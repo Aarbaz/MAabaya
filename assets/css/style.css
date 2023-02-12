@@ -1,0 +1,39 @@
+body {
+	margin: 0;
+	height: 100vh;
+}
+ .challan-div img {
+ 	width: 100%; height: auto;
+ }
+
+.leftbox {
+	background-color: #e1e1e9; padding: 10px; 
+}
+
+#challan-form ul li {
+	list-style: none;
+}
+
+#challan-form .form-control {
+	width: 80%;
+}
+
+#challan-form .control-label {
+    padding-top: 0px;
+}
+
+#mainDiv { min-height: calc(100vh - 130px);  }
+.footer {
+ 	background-color: #3c3d41;
+	padding: 15px;
+	color: rgba(255,255,255,1.00);
+	margin-bottom: 2px;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	/*z-index:-9999;*/
+}
+.hide{
+	display: none;
+}
