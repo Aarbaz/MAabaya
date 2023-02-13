@@ -45,15 +45,15 @@
                 foreach ($invoice_list->result() as $row){  ?>
   						  <tr>
                   <td><?php echo $i; ?></td>
-    							<td><?php echo $row->bakery_name; ?></td>
-    							<td><?php echo $row->bakery_address.', '.$row->bakery_area.', '.$row->bakery_city; ?></td>
+    							<td><?php echo $row->customer_id; ?></td>
+    							<td><?php echo $row->customer_address?></td>
     							<td><?php echo $row->invoice_no; ?></td>  						
                   <td><?php echo $row->round_off_total; ?></td>
     							<td><?php echo date('d M, Y', strtotime($row->invoice_date) ); ?></td>
     						  <td>
-                    <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->bakery_name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
+                    <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->customer_id).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
 
-                  <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_invoice(<?php echo $row->sr_no.",'".$row->bakery_name."','".$row->invoice_no."'";?>)" ><span class="glyphicon glyphicon-trash"></span></button></td>
+                  <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_invoice(<?php echo $row->sr_no.",'".$row->customer_id."','".$row->invoice_no."'";?>)" ><span class="glyphicon glyphicon-trash"></span></button></td>
                 </tr>
               <?php $i++; } 
               } ?>  
@@ -93,17 +93,7 @@
 </div>
 <!--ends delete-->
 <!--footer section-->
-<div class="container" style="height: 100px;">&nbsp;<br /></div>
-<div class="container-fluid footer">
-  <div class="row">
-    <div class="col-sm-1">&nbsp;</div>
-    <div class="col-sm-5">Made with <span style="color: #e25555;"><i class="glyphicon glyphicon-heart"></i></span> By Shareef Ansari</div>   
-    <div class="col-sm-1">&nbsp;</div>   
-    <div class="col-sm-4">
-      <p><i class="glyphicon glyphicon-envelope"></i> ashareefeng@gmail.com &nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-earphone"></i>  90295 79146</p>
-    </div>      
-  </div>
-</div>
+
 <!--END footer section-->
 
 </div><!--close main div-->

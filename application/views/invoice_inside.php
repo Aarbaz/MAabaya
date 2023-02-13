@@ -16,18 +16,22 @@
 								<h3 class="text-center">TAX INVOICE</h3>
 							</div>
 							<div class="col-sm-5 leftbox">
-								<div class="form-group hide">
+								<div class="form-group ">
 									<label class="control-label col-sm-3">To</label>
-									<div class="col-sm-9">
+									<div class="col-sm-6">
 	  									<select name="customerName" id="customerName" class="form-control">
 	  										<option value="" selected="selected">--select customer--</option>
                                             <?php foreach ($custList->result() as $row){
                                                 echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->bakery_name.'</option>';
                                             } ?>
-	  									</select>									
+                                            <!-- <option value="other">Other</option> -->
+	  									</select> 								
 							   		</div>
+                                    <div class="col-sm-2">
+                                    <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new');?>">Add Customer</a> 
+                                    </div>
 								</div>
-                                <div class="form-group">
+                                <div class="form-group hide">
 									<label class="control-label col-sm-3">Customer Name</label>
 									<div class="col-sm-9" id="addds_holder">
                                         <input type="text" name="customerName" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
@@ -192,8 +196,8 @@
                                     <thead>
                                         <tr>                                            
                                             <th>PRODUCT</th>
-                                            <th class="hide">HSN</th>
-                                            <th>QNTY @kg</th>                                            
+                                            <th>Design No</th>
+                                            <th>QNTY </th>                                            
                                             <th>RATE</th>
                                             <th>AMOUNT</th>
                                         </tr>
@@ -208,7 +212,7 @@
                                                     } ?>
                                                 </select>
                                             </td>
-                                            <td class="hide"><input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value="1901"></td>
+                                            <td class=""><input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""></td>
                                             <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                             <td>
@@ -624,4 +628,16 @@ if( round_amount!= null)
 });
 })
 
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("#ddlModels").change(function () {
+            if ($(this).val() == 'other') {
+                $("#txtOther").removeAttr("disabled");
+                $("#txtOther").focus();
+            } else {
+                $("#txtOther").attr("disabled", "disabled");
+            }
+        });
+    });
 </script>

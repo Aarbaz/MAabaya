@@ -105,6 +105,8 @@ class Invoice extends CI_Controller {
 
 			// $stk = implode(',', $this->input->post('stk[]'));
 			// $stk = trim($stk, ',');
+			$hsn = implode(',', $this->input->post('hsn[]'));
+			$hsn = trim($hsn, ',');
 			$qnty = implode(',', $this->input->post('qnty[]'));
 			$qnty = trim($qnty, ',');
 
@@ -139,6 +141,7 @@ class Invoice extends CI_Controller {
 				'invoice_no' => $invoice_no,
 				'product_name'	=> 	$material,			
 				//'stk'		=> $stk,
+				'hsn'		=> $hsn,
 				'qnty'		=> $qnty,
 				'rate'		=> $rate,
 				'amount'	=> $amount,
@@ -166,6 +169,7 @@ class Invoice extends CI_Controller {
 				'invoice_no' => $invoice_no,
 				'product_name'	=> 	$material,			
 				// /'stk'		=> $stk,
+				'hsn'		=> $hsn,
 				'qnty'		=> $qnty,
 				'rate'		=> $rate,
 				'amount'	=> $amount,
