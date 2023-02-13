@@ -221,7 +221,7 @@
       }
     });
 
-    //update balance,paid
+    //update balance,paid.
     $(document).on('change', '#bill_amount,#paid', function(){
       var bill_amount =   parseFloat($('#bill_amount').val());
       var paid        =    parseFloat($('#paid').val());
