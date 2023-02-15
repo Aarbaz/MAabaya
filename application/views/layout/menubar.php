@@ -61,11 +61,21 @@
 					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Dashboard');?>">Dashboard</a>
 				</li>
 				<li>
+
+
+        <li>
+					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Product');?>">Purchaser</a>
+				</li>
+        <li>
+					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Making');?>">Making</a>
+        </li>
+
+        <!-- <li>
 					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Purchaser');?>">Purchaser</a>
 				</li>
         <li>
 					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Product');?>">Products</a>
-				</li>
+				</li> -->
 				<!-- <li>
 					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Challan');?>">Challan</a>
 				</li> -->
