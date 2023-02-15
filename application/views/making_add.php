@@ -30,30 +30,23 @@ input[type="date"]{
 
         <div class="panel-body">
           <p data-placement="top" data-toggle="tooltip">
-            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Product/');?>">Go back to Material list</a>
+            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Making/');?>">Go back to Making list</a>
           </p> <hr />
           <?php
-            echo form_open('Product/add_new', 'class="form-horizontal" id="add_product_form"');
+            echo form_open('Making/add_new', 'class="form-horizontal" id="add_product_form"');
           ?>
           <div class="form-group">
             <div class="col-sm-5">
-          <!-- <select name="purchaserID" id="purchaserID" class="form-control">
-            <option value="" selected="selected">--select purchaser--</option>
-            <?php foreach ($purList->result() as $row){
-                echo '<option value="'.$row->id.'" '.set_select('purchaserID',$row->id).'>'.$row->bakery_name.'</option>';
-            } ?>
-          </select> -->
-          <input type="text" class="form-control" name="owner_name" placeholder="Owner Name" value="<?php echo set_value('owner_name'); ?>">
-
-        </div>
-        <div class="col-sm-6"> <?php echo form_error('purchaserID', '<p class="text-danger">', '</p>'); ?></div>
-      </div>
-            <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" name="material_name" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
+              <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>">
             </div>
+            <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-5">
+              <input type="text" class="form-control" name="material_name" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>">
+            </div>
+            <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
+          </div>
 
             <!-- <div class="form-group">
               <div class="col-sm-5">
@@ -67,9 +60,6 @@ input[type="date"]{
               </div>
               <div class="col-sm-6"> <?php echo form_error('design_number', '<p class="text-danger">', '</p>'); ?></div>
             </div> -->
-
-
-
             <div class="form-group">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
@@ -87,7 +77,7 @@ input[type="date"]{
               <div class="col-sm-6"> <?php echo form_error('prod_exp', '<p class="text-danger">', '</p>'); ?></div>
             </div> -->
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="price" name="p_price" placeholder="Price" value="<?php echo set_value('price'); ?>">
               </div>
@@ -98,11 +88,11 @@ input[type="date"]{
                 <input type="text" class="form-control" id="price_total" name="price_total" placeholder="Total Amount" value="<?php echo set_value('price_total'); ?>" readonly="readonly">
               </div>
               <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
+            </div> -->
 
           <div class="form-group">
             <div class="col-sm-5">
-              <?php echo form_submit('add_product','Add Material','class="btn btn-success"'); ?>
+              <?php echo form_submit('add_making','Add Material','class="btn btn-success"'); ?>
             </div>
              <div class="col-sm-6">
               <?php
@@ -111,7 +101,7 @@ input[type="date"]{
               ?>
              </div>
           </div>
-      <?php echo form_close();  ?>
+          <?php echo form_close();  ?>
         </div>
       </div>
     </div>

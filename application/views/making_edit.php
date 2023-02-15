@@ -10,11 +10,11 @@
 
         <div class="panel-body">
           <p data-placement="top" data-toggle="tooltip">
-            <a class="btn btn-info btn-sm" href="<?php echo base_url('/index.php/Product/');?>">Go back to Material list</a>
+            <a class="btn btn-info btn-sm" href="<?php echo base_url('/index.php/Making/');?>">Go back to Material list</a>
           </p>
           <?php
           // print_r($prod);
-            $url = 'Product/edit/'.$prod->id;
+            $url = 'Making/edit/'.$prod->id;
             echo form_open($url, 'class="form-horizontal" id="add_product_form"');
           ?>
           <div class="form-group">
@@ -27,14 +27,14 @@
                 echo '<option    value="'.$row->id.'" '.set_select('purchaserID',$row->id).'>'.$row->bakery_name.'</option>';
             } ?>
           </select> -->
-          <input type="text" class="form-control" name="owner_name" placeholder="Owner Name" value="<?php echo set_value('owner_name', $prod->owner_name); ?>">
+          <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('owner_name', $prod->master_name); ?>">
 
         </div>
         <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
       </div>
             <div class="form-group">
               <div class="col-sm-5">
-                <input type="text" class="form-control" name="material_name" placeholder="material Name" value="<?php echo set_value('material_name', $prod->product_name); ?>">
+                <input type="text" class="form-control" name="material_name" placeholder="material Name" value="<?php echo set_value('material_name', $prod->material_name); ?>">
                 <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('prod_name', '<p class="text-danger">', '</p>'); ?></div>
@@ -47,12 +47,12 @@
               <div class="col-sm-6"> <?php echo form_error('p_design_number', '<p class="text-danger">', '</p>'); ?></div>
             </div> -->
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="p_price" name="p_price" placeholder="Price" value="<?php echo set_value('price', $prod->price); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('p_price', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
+            </div> -->
 
             <div class="form-group">
               <div class="col-sm-5">
@@ -75,16 +75,16 @@
               <div class="col-sm-6"> <?php echo form_error('product_exp', '<p class="text-danger">', '</p>'); ?></div>
             </div> -->
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="price_total" name="price_total" placeholder="Total Amount" value="<?php echo set_value('price_total', $prod->total_amount); ?>" readonly="readonly">
               </div>
               <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
+            </div> -->
 
           <div class="form-group">
             <div class="col-sm-5">
-              <?php echo form_submit('edit_product','Edit & Save','class="btn btn-success"'); ?>
+              <?php echo form_submit('edit_making','Edit & Save','class="btn btn-success"'); ?>
             </div>
              <div class="col-sm-6">
               <?php

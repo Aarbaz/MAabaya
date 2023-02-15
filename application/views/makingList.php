@@ -10,7 +10,7 @@
 
         <div class="panel-body">
           <p>
-            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Product/add_new');?>">Add New Material</a>
+            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Making/add_new');?>">Add New Making</a>
           </p><br />
           <?php
             if( $this->session->flashdata('success') )
@@ -21,12 +21,12 @@
     				<thead>
   						<tr>
               <th>Sr No</th>
-              <th>Owner Name</th>
+              <th>Master Name</th>
   							<th>Material Name</th>
-                <th>InStock</th>
-                <th>Product Amount</th>
+                <th>Stock</th>
+                <!-- <th>Product Amount</th> -->
                 <!-- <th>Expiry Date</th> -->
-                <th>Total</th>
+                <!-- <th>Total</th> -->
                 <th>Action</th>
   						</tr>
 					  </thead>
@@ -38,15 +38,15 @@
               foreach ($products->result() as $row){  ?>
 						  <tr>
                 <td><?php echo $i; ?></td>
-                <td><?php echo $row->owner_name; ?></td>
-  							<td><?php echo $row->product_name; ?></td>
+                <td><?php echo $row->master_name; ?></td>
+  							<td><?php echo $row->material_name; ?></td>
                 <td><?php echo $row->stock; ?> Meters</td>
-  							<td><?php echo $row->price; ?> Rs</td>
+  							<!-- <td><?php echo $row->price; ?> Rs</td> -->
                 <!-- <td><?php echo $row->prod_exp; ?></td> -->
-  							<td><?php echo $row->total_amount; ?> Rs</td>
+  							<!-- <td><?php echo $row->total_amount; ?> Rs</td> -->
                 <td>
-                 <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Product/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
-                  <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
+                 <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Making/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                  <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_making(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td>
 						  </tr>
             <?php $i++; } } ?>
@@ -63,7 +63,7 @@
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="delete_form" method="post" action="<?php echo site_url('/Product/deleteProduct');?>">
+      <form id="delete_form" method="post" action="<?php echo site_url('/Making/deleteMaking');?>">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h4 class="modal-title custom_align" id="Heading">Delete this Product</h4>
@@ -101,7 +101,7 @@ $(document).ready(function(){
 
 });
 
-function delete_product(row_id)
+function delete_making(row_id)
 {
     var row_id = row_id;
     $('#delete').modal('show');

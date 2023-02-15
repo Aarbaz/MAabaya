@@ -1,31 +1,31 @@
 <?php
 //defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Product_model extends CI_Model {
+class Making_model extends CI_Model {
 
-    public function add_product($data)
+    public function add_material($data)
 	{
-		$this->db->insert('products', $data);
+		$this->db->insert('material', $data);
 		return $this->db->insert_id();
 	}
 
-	public function get_all_products()
+	public function get_all_material()
     {
-        return $this->db->get("products");
+        return $this->db->get("material");
     }
 
-    public function get_product_byID($id)
-    {   $this->db->select('id,total_amount,product_name,stock,price,owner_name');
-    	$this->db->from('products');
+    public function get_material_byID($id)
+    {   $this->db->select('id, master_name,material_name,stock');
+    	$this->db->from('material');
         $this->db->where('id',$id);
         $query = $this->db->get();
         return $query->row();
     }
 
-     public function update_product($data, $id)
+     public function update_making($data, $id)
     {
         $this->db->where('id', $id);
-		$this->db->update('products', $data);
+		$this->db->update('material', $data);
 		return $this->db->affected_rows();
 
     }
@@ -33,7 +33,7 @@ class Product_model extends CI_Model {
     public function delete_by_id($id)
     {
         $this->db->where('id', $id);
-        $this->db->delete('products');
+        $this->db->delete('material');
         return $this->db->affected_rows();
     }
 
@@ -42,9 +42,9 @@ class Product_model extends CI_Model {
         return $this->db->select('product_name,stock,price')->where('product_name', $detail)->get('products')->result_array();
     }
 
-    public function get_all_purchaser()
+    public function get_all_making()
     {
-        return $this->db->select('id, bakery_name')->get('purchasers');
+        return $this->db->select('id, master_name,material_name,stock')->get('material');
 
     }
 }
