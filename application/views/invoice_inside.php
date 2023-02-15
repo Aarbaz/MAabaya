@@ -433,6 +433,7 @@ $(document).ready(function(){
     //show customer address on customer name change event
     var cust_list = <?php echo json_encode($custList->result()); ?>;
     $("#customerName").on('change', function(){
+        // alert();
         var cust_id = $("#customerName option:selected").val();
 
         for (var key = 0; key < cust_list.length; key++) 

@@ -116,7 +116,7 @@ class Customer extends CI_Controller {
 				$insert = $this->Customer_model->add_customer($data);
 				if($insert > 0)
 				{
-					alert("Customer added successfully.");
+					// alert("Customer added successfully.");
 					$this->session->set_flashdata('success', 'Customer added successfully.');
 					redirect('Invoice/create');	
 				}
