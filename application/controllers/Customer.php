@@ -79,10 +79,10 @@ class Customer extends CI_Controller {
 	{
 		$this->form_validation->set_rules('bakery_name', 'Bakery Name', 'required|alpha_numeric_spaces');
 		/* $this->form_validation->set_rules('owner_name', 'Owner Name', 'required|alpha_numeric_spaces'); */
-		$this->form_validation->set_rules('area', 'Area', "required|regex_match[/^[a-zA-Z0-9\.\-\,\'\s]+$/]",
-			array('regex_match' =>'Please enter valid area'));
-		$this->form_validation->set_rules('city', 'City', 'required|alpha_numeric_spaces');
-		$this->form_validation->set_rules('phone', 'Phone number', 'numeric|min_length[10]|max_length[12]');
+		/* $this->form_validation->set_rules('area', 'Area', "required|regex_match[/^[a-zA-Z0-9\.\-\,\'\s]+$/]",
+			array('regex_match' =>'Please enter valid area')); */
+		//$this->form_validation->set_rules('city', 'City', 'required|alpha_numeric_spaces');
+		//$this->form_validation->set_rules('phone', 'Phone number', 'numeric|min_length[10]|max_length[12]');
 		//$this->form_validation->set_rules('email', 'Email ID', 'valid_email');
 		/* $this->form_validation->set_rules('gst', 'GST', 'trim|regex_match[/^[a-zA-Z0-9]{15}+$/]'); */
 		
@@ -116,6 +116,7 @@ class Customer extends CI_Controller {
 				$insert = $this->Customer_model->add_customer($data);
 				if($insert > 0)
 				{
+					alert("Customer added successfully.");
 					$this->session->set_flashdata('success', 'Customer added successfully.');
 					redirect('Invoice/create');	
 				}

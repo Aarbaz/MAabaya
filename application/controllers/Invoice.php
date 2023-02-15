@@ -9,9 +9,10 @@ class Invoice extends CI_Controller {
         $this->load->library('form_validation');
 		$this->load->library('tcpdf');
         $this->load->model('Challan_model'); 
+		$this->load->library('upload');
 		//$this->load->helper('pdf_helper');
 		$this->load->helper('url'); 
-		//$this->load->library('Pdf');
+		//$this->load->library('pdf');
     }
 
 	public function index()
@@ -163,7 +164,7 @@ class Invoice extends CI_Controller {
 			);			
 
 			$data_pdf = array(
-				'customer' => $this->input->post('customerName'),
+				'customer' => $this->input->post('cust_name'),
 				'customer_address' => $this->input->post('cust_adds_txt'),
 				'gst' => $this->input->post('cust_gst'),
 				'invoice_no' => $invoice_no,
@@ -226,7 +227,8 @@ class Invoice extends CI_Controller {
 				}
 				$save_path = $dir.$filename;	
 				ob_end_clean();
-				$pdf->Output($save_path, 'I');				
+				$pdf->Output($save_path, 'S');			
+				file_put_contents($save_path, $pdf);	
 				$this->session->set_flashdata('success', 'Invoice created successfully....');
 				redirect('Invoice/');
 			}
@@ -285,17 +287,20 @@ class Invoice extends CI_Controller {
 	{
 		$bakery_name = $this->input->post('bakery_name');
 		$invoice_number = $this->input->post('invoice_number');
-		$pdf_file = APPPATH.'invoice/'.$bakery_name.'/'.$invoice_number.'.pdf';			
-
-		if($this->input->post(' '))
-		{			
+		
+		$pdf_file = APPPATH.'invoice/'.$bakery_name.'/'.$invoice_number.'.pdf';				
+		//print_r($pdf_file);
+		/* if($this->input->post(' '))
+		{ */			
 			$id = $this->input->post('row_id');
-			$upd = 1; //$this->Challan_model->delete_invoice_by_id($id);
-			if($upd )
+			//$upd = 1; //$this->Challan_model->delete_invoice_by_id($id);
+			//print_r($id);
+			$upd = $this->Challan_model->delete_invoice_by_id($id);
+			if($upd)
 			{
 				if (file_exists($pdf_file))
 				{
-					//unlink($pdf_file);
+					unlink($pdf_file);
 				}
 				$response['result'] = 'Invoice deleted successfully.';
 				$response['status'] = 'passed';
@@ -306,7 +311,7 @@ class Invoice extends CI_Controller {
 				$response['status'] = 'failed';
 			}
 			echo json_encode($response);
-		}
+		//}
 	}
 
 	

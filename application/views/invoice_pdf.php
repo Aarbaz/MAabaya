@@ -65,7 +65,7 @@
     $qnty = explode(',', $qnty);
     $rate = explode(',', $rate);
     $amount = explode(',', $amount);                          
-    $items = array('mat'=> $mat,'qnty'=>$qnty,'rate' => $rate, 'amount' => $amount); 
+    $items = array('mat'=> $mat,'qnty'=>$qnty,'hsn'=>$hsn,'rate' => $rate, 'amount' => $amount); 
     $len = count($items['mat']);                        
     
     $items2 = array();
@@ -92,8 +92,8 @@
           <td><?php echo isset($items2[$i][0])?$items2[$i][0]:''; ?></td>
           <td><?php echo isset($items2[$i][1])?$items2[$i][1]:''; ?></td>
           <td><?php echo isset($items2[$i][2]) ? $items2[$i][2] : '' ; ?></td>
-          <td><?php echo isset($items2[$i][4]) ? $items2[$i][4] : '' ; ?></td>
           <td><?php echo isset($items2[$i][3]) ? 'Rs. '.$items2[$i][3] : '' ; ?></td>
+          <td><?php echo isset($items2[$i][4]) ? $items2[$i][4] : '' ; ?></td>
           <!-- <td><?php echo $items2[$i][4] ? 'Rs. '.$items2[$i][4] : '' ; ?></td> -->
         </tr>    
       <?php
@@ -108,7 +108,7 @@
   <tr>
     <td colspan="3">&nbsp;&nbsp;</td>
   </tr>                    
-  <tr>
+  <!-- <tr>
     <th class="right">TRANSPORT CHARGES</th>
     <td>&nbsp;</td>
     <td>&nbsp;<?php echo $transport_charges ? 'Rs. '. $transport_charges : ''; ?></td>
@@ -117,12 +117,12 @@
     <th class="right">OTHER</th>
     <td>&nbsp;</td>
     <td> <?php echo $other_charge ? 'Rs. '. $other_charge : ''; ?> </td>
-  </tr>
-  <tr>
+  </tr> -->
+  <!-- <tr>
     <th class="right">TOTAL TAXABLE VALUE</th>
     <td>&nbsp;</td>
     <td> <?php echo 'Rs. '. $total_taxable_amount; ?> </td>
-  </tr>
+  </tr> -->
 
   <?php if($cgst_2_5_cent) {?>
   <tr>

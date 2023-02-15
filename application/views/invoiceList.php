@@ -45,15 +45,15 @@
                 foreach ($invoice_list->result() as $row){  ?>
   						  <tr>
                   <td><?php echo $i; ?></td>
-    							<td><?php echo $row->customer_id; ?></td>
-    							<td><?php echo $row->customer_address?></td>
+    							<td><?php echo $row->bakery_name; ?></td>
+    							<td><?php echo $row->bakery_address?></td>
     							<td><?php echo $row->invoice_no; ?></td>  						
                   <td><?php echo $row->round_off_total; ?></td>
     							<td><?php echo date('d M, Y', strtotime($row->invoice_date) ); ?></td>
     						  <td>
                     <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->customer_id).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
 
-                  <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_invoice(<?php echo $row->sr_no.",'".$row->customer_id."','".$row->invoice_no."'";?>)" ><span class="glyphicon glyphicon-trash"></span></button></td>
+                    <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" name="row_id" value="<?php echo $row->sr_no ?>" row_id="<?php echo $row->sr_no ?>" bakery_name="<?php echo $row->bakery_name ?>" invoice_number="<?php echo $row->invoice_no ?>" onclick="delete_invoice(event)" ><span class="glyphicon glyphicon-trash"></span></button></td>
                 </tr>
               <?php $i++; } 
               } ?>  
@@ -110,11 +110,12 @@ $(document).ready(function(){
 
 });
 
-function delete_invoice(row_id, bakery_name, invoice_number)
+function delete_invoice(event)
 {
-  var row_id = row_id;
-  var bakery_name = bakery_name;
-  var invoice_number = invoice_number;
+  var row_id = $(event.currentTarget).attr("row_id");
+  //var row_id = row_id;
+  var bakery_name = $(event.currentTarget).attr("bakery_name");
+  var invoice_number = $(event.currentTarget).attr("invoice_number");
   $("#delete").modal("show");
   $("#yes").click(function(){
     $.ajax({
@@ -127,7 +128,7 @@ function delete_invoice(row_id, bakery_name, invoice_number)
         $('.modal-body').css('opacity', '.5');
       },
       success:function(msg){     
-        var resp = JSON.parse(msg);
+        var resp = JSON.parse(unescape(msg));
         if(resp.status =='passed')
         {
           $('.statusMsgDel').empty();

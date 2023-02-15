@@ -22,11 +22,9 @@
   						<tr>
   							<th>Sr No</th>
   							<th>Customer Name</th>
-  							<th class="hide">Owner Name</th>
-                <th class="hide">GST No.</th>
-  							<th>Phone No</th>
+  							<!-- <th>Phone No</th> -->
                 <th>Address</th>
-                <th class="hide">Last Amount</th>                
+                <!-- <th class="hide">Last Amount</th>     -->            
                 <th>Action</th>
   						</tr>
 					  </thead>
@@ -40,11 +38,10 @@
   						  <tr>
                   <td><?php echo $i; ?></td>
     							<td><?php echo $row->bakery_name; ?></td>
-    							<!-- <td><?php echo $row->owner_name; ?></td> -->
-    							<!-- <td><?php echo $row->bakery_gst; ?></td>  		 -->				
-                  <td><?php echo $row->owner_phone; ?></td>       
-                  <td><?php echo $row->bakery_address.'<br />'.$row->bakery_area.','.$row->bakery_city; ?></td>  
-                 <!--  <td><?php echo $row->last_amount; ?></td>   -->
+    										
+                  <!-- <td><?php echo $row->owner_phone; ?></td> -->       
+                  <td><?php echo $row->bakery_address.'<br />'; ?></td>  
+
     							<td>
                     <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Customer/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
 

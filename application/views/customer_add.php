@@ -43,28 +43,28 @@
               <div class="col-sm-6"> <?php echo form_error('bakery_adds', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="area" name="area" placeholder="Area" value="<?php echo set_value('area'); ?>">        
               </div>     
               <div class="col-sm-6"> <?php echo form_error('area', '<p class="text-danger">', '</p>'); ?></div>   
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="city" name="city" placeholder="city" value="<?php echo set_value('city'); ?>">        
               </div>     
               <div class="col-sm-6"> <?php echo form_error('city', '<p class="text-danger">', '</p>'); ?></div>   
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="<?php echo set_value('phone'); ?>">        
               </div>
               <div class="col-sm-6"> <?php echo form_error('phone', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group hide">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="email" name="email" placeholder="Email ID" value="<?php echo set_value('email'); ?>">        
               </div>  

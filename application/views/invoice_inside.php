@@ -24,6 +24,8 @@
                                             <?php foreach ($custList->result() as $row){
                                                 echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->bakery_name.'</option>';
                                             } ?>
+                                            <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
+                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name"> 
                                             <!-- <option value="other">Other</option> -->
 	  									</select> 								
 							   		</div>
@@ -34,7 +36,7 @@
                                 <div class="form-group hide">
 									<label class="control-label col-sm-3">Customer Name</label>
 									<div class="col-sm-9" id="addds_holder">
-                                        <input type="text" name="customerName" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
+                                        <input type="text" name="customerName1" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
                                         <!-- <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
                                         <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">  -->        
                                     </div>
@@ -44,7 +46,7 @@
 									<div class="col-sm-9" id="addds_holder">
                                         <input type="text" name="cust_adds_txt" id="cust_adds_txt" class="form-control" value="<?php echo set_value('cust_adds_txt');?>">
                                         <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">         
+                                        <input type="hidden" name="cust_name1" value="<?php echo set_value('cust_name');?>" id="cust_name1">         
                                     </div>
 								</div>	
 								<div class="form-group hide">
@@ -208,7 +210,7 @@
                                                 <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select product--</option>
                                                     <?php foreach ($productList->result() as $row){ 
-                                                    echo '<option label="'.$row->unit_price.'" value="'.$row->product_name.'" '. set_select("items[]", $row->product_name).'>'.$row->product_name.'</option>';
+                                                    echo '<option label="" value="'.$row->product_name.'" '. set_select("items[]", $row->product_name).'>'.$row->product_name.'</option>';
                                                     } ?>
                                                 </select>
                                             </td>
