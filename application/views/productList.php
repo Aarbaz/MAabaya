@@ -23,7 +23,7 @@
               <th>Sr No</th>
               <th>Owner Name</th>
   							<th>Material Name</th>
-                <th>InStock</th>
+                <th>Quantity</th>
                 <th>Product Amount</th>
                 <!-- <th>Expiry Date</th> -->
                 <th>Total</th>

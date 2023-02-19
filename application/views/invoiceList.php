@@ -51,7 +51,7 @@
                   <td><?php echo $row->round_off_total; ?></td>
     							<td><?php echo date('d M, Y', strtotime($row->invoice_date) ); ?></td>
     						  <td>
-                    <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->customer_id).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
+                    <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->bakery_name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
 
                     <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" name="row_id" value="<?php echo $row->sr_no ?>" row_id="<?php echo $row->sr_no ?>" bakery_name="<?php echo $row->bakery_name ?>" invoice_number="<?php echo $row->invoice_no ?>" onclick="delete_invoice(event)" ><span class="glyphicon glyphicon-trash"></span></button></td>
                 </tr>
@@ -136,7 +136,7 @@ function delete_invoice(event)
           setTimeout(function(){
             $('#delete').modal('hide');
             location.reload();
-          }, 4000);
+          }, 1000);
         }
         else
         {

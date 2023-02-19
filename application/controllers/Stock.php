@@ -25,8 +25,8 @@ class Stock extends CI_Controller {
         	$data['username'] = $this->session->userdata('logged_in');
         	$data['products'] = $this->Product_model->get_all_products();
         	$data['stocks'] = $this->Stock_model->get_stock();
-			var_dump($data['stocks'][0]->stock_qty);
-			var_dump($data);
+			/* var_dump($data['stocks']->stock_qty);
+			var_dump($data); */
 			//var_dump($data['stocks']->stock_qty);
 			$this->load->view('layout/header', $data);				
 	        $this->load->view('layout/menubar');

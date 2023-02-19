@@ -12,7 +12,11 @@ class Challan extends CI_Controller {
     {
         parent::__construct();     
         $this->load->library('form_validation');
-        $this->load->model('Challan_model');          
+        $this->load->model('Challan_model');    
+		$this->load->library('tcpdf');
+		$this->load->library('upload');
+		//$this->load->helper('pdf_helper');
+		$this->load->helper('url');       
     }
 
 	public function create()
