@@ -36,9 +36,9 @@
               $i = 1;
               foreach ($data_list->result() as $row){  ?>
 						  <tr>
-                <td><?php echo $i;  print_r($row);?></td>
+                <td><?php echo $i;?></td>
                
-                <td><?php echo $row->master_name; ?></td>
+                <td><?php echo $row->bakery_name; ?></td>
   							<td><?php echo $row->material_name; ?></td>
   							<td><?php echo $row->design_number; ?></td>
   							<td><?php echo $row->pices; ?></td>
