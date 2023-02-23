@@ -43,6 +43,7 @@ input[type="date"]{
                 echo '<option value="'.$row->id.'" '.set_select('purchaserID',$row->id).'>'.$row->bakery_name.'</option>';
             } ?>
           </select> -->
+          <label>Owner Name</label>
           <input type="text" class="form-control" name="owner_name" placeholder="Owner Name" value="<?php echo set_value('owner_name'); ?>">
 
         </div>
@@ -50,6 +51,7 @@ input[type="date"]{
       </div>
             <div class="form-group">
               <div class="col-sm-5">
+                <label>Material Name</label>
                 <input type="text" class="form-control" name="material_name" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
@@ -72,6 +74,7 @@ input[type="date"]{
 
             <div class="form-group">
               <div class="col-sm-5">
+                <label>Stock/Quantity</label>
                 <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
@@ -89,12 +92,16 @@ input[type="date"]{
 
             <div class="form-group">
               <div class="col-sm-5">
+                <label>Price</label>
+
                 <input type="text" class="form-control" id="price" name="p_price" placeholder="Price" value="<?php echo set_value('price'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('price', '<p class="text-danger">', '</p>'); ?></div>
             </div>
             <div class="form-group">
               <div class="col-sm-5">
+                <label>Total Amount</label>
+
                 <input type="text" class="form-control" id="price_total" name="price_total" placeholder="Total Amount" value="<?php echo set_value('price_total'); ?>" readonly="readonly">
               </div>
               <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>

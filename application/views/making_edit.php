@@ -27,6 +27,8 @@
                 echo '<option    value="'.$row->id.'" '.set_select('purchaserID',$row->id).'>'.$row->bakery_name.'</option>';
             } ?>
           </select> -->
+          <label>Master Name</label>
+
           <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('owner_name', $prod->master_name); ?>">
 
         </div>
@@ -34,6 +36,8 @@
       </div>
             <div class="form-group">
               <div class="col-sm-5">
+          <label>Material Name</label>
+
                 <input type="text" class="form-control" name="material_name" placeholder="material Name" value="<?php echo set_value('material_name', $prod->material_name); ?>">
                 <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
               </div>
@@ -56,6 +60,8 @@
 
             <div class="form-group">
               <div class="col-sm-5">
+          <label>Stock/Quantity</label>
+
                 <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock" value="<?php echo set_value('stock', $prod->stock);?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>

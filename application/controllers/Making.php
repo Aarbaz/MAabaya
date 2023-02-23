@@ -53,16 +53,34 @@ class Making extends CI_Controller
 	public function add_new()
 	{
 		// $this->form_validation->set_rules('prod_name', 'Product Name', 'trim|required|callback_regexValidate|is_unique[products.product_name]',  array('is_unique' => 'This %s already exists.'));
-		$this->form_validation->set_rules('material_name', 'Material Name', 'trim|required');
+		// $this->form_validation->set_rules('material_name', 'Material Name', 'trim|required');
 		$this->form_validation->set_rules('master_name', 'Master Name', 'trim|required');
 		// $this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
-		$this->form_validation->set_rules('stock_q', 'Product Amount', 'trim|required|numeric');
+		// $this->form_validation->set_rules('stock_q', 'Product Amount', 'trim|required|numeric');
 		// $this->form_validation->set_rules('p_design_number', 'Design Number', 'trim|required');
 		// $this->form_validation->set_rules('purchaserID', 'Purchaser ID', 'trim|required');
 		// $this->form_validation->set_rules('pcs', 'Pcs', 'trim');
 		// $this->form_validation->set_rules('meter', 'Meter', 'trim');
 		// $this->form_validation->set_rules('product_exp', 'Expiry Date', 'trim|required');
 		// $this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
+		$validation = array(
+		    array(
+		        'field' => 'material_name[]',
+		        'label' => 'Material', 
+		        'rules' => 'required', 
+		        "errors" => array('required' => " Please select %s. ")
+		    ),
+		);
+
+		$validation2 = array(
+		    array(
+		        'field' => 'stock_q[]',
+		        'label' => 'Stock', 
+		        'rules' => 'required', 
+		        "errors" => array('required' => " Please select %s. ")
+		    ),
+		);
+
 
 		if ($this->input->post('add_making') != NULL) {
 			if ($this->form_validation->run() == false) {
@@ -76,13 +94,20 @@ class Making extends CI_Controller
 			} else {
 				// POST data
 				$postData = $this->input->post();
+
+				$material_name = implode(',', $this->input->post('material_name[]'));
+			$material_name = trim($material_name, ',');
+			$stock_q = implode(',', $this->input->post('stock_q[]'));
+			$stock_q = trim($stock_q, ',');
+
+			
 				$data = array(
-					'material_name' => strtoupper($postData['material_name']),
+					'material_name' => $material_name,
 					'master_name' => strtoupper($postData['master_name']),
 					// 'purchaser_id' => $postData['purchaserID'],
 					// 'price' => $postData['p_price'],
 					// 'design_number' => $postData['p_design_number'],
-					'stock' => $postData['stock_q'],
+					'stock' => $stock_q,
 					// 'prod_exp' => $postData['product_exp'],
 					// 'total_amount' => $postData['price_total'],
 					// 'pcs' => $postData['pcs'],

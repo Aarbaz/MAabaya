@@ -27,6 +27,7 @@
                 echo '<option    value="'.$row->id.'" '.set_select('purchaserID',$row->id).'>'.$row->bakery_name.'</option>';
             } ?>
           </select> -->
+          <label>Owner Name</label>
           <input type="text" class="form-control" name="owner_name" placeholder="Owner Name" value="<?php echo set_value('owner_name', $prod->owner_name); ?>">
 
         </div>
@@ -34,6 +35,8 @@
       </div>
             <div class="form-group">
               <div class="col-sm-5">
+          <label>Material Name</label>
+
                 <input type="text" class="form-control" name="material_name" placeholder="material Name" value="<?php echo set_value('material_name', $prod->product_name); ?>">
                 <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
               </div>
@@ -49,6 +52,8 @@
 
             <div class="form-group">
               <div class="col-sm-5">
+          <label>Price</label>
+
                 <input type="text" class="form-control" id="p_price" name="p_price" placeholder="Price" value="<?php echo set_value('price', $prod->price); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('p_price', '<p class="text-danger">', '</p>'); ?></div>
@@ -56,6 +61,8 @@
 
             <div class="form-group">
               <div class="col-sm-5">
+          <label>Stock/Quantity</label>
+
                 <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock" value="<?php echo set_value('stock', $prod->stock);?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
@@ -77,6 +84,8 @@
 
             <div class="form-group">
               <div class="col-sm-5">
+          <label>Total Amount</label>
+
                 <input type="text" class="form-control" id="price_total" name="price_total" placeholder="Total Amount" value="<?php echo set_value('price_total', $prod->total_amount); ?>" readonly="readonly">
               </div>
               <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
