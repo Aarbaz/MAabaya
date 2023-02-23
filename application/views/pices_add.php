@@ -11,14 +11,14 @@
 				
 				<div class="panel-body">	
 					<div class="challan-div">			     
-						<form id="insider_invoice_form" name="insider_invoice_form" class="form-horizontal" action="<?php echo site_url('Invoice/add_insider_invoice');?>" method="post">
+						<form id="insider_invoice_form" name="insider_invoice_form" class="form-horizontal" action="<?php echo site_url('Pices/create');?>" method="post">
 							<div class="form-group">						
 								<h3 class="text-center">Pices Recived</h3>
 							</div>
 							<div class="col-sm-5 leftbox">
 								<div class="form-group ">
-									<label class="control-label col-sm-3">To</label>
-									<div class="col-sm-6">
+									<label class="control-label col-sm-3">Master Name</label>
+									<div class="col-sm-9">
 	  									<select name="customerName" id="customerName" class="form-control">
 	  										<option value="" selected="selected">--select customer--</option>
                                             <?php foreach ($custList->result() as $row){
@@ -29,7 +29,7 @@
                                             <!-- <option value="other">Other</option> -->
 	  									</select> 								
 							   		</div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-2 hide">
                                     <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new');?>">Add Customer</a> 
                                     </div>
 								</div>
@@ -78,7 +78,7 @@
                                 </div>                                                                                             
 							</div>
 							<div class="col-sm-1">&nbsp;</div>
-							<div class="col-sm-6 leftbox inv">
+							<div class="col-sm-6 leftbox inv hide">
 								<div class="form-group">
 									<label class="control-label col-sm-4">INVOICE NO.</label>
 									<div class="col-sm-8">&nbsp;&nbsp;
@@ -157,51 +157,17 @@
                                   ?>
                                 </div>
                             </div>                             
-							<div class="form-group" id="table_with_tax">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>                                            
-                                            <th>PRODUCT</th>
-                                            <th>HSN</th>
-                                            <th>QNTY @kg</th>
-                                            <th>AMOUNT WITH TAX</th>
-                                            <th>RATE</th>
-                                            <th>AMOUNT</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="row_one">
-                                            <td>
-                                                <select name="items[]" id="items" class="form-control">
-                                                    <option value="">--select product--</option>
-                                                    <?php foreach ($productList->result() as $row){ 
-                                                    echo '<option value="'.$row->product_name.'" '. set_select("items[]", $row->product_name).'>'.$row->product_name.'</option>';
-                                                    } ?>
-                                                </select>
-                                            </td>
-                                            <td><input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""></td>
-                                            <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>
-                                            <td><input type="text" name="amount_with_tax[]" class="amount_with_tax only_num form-control" size="3" maxlength="7"></td>                      
-                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
-                                            <td>
-                                                <input type="text" name="amount[]" class="amount form-control" style="width: 40%; display: inline;" value="" size="3" readonly="readonly">&nbsp;
-                                                <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>&nbsp;
-                                                <button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+					
                             <!--table withouot tax-->
                             <div class="form-group" id="table_without_tax">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>                                            
-                                            <th>PRODUCT</th>
+                                            <th>Material Name</th>
                                             <th>Design No</th>
-                                            <th>QNTY </th>                                            
-                                            <th>RATE</th>
-                                            <th>AMOUNT</th>
+                                            <th>Pices</th>
+                                            <th>Average</th>                                            
+                                            <th>Total Material Used</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -281,7 +247,7 @@
                             </div> 
                             <div class="form-group">
                                 <div class="col-sm-2 col-sm-offset-6">
-                                    <b>TOTAL AMOUNT</b>
+                                    <b>TOTAL</b>
                                 </div>
                                 <div class="col-sm-3"> 
                                     <input type="text" name="total_amount" id="total_amount" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="" size="3">
@@ -298,7 +264,7 @@
                             </div>                                                        
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-1">
-                                    <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
+                                    <b>IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
                             <div class="form-group">
