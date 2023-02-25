@@ -40,7 +40,7 @@
                   </div>
                   <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
                </div>
-               <div class="form-group" id="some_id">
+               <!-- <div class="form-group" id="some_id">
                 <div class="element">
   </div>
                   <div class="col-sm-3">
@@ -53,13 +53,13 @@
                      <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
                   </div>
                   <div class="col-sm-2"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
-                  <div class="col-sm-2"> 
+                  <div class="col-sm-2">
                     <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>&nbsp;
                <button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                </div>
                </div>
-               <div class="results"></div>
-               
+               <div class="results"></div> -->
+
                <!-- <div class="form-group">
                   <div class="col-sm-5">
                     <input type="text" class="form-control" id="weight" name="weight" placeholder="Amount" value="<?php echo set_value('weight'); ?>">
@@ -94,6 +94,31 @@
                   </div>
                   <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
                   </div> -->
+                  <div class="form-group" id="table_without_tax">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Material Name</th>
+                                            <th>Stock/Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="row_one">
+
+                                            <td class="">
+                                              <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>">
+                                            </td>
+                                            <td>
+                                              <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
+                                            </td>
+                                            <td>
+                                                <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
+                                                &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                <div class="form-group">
                   <div class="col-sm-5">
                      <?php echo form_submit('add_making','Add Material','class="btn btn-success"'); ?>
@@ -114,12 +139,22 @@
 </div><!--close main div-->
 <script type="text/javascript">
 
-   
-   
+
+
    $(document).ready(function(){
 
+     // add new row
+     $(document).on('click', '.add_more', function(){
+         $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+     });
+     //Remove table row
+     $(document).on('click', '.remove', function(){
+       var $tr = $(this).closest('tr');
+       if ($tr.index() != '0') {
+         $tr.remove();
+       }
+     });
 
- 
 $('#some_id').on('click', '.add_more', function() {
   $('.add_more').closest('#some_id').first().clone().appendTo('.results');
 });

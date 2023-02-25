@@ -49,7 +49,14 @@
               </div>
               <div class="col-sm-6"> <?php echo form_error('p_design_number', '<p class="text-danger">', '</p>'); ?></div>
             </div> -->
+            <div class="form-group">
+              <div class="col-sm-5">
+          <label>Stock/Quantity</label>
 
+                <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock" value="<?php echo set_value('stock', $prod->stock);?>">
+              </div>
+              <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
+            </div>
             <div class="form-group">
               <div class="col-sm-5">
           <label>Price</label>
@@ -59,14 +66,7 @@
               <div class="col-sm-6"> <?php echo form_error('p_price', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
-            <div class="form-group">
-              <div class="col-sm-5">
-          <label>Stock/Quantity</label>
 
-                <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock" value="<?php echo set_value('stock', $prod->stock);?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
             <!-- <input type="radio" value="1" onclick="changeRadio1()" name="pcs" <?php if ($prod->pcs == '1') {?>
               checked <?php
             } ?>>

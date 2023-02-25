@@ -34,15 +34,16 @@
         </div>
         <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
       </div>
-            <div class="form-group">
+      <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
+      
+            <!-- <div class="form-group">
               <div class="col-sm-5">
           <label>Material Name</label>
 
                 <input type="text" class="form-control" name="material_name" placeholder="material Name" value="<?php echo set_value('material_name', $prod->material_name); ?>">
-                <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('prod_name', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
+            </div> -->
 
             <!-- <div class="form-group">
               <div class="col-sm-5">
@@ -58,14 +59,14 @@
               <div class="col-sm-6"> <?php echo form_error('p_price', '<p class="text-danger">', '</p>'); ?></div>
             </div> -->
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <div class="col-sm-5">
-          <label>Stock/Quantity</label>
+                <label>Stock/Quantity</label>
 
                 <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock" value="<?php echo set_value('stock', $prod->stock);?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
+            </div> -->
             <!-- <input type="radio" value="1" onclick="changeRadio1()" name="pcs" <?php if ($prod->pcs == '1') {?>
               checked <?php
             } ?>>
@@ -87,7 +88,44 @@
               </div>
               <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
             </div> -->
+            <?php
+              $mat = explode(',', $prod->material_name);
+              $stk = explode(',', $prod->stock);
+              $cnt= count($mat);
 
+              for ($i=0; $i < $cnt; $i++) {
+                ?>
+            <div class="form-group" id="table_without_tax">
+                          <table class="table table-bordered">
+                              <thead>
+                                  <tr>
+                                      <th>Material Name</th>
+                                      <th>Stock/Quantity</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr class="row_one">
+
+                                      <td class="">
+                                        <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo  $mat[$i]; ?>">
+                                        <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
+                                      </td>
+                                      <td>
+                                        <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo $stk[$i];?>">
+                                        <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
+                                      </td>
+                                      <td>
+                                          <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
+                                          &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
+                                      </td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                      <?php
+
+                                                           }
+                                                     ?>
           <div class="form-group">
             <div class="col-sm-5">
               <?php echo form_submit('edit_making','Edit & Save','class="btn btn-success"'); ?>
@@ -110,7 +148,17 @@
 
 </div><!--close main div-->
 <script type="text/javascript">
-
+// add new row
+$(document).on('click', '.add_more', function(){
+    $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+});
+//Remove table row
+$(document).on('click', '.remove', function(){
+  var $tr = $(this).closest('tr');
+  if ($tr.index() != '0') {
+    $tr.remove();
+  }
+});
 function changeRadio1() {
   var isChecked = $('input[name=pcs]').is(':checked');
 if (isChecked) {
