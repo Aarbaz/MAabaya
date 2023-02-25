@@ -13,10 +13,33 @@ class Pices_model extends CI_Model {
     }
     public function get_products_in_pcs_list()
     {
-        /* return $this->db->select('sr_no, master_id,total, round_off_total, material_name,design_number,pices','bakery_address')
-        ->from('customers')->join('product_pices', 'customers.id = product_pices.master_id')->get(); */
-        return $this->db->select('sr_no,  master_id,total, round_off_total,bakery_name, material_name,design_number,pices,bakery_address')->order_by('sr_no','desc')
-        ->from('product_pices')->join('customers', 'customers.id = product_pices.master_id')->get();
+        $ids = "9,11";
+        $id_array = explode(",", $ids);
+
+        $this->db->select('id, product_name');
+        $this->db->from('products');
+        $this->db->where_in('id', $id_array);
+        $query = $this->db->get();
+
+        // Build an array of the retrieved values
+        $values = array();
+        foreach ($query->result() as $row) {
+            $values[$row->id] = array(
+                'product_name' => $row->product_name,
+                // /'value' => $row->value
+            );
+        }
+        print_r($query->result());
+
+        // Access the values using the ID as the key
+        //echo $values[1]['name'];
+
+        $this->db->select('sr_no,  master_id,material_id,total, round_off_total,design_number,bakery_name, material_name,design_number,pices,bakery_address');
+        $this->db->order_by('sr_no','desc');
+        $this->db->from('product_pices');
+        $this->db->join('customers', 'customers.id = product_pices.master_id');
+       // $this->db->join('designs','product_pices.design_number = designs.id');
+       return $this->db->get();
        /*  return $this->db->select('sr_no, invoice_no, round_off_total, invoice_date, customer_id,customer_address, product_name, invoice_date')->order_by('sr_no','desc')
         ->from('insider_bill')->get(); */
     }

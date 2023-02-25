@@ -176,11 +176,19 @@
                                                 <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select product--</option>
                                                     <?php foreach ($productList->result() as $row){ 
-                                                    echo '<option label="" value="'.$row->product_name.'" '. set_select("items[]", $row->product_name).'>'.$row->product_name.'</option>';
+                                                    echo '<option label="" value="'.$row->id.'" '. set_select("items[]", $row->product_name).'>'.$row->product_name.'</option>';
                                                     } ?>
                                                 </select>
                                             </td>
-                                            <td class=""><input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""></td>
+                                            <td class=""><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
+                                            <select name="hsn[]" id="hsn" class="form-control">
+                                                    <option value="">--select design no--</option>
+                                                    <?php foreach ($designs->result() as $row){ 
+                                                        //print_r( $row);
+                                                    echo '<option label="" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                    } ?>
+                                                </select>
+                                        </td>
                                             <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                             <td>

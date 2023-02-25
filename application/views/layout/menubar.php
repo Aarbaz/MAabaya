@@ -71,11 +71,11 @@
         </li>
 
          <li>
-					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Pices');?>">Pcs</a>
+					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Pices');?>">Pices</a>
 				</li>
-      <!--  <li>
-					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Product');?>">Products</a>
-				</li> -->
+       <li>
+					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Design');?>">Designs</a>
+				</li>
 				<!-- <li>
 					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Challan');?>">Challan</a>
 				</li> -->

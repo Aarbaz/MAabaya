@@ -9,8 +9,8 @@ class Pices extends CI_Controller
 		$this->load->library('form_validation');
 		$this->load->model('Pices_model');
 		$this->load->model('Stock_model');
+		$this->load->model('Design_model');
 		$this->load->model('Product_model');
-		$this->load->library('form_validation');
 		$this->load->library('tcpdf');
         $this->load->model('Challan_model'); 
 		$this->load->library('upload');
@@ -43,6 +43,7 @@ class Pices extends CI_Controller
 			$data['purList'] = $this->Product_model->get_all_purchaser();
 			$data['custList'] = $this->Challan_model->get_all_customer();
         	$data['productList'] = $this->Challan_model->get_all_products();
+        	$data['designs'] = $this->Design_model->get_all_design();
         	$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
 	        $this->load->view('layout/header', $data);	        	       
 	        $this->load->view('layout/menubar');
@@ -80,8 +81,8 @@ class Pices extends CI_Controller
 			$material = implode(',', $this->input->post('items[]'));
 			$material = trim($material,',');
 
-			// $stk = implode(',', $this->input->post('stk[]'));
-			// $stk = trim($stk, ',');
+			/* $material_id = implode(',', $this->input->post('material_id[]'));
+			$material_id = trim($material_id, ','); */
 			$hsn = implode(',', $this->input->post('hsn[]'));
 			$hsn = trim($hsn, ',');
 			$qnty = implode(',', $this->input->post('qnty[]'));
@@ -115,8 +116,8 @@ class Pices extends CI_Controller
 
 			$data = array(
 				'master_id' => $bakers_id,
-				'material_name'	=> 	$material,			
-				//'stk'		=> $stk,
+				'material_id'	=> 	$material,			
+				//'material_id'		=> $material_id,
 				'design_number'		=> $hsn,
 				'pices'		=> $qnty,
 				'average'		=> $rate,
@@ -126,7 +127,13 @@ class Pices extends CI_Controller
 				'total_in_words' => $total_word,
 				//'invoice_date' => date('Y-m-d H:i:s')
 			);			
-
+			/* $data2 = array(
+				'product_id' => $product_id,
+				'stock_qty' => $postData['stock_q'],
+				'purchase_rate' => $postData['p_price'],
+				// 'p_design_number' => $postData['p_design_number'],
+			);
+			$Store = $this->Stock_model->add_record($data2); */
 			/* $data_pdf = array(
 				'customer' => $this->input->post('cust_name'),
 				'customer_address' => $this->input->post('cust_adds_txt'),
@@ -195,7 +202,7 @@ class Pices extends CI_Controller
 				$pdf->Output($save_path, 'F');			
 				//file_put_contents($save_path, $pdf); */	
 				$this->session->set_flashdata('success', 'Invoice created successfully....');
-				redirect('Invoice/');
+				redirect('Pices/');
 			}
 			else
 			{
