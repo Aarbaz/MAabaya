@@ -11,6 +11,7 @@ class Pices extends CI_Controller
 		$this->load->model('Stock_model');
 		$this->load->model('Design_model');
 		$this->load->model('Product_model');
+		$this->load->model('Material_model');
 		$this->load->library('tcpdf');
         $this->load->model('Challan_model'); 
 		$this->load->library('upload');
@@ -24,7 +25,6 @@ class Pices extends CI_Controller
 			$data['username'] = $this->session->userdata('logged_in');
 			$data['products'] = $this->Pices_model->get_products_in_pcs();
 			$data['data_list'] = $this->Pices_model->get_products_in_pcs_list();
-
 			$this->load->view('layout/header', $data);
 			$this->load->view('layout/menubar');
 			$this->load->view('product_in_pc.php', $data);
@@ -40,11 +40,10 @@ class Pices extends CI_Controller
         {		
         	$data['title'] = ucwords('Add new Material Page');
 			$data['username'] = $this->session->userdata('logged_in');
-			$data['purList'] = $this->Product_model->get_all_purchaser();
-			$data['custList'] = $this->Challan_model->get_all_customer();
-        	$data['productList'] = $this->Challan_model->get_all_products();
+			$data['custList'] = $this->Pices_model->get_all_master();
+        	$data['productList'] = $this->Pices_model->get_all_material();
         	$data['designs'] = $this->Design_model->get_all_design();
-        	$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
+        	//$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
 	        $this->load->view('layout/header', $data);	        	       
 	        $this->load->view('layout/menubar');
 			$this->load->view('pices_add', $data);
@@ -80,6 +79,8 @@ class Pices extends CI_Controller
 		{						
 			$material = implode(',', $this->input->post('items[]'));
 			$material = trim($material,',');
+			$selected_ids = implode(',',$this->input->post('selected_ids'));
+			$selected_ids = trim($selected_ids,',');
 
 			/* $material_id = implode(',', $this->input->post('material_id[]'));
 			$material_id = trim($material_id, ','); */
@@ -116,7 +117,7 @@ class Pices extends CI_Controller
 
 			$data = array(
 				'master_id' => $bakers_id,
-				'material_id'	=> 	$material,			
+				'mat_name'	=> 	$material,			
 				//'material_id'		=> $material_id,
 				'design_number'		=> $hsn,
 				'pices'		=> $qnty,
@@ -164,9 +165,51 @@ class Pices extends CI_Controller
 				'other_notes'  => $sup_other
 			); */				
 
-			
 			$insert = $this->Pices_model->create_record($data);
+			// Get the product and quantity values from your input
+			$selected_ids_values = explode(",", $selected_ids);
+			$product_values = $selected_ids_values; // Dynamic product values
+			$qnty_values = explode(",", $qnty);
+			$quantity_values = ($qnty_values); // Dynamic quantity values
+			//print_r($values);
 			
+			// Prepare the data to be inserted
+			$data2 = array();
+			for ($i = 0; $i < count($product_values); $i++) {
+				$data2[] = array(
+					'p_design_number' => $product_values[$i],
+					'stock_qty' => $quantity_values[$i]
+				);
+			}
+			// Update Stock
+			// $stock = $this->Stock_model->add_record($data2);
+			$this->db->trans_start(); // Start a transaction to ensure data consistency
+			foreach ($data2 as $row) {
+				$product_id = $row['p_design_number'];
+				$quantity = $row['stock_qty'];
+
+				$this->db->where('p_design_number', $product_id);
+				$query = $this->db->get('stock');
+				$row = $query->row();
+				if ($query->num_rows()) {
+					// If the product exists, update the quantity value in the database
+					$data2 = array(
+						'stock_qty' => $row->stock_qty + $quantity
+					);
+					print_r($data2);
+					$this->db->where('p_design_number', $product_id);
+					$this->db->update('stock', $data2);
+				} else {
+					// If the product does not exist, insert a new row into the database
+					$this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
+				}
+			}
+			$this->db->trans_complete(); // End the transaction
+
+			if ($this->db->trans_status() === false) {
+				// Handle transaction failure
+				$this->session->set_flashdata('success', 'Stock Updated successfully....');
+			}
 			if($insert == true)
 			{	
 				/* $QuantitySold = $qnty;
@@ -201,15 +244,31 @@ class Pices extends CI_Controller
 				$pdf->Output($save_path, 'I');			
 				$pdf->Output($save_path, 'F');			
 				//file_put_contents($save_path, $pdf); */	
-				$this->session->set_flashdata('success', 'Invoice created successfully....');
+				$this->session->set_flashdata('success', 'Data Added successfully....');
 				redirect('Pices/');
 			}
 			else
 			{
 				$this->session->set_flashdata('fail', "Sorry! there was some error.");
-				redirect(base_url('/index.php/Invoice/create'));
+				redirect(base_url('/index.php/Pices/add_new'));
 			}					
 		}		
+	}
+
+	public function deletePices()
+	{
+		if ($this->input->post('row_id')) {
+			$id = $this->input->post('row_id');
+			$upd = $this->Pices_model->delete_by_id($id);
+			if ($upd > 0) {
+				$resp['status'] = 'passed';
+				$resp['result'] = 'Product deleted successfully.';
+			} else {
+				$resp['status'] = 'failed';
+				$resp['result'] = 'Some problem occurred, please try again';
+			}
+			echo json_encode($resp);
+		}
 	}
 }
 ?>

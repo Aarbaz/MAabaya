@@ -7,13 +7,40 @@ class Pices_model extends CI_Model {
     {
         return $this->db->get("product_pices");
     }
-    public function get_all_customer()
+    public function get_all_material()
     {
-        return $this->db->select('id, bakery_name, bakery_gst, bakery_area, bakery_city')->get('customers');
+        return $this->db->get("material");
+    }
+    public function get_all_master()
+    {
+        return $this->db->select('id, master_name')->get('material');
     }
     public function get_products_in_pcs_list()
     {
-        $ids = "9,11";
+        
+        $this->db->select('design_number');
+    	$this->db->from('product_pices');
+        $query = $this->db->get();
+        $data= $query->result();
+        $data = json_encode($data);
+
+        // Decode the JSON string into an associative array
+        $jsonArray = json_decode($data, true);
+
+        $this->db->select('*');
+        $this->db->order_by('sr_no','desc');
+        $this->db->from('product_pices');
+        $this->db->join('material', 'material.id = product_pices.master_id');
+        return $this->db->get();
+    }
+    public function create_record($data)
+    {
+        return $this->db->insert('product_pices', $data);
+    }
+
+    /* public function getProduct()
+    {
+        $ids = "9,11,12";
         $id_array = explode(",", $ids);
 
         $this->db->select('id, product_name');
@@ -29,22 +56,12 @@ class Pices_model extends CI_Model {
                 // /'value' => $row->value
             );
         }
-        print_r($query->result());
-
-        // Access the values using the ID as the key
-        //echo $values[1]['name'];
-
-        $this->db->select('sr_no,  master_id,material_id,total, round_off_total,design_number,bakery_name, material_name,design_number,pices,bakery_address');
-        $this->db->order_by('sr_no','desc');
-        $this->db->from('product_pices');
-        $this->db->join('customers', 'customers.id = product_pices.master_id');
-       // $this->db->join('designs','product_pices.design_number = designs.id');
-       return $this->db->get();
-       /*  return $this->db->select('sr_no, invoice_no, round_off_total, invoice_date, customer_id,customer_address, product_name, invoice_date')->order_by('sr_no','desc')
-        ->from('insider_bill')->get(); */
-    }
-    public function create_record($data)
+        print_r ($query->result());
+    } */
+    public function delete_by_id($id)
     {
-        return $this->db->insert('product_pices', $data);
+        $this->db->where('sr_no', $id);
+        $this->db->delete('product_pices');
+        return $this->db->affected_rows();
     }
 }
