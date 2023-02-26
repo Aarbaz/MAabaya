@@ -38,8 +38,8 @@
 						  <tr>
                 <td><?php echo $i;?></td>
                
-                <td><?php echo $row->bakery_name; ?></td>
-  							<td><?php echo $row->material_name; ?></td>
+                <td><?php echo $row->master_name; ?></td>
+  							<td><?php echo $row->mat_name; ?></td>
   							<td><?php echo $row->design_number; ?></td>
   							<td><?php echo $row->pices; ?></td>
                 <td>
@@ -61,10 +61,10 @@
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="delete_form" method="post" action="<?php echo site_url('/Product/deleteProduct');?>">
+      <form id="delete_form" method="post" action="<?php echo site_url('/Pices/deletePices');?>">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h4 class="modal-title custom_align" id="Heading">Delete this Product</h4>
+        <h4 class="modal-title custom_align" id="Heading">Delete Entry</h4>
       </div>
 
       <div class="modal-body">
@@ -122,7 +122,7 @@ function delete_product(row_id)
                 setTimeout(function(){
                   $('#delete').modal('hide');
                   location.reload();
-                }, 4000);
+                }, 2000);
               }
               else
               {
