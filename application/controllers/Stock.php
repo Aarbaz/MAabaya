@@ -14,6 +14,7 @@ class Stock extends CI_Controller {
         parent::__construct();     
         $this->load->library('form_validation');
         $this->load->model('Product_model');         
+        $this->load->model('Design_model');         
         $this->load->model('Stock_model');         
     }
 
@@ -23,7 +24,8 @@ class Stock extends CI_Controller {
         {		
         	$data['title'] = ucfirst('Product List Page');
         	$data['username'] = $this->session->userdata('logged_in');
-        	$data['products'] = $this->Product_model->get_all_products();
+        	//$data['products'] = $this->Product_model->get_all_products();
+        	$data['products'] = $this->Design_model->get_all_design();
         	$data['stocks'] = $this->Stock_model->get_stock();
 			/* var_dump($data['stocks']->stock_qty);
 			var_dump($data); */

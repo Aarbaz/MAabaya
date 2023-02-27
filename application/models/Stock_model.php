@@ -33,6 +33,23 @@ public function delete_by_id($id)
 
 	public function get_stock()
 	{
+		/* $query = 'SELECT * FROM `stock` join `designs` where stock.p_design_number = designs.id';
+		$sql = $this->db->query($query);
+		return $sql->result_array(); */
+		$this->db->select('*');
+        //$this->db->order_by('id','desc');
+        $this->db->from('stock');
+        $this->db->join('designs', 'designs.id = stock.p_design_number');
+        return $this->db->get();
+		/* foreach ($sql->result() as $row)
+{
+        // echo $row->stock_qty;
+        // echo $row->product_name;	
+		echo $data['stocks'] = $row->stock_qty;
+} */
+	}
+	public function get_stock1()
+	{
 		$query = 'SELECT stock.stock_qty, products.product_name FROM `products`,`stock` where stock.product_id = products.id';
 		$sql = $this->db->query($query);
 		return $sql->result_array();

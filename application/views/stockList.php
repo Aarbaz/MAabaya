@@ -10,7 +10,7 @@
 				
         <div class="panel-body">
           <p>
-            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Stock/add_new');?>">Add New Product </a>
+            <a class="btn btn-primary btn-sm hide" href="<?php echo base_url('/index.php/Stock/add_new');?>">Add New Product </a>
           </p><br />
           <?php
             if( $this->session->flashdata('success') )
@@ -23,7 +23,7 @@
               <th>Sr No</th>
   							<!-- <th>Product Name</th> -->
   							<th>Design Number</th>
-                <th>Quantity</th>
+                <th>Stock</th>
                 <!-- <th>Expiry Date</th> -->
                 <!-- <th>Total</th> -->  							
                <!--  <th>Action</th> -->
@@ -33,15 +33,15 @@
 					  <tbody>
             <?php
             
-            if(isset($products)){
+            if(isset($stocks)){
               $i = 1;
               
-              foreach ($products->result() as $row ){?>
+              foreach ($stocks->result() as $row ){?>
 						  <tr>
                 <td><?php echo $i; ?></td>
   							<!-- <td><?php echo $row->product_name; ?></td> -->
-  							<td><?php echo $row->design_number; ?></td>
-                <td><?php echo $row->stock; ?></td> 
+  							<td><?php echo $row->design_num; ?></td>
+                <td><?php echo $row->stock_qty; ?></td> 
                 <!-- <td><?php echo $row->prod_exp; ?></td>    -->          
   						<!-- 	<td><?php echo $row->price; ?></td>  		 -->					             
                 <!-- <td>
