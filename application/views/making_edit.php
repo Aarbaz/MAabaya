@@ -35,7 +35,7 @@
         <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
       </div>
       <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
-      
+
             <!-- <div class="form-group">
               <div class="col-sm-5">
           <label>Material Name</label>
@@ -88,13 +88,7 @@
               </div>
               <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
             </div> -->
-            <?php
-              $mat = explode(',', $prod->material_name);
-              $stk = explode(',', $prod->stock);
-              $cnt= count($mat);
 
-              for ($i=0; $i < $cnt; $i++) {
-                ?>
             <div class="form-group" id="table_without_tax">
                           <table class="table table-bordered">
                               <thead>
@@ -103,6 +97,13 @@
                                       <th>Stock/Quantity</th>
                                   </tr>
                               </thead>
+                              <?php
+                                $mat = explode(',', $prod->material_name);
+                                $stk = explode(',', $prod->stock);
+                                $cnt= count($mat);
+
+                                for ($i=0; $i < $cnt; $i++) {
+                                  ?>
                               <tbody>
                                   <tr class="row_one">
 
@@ -120,12 +121,15 @@
                                       </td>
                                   </tr>
                               </tbody>
+                              <?php
+
+                                                                   }
+                                                             ?>
                           </table>
                       </div>
-                      <?php
 
-                                                           }
-                                                     ?>
+
+
           <div class="form-group">
             <div class="col-sm-5">
               <?php echo form_submit('edit_making','Edit & Save','class="btn btn-success"'); ?>
