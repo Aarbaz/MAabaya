@@ -9,6 +9,11 @@ class Invoice extends CI_Controller {
         $this->load->library('form_validation');
 		$this->load->library('tcpdf');
         $this->load->model('Challan_model'); 
+        $this->load->model('Pices_model');
+		$this->load->model('Stock_model');
+		$this->load->model('Design_model');
+		$this->load->model('Product_model');
+		$this->load->model('Material_model');
 		$this->load->library('upload');
 		//$this->load->helper('pdf_helper');
 		$this->load->helper('url'); 
@@ -42,6 +47,7 @@ class Invoice extends CI_Controller {
 			$data['custList'] = $this->Challan_model->get_all_customer();
         	$data['productList'] = $this->Challan_model->get_all_products();
         	$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
+			$data['designs'] = $this->Design_model->get_all_design();
 	        $this->load->view('layout/header', $data);	        	       
 	        $this->load->view('layout/menubar');
 			$this->load->view('invoice_inside', $data);
@@ -103,7 +109,8 @@ class Invoice extends CI_Controller {
 		{						
 			$material = implode(',', $this->input->post('items[]'));
 			$material = trim($material,',');
-
+			$selected_ids = implode(',',$this->input->post('selected_ids'));
+			$selected_ids = trim($selected_ids,',');
 			// $stk = implode(',', $this->input->post('stk[]'));
 			// $stk = trim($stk, ',');
 			$hsn = implode(',', $this->input->post('hsn[]'));
@@ -193,20 +200,53 @@ class Invoice extends CI_Controller {
 				'other_notes'  => $sup_other
 			);				
 
-			
+			$selected_ids_values = explode(",", $selected_ids);
+			$product_values = $selected_ids_values; // Dynamic product values
+			$qnty_values = explode(",", $qnty);
+			$quantity_values = ($qnty_values); 
 			$insert = $this->Challan_model->create_invoice_insider($data);
 			
+					
 			if($insert == true)
 			{	
-				$QuantitySold = $qnty;
-				$ProductID = $material; 
-				$stock = 'stock';
-				$latestStock = $stock - $QuantitySold;
-				$data3 =array(
-					
-				);
+				$data2 = array();
+				for ($i = 0; $i < count($product_values); $i++) {
+					$data2[] = array(
+						'p_design_number' => $product_values[$i],
+						'stock_qty' => $quantity_values[$i]
+					);
+				}
+		
+				// Update Stock
+				// $stock = $this->Stock_model->add_record($data2);
+				$this->db->trans_start(); // Start a transaction to ensure data consistency
+				foreach ($data2 as $row) {
+					$product_id = $row['p_design_number'];
+					$quantity = $row['stock_qty'];
 
+					$this->db->where('p_design_number', $product_id);
+					$query = $this->db->get('stock');
+					$row = $query->row();
+					if ($query->num_rows()) {
+						// If the product exists, update the quantity value in the database
+						$data2 = array(
+							'stock_qty' => $row->stock_qty - $quantity
+						);
+						$this->db->where('p_design_number', $product_id);
+						$this->db->update('stock', $data2);
+					} else {
+						// If the product does not exist, insert a new row into the database
+						/* $this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity)); */
+						
+						$this->session->set_flashdata('error', $product_id.' is not in stock....');
+					}
+				}
+				$this->db->trans_complete(); // End the transaction
 
+				if ($this->db->trans_status() === false) {
+					// Handle transaction failure
+					$this->session->set_flashdata('success', 'Stock Updated successfully....');
+				}
 				$this->load->library('tcpdf/tcpdf.php');
 				
 				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);				

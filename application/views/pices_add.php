@@ -22,7 +22,7 @@
 	  									<select name="customerName" id="customerName" class="form-control">
 	  										<option value="" selected="selected">--select customer--</option>
                                             <?php foreach ($custList->result() as $row){
-                                                echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->bakery_name.'</option>';
+                                                echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->master_name.'</option>';
                                             } ?>
                                             <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
                                         <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name"> 
@@ -163,8 +163,8 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>                                            
-                                            <th>Material Name</th>
                                             <th>Design No</th>
+                                            <th>Material Name</th>
                                             <th>Pices</th>
                                             <th>Average</th>                                            
                                             <th>Total Material Used</th>
@@ -173,19 +173,23 @@
                                     <tbody>
                                         <tr class="row_one">
                                             <td>
-                                                <select name="items[]" id="items" class="form-control">
-                                                    <option value="">--select product--</option>
-                                                    <?php foreach ($productList->result() as $row){ 
-                                                    echo '<option label="" value="'.$row->id.'" '. set_select("items[]", $row->product_name).'>'.$row->product_name.'</option>';
-                                                    } ?>
-                                                </select>
-                                            </td>
-                                            <td class=""><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
-                                            <select name="hsn[]" id="hsn" class="form-control">
+                                                <select name="hsn[]" id="hsn"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
                                                     <?php foreach ($designs->result() as $row){ 
+                                                        $selected = set_select("hsn[]", $row->design_num);
+                                                        $data_id = $row->id;
+                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                    
+                                                    } ?>
+                                                </select>
+                                                <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
+                                            </td>
+                                            <td class=""><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
+                                            <select name="items[]" id="items" class="form-control">
+                                                    <option value="">--select Product--</option>
+                                                    <?php foreach ($productList->result() as $row){ 
                                                         //print_r( $row);
-                                                    echo '<option label="" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                    echo '<option label="" value="'.$row->material_name.'" '. set_select("items[]", $row->material_name).'>'.$row->material_name.'</option>';
                                                     } ?>
                                                 </select>
                                         </td>
@@ -290,7 +294,7 @@
                             </div>                              
                             <div class="form-group">
                               <div class="col-sm-6 col-sm-offset-3">
-                                <button type="submit" name="add_challan" class="btn btn-primary">SAVE & PRINT</button>
+                                <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>                    
                               </div>
@@ -602,7 +606,20 @@ if( round_amount!= null)
     $("#total_word").val(total_words);   
 }
 
-});
+    });
+/* --- */
+$('.submit-btn').click(function() {
+      var selected_ids = [];
+      $('tr.row_one').each(function() {
+            //var selectedValue = $(this).find('select').val();
+            var otherAttribute = $(this).find('select option:selected').attr('data-id');
+            console.log(' Other attribute value: ' + otherAttribute);
+            selected_ids.push(otherAttribute);
+            console.log(selected_ids);
+        });
+        $('#selected_ids').val(selected_ids.join(','));
+
+    });
 })
 
 </script>

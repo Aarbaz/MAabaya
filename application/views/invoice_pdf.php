@@ -154,23 +154,18 @@
     <td> <?php echo 'Rs. '. $round_off_total; ?></td>
   </tr>                     
 </table>         
-
-<div>&nbsp;</div>
-<div>             
+<div class="row" style="display:flex;">
+<div class="col-sm-6">             
   <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;Rupees <?php echo $total_in_words; ?> Only
 </div>
-<div>&nbsp;<br /></div>
-<table width="100%" border="0">
-  <tr>
-    <td width="50%">
-      <b>Note:</b> This receipt should be signed by the person having the authority. No complaints will be entertained if the same are received after 24 hours of the delivery.</td>
-    <td width="50%">
-      <p style="text-align: right;">FOR <b>M.A Abaya Manufacturer </b></p>
-      <p>&nbsp;</p>
-      <p style="text-align: right;"><br />AUTHORISED SIGNATURE</p>
-    </td>
-  </tr>
-</table>
+<!-- <div class="col-sm-6"> 
+  <p style="margin:0px;">From <b>M.A Abaya Manufacturer </b></p>
+      <p style=" margin:0px;">AUTHORISED SIGNATURE</p>
+</div> -->
+</div>
+<div>
+      
+    </div>
 
 </body>
 </html>

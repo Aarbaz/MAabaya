@@ -179,7 +179,18 @@
                                                     } ?>
                                                 </select>
                                             </td>
-                                            <td><input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""></td>
+                                            <td>
+                                                <select name="hsn[]" id="hsn1"  class="form-control my-select">
+                                                    <option value="">--select design no--</option>
+                                                    <?php foreach ($designs->result() as $row){ 
+                                                        $selected = set_select("hsn[]", $row->design_num);
+                                                        $data_id = $row->id;
+                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                    
+                                                    } ?>
+                                                </select>
+                                                <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
+                                            </td>
                                             <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>
                                             <td><input type="text" name="amount_with_tax[]" class="amount_with_tax only_num form-control" size="3" maxlength="7"></td>                      
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
@@ -197,8 +208,8 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>                                            
-                                            <th>PRODUCT</th>
                                             <th>Design No</th>
+                                            <th>PRODUCT</th>
                                             <th>QNTY </th>                                            
                                             <th>RATE</th>
                                             <th>AMOUNT</th>
@@ -206,6 +217,18 @@
                                     </thead>
                                     <tbody>
                                         <tr class="row_one">
+                                        <td class="">
+                                            <select name="hsn[]" id="hsn"  class="form-control my-select">
+                                                    <option value="">--select design no--</option>
+                                                    <?php foreach ($designs->result() as $row){ 
+                                                        $selected = set_select("hsn[]", $row->design_num);
+                                                        $data_id = $row->id;
+                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                    
+                                                    } ?>
+                                                </select>
+                                                <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
+                                            </td>
                                             <td>
                                                 <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select product--</option>
@@ -214,7 +237,7 @@
                                                     } ?>
                                                 </select>
                                             </td>
-                                            <td class=""><input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""></td>
+                                            
                                             <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                             <td>
@@ -316,7 +339,7 @@
                             </div>                              
                             <div class="form-group">
                               <div class="col-sm-6 col-sm-offset-3">
-                                <button type="submit" name="add_challan" class="btn btn-primary">SAVE & PRINT</button>
+                                <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>                    
                               </div>
@@ -642,5 +665,17 @@ if( round_amount!= null)
                 $("#txtOther").attr("disabled", "disabled");
             }
         });
+    });
+    $('.submit-btn').click(function() {
+      var selected_ids = [];
+      $('tr.row_one').each(function() {
+            //var selectedValue = $(this).find('select').val();
+            var otherAttribute = $(this).find('select option:selected').attr('data-id');
+            console.log(' Other attribute value: ' + otherAttribute);
+            selected_ids.push(otherAttribute);
+            console.log(selected_ids);
+        });
+        $('#selected_ids').val(selected_ids.join(','));
+
     });
 </script>
