@@ -29,19 +29,7 @@
               <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="gst" name="gst" placeholder="GST No" value="<?php echo set_value('gst'); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('gst', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
 
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <textarea class="form-control" id="bakery_adds" name="bakery_adds" placeholder="Bakery Adds"><?php echo set_value('bakery_adds'); ?></textarea>
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('bakery_adds', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
             <div class="form-group">
               <div class="col-sm-5">
                 <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="<?php echo set_value('phone'); ?>">
@@ -55,28 +43,7 @@
               <div class="col-sm-6"> <?php echo form_error('area', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="city" name="city" placeholder="city" value="<?php echo set_value('city'); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('city', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
-
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="email" name="email" placeholder="Email ID" value="<?php echo set_value('email'); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('email', '<p class="text-danger">', '</p>'); ?></div>
-            </div>      -->
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="last_amount" name="last_amount" placeholder="Last Amount" value="<?php echo set_value('last_amount'); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('last_amount', '<p class="text-danger">', '</p>'); ?></div>
-            </div>                -->
+          
 
           <div class="form-group">
             <div class="col-sm-5">

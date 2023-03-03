@@ -40,7 +40,16 @@
                 <td><?php echo $i; ?></td>
                 <td><?php echo $row->owner_name; ?></td>
   							<td><?php echo $row->product_name; ?></td>
-                <td><?php echo $row->stock; ?> Meters</td>
+                <?php
+                $stk = explode(',', $row->stock);
+                $prd = explode(',', $row->price);
+                $cnt= count($stk);
+
+                for ($i=0; $i < $cnt; $i++) {
+                 ?>
+                 
+                <td><?php echo $stk[$i].'-'.$prd[$i]; ?> Meters</td>
+              <?php } ?>
   							<td><?php echo $row->price; ?> Rs</td>
                 <!-- <td><?php echo $row->prod_exp; ?></td> -->
   							<td><?php echo $row->total_amount; ?> Rs</td>

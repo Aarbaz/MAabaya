@@ -129,7 +129,7 @@ class Making extends CI_Controller
 								{
 									$this->load->library('tcpdf/tcpdf.php');
 
-									$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);	
+									$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 									$pdf->setPrintHeader(false);
 									$pdf->setPrintFooter(false);
 									$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
@@ -140,7 +140,7 @@ class Making extends CI_Controller
 									$pdf->writeHTML($pdf_data, true, false, true, false, "");
 
 									// $filename = $this->input->post("invoice_no") . ".pdf";
-									$filename = "asad" . ".pdf";
+									$filename = "asads" . ".pdf";
 									$dir = APPPATH . "/invoice/" . $data_pdf["master_name"] . "/";
 									if (!is_dir($dir)) {
 											mkdir($dir, 0777, true);
@@ -249,26 +249,18 @@ class Making extends CI_Controller
                 $this->load->view("layout/menubar");
                 $this->load->view("making_edit");
                 $this->load->view("layout/footer");
-                echo "strs";
+
             } else {
                 // print_r($postData['master_name']);
                 // die();
-                $material_name = implode(
-                    ",",
-                    $this->input->post("material_name[]")
-                );
+                $material_name = implode(",",$this->input->post("material_name[]"));
                 $material_name = trim($material_name, ",");
                 $stock_q = implode(",", $this->input->post("stock_q[]"));
                 $stock_q = trim($stock_q, ",");
                 $data = [
                     "master_name" => strtoupper($postData["master_name"]),
                     "material_name" => $material_name,
-                    // 'design_number' => strtoupper($postData['p_design_number']),
-                    // 'price' => $postData['p_price'],
                     "stock" => $stock_q,
-                    // 'prod_exp' => $postData['product_exp'],
-                    // 'total_amount' => $postData['price_total'],
-                    // 'pcs' => $postData['pcs'],
                 ];
                 $prod_id = $postData["prod_id"];
                 // print_r($data);

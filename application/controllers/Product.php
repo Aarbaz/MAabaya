@@ -52,17 +52,13 @@ class Product extends CI_Controller
 	//form to add new product
 	public function add_new()
 	{
+
 		// $this->form_validation->set_rules('prod_name', 'Product Name', 'trim|required|callback_regexValidate|is_unique[products.product_name]',  array('is_unique' => 'This %s already exists.'));
-		$this->form_validation->set_rules('material_name', 'Material Name', 'trim|required');
+		// $this->form_validation->set_rules('material_name', 'Material Name', 'trim|required');
 		$this->form_validation->set_rules('owner_name', 'Owner Name', 'trim|required');
-		$this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
-		$this->form_validation->set_rules('stock_q', 'Product Amount', 'trim|required|numeric');
-		// $this->form_validation->set_rules('p_design_number', 'Design Number', 'trim|required');
-		// $this->form_validation->set_rules('purchaserID', 'Purchaser ID', 'trim|required');
-		// $this->form_validation->set_rules('pcs', 'Pcs', 'trim');
-		// $this->form_validation->set_rules('meter', 'Meter', 'trim');
-		// $this->form_validation->set_rules('product_exp', 'Expiry Date', 'trim|required');
-		$this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
+		// $this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
+		// $this->form_validation->set_rules('stock_q', 'Product Amount', 'trim|required|numeric');
+		// $this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
 
 		if ($this->input->post('add_product') != NULL) {
 			if ($this->form_validation->run() == false) {
@@ -73,30 +69,43 @@ class Product extends CI_Controller
 				$this->load->view('layout/menubar');
 				$this->load->view('product_add', $data);
 				$this->load->view('layout/footer');
+				// echo "strs8";
+				// print_r($this->input->post());
+
 			} else {
+				// echo "strs2";
 				// POST data
 				$postData = $this->input->post();
-				$data = array(
-					'product_name' => strtoupper($postData['material_name']),
-					'owner_name' => strtoupper($postData['owner_name']),
-					// 'purchaser_id' => $postData['purchaserID'],
-					'price' => $postData['p_price'],
-					// 'design_number' => $postData['p_design_number'],
-					'stock' => $postData['stock_q'],
-					// 'prod_exp' => $postData['product_exp'],
-					'total_amount' => $postData['price_total'],
-					// 'pcs' => $postData['pcs'],
-				);
+				$material_name = implode(',', $this->input->post('material_name[]'));
+				$material_name = trim($material_name, ',');
 
+				$qnty = implode(',', $this->input->post('stock_q[]'));
+				$qnty = trim($qnty, ',');
+
+				$rate = implode(',', $this->input->post('p_price[]'));
+				$rate = trim($rate, ',');
+
+				$amount = implode(',', $this->input->post('price_total[]'));
+				$amount = trim($amount,',');
+
+				$data = array(
+					'owner_name' => strtoupper($postData['owner_name']),
+					'product_name' => $material_name,
+					'price' => $rate,
+					'stock' => $qnty,
+					'total_amount' => $amount,
+				);
+				// print_r($data);
+				// die();
 				$insert = $this->Product_model->add_product($data);
 				$product_id = $this->db->insert_id();
-				$data2 = array(
-					'product_id' => $product_id,
-					'stock_qty' => $postData['stock_q'],
-					'purchase_rate' => $postData['p_price'],
-					// 'p_design_number' => $postData['p_design_number'],
-				);
-				$Store = $this->Stock_model->add_record($data2);
+				// $data2 = array(
+				// 	'product_id' => $product_id,
+				// 	'stock_qty' => $postData['stock_q'],
+				// 	'purchase_rate' => $postData['p_price'],
+				// 	// 'p_design_number' => $postData['p_design_number'],
+				// );
+				// $Store = $this->Stock_model->add_record($data2);
 
 				if ($insert > 0) {
 					$this->session->set_flashdata('success', 'Material added successfully.');
@@ -142,17 +151,17 @@ class Product extends CI_Controller
 		} elseif ($this->input->post('edit_product') != NULL) {
 			// POST data
 			$postData = $this->input->post();
-			$this->form_validation->set_rules('material_name', 'Material Name', 'trim|required|callback_regexValidate|edit_unique[products.product_name.' . $prod_id . ']');
+			// $this->form_validation->set_rules('material_name', 'Material Name', 'trim|required');
 			// $this->form_validation->set_rules('p_design_number', 'Design Number', 'trim|required|callback_regexValidate|edit_unique[products.design_number.' . $prod_id . ']');
 			// $this->form_validation->set_rules('p_design_number', 'Design Number', 'trim|required');
 			$this->form_validation->set_rules('owner_name', 'Owner Name', 'trim|required');
-			$this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
-			$this->form_validation->set_rules('stock_q', 'Product in Stock', 'trim|required|numeric');
+			// $this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
+			// $this->form_validation->set_rules('stock_q', 'Product in Stock', 'trim|required');
 			// $this->form_validation->set_rules('pcs', 'Pcs', 'trim');
 			// $this->form_validation->set_rules('meter', 'Meter', 'trim');
 			// $this->form_validation->set_rules('product_exp', 'Expiry Da
 			// $this->form_validation->set_rules('product_exp', 'Expiry Date', 'trim|required');
-			$this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
+			// $this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
 
 			if ($this->form_validation->run() == false) {
 				$data['title'] = ucwords('Edit Product Details');
@@ -166,27 +175,47 @@ class Product extends CI_Controller
 				$this->load->view('layout/footer');
 			} else {
 
-				$data = array(
+				$material_name = implode(",", $this->input->post('material_name[]'));
+				$material_name = trim($material_name, ",");
+
+				$qnty = implode(",", $this->input->post('stock_q[]'));
+				$qnty = trim($qnty, ",");
+
+				$rate = implode(",", $this->input->post('p_price[]'));
+				$rate = trim($rate,",");
+
+				$amount = implode(",", $this->input->post('price_total[]'));
+				$amount = trim($amount,",");
+
+				// print_r($amount);
+
+				$data = [
 					'owner_name' => strtoupper($postData['owner_name']),
-					'product_name' => strtoupper($postData['material_name']),
-					// 'design_number' => strtoupper($postData['p_design_number']),
-					'price' => $postData['p_price'],
-					'stock' => strtoupper($postData['stock_q']),
-					// 'prod_exp' => $postData['product_exp'],
-					'total_amount' => $postData['price_total'],
-					// 'pcs' => $postData['pcs'],
-				);
-				$prod_id = $postData['prod_id'];
+					'product_name' => $material_name,
+					'total_amount' => $amount,
+					'stock' => $qnty,
+					'price' => $rate,
+				];
+				// print_r($data);
+				// die();
+				// $data = array(
+				// 	'owner_name' => strtoupper($postData['owner_name']),
+				// 	'product_name' => strtoupper($postData['material_name']),
+				// 	'price' => $postData['p_price'],
+				// 	'stock' => strtoupper($postData['stock_q']),
+				// 	'total_amount' => $postData['price_total'],
+				// );
+				$prod_id = $postData["prod_id"];
 
 				$update = $this->Product_model->update_product($data, $prod_id);
 				// $product_id = $this->db->insert_id();
-				$data2 = array(
-					'product_id' => $prod_id,
-					'stock_qty' => $postData['stock_q'],
-					'purchase_rate' => $postData['p_price'],
-					// 'p_design_number' => $postData['p_design_number'],
-				);
-				$Store = $this->Stock_model->update_record($data2,$prod_id,);
+				// $data2 = array(
+				// 	'product_id' => $prod_id,
+				// 	'stock_qty' => $postData['stock_q'],
+				// 	'purchase_rate' => $postData['p_price'],
+				// 	// 'p_design_number' => $postData['p_design_number'],
+				// );
+				// $Store = $this->Stock_model->update_record($data2,$prod_id,);
 
 				if ($update != -1) {
 					$this->session->set_flashdata('success', 'Material details updated successfully.');

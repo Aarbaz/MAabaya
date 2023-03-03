@@ -17,79 +17,72 @@
             $url = 'Product/edit/'.$prod->id;
             echo form_open($url, 'class="form-horizontal" id="add_product_form"');
           ?>
+          <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
+          
           <div class="form-group">
             <div class="col-sm-5">
-          <!-- <select name="purchaserID" id="purchaserID" class="form-control">
-            <option value="" selected="selected">--select purchaser--</option>
-            <?php foreach ($purList->result() as $row){
-              // 'if($row->id  == $prod->purchase_id ){echo.'"selected"'.}.'
-              // print_r($row->id  == $prod->purchaser_id);
-                echo '<option    value="'.$row->id.'" '.set_select('purchaserID',$row->id).'>'.$row->bakery_name.'</option>';
-            } ?>
-          </select> -->
+
           <label>Owner Name</label>
           <input type="text" class="form-control" name="owner_name" placeholder="Owner Name" value="<?php echo set_value('owner_name', $prod->owner_name); ?>">
 
         </div>
         <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
       </div>
-            <div class="form-group">
-              <div class="col-sm-5">
-          <label>Material Name</label>
+      <div class="form-group" id="table_without_tax">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Material Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <?php
+                          $mat = explode(',', $prod->product_name);
+                          $stk = explode(',', $prod->stock);
+                          $prd = explode(',', $prod->price);
+                          $amt = explode(',', $prod->total_amount);
+                          $cnt= count($mat);
 
-                <input type="text" class="form-control" name="material_name" placeholder="material Name" value="<?php echo set_value('material_name', $prod->product_name); ?>">
-                <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('prod_name', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
+                          for ($i=0; $i < $cnt; $i++) {
+                            ?>
+                        <tbody>
+                            <tr class="row_one">
 
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="p_design_number" name="p_design_number" placeholder="Price" value="<?php echo set_value('design_number', $prod->design_number); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('p_design_number', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-            <div class="form-group">
-              <div class="col-sm-5">
-          <label>Stock/Quantity</label>
+                                <td class="">
+                                  <input type="text" class="form-control" name="material_name[]" placeholder="material Name" value="<?php echo  $mat[$i]; ?>">
 
-                <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock" value="<?php echo set_value('stock', $prod->stock);?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
-            <div class="form-group">
-              <div class="col-sm-5">
-          <label>Price</label>
+                                  <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo  $mat[$i]; ?>"> -->
+                                  <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control qnty" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo $stk[$i];?>">
+                                  <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control rate" id="p_price" name="p_price[]" placeholder="Price" value="<?php echo $prd[$i];?>">
 
-                <input type="text" class="form-control" id="p_price" name="p_price" placeholder="Price" value="<?php echo set_value('price', $prod->price); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('p_price', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control amount" id="price_total" name="price_total[]" placeholder="Total Amount" value="<?php echo $amt[$i];?>" readonly="readonly">
+
+                                </td>
+                                <td>
+                                    <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
+                                    &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <?php
+
+                                                             }
+                                                       ?>
+                    </table>
+                </div>
 
 
-            <!-- <input type="radio" value="1" onclick="changeRadio1()" name="pcs" <?php if ($prod->pcs == '1') {?>
-              checked <?php
-            } ?>>
-            Pcs
-            <input type="radio" value="0" onclick=" changeRadio2()" name="pcs" <?php if ($prod->pcs == '0') {?>
-              checked <?php
-            } ?>>
-            Meter -->
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="product_exp" name="product_exp" placeholder="Expiry Date" value="<?php echo set_value('prod_exp', $prod->prod_exp); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('product_exp', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
 
-            <div class="form-group">
-              <div class="col-sm-5">
-          <label>Total Amount</label>
-
-                <input type="text" class="form-control" id="price_total" name="price_total" placeholder="Total Amount" value="<?php echo set_value('price_total', $prod->total_amount); ?>" readonly="readonly">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
 
           <div class="form-group">
             <div class="col-sm-5">
@@ -114,23 +107,30 @@
 </div><!--close main div-->
 <script type="text/javascript">
 
-function changeRadio1() {
-  var isChecked = $('input[name=pcs]').is(':checked');
-if (isChecked) {
-  $('input[name=meter]').prop('checked', false);
-} else {
-  $('input[name=pcs]').prop('checked', false);
-}
-}
+// add new row
+$(document).on('click', '.add_more', function(){
+    $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+});
+//Remove table row
+$(document).on('click', '.remove', function(){
+  var $tr = $(this).closest('tr');
+  if ($tr.index() != '0') {
+    $tr.remove();
+  }
+});
 
-function changeRadio2() {
-  var isChecked2 = $('input[name=meter]').is(':checked');
-if (isChecked2) {
-  $('input[name=pcs]').prop('checked', false);
-} else {
-  $('input[name=meter]').prop('checked', false);
-}
-}
+$('.qnty, .rate').on('change', function(){
+    var ro  = $(this).closest('tr');
+    var qnty = ro.find('.qnty').val();
+    var rate = ro.find('.rate').val();
+
+    if(qnty && rate)
+    {
+        // var the_amount = (qnty*rate).toFixed(2);
+        var the_amount = (qnty*rate);
+        ro.find('.amount').val(the_amount);
+    }
+});
 
 
   $(document).ready(function(){

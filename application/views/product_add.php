@@ -37,19 +37,49 @@ input[type="date"]{
           ?>
           <div class="form-group">
             <div class="col-sm-5">
-          <!-- <select name="purchaserID" id="purchaserID" class="form-control">
-            <option value="" selected="selected">--select purchaser--</option>
-            <?php foreach ($purList->result() as $row){
-                echo '<option value="'.$row->id.'" '.set_select('purchaserID',$row->id).'>'.$row->bakery_name.'</option>';
-            } ?>
-          </select> -->
+
           <label>Owner Name</label>
           <input type="text" class="form-control" name="owner_name" placeholder="Owner Name" value="<?php echo set_value('owner_name'); ?>">
 
         </div>
         <div class="col-sm-6"> <?php echo form_error('purchaserID', '<p class="text-danger">', '</p>'); ?></div>
       </div>
-            <div class="form-group">
+      <div class="form-group" id="table_without_tax">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Material Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row_one">
+
+                                <td class="">
+                                  <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>">
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control qnty" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity"  value="<?php echo set_value('price'); ?>">
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control rate" id="price" name="p_price[]" placeholder="Price"  value="<?php echo set_value('price'); ?>">
+
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control amount" id="price_total" name="price_total[]" placeholder="Total Amount" value="<?php echo set_value('price_total'); ?>" readonly="readonly">
+
+                                </td>
+                                <td>
+                                    <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
+                                    &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <!-- <div class="form-group">
               <div class="col-sm-5">
                 <label>Material Name</label>
                 <input type="text" class="form-control" name="material_name" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>">
@@ -57,38 +87,14 @@ input[type="date"]{
               <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="weight" name="weight" placeholder="Amount" value="<?php echo set_value('weight'); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('weight', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="design_number" name="p_design_number" placeholder="Design Number" value="<?php echo set_value('design_number'); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('design_number', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
-
-
             <div class="form-group">
               <div class="col-sm-5">
-                <label>Stock/Quantity</label>
+                <label>Quantity</label>
                 <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
             </div>
-            <!-- <input type="radio" value="1" name="pcs">
-            Pcs
-            <input type="radio" value="0" name="pcs">
-            Meter -->
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="date" class="form-control" id="prod_exp" name="product_exp" placeholder="Expiry Date" value="<?php echo set_value('prod_exp'); ?>" onchange="this.className=(this.value!=''?'has-value':'')">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('prod_exp', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
+
 
             <div class="form-group">
               <div class="col-sm-5">
@@ -105,7 +111,7 @@ input[type="date"]{
                 <input type="text" class="form-control" id="price_total" name="price_total" placeholder="Total Amount" value="<?php echo set_value('price_total'); ?>" readonly="readonly">
               </div>
               <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
+            </div> -->
 
           <div class="form-group">
             <div class="col-sm-5">
@@ -128,13 +134,43 @@ input[type="date"]{
 
 
 </div><!--close main div-->
+<script src="<?php echo base_url('assets/js/to_words.js'); ?>"></script>
+<script src="<?php echo base_url('assets/js/jquery.validate.min.js'); ?>"></script>
 <script type="text/javascript">
+
+// add new row
+$(document).on('click', '.add_more', function(){
+    $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+});
+//Remove table row
+$(document).on('click', '.remove', function(){
+  var $tr = $(this).closest('tr');
+  if ($tr.index() != '0') {
+    $tr.remove();
+  }
+});
+
   $(document).ready(function(){
-    $('#stock_q, #price').on('change', function(){
-      var qnty = $('#stock_q').val();
-      var rate = $('#price').val();
-      var the_amount = (qnty*rate).toFixed(2);
-      $('#price_total').val(the_amount);
+    // $('#stock_q, #price').on('change', function(){
+    //   var qnty = $('#stock_q').val();
+    //   var rate = $('#price').val();
+    //   var the_amount = (qnty*rate).toFixed(2);
+    //   $('#price_total').val(the_amount);
+    // });
+
+    $('.qnty, .rate').on('change', function(){
+        var ro  = $(this).closest('tr');
+        var qnty = ro.find('.qnty').val();
+        var rate = ro.find('.rate').val();
+
+        if(qnty && rate)
+        {
+            // var the_amount = (qnty*rate).toFixed(2);
+            var the_amount = (qnty*rate);
+            ro.find('.amount').val(the_amount);
+        }
     });
+
+
   });
 </script>
