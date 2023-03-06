@@ -3,37 +3,66 @@
 
 class Purchaser_model extends CI_Model {
 
+  public function add_purchaser_qty($dataStk)
+{
+  
+  $this->db->insert('purchaser_stock', $dataStk);
+  // return $this->db->insert_batch('balance', $insert_data);
+
+  return $this->db->insert_id();
+}
+
+public function update_purchaser_qty($data, $id)
+{
+   $this->db->where('purchaser_id', $id);
+$this->db->update('purchaser_stock', $data);
+return $this->db->affected_rows();
+
+}
+
     public function add_purchaser($data)
 	{
-		$this->db->insert('purchasers', $data);
+		$this->db->insert('purchaser', $data);
 		return $this->db->insert_id();
 	}
 
-	public function get_purchasers()
+	public function get_all_purchasers()
     {
-        return $this->db->get('purchasers');
+        return $this->db->get("purchaser");
     }
 
     public function get_purchaser_byID($id)
-    {
-    	$this->db->from('purchasers');
+    {   $this->db->select('id,total_amount,material_name,stock,price,owner_name');
+    	$this->db->from('purchaser');
         $this->db->where('id',$id);
-        return $this->db->get()->row();
-        //return $query->row();
+        $query = $this->db->get();
+        return $query->row();
     }
 
      public function update_purchaser($data, $id)
     {
         $this->db->where('id', $id);
-		$this->db->update('purchasers', $data);
+		$this->db->update('purchaser', $data);
 		return $this->db->affected_rows();
+
     }
 
     public function delete_by_id($id)
     {
         $this->db->where('id', $id);
-        $this->db->delete('purchasers');
+        $this->db->delete('purchaser');
         return $this->db->affected_rows();
+    }
+
+    public function getPurchaserDetailbyId($detail)
+    {
+        return $this->db->select('material_name,stock,price')->where('material_name', $detail)->get('purchaser')->result_array();
+    }
+
+    public function get_all_purchaser()
+    {
+        return $this->db->select('id')->get('purchaser');
+
     }
 
 }

@@ -1,267 +1,306 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Purchaser extends CI_Controller {
+class Purchaser  extends CI_Controller
+{
 	/*
-	 1. index() displays a list of all purchasers
-	 2. add_new() insert new purchaser in DB
-	 3. call edit() to modify a purchaser
+	 1. idex() is called to dislay list of materials
+	 2. add_new() creates a new entry into DB
+	 3. edit() to update product
 	 */
 
 	public function __construct()
-    {
-        parent::__construct();
-        $this->load->library('form_validation');
-        $this->load->model('Purchaser_model');
-    }
-
-    public function index2()
-    {
-    	$this->load->view('add-brand');
-    }
-	public function index()
 	{
-		if($this->session->userdata('logged_in'))
-        {
-        	$data['title'] = 'Purchasers List';
-        	$data['username'] = $this->session->userdata('logged_in');
-        	$data['purchaser'] = $this->Purchaser_model->get_purchasers();
+		parent::__construct();
+		$this->load->library('form_validation');
+		// $this->load->model('Purchaser_model');
+		$this->load->model('Stock_model');
+		$this->load->model('Purchaser_model');
+	}
 
-	        $this->load->view('layout/header', $data);
-	        $this->load->view('layout/menubar');
-			$this->load->view('purchaserList', $data);
-			$this->load->view('layout/footer');
-		}
-		else
-		{
-			redirect('Welcome');
+	public function regexValidate($str)
+	{
+		if (!preg_match('/^[a-zA-Z0-9\s\.]+$/', $str)) {
+			$this->form_validation->set_message('regexValidate', 'The %s field must only contain letters and/or number');
+			return FALSE;
+		} else {
+			return TRUE;
 		}
 	}
 
-	public function addBrand()
+	public function index()
 	{
-		$this->load->library('form_validation');
-		$this->form_validation->set_rules('sname', 'sr Name', 'trim|required');
-		$this->form_validation->set_rules('bname', 'Brand Name', 'trim|required|regex_match[/^[a-z]+$/]', array('regex_match' => 'Enter a legel brand name.'));
+		// die();
+		if ($this->session->userdata('logged_in')) {
+			// echo "strings";
 
-		if ($this->form_validation->run() == FALSE)
-        {
-        	$data['result'] = $this->form_validation->error_array();
-        	$data['status']   = 'failed';
-        }
-        else
-        {
-            $brand_name = $this->input->post('bname');
-			$config['upload_path'] = './assets/images';
-			$config['allowed_types'] = 'jpg|png|gif';
-			$config['max_size']     = '500';
-			$config['max_width'] = '1024';
-			$config['max_height'] = '768';
+			$data['title'] = ucfirst('Material List Page');
+			$data['username'] = $this->session->userdata('logged_in');
+			$data['purchaser'] = $this->Purchaser_model->get_all_purchasers();
 
-			$this->load->library('upload', $config);
-			$this->upload->display_errors('', '');
-			if ( ! $this->upload->do_upload('userfile'))
-	        {
-	            $data['result'] = array('error' => $this->upload->display_errors());
-	            $data['status']   = 'failed';
-	        }
-	        else
-	        {
-	            $data['result'] = $this->upload->data('is_image');
-	            $data['file_name'] = $this->upload->data('file_name');
-	            $data['status']   = 'passed';
-	        }
-	    }
-        echo json_encode($data);
-    }
-	// Add new purchaser form
+			$this->load->view('layout/header', $data);
+			$this->load->view('layout/menubar');
+			$this->load->view('purchaserList', $data);
+			$this->load->view('layout/footer');
+		} else {
+			redirect('Welcome');
+		}
+	}
+	// get from DB
+	public function list_a_purchser($id)
+	{
+		$materials = $this->Purchaser_model->get_purchaser_byID($id);
+		echo json_encode($materials);
+	}
+
+	//form to add new product
 	public function add_new()
 	{
-		// $this->form_validation->set_rules('bakery_name', 'Store Name', 'required|alpha_numeric_spaces');
-		$this->form_validation->set_rules('bakery_name', 'Store Name', 'required');
-		$this->form_validation->set_rules('owner_name', 'Purchaser Name', 'required|alpha_numeric_spaces');
-		// $this->form_validation->set_rules('area', 'Area', "required|regex_match[/^[a-zA-Z0-9\.\-\,\'\s]+$/]",
-		// 	array('regex_match' =>'Please enter valid area'));
-		$this->form_validation->set_rules('area', 'Area', "required");
-		// $this->form_validation->set_rules('city', 'City', 'required|alpha_numeric_spaces');
-		$this->form_validation->set_rules('phone', 'Phone number', 'numeric|min_length[10]|max_length[12]');
-		// $this->form_validation->set_rules('email', 'Email ID', 'valid_email');
-		// $this->form_validation->set_rules('gst', 'GST', 'trim|regex_match[/^[a-zA-Z0-9]{15}+$/]');
 
-		if( $this->input->post('add_purchaser') != NULL )
-		{
-     		$postData = $this->input->post();
-			if ($this->form_validation->run() == false)
-			{
-				$data['title'] = ucwords('Add new Purchaser Page');
-	        	$data['username'] = $this->session->userdata('logged_in');
+		// $this->form_validation->set_rules('prod_name', 'Product Name', 'trim|required|callback_regexValidate|is_unique[products.product_name]',  array('is_unique' => 'This %s already exists.'));
+		// $this->form_validation->set_rules('material_name', 'Material Name', 'trim|required');
+		$this->form_validation->set_rules('owner_name', 'Owner Name', 'trim|required');
+		// $this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
+		// $this->form_validation->set_rules('stock_q', 'Product Amount', 'trim|required|numeric');
+		// $this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
 
-		        $this->load->view('layout/header', $data);
-		        $this->load->view('layout/menubar');
+		if ($this->input->post('add_purchaser') != NULL) {
+			if ($this->form_validation->run() == false) {
+				$data['title'] = ucwords('Add new Purcahser Page');
+				$data['username'] = $this->session->userdata('logged_in');
+				$data['purList'] = $this->Purchaser_model->get_all_purchaser();
+				$this->load->view('layout/header', $data);
+				$this->load->view('layout/menubar');
 				$this->load->view('purchaser_add', $data);
 				$this->load->view('layout/footer');
-			}
-			else
-			{
+				// echo "strs8";
+
+			} else {
+				// echo "strs2";
+				// POST data
+				// print_r($this->input->post('material_name[]'));
+					// die();
+				$postData = $this->input->post();
+				$material_name = implode(',', $this->input->post('material_name[]'));
+				$material_name = trim($material_name, ',');
+
+				$qnty = implode(',', $this->input->post('stock_q[]'));
+				$qnty = trim($qnty, ',');
+
+				$rate = implode(',', $this->input->post('p_price[]'));
+				$rate = trim($rate, ',');
+
+				$amount = implode(',', $this->input->post('price_total[]'));
+				$amount = trim($amount,',');
+
 				$data = array(
-					'bakery_name' => strtoupper($postData['bakery_name']),
 					'owner_name' => strtoupper($postData['owner_name']),
-					'owner_phone' => $postData['phone'],
-					// 'owner_email' => $postData['email'],
-					// 'bakery_gst' => $postData['gst'],
-					// 'bakery_address' => ucwords($postData['bakery_adds']),
-					'bakery_area' => ucwords($postData['area']),
-					// 'bakery_city' => ucwords($postData['city']),
-					// 'last_amount' => $postData['last_amount']
+					'material_name' => $material_name,
+					'price' => $rate,
+					'stock' => $qnty,
+					'total_amount' => $amount,
 				);
 
 				$insert = $this->Purchaser_model->add_purchaser($data);
-				if($insert > 0)
-				{
-					$this->session->set_flashdata('success', 'Purchaser added successfully.');
+				$purchaser_id = $this->db->insert_id();
+
+				$stock = $this->input->post('stock_q[]');
+				$price = $this->input->post('p_price[]');
+
+				$i = 0;
+    foreach($stock as $row){
+        $dataStk['quantity'] = $stock[$i];
+        // $data['voucher_no'] = $voucher_no[$i];
+        $dataStk['price'] = $price[$i];
+        // $this->db->insert("your_table",$data);
+				// $this->db->insert('purchaser_stock', $dataStk);
+				$this->Purchaser_model->add_purchaser_qty($dataStk);
+        $i++;
+    }
+		// print_r($dataStk);
+	  // die();
+				// $data2 = array(
+				// 	'purchaser_id' => $purchaser_id,
+				// 	'quantity' => $this->input->post('stock_q[]'),
+				// 	'price' => $this->input->post('p_price[]'),
+				// 	// 'p_design_number' => $postData['p_design_number'],
+				// );
+				// $Store = $this->Purchaser_model->add_purchaser_qty($data2);
+
+				if ($insert > 0) {
+					$this->session->set_flashdata('success', 'Material added successfully.');
 					redirect('Purchaser');
-				}
-				else
-				{
+				} else {
 					$this->session->set_flashdata('failed', 'Some problem occurred, please try again.');
 					$this->load->view('layout/header', $data);
-			        $this->load->view('layout/menubar');
+					$data['purList'] = $this->Purchaser_model->get_all_purchaser();
+					$this->load->view('layout/menubar');
 					$this->load->view('purchaser_add', $data);
 					$this->load->view('layout/footer');
 				}
 			}
-     	}
-
-		elseif($this->session->userdata('logged_in'))
-        {
-        	$data['title'] = 'Add new purchaser';
-        	$data['username'] = $this->session->userdata('logged_in');
-
-	        $this->load->view('layout/header', $data);
-	        $this->load->view('layout/menubar');
+		} elseif ($this->session->userdata('logged_in')) {
+			$data['title'] = ucwords('Add new Material Page');
+			$data['username'] = $this->session->userdata('logged_in');
+			$data['purList'] = $this->Purchaser_model->get_all_purchaser();
+			$this->load->view('layout/header', $data);
+			$this->load->view('layout/menubar');
 			$this->load->view('purchaser_add', $data);
 			$this->load->view('layout/footer');
-		}
-		else
-		{
+		} else {
 			redirect('Welcome');
 		}
 	}
 
-  	//form to UPDATE purchaser
-  	public function edit($cust_id )
-  	{
-  		$cust_data = $this->Purchaser_model->get_purchaser_byID($cust_id);
-  		if(!$this->session->userdata('logged_in'))
-    	{
-    		redirect('Welcome');
-    	}
+	//form to UPDATE PRODUCT
+	public function edit($pur_id)
+	{
+		$cust_data = $this->Purchaser_model->get_purchaser_byID($pur_id);
+		if (!$this->session->userdata('logged_in')) {
+			redirect('Welcome');
+		} elseif ($pur_id && $this->input->post('edit_purchaser') == NULL) {
+			$data['title'] = ucwords('Edit Purchaser Details');
+			$data['username'] = $this->session->userdata('logged_in');
+			$data['pur'] = $cust_data;
+			$data['purList'] = $this->Purchaser_model->get_all_purchaser();
 
-    	elseif( $cust_id && $this->input->post('edit_purchaser') == NULL )
-    	{
-    		if($cust_data)
-      		{
-      			$data['title'] = 'Edit Purchaser Details';
-	            $data['username'] = $this->session->userdata('logged_in');
-	            $data['cust'] = $cust_data;
-	            $this->load->view('layout/header', $data);
-    	        $this->load->view('layout/menubar');
-        		$this->load->view('Purchaser_edit');
-        		$this->load->view('layout/footer');
-      		}
-		    else
-		    {
-		        $data['title'] = 'Page not found';
-		        $data['username'] = $this->session->userdata('logged_in');
-		        $this->load->view('layout/header', $data);
-		        $this->load->view('layout/menubar');
-		        $this->load->view('errors/html/error_404');
-		        $this->load->view('layout/footer');
-		    }
-		}
-	    elseif( $this->input->post('edit_purchaser') != NULL )
-	    {
-	    	$postData = $this->input->post();
+			$this->load->view('layout/header', $data);
+			$this->load->view('layout/menubar');
+			$this->load->view('purchaser_edit');
+			$this->load->view('layout/footer');
+		} elseif ($this->input->post('edit_purchaser') != NULL) {
+			// POST data
+			$postData = $this->input->post();
+			// $this->form_validation->set_rules('material_name', 'Material Name', 'trim|required');
+			// $this->form_validation->set_rules('p_design_number', 'Design Number', 'trim|required|callback_regexValidate|edit_unique[products.design_number.' . $prod_id . ']');
+			// $this->form_validation->set_rules('p_design_number', 'Design Number', 'trim|required');
+			$this->form_validation->set_rules('owner_name', 'Owner Name', 'trim|required');
+			// $this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
+			// $this->form_validation->set_rules('stock_q', 'Product in Stock', 'trim|required');
+			// $this->form_validation->set_rules('pcs', 'Pcs', 'trim');
+			// $this->form_validation->set_rules('meter', 'Meter', 'trim');
+			// $this->form_validation->set_rules('product_exp', 'Expiry Da
+			// $this->form_validation->set_rules('product_exp', 'Expiry Date', 'trim|required');
+			// $this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
 
-			$this->form_validation->set_rules('bakery_name', 'Store Name', 'required');
-			$this->form_validation->set_rules('owner_name', 'Purchaser Name', 'required|alpha_numeric_spaces');
-			// $this->form_validation->set_rules('city', 'City', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('phone', 'Phone number', 'numeric|min_length[10]|max_length[12]');
-			// $this->form_validation->set_rules('email', 'Email ID', 'valid_email');
-
-	      	if ($this->form_validation->run() == false)
-	        {
-	        	$data['title'] = 'Edit Purchaser Details';
+			if ($this->form_validation->run() == false) {
+				$data['title'] = ucwords('Edit Purchaser Details');
 				$data['username'] = $this->session->userdata('logged_in');
-				$data['cust'] = $cust_data;
+				$data['purList'] = $this->Purchaser_model->get_all_purchaser();
+				$data['pur'] = $cust_data;
 
 				$this->load->view('layout/header', $data);
 				$this->load->view('layout/menubar');
-				$this->load->view('Purchaser_edit');
+				$this->load->view('purchaser_edit');
 				$this->load->view('layout/footer');
-      		}
-			else
-			{
-				$data = array(
-					'bakery_name' => strtoupper($postData['bakery_name']),
+			} else {
+
+				$material_name = implode(",", $this->input->post('material_name[]'));
+				$material_name = trim($material_name, ",");
+
+				$qnty = implode(",", $this->input->post('stock_q[]'));
+				$qnty = trim($qnty, ",");
+
+				$rate = implode(",", $this->input->post('p_price[]'));
+				$rate = trim($rate,",");
+
+				$amount = implode(",", $this->input->post('price_total[]'));
+				$amount = trim($amount,",");
+
+				// print_r($amount);
+
+				$data = [
 					'owner_name' => strtoupper($postData['owner_name']),
-					'owner_phone' => $postData['phone'],
-					// 'owner_email' => $postData['email'],
-					// 'bakery_gst' => $postData['gst'],
-					// 'bakery_address' => ucwords($postData['bakery_adds']),
-					'bakery_area' => ucwords($postData['area']),
-					// 'bakery_city' => ucwords($postData['city']),
-					// 'last_amount' => $postData['last_amount']
+					'material_name' => $material_name,
+					'total_amount' => $amount,
+					'stock' => $qnty,
+					'price' => $rate,
+				];
+				// print_r($data);
+				// die();
+				// $data = array(
+				// 	'owner_name' => strtoupper($postData['owner_name']),
+				// 	'product_name' => strtoupper($postData['material_name']),
+				// 	'price' => $postData['p_price'],
+				// 	'stock' => strtoupper($postData['stock_q']),
+				// 	'total_amount' => $postData['price_total'],
+				// );
+				$purchaser_id = $postData["pur_id"];
+
+				$update = $this->Purchaser_model->update_purchaser($data, $pur_id);
+
+				// $purchaser_id = $this->db->insert_id();
+				$data2 = array(
+					'purchaser_id' => $purchaser_id,
+					'quantity' => $qnty,
+					'price' => $rate,
+					// 'p_design_number' => $postData['p_design_number'],
 				);
+				// print_r($purchaser_id);
+				// print_r($data2);
+				// die();
+				$Store = $this->Purchaser_model->update_purchaser_qty($data2,$purchaser_id);
 
-				$cust_id = $postData['cust_id'];
-				$update = $this->Purchaser_model->update_purchaser($data, $cust_id);
+				// $product_id = $this->db->insert_id();
+				// $data2 = array(
+				// 	'product_id' => $prod_id,
+				// 	'stock_qty' => $postData['stock_q'],
+				// 	'purchase_rate' => $postData['p_price'],
+				// 	// 'p_design_number' => $postData['p_design_number'],
+				// );
+				// $Store = $this->Stock_model->update_record($data2,$prod_id,);
 
-				if($update != -1)
-				{
-					$this->session->set_flashdata('success', 'Purchaser details updated successfully.');
+				if ($update != -1) {
+					$this->session->set_flashdata('success', 'Material details updated successfully.');
 					redirect('Purchaser');
-				}
-				else
-				{
+				} else {
 					$this->session->set_flashdata('failed', 'Some problem occurred, please try again.');
-					$data['title'] = ucwords('Edit Purchaser Details');
+					$data['title'] = ucwords('Edit Material Details');
 					$data['username'] = $this->session->userdata('logged_in');
+					$data['purList'] = $this->Purchaser_model->get_all_purchaser();
 					$data['cust'] = $cust_data;
 					$this->load->view('layout/header', $data);
 					$this->load->view('layout/menubar');
-					$this->load->view('Purchaser_edit');
+					$this->load->view('purchaser_edit');
 					$this->load->view('layout/footer');
 				}
-     		}
-     	}
-    }
+			}
+		}
+	}
 
 	// Logout from admin page
 	public function logout()
 	{
 		$this->session->unset_userdata('logged_in');
-		header("location:". site_url('?status=loggedout'));
+		header("location:" . site_url('?status=loggedout'));
 	}
 
 	public function deletePurchaser()
 	{
-		if( $this->input->post('row_id'))
-		{
+		if ($this->input->post('row_id')) {
 			$id = $this->input->post('row_id');
 			$upd = $this->Purchaser_model->delete_by_id($id);
-			if($upd > 0)
-			{
+			$stk = $this->Stock_model->delete_by_id($id);
+			if ($upd > 0) {
 				$resp['status'] = 'passed';
-				$resp['result'] = 'Purchaser deleted successfully.';
-			}
-			else
-			{
+				$resp['result'] = 'Material deleted successfully.';
+			} else {
 				$resp['status'] = 'failed';
 				$resp['result'] = 'Some problem occurred, please try again';
 			}
 			echo json_encode($resp);
 		}
 	}
+
+	public function getPurchaserDetail()
+	{
+		$pp_id = $this->input->post('p_id');
+		$detail = $this->Purchaser_model->getPurchaserDetailbyId($pp_id);
+
+		//print_r($detail);
+
+		echo json_encode($detail);
+	}
+
 
 }

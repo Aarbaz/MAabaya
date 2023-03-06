@@ -2,88 +2,91 @@
 
 <div class="container-fluid">
   <div class="row">
-		<div class="col-sm-12">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-				  <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Purchaser/logout');?>">Log Out</a></span></h4>
-				</div>
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Purchaser/logout');?>">Log Out</a></span></h4>
+        </div>
 
         <div class="panel-body">
           <p data-placement="top" data-toggle="tooltip">
-            <a class="btn btn-info btn-sm" href="<?php echo base_url('/index.php/Purchaser/');?>">Go back to Purchaser list</a>
+            <a class="btn btn-info btn-sm" href="<?php echo base_url('/index.php/Purchaser/');?>">Go back to Material list</a>
           </p>
           <?php
-            $url = 'Purchaser/edit/'.$cust->id;
-            echo form_open($url, 'class="form-horizontal" id="add_customer_form"');
+          // print_r($pur);
+            $url = 'Purchaser/edit/'.$pur->id;
+            echo form_open($url, 'class="form-horizontal" id="add_puruct_form"');
           ?>
-            <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="bakery_name" name="bakery_name" value="<?php echo set_value('bakery_name', $cust->bakery_name); ?>">
-                <input type="hidden" name="cust_id" value="<?php echo $cust->id; ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('bakery_name', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" name="owner_name" value="<?php echo set_value('owner_name', $cust->owner_name); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" name="gst" placeholder="GST No" value="<?php echo set_value('gst', $cust->bakery_gst);?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('gst', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <textarea class="form-control" name="bakery_adds" placeholder="Bakery Adds"><?php echo set_value('bakery_adds',$cust->bakery_address); ?></textarea>
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('bakery_adds', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-            <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="<?php echo set_value('phone',$cust->owner_phone); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('phone', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
-            <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="area" name="area" placeholder="Area" value="<?php echo set_value('area', $cust->bakery_area);?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('area', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
-
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="city" name="city" placeholder="city" value="<?php echo set_value('city',$cust->bakery_city); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('city', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
-
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="email" name="email" placeholder="Email ID" value="<?php echo set_value('email',$cust->owner_email); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('email', '<p class="text-danger">', '</p>'); ?></div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="last_amount" name="last_amount" placeholder="Last Amount" value="<?php echo set_value('last_amount',$cust->last_amount); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('last_amount', '<p class="text-danger">', '</p>'); ?></div>
-            </div>                   -->
+          <input type="hidden" name="pur_id" value="<?php echo $pur->id; ?>">
 
           <div class="form-group">
             <div class="col-sm-5">
-              <?php echo form_submit('edit_purchaser','Edit Purchaser','class="btn btn-success"'); ?>
+
+          <label>Owner Name</label>
+          <input type="text" class="form-control" name="owner_name" placeholder="Owner Name" value="<?php echo set_value('owner_name', $pur->owner_name); ?>">
+
+        </div>
+        <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
+      </div>
+      <div class="form-group" id="table_without_tax">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Material Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <?php
+                          $mat = explode(',', $pur->material_name);
+                          $stk = explode(',', $pur->stock);
+                          $prd = explode(',', $pur->price);
+                          $amt = explode(',', $pur->total_amount);
+                          $cnt= count($mat);
+
+                          for ($i=0; $i < $cnt; $i++) {
+                            ?>
+                        <tbody>
+                            <tr class="row_one">
+
+                                <td class="">
+                                  <input type="text" class="form-control" name="material_name[]" placeholder="material Name" value="<?php echo  $mat[$i]; ?>">
+
+                                  <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo  $mat[$i]; ?>"> -->
+                                  <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control qnty" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo $stk[$i];?>">
+                                  <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control rate" id="p_price" name="p_price[]" placeholder="Price" value="<?php echo $prd[$i];?>">
+
+                                </td>
+                                <td>
+                                  <input type="text" class="form-control amount" id="price_total" name="price_total[]" placeholder="Total Amount" value="<?php echo $amt[$i];?>" readonly="readonly">
+
+                                </td>
+                                <td>
+                                    <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
+                                    &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <?php
+
+                                                             }
+                                                       ?>
+                    </table>
+                </div>
+
+
+
+
+          <div class="form-group">
+            <div class="col-sm-5">
+              <?php echo form_submit('edit_purchaser','Edit & Save','class="btn btn-success"'); ?>
             </div>
              <div class="col-sm-6">
               <?php
@@ -94,11 +97,51 @@
           </div>
       <?php echo form_close();  ?>
         </div>
-    	</div>
+      </div>
     </div>
-	</div>
+  </div>
 </div>
 
 
 
 </div><!--close main div-->
+<script type="text/javascript">
+
+// add new row
+$(document).on('click', '.add_more', function(){
+    $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+});
+//Remove table row
+$(document).on('click', '.remove', function(){
+  var $tr = $(this).closest('tr');
+  if ($tr.index() != '0') {
+    $tr.remove();
+  }
+});
+
+$('.qnty, .rate').on('change', function(){
+    var ro  = $(this).closest('tr');
+    var qnty = ro.find('.qnty').val();
+    var rate = ro.find('.rate').val();
+
+    if(qnty && rate)
+    {
+        // var the_amount = (qnty*rate).toFixed(2);
+        var the_amount = (qnty*rate);
+        ro.find('.amount').val(the_amount);
+    }
+});
+
+
+  $(document).ready(function(){
+
+
+
+    $('#stock_q, #p_price').on('change', function(){
+      var qnty = $('#stock_q').val();
+      var rate = $('#p_price').val();
+      var the_amount = (qnty*rate).toFixed(2);
+      $('#price_total').val(the_amount);
+    });
+  });
+</script>

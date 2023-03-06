@@ -22,8 +22,8 @@
   						<tr>
               <th>Sr No</th>
               <th>Master Name</th>
-  							<th>Material Name</th>
-                <th>Stock</th>
+  							<th>Material/Quantity</th>
+                <!-- <th>Stock</th> -->
                 <!-- <th>Product Amount</th> -->
                 <!-- <th>Expiry Date</th> -->
                 <!-- <th>Total</th> -->
@@ -39,9 +39,23 @@
 						  <tr>
                 <td><?php echo $i; ?></td>
                 <td><?php echo $row->master_name; ?></td>
-  							<td><?php echo $row->material_name; ?></td>
-                <td><?php echo $row->stock; ?> Meters</td>
-  							<!-- <td><?php echo $row->price; ?> Rs</td> -->
+  							<!-- <td><?php echo $row->material_name; ?></td> -->
+                <!-- <td><?php echo $row->stock; ?> Meters</td> -->
+  							<td>
+                  <?php
+                  $material_name = explode(',', $row->material_name);
+                  $stk = explode(',', $row->stock);
+                  // $prd = explode(',', $row->price);
+                  // $total_amount = explode(',', $row->total_amount);
+                  $cntm= count($material_name);
+
+                  for ($m=0; $m < $cntm; $m++) {
+
+                   echo $material_name[$m].' - '.$stk[$m].' Meters'; ?>
+                   <br>
+
+                  <?php } ?>
+                </td>
                 <!-- <td><?php echo $row->prod_exp; ?></td> -->
   							<!-- <td><?php echo $row->total_amount; ?> Rs</td> -->
                 <td>
