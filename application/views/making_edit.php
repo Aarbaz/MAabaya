@@ -13,82 +13,26 @@
             <a class="btn btn-info btn-sm" href="<?php echo base_url('/index.php/Making/');?>">Go back to Material list</a>
           </p>
           <?php
-          // print_r($prod);
             $url = 'Making/edit/'.$prod->id;
             echo form_open($url, 'class="form-horizontal" id="add_product_form"');
           ?>
           <div class="form-group">
             <div class="col-sm-5">
-          <!-- <select name="purchaserID" id="purchaserID" class="form-control">
-            <option value="" selected="selected">--select purchaser--</option>
-            <?php foreach ($purList->result() as $row){
-              // 'if($row->id  == $prod->purchase_id ){echo.'"selected"'.}.'
-              // print_r($row->id  == $prod->purchaser_id);
-                echo '<option    value="'.$row->id.'" '.set_select('purchaserID',$row->id).'>'.$row->bakery_name.'</option>';
-            } ?>
-          </select> -->
+
           <label>Master Name</label>
 
-          <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('owner_name', $prod->master_name); ?>">
-
+          <select name="master_name" id="master_name" class="form-control">
+            <option value="" selected="selected">--select master--</option>
+              <?php
+              foreach ($custList->result() as $row){?>
+                <option value="<?php echo $row->id ?>" <?php echo ($prod->master_id == $row->id) ? 'selected' : '' ?>><?php echo $row->bakery_name ?></option>
+                  <?php
+              } ?>
+          </select>
         </div>
         <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
       </div>
       <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-          <label>Material Name</label>
-
-                <input type="text" class="form-control" name="material_name" placeholder="material Name" value="<?php echo set_value('material_name', $prod->material_name); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('prod_name', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="p_design_number" name="p_design_number" placeholder="Price" value="<?php echo set_value('design_number', $prod->design_number); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('p_design_number', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="p_price" name="p_price" placeholder="Price" value="<?php echo set_value('price', $prod->price); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('p_price', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <label>Stock/Quantity</label>
-
-                <input type="text" class="form-control" id="stock_q" name="stock_q" placeholder="Stock" value="<?php echo set_value('stock', $prod->stock);?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-            <!-- <input type="radio" value="1" onclick="changeRadio1()" name="pcs" <?php if ($prod->pcs == '1') {?>
-              checked <?php
-            } ?>>
-            Pcs
-            <input type="radio" value="0" onclick=" changeRadio2()" name="pcs" <?php if ($prod->pcs == '0') {?>
-              checked <?php
-            } ?>>
-            Meter -->
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="product_exp" name="product_exp" placeholder="Expiry Date" value="<?php echo set_value('prod_exp', $prod->prod_exp); ?>">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('product_exp', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
-            <!-- <div class="form-group">
-              <div class="col-sm-5">
-                <input type="text" class="form-control" id="price_total" name="price_total" placeholder="Total Amount" value="<?php echo set_value('price_total', $prod->total_amount); ?>" readonly="readonly">
-              </div>
-              <div class="col-sm-6"> <?php echo form_error('price_total', '<p class="text-danger">', '</p>'); ?></div>
-            </div> -->
-
             <div class="form-group" id="table_without_tax">
                           <table class="table table-bordered">
                               <thead>
@@ -98,7 +42,7 @@
                                   </tr>
                               </thead>
                               <?php
-                                $mat = explode(',', $prod->material_name);
+                                $mat = explode(',', $prod->material_id);
                                 $stk = explode(',', $prod->stock);
                                 $cnt= count($mat);
 
@@ -108,20 +52,15 @@
                                   <tr class="row_one">
 
                                       <td class="">
-                                        <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo  $mat[$i]; ?>"> -->
 
                                         <select name="material_name[]" id="material_name" class="form-control">
                                           <option value="" selected="selected">--select material--</option>
                                             <?php
-                                            // print_r($matList);
-                                            // die();
 
                                             foreach ($matList->result() as $row){
                                               ?>
                                               <option value="<?php echo $row->id ?>" <?php echo ($mat[$i] == $row->id) ? 'selected' : '' ?>><?php echo $row->material_name ?></option>
-
                                               <?php
-                                                // echo '<option  value="'.$row->material_name.'" '.set_select('materialName',$row->material_name).' '.if($mat[$i] == $row->material_name ){ echo "selected"; }.' >'.$row->material_name.'</option>';
 
                                             } ?>
                                         </select>
@@ -200,8 +139,6 @@ if (isChecked2) {
 
 
   $(document).ready(function(){
-
-
 
     $('#stock_q, #p_price').on('change', function(){
       var qnty = $('#stock_q').val();

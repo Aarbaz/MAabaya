@@ -19,7 +19,7 @@ class Making extends CI_Controller
         $this->load->library("upload");
         //$this->load->helper('pdf_helper');
         $this->load->helper("url");
-        // $this->load->model('Stock_model');
+        $this->load->model("Customer_model");
     }
 
     public function regexValidate($str)
@@ -41,8 +41,7 @@ class Making extends CI_Controller
             $data["title"] = ucfirst("Making List Page");
             $data["username"] = $this->session->userdata("logged_in");
             $data["products"] = $this->Making_model->get_all_material();
-            $data['matList'] = $this->Purchaser_model->get_all_material();
-
+            $data["matList"] = $this->Purchaser_model->get_all_material();
 
             $this->load->view("layout/header", $data);
             $this->load->view("layout/menubar");
@@ -52,12 +51,6 @@ class Making extends CI_Controller
             redirect("Welcome");
         }
     }
-    // get from DB
-    // public function list_a_product($id)
-    // {
-    // 	$materials = $this->Product_model->get_product_byID($id);
-    // 	echo json_encode($materials);
-    // }
 
     // //form to add new product
     public function add_new()
@@ -99,9 +92,8 @@ class Making extends CI_Controller
             if ($this->form_validation->run() == false) {
                 $data["title"] = ucwords("Add new Making Page");
                 $data["username"] = $this->session->userdata("logged_in");
-                $data['matList'] = $this->Purchaser_model->get_all_material();
-
-                // $data['purList'] = $this->Product_model->get_all_purchaser();
+                $data["matList"] = $this->Purchaser_model->get_all_material();
+                $data["custList"] = $this->Customer_model->get_mowner();
                 $this->load->view("layout/header", $data);
                 $this->load->view("layout/menubar");
                 $this->load->view("making_add", $data);
@@ -109,73 +101,22 @@ class Making extends CI_Controller
             } else {
                 // POST data
                 $postData = $this->input->post();
-
-                $material_name = implode(",",$this->input->post("material_name[]"));
-                $material_name = trim($material_name, ",");
+                $material_id = implode(
+                    ",",
+                    $this->input->post("material_name[]")
+                );
+                $material_id = trim($material_id, ",");
                 $stock_q = implode(",", $this->input->post("stock_q[]"));
                 $stock_q = trim($stock_q, ",");
 
                 $data = [
-                    "material_name" => $material_name,
-                    "master_name" => strtoupper($postData["master_name"]),
+                    "material_id" => $material_id,
+                    "master_id" => strtoupper($postData["master_name"]),
                     "stock" => $stock_q,
                 ];
 
                 $insert = $this->Making_model->add_material($data);
                 $product_id = $this->db->insert_id();
-
-                // $data_pdf = [
-                //     "material_name" => $material_name,
-                //     "master_name" => strtoupper($postData["master_name"]),
-                //     "stock" => $stock_q,
-                // ];
-                //
-								// if($insert == true)
-								// {
-								// 	$this->load->library('tcpdf/tcpdf.php');
-                //
-								// 	$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-								// 	$pdf->setPrintHeader(false);
-								// 	$pdf->setPrintFooter(false);
-								// 	$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
-								// 	//$pdf->SetFont('helvetica', '', 10);
-								// 	$pdf->SetFont("times", "", 10);
-								// 	$pdf_data = $this->load->view("making_pdf", $data_pdf, true);
-								// 	$pdf->addPage();
-								// 	$pdf->writeHTML($pdf_data, true, false, true, false, "");
-                //
-								// 	// $filename = $this->input->post("invoice_no") . ".pdf";
-								// 	$filename = "asads" . ".pdf";
-								// 	$dir = APPPATH . "/invoice/" . $data_pdf["master_name"] . "/";
-								// 	if (!is_dir($dir)) {
-								// 			mkdir($dir, 0777, true);
-								// 	}
-								// 	$save_path = $dir . $filename;
-								// 	ob_end_clean();
-								// 	$pdf->Output($save_path, "I");
-								// 	$pdf->Output($save_path, "F");
-								// 	//file_put_contents($save_path, $pdf);
-								// 	$this->session->set_flashdata(
-								// 			"success",
-								// 			"Invoice created successfully...."
-								// 	);
-								// 	redirect("Making/");
-								// 	// $data2 = array(
-								// 	// 	'product_id' => $product_id,
-								// 	// 	'stock_qty' => $postData['stock_q'],
-								// 	// 	// 'purchase_rate' => $postData['p_price'],
-								// 	// 	// 'p_design_number' => $postData['p_design_number'],
-								// 	// );
-								// 	// // $Store = $this->Stock_model->add_record($data2);
-                //
-                //
-								// }
-                //
-								// else
-								// {
-								// 	$this->session->set_flashdata('fail', "Sorry! there was some error.");
-								// 	redirect(base_url('/index.php/Making/add_new'));
-								// }
 
                 if ($insert > 0) {
                     $this->session->set_flashdata(
@@ -189,19 +130,18 @@ class Making extends CI_Controller
                         "Some problem occurred, please try again."
                     );
                     $this->load->view("layout/header", $data);
-                    // $data['purList'] = $this->Product_model->get_all_purchaser();
+                    // $data['purList'] = $this->Purchaser_model->get_all_purchaser();
                     $this->load->view("layout/menubar");
                     $this->load->view("making_add", $data);
                     $this->load->view("layout/footer");
                 }
-                
             }
         } elseif ($this->session->userdata("logged_in")) {
             $data["title"] = ucwords("Add new Material Page");
             $data["username"] = $this->session->userdata("logged_in");
-            $data['matList'] = $this->Purchaser_model->get_all_material();
+            $data["matList"] = $this->Purchaser_model->get_all_material();
+            $data["custList"] = $this->Customer_model->get_mowner();
 
-            // $data['purList'] = $this->Product_model->get_all_purchaser();
             $this->load->view("layout/header", $data);
             $this->load->view("layout/menubar");
             $this->load->view("making_add", $data);
@@ -214,8 +154,6 @@ class Making extends CI_Controller
     //form to UPDATE PRODUCT
     public function edit($prod_id)
     {
-        // echo 'str';
-        // die();
         $cust_data = $this->Making_model->get_material_byID($prod_id);
         if (!$this->session->userdata("logged_in")) {
             redirect("Welcome");
@@ -224,8 +162,8 @@ class Making extends CI_Controller
             $data["username"] = $this->session->userdata("logged_in");
             $data["prod"] = $cust_data;
             $data["purList"] = $this->Making_model->get_all_making();
-            $data['matList'] = $this->Purchaser_model->get_all_material();
-
+            $data["matList"] = $this->Purchaser_model->get_all_material();
+            $data["custList"] = $this->Customer_model->get_mowner();
 
             $this->load->view("layout/header", $data);
             $this->load->view("layout/menubar");
@@ -254,7 +192,8 @@ class Making extends CI_Controller
                 $data["title"] = ucwords("Edit Making Details");
                 $data["username"] = $this->session->userdata("logged_in");
                 $data["purList"] = $this->Making_model->get_all_making();
-                $data['matList'] = $this->Purchaser_model->get_all_material();
+                $data["matList"] = $this->Purchaser_model->get_all_material();
+                $data["custList"] = $this->Customer_model->get_mowner();
 
                 $data["prod"] = $cust_data;
 
@@ -262,22 +201,21 @@ class Making extends CI_Controller
                 $this->load->view("layout/menubar");
                 $this->load->view("making_edit");
                 $this->load->view("layout/footer");
-
             } else {
-                // print_r($postData['master_name']);
-                // die();
-                $material_name = implode(",",$this->input->post("material_name[]"));
-                $material_name = trim($material_name, ",");
+                $material_id = implode(
+                    ",",
+                    $this->input->post("material_name[]")
+                );
+                $material_id = trim($material_id, ",");
                 $stock_q = implode(",", $this->input->post("stock_q[]"));
                 $stock_q = trim($stock_q, ",");
                 $data = [
-                    "master_name" => strtoupper($postData["master_name"]),
-                    "material_name" => $material_name,
+                    "master_id" => strtoupper($postData["master_name"]),
+                    "material_id" => $material_id,
                     "stock" => $stock_q,
                 ];
                 $prod_id = $postData["prod_id"];
-                // print_r($data);
-                // die();
+
                 $update = $this->Making_model->update_making($data, $prod_id);
                 // $product_id = $this->db->insert_id();
                 // $data2 = array(
@@ -302,7 +240,10 @@ class Making extends CI_Controller
                     $data["title"] = ucwords("Edit Material Details");
                     $data["username"] = $this->session->userdata("logged_in");
                     $data["purList"] = $this->Making_model->get_all_making();
-                    $data['matList'] = $this->Purchaser_model->get_all_material();
+                    $data[
+                        "matList"
+                    ] = $this->Purchaser_model->get_all_material();
+                    $data["custList"] = $this->Customer_model->get_mowner();
 
                     $data["cust"] = $cust_data;
                     $this->load->view("layout/header", $data);
@@ -337,14 +278,4 @@ class Making extends CI_Controller
             echo json_encode($resp);
         }
     }
-
-    // public function getProductDetail()
-    // {
-    // 	$pp_id = $this->input->post('p_id');
-    // 	$detail = $this->Product_model->getProductDetailbyId($pp_id);
-    //
-    // 	//print_r($detail);
-    //
-    // 	echo json_encode($detail);
-    // }
 }

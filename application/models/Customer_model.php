@@ -8,7 +8,7 @@ class Customer_model extends CI_Model {
 		$this->db->insert('customers', $data);
 		return $this->db->insert_id();
 	}
-	
+
 	public function get_customers()
     {
         return $this->db->get('customers');
@@ -18,9 +18,26 @@ class Customer_model extends CI_Model {
     {
     	$this->db->from('customers');
         $this->db->where('id',$id);
-        return $this->db->get()->row(); 
-        //return $query->row();     
+        return $this->db->get()->row();
+        //return $query->row();
     }
+
+    public function get_powner()
+    {
+        $role = '0';
+        $this->db->select('id,,bakery_name');
+        $this->db->where('role',$role);
+        return $query = $this->db->get('customers');
+    }
+
+    public function get_mowner()
+    {
+        $role = '1';
+        $this->db->select('id,,bakery_name');
+        $this->db->where('role',$role);
+        return $query = $this->db->get('customers');
+    }
+
 
      public function update_customer($data, $id)
     {
@@ -28,7 +45,7 @@ class Customer_model extends CI_Model {
 		$this->db->update('customers', $data);
 		return $this->db->affected_rows();
     }
- 
+
     public function delete_by_id($id)
     {
         $this->db->where('id', $id);

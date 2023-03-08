@@ -33,45 +33,55 @@
                <?php
                   echo form_open('Making/add_new', 'class="form-horizontal" id="add_product_form"');
                   ?>
+               <p>
+                  <span class="btn btn-primary btn-sm" onclick="add_new_master()">Add New Master</span>
+               </p>
+               <br>
                <div class="form-group">
                   <div class="col-sm-5">
                      <label>Master Name</label>
-                     <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>">
+                     <!-- <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>"> -->
+                     <select name="master_name" id="master_name" class="form-control">
+                        <option value="" selected="selected">--select master--</option>
+                        <?php
+                           // print_r($custList);
+                           foreach ($custList->result() as $row){
+                               echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->bakery_name).'>'.$row->bakery_name.'</option>';
+                           } ?>
+                     </select>
                   </div>
                   <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
                </div>
-
-                  <div class="form-group" id="table_without_tax">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Material Name</th>
-                                            <th>Stock/Quantity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="row_one">
-
-                                            <td class="">
-                                              <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>"> -->
-                                              <select name="material_name[]" id="material_name" class="form-control">
-                                                <option value="" selected="selected">--select material--</option>
-                                                  <?php foreach ($matList->result() as $row){
-                                                      echo '<option value="'.$row->id.'" '.set_select('materialName',$row->material_name).'>'.$row->material_name.'</option>';
-                                                  } ?>
-                                              </select>
-                                            </td>
-                                            <td>
-                                              <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
-                                            </td>
-                                            <td>
-                                                <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
-                                                &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+               <div class="form-group" id="table_without_tax">
+                  <table class="table table-bordered">
+                     <thead>
+                        <tr>
+                           <th>Material Name</th>
+                           <th>Stock/Quantity</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr class="row_one">
+                           <td class="">
+                              <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>"> -->
+                              <select name="material_name[]" id="material_name" class="form-control">
+                                 <option value="" selected="selected">--select material--</option>
+                                 <?php foreach ($matList->result() as $row){
+                                    echo '<option value="'.$row->id.'" '.set_select('materialName',$row->material_name).'>'.$row->material_name.'</option>';
+                                    } ?>
+                              </select>
+                           </td>
+                           <td>
+                              <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
+                           </td>
+                           <td>
+                              <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
+                              &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
                <div class="form-group">
                   <div class="col-sm-5">
                      <?php echo form_submit('add_making','Add Material','class="btn btn-success"'); ?>
@@ -90,38 +100,69 @@
    </div>
 </div>
 </div><!--close main div-->
+<div class="modal fade" id="add_master" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <form id="add_owner_form" method="post" action="<?php echo site_url('/Customer/add_mowner');?>">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+               <h4 class="modal-title custom_align" id="Heading">Add Master</h4>
+            </div>
+            <div class="modal-body">
+               <div class="col-sm-12">
+                  <div class="form-group">
+                     <label class="control-label col-sm-3">Master Name</label>
+                     <div class="col-sm-9" id="design_holder">
+                        <input type="text" name="master_name" id="master_name" class="form-control" value="">
+                        <input type="hidden" name="id" value="">
+                     </div>
+                  </div>
+               </div>
+               <p class="statusMsgDel text-center"></p>
+            </div>
+            <div class="modal-footer " style="margin-top: 50px;">
+               <div class="col-sm-12">
+                  <button type="submit" class="btn btn-success" id="insert_update" ><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Close</button>
+               </div>
+            </div>
+         </form>
+      </div>
+      <!-- /.modal-content -->
+   </div>
+</div>
 <script type="text/javascript">
+   function add_new_master(){
+       $('#add_master').modal('show');
+   }
+      $(document).ready(function(){
 
+        // add new row
+        $(document).on('click', '.add_more', function(){
+            $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+        });
+        //Remove table row
+        $(document).on('click', '.remove', function(){
+          var $tr = $(this).closest('tr');
+          if ($tr.index() != '0') {
+            $tr.remove();
+          }
+        });
 
-
-   $(document).ready(function(){
-
-     // add new row
-     $(document).on('click', '.add_more', function(){
-         $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
-     });
-     //Remove table row
-     $(document).on('click', '.remove', function(){
-       var $tr = $(this).closest('tr');
-       if ($tr.index() != '0') {
-         $tr.remove();
-       }
-     });
-
-$('#some_id').on('click', '.add_more', function() {
-  $('.add_more').closest('#some_id').first().clone().appendTo('.results');
-});
-
- $('#some_id').on('click', '#remove', function() {
-  alert();
-  $('#remove').closest('#some_id').not(':first').last().remove();
-});
-
-     $('#stock_q, #price').on('change', function(){
-       var qnty = $('#stock_q').val();
-       var rate = $('#price').val();
-       var the_amount = (qnty*rate).toFixed(2);
-       $('#price_total').val(the_amount);
-     });
+   $('#some_id').on('click', '.add_more', function() {
+     $('.add_more').closest('#some_id').first().clone().appendTo('.results');
    });
+
+    $('#some_id').on('click', '#remove', function() {
+     alert();
+     $('#remove').closest('#some_id').not(':first').last().remove();
+   });
+
+        $('#stock_q, #price').on('change', function(){
+          var qnty = $('#stock_q').val();
+          var rate = $('#price').val();
+          var the_amount = (qnty*rate).toFixed(2);
+          $('#price_total').val(the_amount);
+        });
+      });
 </script>
