@@ -38,12 +38,12 @@
 						  <tr>
                 <td><?php echo $i;?></td>
                
-                <td><?php echo $row->master_name; ?></td>
+                <td><?php echo $row->name; ?></td>
   							<td><?php echo $row->mat_name; ?></td>
   							<td><?php echo $row->design_number; ?></td>
   							<td><?php echo $row->pices; ?></td>
                 <td>
-                 <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Product/edit/').$row->sr_no;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                 <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Pices/editPices/').$row->sr_no;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->sr_no;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td>
 						  </tr>

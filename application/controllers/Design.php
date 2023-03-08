@@ -39,8 +39,6 @@ class Design extends CI_Controller
             $data = array(
                 'design_num' => $design_number,
             );
-           /*  print_r($id);
-            die(); */
             if ($id) {
                 $data = array(
                     'id' => $id,

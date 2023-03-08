@@ -10,8 +10,11 @@
                 </div>
 				
 				<div class="panel-body">	
-					<div class="challan-div">			     
-						<form id="insider_invoice_form" name="insider_invoice_form" class="form-horizontal" action="<?php echo site_url('Pices/create');?>" method="post">
+					<div class="challan-div">	
+                    <?php
+            echo form_open('Pices/editPices/'.$pices->sr_no.' class="form-horizontal" id="edit_pices_form"');
+          ?>		     
+						<form id="insider_invoice_form" name="insider_invoice_form" class="form-horizontal" action="<?php echo site_url('Pices/editPices/'.$pices->sr_no.'');?>" method="post">
 							<div class="form-group">						
 								<h3 class="text-center">Pices Recived</h3>
 							</div>
@@ -19,25 +22,18 @@
 								<div class="form-group ">
 									<label class="control-label col-sm-3">Master Name</label>
 									<div class="col-sm-9">
-	  									<!-- <select name="customerName" id="customerName" class="form-control">
-	  										<option value="" selected="selected">--select customer--</option>
+	  									<select name="customerName" id="customerName" class="form-control">
+	  										<option value="" >--select customer--</option>
                                             <?php foreach ($custList->result() as $row){
-                                                echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->material_name.'</option>';
-                                            } ?>
-                                            
+                                                print_r($pices->master_id);
+                                               ?>
+                                                <option value="<?php echo $row->id ?>" <?php echo ($pices->master_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
+
+                                         <?php   } ?>
                                             <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
                                         <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name"> 
-                                            <option value="other">Other</option>
-	  									</select>  -->	
-                                        
-                                          <select name="customerName" id="customerName" class="form-control">
-                                            <option value="" selected="selected">--select master--</option>
-                                            <?php
-                                                // print_r($custList);
-                                                foreach ($custList->result() as $row){
-                                                    echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
-                                                } ?>
-                                            </select>
+                                            <!-- <option value="other">Other</option> -->
+	  									</select> 								
 							   		</div>
                                     <div class="col-sm-2 hide">
                                     <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new');?>">Add Customer</a> 
@@ -180,7 +176,15 @@
                                             <th>Total Material Used</th>
                                         </tr>
                                     </thead>
+                                    <?php  
+                                    $d_no = explode(',', $pices->design_number);
+                                    $mat = explode(',', $pices->mat_name);
+                                    $pieces = explode(',', $pices->pices);
+                                    $avg = explode(',', $pices->average);
+                                    $m_used = explode(',', $pices->material_used);
+                                    $cnt= count($mat); ?>
                                     <tbody>
+                                        <?php for ($i=0; $i < $cnt; $i++) { ?>
                                         <tr class="row_one">
                                             <td>
                                                 <select name="hsn[]" id="hsn"  class="form-control my-select">
@@ -188,34 +192,36 @@
                                                     <?php foreach ($designs->result() as $row){ 
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
-                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
-                                                    
-                                                    } ?>
+                                                        /*  echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>'; */
+                                                        
+                                                        ?>
+                                                     <option data-id="<?php echo $row->id ?>" value="<?php echo $row->design_num ?>" <?php echo ($d_no[$i] == $row->design_num) ? 'selected' : '' ?>><?php echo $row->design_num ?></option>
+                                                  <?php  } ?>
                                                 </select>
                                                 <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
                                             </td>
                                             <td class=""><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
                                             <select name="items[]" id="items" class="form-control">
-                                                    <option value="">--select Product--</option>
-                                                    <?php 
-                                                    foreach ($materialList->result() as $row){
-                                                        
-                                                        $mat = explode(',', $row->material_name);
-                                                        $cnt= count($mat);
-                                                        for ($i=0; $i < $cnt; $i++) {
-                                                       print_r( $row);
-                                                    echo '<option label="" value="'.$mat[$i].'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
-                                                    } }?>
+                                                    <option value="">--select material--</option>
+                                                    <?php foreach ($materialList->result() as $row){ 
+                                                        print_r( $row->material_name );
+                                                   /*  echo '<option label="" value="'.$row->material_name.'" '. set_select("items[]", $row->material_name).'>'.$row->material_name.'</option>'; */
+                                                   //print_r($row);
+                                                   ?>
+                                                   <option value="<?php echo $row->material_name ?>" <?php echo (strtolower($row->material_name) == strtolower($mat[$i])) ? 'selected' : '' ?>><?php echo $row->material_name ?></option>
+                                                <?php    } ?>
                                                 </select>
                                         </td>
-                                            <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
-                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
+                                            <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7" value="<?php echo  $pieces[$i]; ?>"></td>                                            
+                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7" value="<?php echo  $avg[$i]; ?>"></td>
                                             <td>
-                                                <input type="text" name="amount[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3" readonly="readonly">&nbsp;
+                                                <input type="text" name="amount[]" class="amount form-control" style=" width: 40%; display: inline;" value="<?php echo $m_used[$i]?>" size="3" readonly="readonly">&nbsp;
+                                               
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
                                         </tr>
+                                        <?php } ?>
                                     </tbody>
                                 </table>
                             </div>                            
@@ -232,7 +238,7 @@
                                 <div class="col-sm-2 col-sm-offset-6">
                                     <b>OTHER</b>
                                 </div>
-                                <div class="col-sm-3"> 
+                                <div class="col-sm-3 "> 
                                     <input type="text" name="other_charge" id="other_charge" class="only_num form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
@@ -309,14 +315,16 @@
                             </div>                              
                             <div class="form-group">
                               <div class="col-sm-6 col-sm-offset-3">
-                                <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
+              <?php echo form_submit('edit_purchaser','edit&save','class="btn btn-success"'); ?>
+
+                                <!-- <button type="submit" name="edit_purchaser" class="btn btn-primary submit-btn">SAVE & PRINT</button> -->
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>                    
                               </div>
                             </div>
 
 
-						</form>
+                            <?php echo form_close();  ?>
 					</div>
 				</div>
 
@@ -339,7 +347,7 @@ $(document).ready(function(){
     setTimeout(function(){
         $('.successMsg, .err_db').fadeIn().fadeOut().fadeIn().fadeOut('slow');
     }, 3000);    
-    $('#items, .qnty, .amount_with_tax, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');                         
+   /*  $('#items, .amount_with_tax, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');  */                        
                 $('#table_with_tax').hide();  
                 $('#table_without_tax').show();
                 //set product rate on change
@@ -451,7 +459,7 @@ $(document).ready(function(){
             if(a_w_t == 'with')
             { 
                // $('#insider_invoice_form')[0].reset(); 
-                $('#items, .qnty, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');              
+                /* $('#items, .qnty, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');   */            
                 $('#table_with_tax').show();  
                 $('#table_without_tax').hide();
                 //show AMOUNT by qnty*rate
@@ -472,7 +480,7 @@ $(document).ready(function(){
             else
             {
                // $('#insider_invoice_form')[0].reset();    
-               $('#items, .qnty, .amount_with_tax, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');                         
+               /* $('#items, .qnty, .amount_with_tax, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val(''); */                         
                 $('#table_with_tax').hide();  
                 $('#table_without_tax').show();
                 //set product rate on change

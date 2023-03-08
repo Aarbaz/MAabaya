@@ -11,10 +11,6 @@ class Pices_model extends CI_Model {
     {
         return $this->db->get("material");
     }
-    public function get_all_master()
-    {
-        return $this->db->select('id, master_name')->get('material');
-    }
     public function get_products_in_pcs_list()
     {
         
@@ -31,11 +27,28 @@ class Pices_model extends CI_Model {
         $this->db->order_by('sr_no','desc');
         $this->db->from('product_pices');
         $this->db->join('material', 'material.id = product_pices.master_id');
+        $this->db->join('customers', 'customers.id = product_pices.master_id');
         return $this->db->get();
+    }
+    public function get_pices_byID($pices_id)
+    {
+        $this->db->select('*');
+    	$this->db->from('product_pices');
+        $this->db->where('sr_no',$pices_id);
+        $query = $this->db->get();
+        return $query->row();
     }
     public function create_record($data)
     {
         return $this->db->insert('product_pices', $data);
+    }
+
+    public function update_records($data, $pices_id)
+    {
+        $this->db->where('sr_no', $pices_id);
+		$this->db->update('product_pices', $data);
+		return $this->db->affected_rows();
+
     }
 
     /* public function getProduct()
