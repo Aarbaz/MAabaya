@@ -52,4 +52,6 @@ class Making_model extends CI_Model
             ->select("id, master_id,material_id,stock")
             ->get("making");
     }
+
+
 }

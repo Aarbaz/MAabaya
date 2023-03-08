@@ -25,7 +25,7 @@ class Customer_model extends CI_Model {
     public function get_powner()
     {
         $role = '0';
-        $this->db->select('id,,bakery_name');
+        $this->db->select('id,,name');
         $this->db->where('role',$role);
         return $query = $this->db->get('customers');
     }
@@ -33,7 +33,7 @@ class Customer_model extends CI_Model {
     public function get_mowner()
     {
         $role = '1';
-        $this->db->select('id,,bakery_name');
+        $this->db->select('id,,name');
         $this->db->where('role',$role);
         return $query = $this->db->get('customers');
     }

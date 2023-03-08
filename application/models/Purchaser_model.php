@@ -17,6 +17,14 @@ class Purchaser_model extends CI_Model
         return $this->db->affected_rows();
     }
 
+    public function update_pstock_qty($data, $id)
+    {
+        $this->db->where("material_id", $id);
+        $this->db->update("purchaser_stock", $data);
+        return $this->db->affected_rows();
+    }
+
+
     public function create_material($data)
     {
         return $this->db->insert("material", $data);
@@ -94,4 +102,14 @@ class Purchaser_model extends CI_Model
     {
         return $this->db->select("id")->get("purchaser");
     }
+
+    function get_pstock($id)
+  {
+    $this->db->select("id, quantity");
+    $this->db->from("purchaser_stock");
+    $this->db->where("material_id", $id);
+    $query = $this->db->get();
+    return $query->row();
+  }
+
 }
