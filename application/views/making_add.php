@@ -40,7 +40,7 @@
                   </div>
                   <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
                </div>
-              
+
                   <div class="form-group" id="table_without_tax">
                                 <table class="table table-bordered">
                                     <thead>
@@ -53,7 +53,13 @@
                                         <tr class="row_one">
 
                                             <td class="">
-                                              <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>">
+                                              <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>"> -->
+                                              <select name="material_name[]" id="material_name" class="form-control">
+                                                <option value="" selected="selected">--select material--</option>
+                                                  <?php foreach ($matList->result() as $row){
+                                                      echo '<option value="'.$row->id.'" '.set_select('materialName',$row->material_name).'>'.$row->material_name.'</option>';
+                                                  } ?>
+                                              </select>
                                             </td>
                                             <td>
                                               <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">

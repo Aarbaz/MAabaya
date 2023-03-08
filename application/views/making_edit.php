@@ -108,7 +108,24 @@
                                   <tr class="row_one">
 
                                       <td class="">
-                                        <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo  $mat[$i]; ?>">
+                                        <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo  $mat[$i]; ?>"> -->
+
+                                        <select name="material_name[]" id="material_name" class="form-control">
+                                          <option value="" selected="selected">--select material--</option>
+                                            <?php
+                                            // print_r($matList);
+                                            // die();
+
+                                            foreach ($matList->result() as $row){
+                                              ?>
+                                              <option value="<?php echo $row->id ?>" <?php echo ($mat[$i] == $row->id) ? 'selected' : '' ?>><?php echo $row->material_name ?></option>
+
+                                              <?php
+                                                // echo '<option  value="'.$row->material_name.'" '.set_select('materialName',$row->material_name).' '.if($mat[$i] == $row->material_name ){ echo "selected"; }.' >'.$row->material_name.'</option>';
+
+                                            } ?>
+                                        </select>
+
                                         <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
                                       </td>
                                       <td>

@@ -5,19 +5,37 @@ class Purchaser_model extends CI_Model {
 
   public function add_purchaser_qty($dataStk)
 {
-  
+
   $this->db->insert('purchaser_stock', $dataStk);
   // return $this->db->insert_batch('balance', $insert_data);
 
   return $this->db->insert_id();
 }
 
-public function update_purchaser_qty($data, $id)
+public function update_purchaser_qty($data, $id,$mid)
 {
    $this->db->where('purchaser_id', $id);
+   $this->db->where('material_id', $mid);
 $this->db->update('purchaser_stock', $data);
 return $this->db->affected_rows();
 
+}
+
+public function create_material($data)
+{
+    return $this->db->insert('material', $data);
+}
+
+public function update_material($id,$data)
+{
+    $this->db->where('id', $id);
+$this->db->update('material', $data);
+return $this->db->affected_rows();
+}
+
+public function get_all_material()
+{
+    return $this->db->select('id, material_name')->get('material');
 }
 
     public function add_purchaser($data)
@@ -32,7 +50,7 @@ return $this->db->affected_rows();
     }
 
     public function get_purchaser_byID($id)
-    {   $this->db->select('id,total_amount,material_name,stock,price,owner_name');
+    {   $this->db->select('id,total_amount,material_id,stock,price,owner_name');
     	$this->db->from('purchaser');
         $this->db->where('id',$id);
         $query = $this->db->get();
@@ -59,6 +77,14 @@ return $this->db->affected_rows();
         return $this->db->select('material_name,stock,price')->where('material_name', $detail)->get('purchaser')->result_array();
     }
 
+    public function getMaterialDetailbyId($id)
+    {
+        // return $this->db->select('material_name,')->where('id', $id)->get('material')->row();
+
+        $this->db->where('id', $id);
+		$query = $this->db->get('material');
+		return $query->result();
+    }
     public function get_all_purchaser()
     {
         return $this->db->select('id')->get('purchaser');

@@ -42,15 +42,23 @@
   							<!-- <td><?php echo $row->stock; ?></td> -->
                   <td>
                 <?php
-                $material_name = explode(',', $row->material_name);
+
+                $material_id = explode(',', $row->material_id);
                 $stk = explode(',', $row->stock);
                 $prd = explode(',', $row->price);
                 $total_amount = explode(',', $row->total_amount);
-                $cntp= count($material_name);
-
+                $cntp= count($material_id);
+                // print_r($cntp);
+                // die();
                 for ($p=0; $p < $cntp; $p++) {
+                   foreach ($matList->result() as $col){
 
-                  echo $material_name[$p].' - '.$stk[$p].' Meters - '.$total_amount[$p].' Rs'; ?>
+                      if ($material_id[$p] == $col->id) {
+                        echo $col->material_name.' - '.$stk[$p].' Meters - '.$total_amount[$p].' Rs';
+
+                      }
+                   }
+                    ?>
                   <br>
               <?php } ?></td>
   							<!-- <td><?php echo $row->price; ?> Rs</td> -->

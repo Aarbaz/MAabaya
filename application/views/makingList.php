@@ -51,7 +51,15 @@
 
                   for ($m=0; $m < $cntm; $m++) {
 
-                   echo $material_name[$m].' - '.$stk[$m].' Meters'; ?>
+                   // echo $material_name[$m].' - '.$stk[$m].' Meters';
+                   foreach ($matList->result() as $col){
+
+                      if ($material_name[$m] == $col->id) {
+                        echo $col->material_name.' - '.$stk[$m].' Meters';
+                      }
+                   }
+                   ?>
+
                    <br>
 
                   <?php } ?>

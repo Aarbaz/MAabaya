@@ -30,7 +30,7 @@ input[type="date"]{
 
         <div class="panel-body">
           <p data-placement="top" data-toggle="tooltip">
-            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/purchaser_add/');?>">Go back to Material list</a>
+            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Purchaser/');?>">Go back to Material list</a>
           </p> <hr />
           <?php
             echo form_open('Purchaser/add_new', 'class="form-horizontal" id="add_purchaser_form"');
@@ -42,11 +42,12 @@ input[type="date"]{
           <input type="text" class="form-control" name="owner_name" placeholder="Owner Name" value="<?php echo set_value('owner_name'); ?>">
 
         </div>
-        <p>
-          <span class="btn btn-primary btn-sm" onclick="add_new_purchaser()">Add New</span>
-        </p>
+
         <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
       </div>
+      <p>
+        <span class="btn btn-primary btn-sm" onclick="add_new_material()">Add New</span>
+      </p>
       <div class="form-group" id="table_without_tax">
                     <table class="table table-bordered">
                         <thead>
@@ -61,7 +62,13 @@ input[type="date"]{
                             <tr class="row_one">
 
                                 <td class="">
-                                  <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>">
+                                  <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>"> -->
+                                  <select name="material_name[]" id="material_name" class="form-control">
+                                    <option value="" selected="selected">--select material--</option>
+                                      <?php foreach ($matList->result() as $row){
+                                          echo '<option value="'.$row->id.'" '.set_select('materialName',$row->material_name).'>'.$row->material_name.'</option>';
+                                      } ?>
+                                  </select>
                                 </td>
                                 <td>
                                   <input type="text" class="form-control qnty" id="stock_q" name="stock_q[]" placeholder="Meters"  value="<?php echo set_value('price'); ?>">
@@ -138,10 +145,10 @@ input[type="date"]{
 
 </div><!--close main div-->
 
-<div class="modal fade" id="add_design" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+<div class="modal fade" id="add_material" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="add_design_form" method="post" action="<?php echo site_url('/Design/add_new');?>">
+      <form id="add_material_form" method="post" action="<?php echo site_url('/Purchaser/add_material');?>">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h4 class="modal-title custom_align" id="Heading">Add Design</h4>
@@ -150,9 +157,9 @@ input[type="date"]{
       <div class="modal-body">
             <div class="col-sm-12">
             <div class="form-group">
-									<label class="control-label col-sm-3">Design Number</label>
+									<label class="control-label col-sm-3">Material Name</label>
 									<div class="col-sm-9" id="design_holder">
-                                        <input type="text" name="design_number" id="design_number" class="form-control" value="">
+                                        <input type="text" name="material_name" id="material_name" class="form-control" value="">
                                         <input type="hidden" name="id" value="">
                                     </div>
 								</div>
@@ -175,8 +182,8 @@ input[type="date"]{
 <script src="<?php echo base_url('assets/js/jquery.validate.min.js'); ?>"></script>
 <script type="text/javascript">
 
-function add_new_purchaser(){
-    $('#add_design').modal('show');
+function add_new_material(){
+    $('#add_material').modal('show');
 }
 
 // add new row
