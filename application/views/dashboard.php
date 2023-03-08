@@ -11,95 +11,59 @@
 				</div>
 			    <div class="panel-body">
 			   		<div class="row">
-					   <div class="col-sm-4">
-               <div class="panel panel-default">
-                 <div class="panel-heading">
-                   <b>Total Customers</b>
-                 </div>
-                 <div class="panel-body">
-                   <h2 class="text-center text-primary"><?php echo $customer_count; ?> </h2>
-                 </div>
-                 </div>
-							</div>
-			   			<div class="col-sm-4">
 
-
+			   			<div class="col-sm-3">
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <b>Total Purchaser</b>
                   </div>
                   <div class="panel-body">
-                    <h2 class="text-center text-primary"><?php echo $purchaser_count; ?> </h2>
+                    <h2 class="text-center text-primary"><?php echo $pur_customer; ?> </h2>
                   </div>
                   </div>
+			   			</div>
+              <div class="col-sm-3">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <b>Total Maker</b>
+                  </div>
+                  <div class="panel-body">
+                    <h2 class="text-center text-primary"><?php echo $mak_customer; ?> </h2>
+                  </div>
+                  </div>
+			   			</div>
+              <div class="col-sm-3">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <b>Seller Customer</b>
+                  </div>
+                  <div class="panel-body">
+                    <h2 class="text-center text-primary"><?php echo $sel_customer; ?> </h2>
+                  </div>
+                  </div>
+			   			</div>
+              <!-- <div class="col-sm-2">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <b>Total Customers</b>
+                  </div>
+                  <div class="panel-body">
+                    <h2 class="text-center text-primary"><?php echo $customer_count; ?> </h2>
+                  </div>
+                  </div>
+               </div> -->
+			   			<div class="col-sm-3">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<b>Total Material</b>
+								</div>
+								<div class="panel-body">
+									<h2 class="text-center text-primary"><?php echo $all_material; ?> </h2>
+								</div>
+			   				</div>
+			   			</div>
 
-			   			</div>
-			   			<div class="col-sm-4">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<b>Total Products</b>
-								</div>
-								<div class="panel-body">
-									<h2 class="text-center text-primary"><?php echo $product_count; ?> </h2>
-								</div>
-			   				</div>
-			   			</div>
-						   <!-- <div class="col-sm-3">
-							</div> -->
-			   			<!-- <div class="col-sm-3">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<b>Total Materials</b>
-								</div>
-								<div class="panel-body">
-									<h2 class="text-center text-primary"><?php echo $material_count; ?> </h2>
-								</div>
-			   				</div>
-			   			</div> -->
-			   			<!-- <div class="col-sm-3">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<b>Total Vendors</b>
-								</div>
-								<div class="panel-body">
-									<h2 class="text-center text-primary"><?php echo $vendor_count; ?> </h2>
-								</div>
-			   				</div>
-			   			</div>			   						   						   			 -->
 			   		</div>
-			   		<!-- <div class="row">
-			   			<div class="col-sm-12">
-    						<div class="panel panel-default">
-								<div class="panel-heading"><b>Customer wise Total Order Value</b></div>
-								<div class="panel-body">
-									<table id="order_sum" class="table table-bordered">
-										<tr class="header">
-											<th>Sr No</th><th>Customer Name</th><th>Total Order (In Rs.)</th>
-											<th>Paid (In Rs.)</th><th>Balance (In Rs.)</th><th>Last Aamount (In Rs.)</th>
-										</tr>
-										<?php
-										if(count($order_sum) > 0)
-										{
-											$i = 1;
-											foreach ($order_sum as $order)
-											{
-												echo '<tr>
-														<td>'.$i.'</td>
-														<td>'.$order->bakery_name.'</td>
-														<td class="total">'.$order->total.'</td>
-														<td class="paid">'.$order->paid.'</td>
-														<td class="balance">'.$order->balance.'</td>
-														<td class="last_amount">'.$order->last_amount.'</td>
-													</tr>';
-													$i++;
-											}
-										} ?>
-
-									</table>
-								</div>
-							</div>
-						</div>
-    				</div> -->
 
             <div class="row">
 			   			<div class="col-sm-12">
@@ -111,7 +75,7 @@
 											<th>Sr No</th><th>Purchaser Name</th><th>Total Order (In Rs.)</th>
 											<th>Paid (In Rs.)</th><th>Balance (In Rs.)</th><th>Last Aamount (In Rs.)</th>
 										</tr>
-										<?php
+										<!-- <?php
 										if(count($order_sum) > 0)
 										{
 											$i = 1;
@@ -119,7 +83,7 @@
 											{
 												echo '<tr>
 														<td>'.$i.'</td>
-														<td>'.$order->bakery_name.'</td>
+														<td>'.$order->name.'</td>
 														<td class="total">'.$order->total.'</td>
 														<td class="paid">'.$order->paid.'</td>
 														<td class="balance">'.$order->balance.'</td>
@@ -127,7 +91,7 @@
 													</tr>';
 													$i++;
 											}
-										} ?>
+										} ?> -->
 
 									</table>
 								</div>
