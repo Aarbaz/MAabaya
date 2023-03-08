@@ -14,6 +14,12 @@ class Making_model extends CI_Model
         return $this->db->get("making");
     }
 
+    public function add_making_qty($dataStk)
+    {
+        $this->db->insert("maker_stock", $dataStk);
+        return $this->db->insert_id();
+    }
+
     public function get_material_byID($id)
     {
         $this->db->select("id, master_id,material_id,stock");

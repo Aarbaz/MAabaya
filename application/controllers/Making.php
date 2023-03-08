@@ -94,6 +94,8 @@ class Making extends CI_Controller
                 $data["username"] = $this->session->userdata("logged_in");
                 $data["matList"] = $this->Purchaser_model->get_all_material();
                 $data["custList"] = $this->Customer_model->get_mowner();
+                $data["PurchaserList"] = $this->Customer_model->get_powner();
+
                 $this->load->view("layout/header", $data);
                 $this->load->view("layout/menubar");
                 $this->load->view("making_add", $data);
@@ -121,15 +123,23 @@ class Making extends CI_Controller
 
                 $material_ids = $this->input->post("material_name[]");
                 $stocks = $this->input->post("stock_q[]");
+                $oldstock = $this->input->post("stock_in[]");
+
+
+                $master_id = $this->input->post("master_id");
 
                 $m = 0;
                 foreach ($stocks as $row) {
-                    // $dataStk["material_id"] = $material_ids[$m];
-                    $dataStk["quantity"] = $stocks[$m];
-                    $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
+                    $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
+                    $this->Purchaser_model->update_pstock_qty($dataStk,$master_id,$material_ids[$m]);
+
+                    $dataMak["master_id"] = $master_id;
+                    $dataMak["material_id"] = $material_ids[$m];
+                    $dataMak["quantity"] = $stocks[$m];
+                    $this->Making_model->add_making_qty($dataMak);
+
                     $m++;
                 }
-
 
                 if ($insert > 0) {
                     $this->session->set_flashdata(
@@ -154,6 +164,8 @@ class Making extends CI_Controller
             $data["username"] = $this->session->userdata("logged_in");
             $data["matList"] = $this->Purchaser_model->get_all_material();
             $data["custList"] = $this->Customer_model->get_mowner();
+            $data["PurchaserList"] = $this->Customer_model->get_powner();
+
 
             $this->load->view("layout/header", $data);
             $this->load->view("layout/menubar");

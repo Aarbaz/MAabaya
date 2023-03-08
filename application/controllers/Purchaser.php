@@ -81,7 +81,6 @@ class Purchaser extends CI_Controller
                 $this->load->view("layout/menubar");
                 $this->load->view("purchaser_add", $data);
                 $this->load->view("layout/footer");
-                // echo "strs8";
             } else {
                 $postData = $this->input->post();
                 $material_name = implode(
@@ -120,6 +119,7 @@ class Purchaser extends CI_Controller
                     $dataStk["quantity"] = $stock[$i];
                     $dataStk["price"] = $price[$i];
                     $dataStk["purchaser_id"] = $purchaser_id;
+                    $dataStk["owner_id"] = strtoupper($postData["owner_name"]);
                     $this->Purchaser_model->add_purchaser_qty($dataStk);
                     $i++;
                 }

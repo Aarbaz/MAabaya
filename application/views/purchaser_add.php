@@ -51,7 +51,6 @@
                      <select name="owner_name" id="owner_name" class="form-control">
                         <option value="" selected="selected">--select owner--</option>
                         <?php
-                           // print_r($custList);
                            foreach ($custList->result() as $row){
                                echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
                            } ?>

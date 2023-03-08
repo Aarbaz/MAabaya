@@ -39,12 +39,25 @@
                <br>
                <div class="form-group">
                   <div class="col-sm-5">
-                     <label>Master Name</label>
+                     <label>Purchser Name</label>
                      <!-- <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>"> -->
+                     <select name="master_id" id="master_id" class="form-control">
+                        <option value="" selected="selected">--select master--</option>
+                          <?php
+                              foreach ($PurchaserList->result() as $row){
+                                  echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
+                              } ?>
+
+                     </select>
+                  </div>
+                  <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
+               </div>
+               <div class="form-group">
+                  <div class="col-sm-5">
+                     <label>Master Name</label>
                      <select name="master_name" id="master_name" class="form-control">
                         <option value="" selected="selected">--select master--</option>
                         <?php
-                           // print_r($custList);
                            foreach ($custList->result() as $row){
                                echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
                            } ?>
@@ -61,11 +74,10 @@
                            <th>Stock/Quantity</th>
                         </tr>
                      </thead>
-                     <tbody>
-                        <tr class="row_one">
+                     <tbody id="rows-list">
+                        <tr>
                            <td class="">
-                              <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>"> -->
-                              <select name="material_name[]" id="material_name" class="form-control" onchange="myFunction(this)">
+                              <select name="material_name[]" id="material_name" class="form-control check_stock ">
                                  <option value="" selected="selected">--select material--</option>
                                  <?php foreach ($matList->result() as $row){
                                     echo '<option  value="'.$row->id.'" '.set_select('materialName',$row->material_name).'>'.$row->material_name.'</option>';
@@ -73,7 +85,7 @@
                               </select>
                            </td>
                            <td>
-                              <input type="text" class="form-control stock_in" id="stock_in" name="stock_in[]" placeholder="Stock/Quantity" value="<?php echo set_value('stock_in'); ?>" disabled>
+                              <input type="text" class="form-control stock_in" id="stock_in" name="stock_in[]" placeholder="Stock/Quantity"  value="" readonly>
                            </td>
                            <td>
                               <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
@@ -140,36 +152,25 @@
        $('#add_master').modal('show');
    }
 
-   function myFunction(sel) {
-  var opts = [],
-    opt;
-  var len = sel.options.length;
-  for (var i = 0; i < len; i++) {
-    opt = sel.options[i];
-
-    if (opt.selected) {
-      opts.push(opt);
-
-      var material_id = opt.value;
-      var baseURL= "<?php echo base_url();?>";
-      $.ajax({
-        url:'<?=base_url()?>index.php/Making/quantityById',
-        method: 'post',
-        data: {material_id: material_id},
-        dataType: 'json',
-        success:function(resp){
-            $('.stock_in').val(resp.quantity +' Meters')
-            // $("input[name=stock_in[]]").val(resp.quantity);
-          }
-        });
-    }
-  }
-
-  // return opts;
-}
-
-
       $(document).ready(function(){
+        var list = $("#rows-list");
+        $(list).on('change', ".check_stock", function () {
+            var row = $(this).closest('tr');
+            var material_id = $(this).val();
+            var baseURL= "<?php echo base_url();?>";
+            $.ajax({
+                type: 'post',
+                url: '<?=base_url()?>index.php/Making/quantityById',
+                data: {material_id: material_id},
+            }).then(function (res) {
+              console.log(res);
+              var res = $.parseJSON(res);
+                row.find(".stock_in").val(res.quantity);
+            }, function () {
+                alert("Sorry cannot get the product details!");
+            });
+        });
+
         // add new row
         $(document).on('click', '.add_more', function(){
             $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));

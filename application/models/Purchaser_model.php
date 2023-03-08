@@ -17,9 +17,10 @@ class Purchaser_model extends CI_Model
         return $this->db->affected_rows();
     }
 
-    public function update_pstock_qty($data, $id)
+    public function update_pstock_qty($data, $id,$mid)
     {
-        $this->db->where("material_id", $id);
+        $this->db->where("owner_id", $id);
+        $this->db->where("material_id", $mid);
         $this->db->update("purchaser_stock", $data);
         return $this->db->affected_rows();
     }
