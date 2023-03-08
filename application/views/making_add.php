@@ -46,7 +46,7 @@
                         <?php
                            // print_r($custList);
                            foreach ($custList->result() as $row){
-                               echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->bakery_name).'>'.$row->bakery_name.'</option>';
+                               echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
                            } ?>
                      </select>
                   </div>
@@ -57,6 +57,7 @@
                      <thead>
                         <tr>
                            <th>Material Name</th>
+                           <th>Available Stock</th>
                            <th>Stock/Quantity</th>
                         </tr>
                      </thead>
@@ -64,12 +65,15 @@
                         <tr class="row_one">
                            <td class="">
                               <!-- <input type="text" class="form-control" name="material_name[]" placeholder="Material Name" value="<?php echo set_value('material_name'); ?>"> -->
-                              <select name="material_name[]" id="material_name" class="form-control">
+                              <select name="material_name[]" id="material_name" class="form-control" onchange="myFunction(this)">
                                  <option value="" selected="selected">--select material--</option>
                                  <?php foreach ($matList->result() as $row){
-                                    echo '<option value="'.$row->id.'" '.set_select('materialName',$row->material_name).'>'.$row->material_name.'</option>';
+                                    echo '<option  value="'.$row->id.'" '.set_select('materialName',$row->material_name).'>'.$row->material_name.'</option>';
                                     } ?>
                               </select>
+                           </td>
+                           <td>
+                              <input type="text" class="form-control stock_in" id="stock_in" name="stock_in[]" placeholder="Stock/Quantity" value="<?php echo set_value('stock_in'); ?>" disabled>
                            </td>
                            <td>
                               <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
@@ -135,8 +139,37 @@
    function add_new_master(){
        $('#add_master').modal('show');
    }
-      $(document).ready(function(){
 
+   function myFunction(sel) {
+  var opts = [],
+    opt;
+  var len = sel.options.length;
+  for (var i = 0; i < len; i++) {
+    opt = sel.options[i];
+
+    if (opt.selected) {
+      opts.push(opt);
+
+      var material_id = opt.value;
+      var baseURL= "<?php echo base_url();?>";
+      $.ajax({
+        url:'<?=base_url()?>index.php/Making/quantityById',
+        method: 'post',
+        data: {material_id: material_id},
+        dataType: 'json',
+        success:function(resp){
+            $('.stock_in').val(resp.quantity +' Meters')
+            // $("input[name=stock_in[]]").val(resp.quantity);
+          }
+        });
+    }
+  }
+
+  // return opts;
+}
+
+
+      $(document).ready(function(){
         // add new row
         $(document).on('click', '.add_more', function(){
             $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));

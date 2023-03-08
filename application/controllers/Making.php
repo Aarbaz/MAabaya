@@ -118,6 +118,19 @@ class Making extends CI_Controller
                 $insert = $this->Making_model->add_material($data);
                 $product_id = $this->db->insert_id();
 
+
+                $material_ids = $this->input->post("material_name[]");
+                $stocks = $this->input->post("stock_q[]");
+
+                $m = 0;
+                foreach ($stocks as $row) {
+                    // $dataStk["material_id"] = $material_ids[$m];
+                    $dataStk["quantity"] = $stocks[$m];
+                    $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
+                    $m++;
+                }
+
+
                 if ($insert > 0) {
                     $this->session->set_flashdata(
                         "success",
@@ -277,5 +290,12 @@ class Making extends CI_Controller
             }
             echo json_encode($resp);
         }
+    }
+
+    public function quantityById()
+    {
+      $id = $this->input->post('material_id');
+      $data = $this->Purchaser_model->get_pstock($id);
+      echo json_encode($data);
     }
 }

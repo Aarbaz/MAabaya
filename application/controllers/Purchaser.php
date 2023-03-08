@@ -234,10 +234,7 @@ class Purchaser extends CI_Controller
 
                 $purchaser_id = $postData["pur_id"];
 
-                $update = $this->Purchaser_model->update_purchaser(
-                    $data,
-                    $pur_id
-                );
+                $update = $this->Purchaser_model->update_purchaser($data,$pur_id);
 
                 // $purchaser_id = $this->db->insert_id();
                 $material_id = $this->input->post("material_name[]");
@@ -250,11 +247,7 @@ class Purchaser extends CI_Controller
                     $dataStk["quantity"] = $stock[$j];
                     $dataStk["price"] = $price[$j];
                     $dataStk["purchaser_id"] = $purchaser_id;
-                    $this->Purchaser_model->update_purchaser_qty(
-                        $dataStk,
-                        $purchaser_id,
-                        $material_id[$j]
-                    );
+                    $this->Purchaser_model->update_purchaser_qty($dataStk,$purchaser_id,$material_id[$j]);
                     $j++;
                 }
 

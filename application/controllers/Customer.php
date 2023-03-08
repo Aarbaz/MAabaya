@@ -77,7 +77,7 @@ class Customer extends CI_Controller {
 	// Add new customer form
 	public function add_new()
 	{
-		$this->form_validation->set_rules('bakery_name', 'Bakery Name', 'required|alpha_numeric_spaces');
+		$this->form_validation->set_rules('name', 'Bakery Name', 'required|alpha_numeric_spaces');
 		/* $this->form_validation->set_rules('owner_name', 'Owner Name', 'required|alpha_numeric_spaces'); */
 		/* $this->form_validation->set_rules('area', 'Area', "required|regex_match[/^[a-zA-Z0-9\.\-\,\'\s]+$/]",
 			array('regex_match' =>'Please enter valid area')); */
@@ -102,7 +102,7 @@ class Customer extends CI_Controller {
 			else
 			{
 				$data = array(
-					'bakery_name' => strtoupper($postData['bakery_name']),
+					'name' => strtoupper($postData['name']),
 					'owner_name' => strtoupper($postData['owner_name']),
 					'owner_phone' => $postData['phone'],
 					'owner_email' => $postData['email'],
@@ -182,7 +182,7 @@ class Customer extends CI_Controller {
 	    {
 	    	$postData = $this->input->post();
 
-			$this->form_validation->set_rules('bakery_name', 'Bakery Name', 'required|alpha_numeric_spaces');
+			$this->form_validation->set_rules('name', 'Bakery Name', 'required|alpha_numeric_spaces');
 			$this->form_validation->set_rules('owner_name', 'Owner Name', 'required|alpha_numeric_spaces');
 			$this->form_validation->set_rules('city', 'City', 'alpha_numeric_spaces');
 			$this->form_validation->set_rules('phone', 'Phone number', 'numeric|min_length[10]|max_length[12]');
@@ -202,7 +202,7 @@ class Customer extends CI_Controller {
 			else
 			{
 				$data = array(
-					'bakery_name' => strtoupper($postData['bakery_name']),
+					'name' => strtoupper($postData['name']),
 					'owner_name' => strtoupper($postData['owner_name']),
 					'owner_phone' => $postData['phone'],
 					'owner_email' => $postData['email'],
@@ -275,7 +275,7 @@ class Customer extends CI_Controller {
 					$owner_name = $this->input->post('owner_name');
 					$id = $this->input->post('id');
 					$data = array(
-							'bakery_name' => $owner_name,
+							'name' => $owner_name,
 							'role' => '0',
 					);
 				 /*  print_r($id);
@@ -283,7 +283,7 @@ class Customer extends CI_Controller {
 					if ($id) {
 							$data = array(
 									'id' => $id,
-									'bakery_name' => $owner_name,
+									'name' => $owner_name,
 							);
 							$insert = $this->Customer_model->update_customer($data,$id);
 					}else{
@@ -315,7 +315,7 @@ class Customer extends CI_Controller {
 					$master_name = $this->input->post('master_name');
 					$id = $this->input->post('id');
 					$data = array(
-							'bakery_name' => $master_name,
+							'name' => $master_name,
 							'role' => '1',
 					);
 				 /*  print_r($id);
@@ -323,7 +323,7 @@ class Customer extends CI_Controller {
 					if ($id) {
 							$data = array(
 									'id' => $id,
-									'bakery_name' => $master_name,
+									'name' => $master_name,
 							);
 							$insert = $this->Customer_model->update_customer($data,$id);
 					}else{

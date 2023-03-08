@@ -53,7 +53,7 @@
                         <?php
                            // print_r($custList);
                            foreach ($custList->result() as $row){
-                               echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->bakery_name).'>'.$row->bakery_name.'</option>';
+                               echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
                            } ?>
                      </select>
                   </div>

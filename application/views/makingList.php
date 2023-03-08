@@ -4,7 +4,7 @@
       <div class="col-sm-12">
          <div class="panel panel-default">
             <div class="panel-heading">
-               <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Product/logout');?>">Log Out</a></span></h4>
+               <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Making/logout');?>">Log Out</a></span></h4>
             </div>
             <div class="panel-body">
                <p>
@@ -33,7 +33,7 @@
                         <td><?php echo $i; ?></td>
                         <td><?php
                            $detail = $this->Customer_model->get_customer_byID($row->master_id);
-                            echo $detail->bakery_name; ?></td>
+                            echo $detail->name; ?></td>
                         <td>
                            <?php
                               $material_ids = explode(',', $row->material_id);

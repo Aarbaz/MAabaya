@@ -25,7 +25,7 @@
             <option value="" selected="selected">--select master--</option>
               <?php
               foreach ($custList->result() as $row){?>
-                <option value="<?php echo $row->id ?>" <?php echo ($prod->master_id == $row->id) ? 'selected' : '' ?>><?php echo $row->bakery_name ?></option>
+                <option value="<?php echo $row->id ?>" <?php echo ($prod->master_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
                   <?php
               } ?>
           </select>

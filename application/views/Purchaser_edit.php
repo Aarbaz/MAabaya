@@ -22,7 +22,7 @@
                         <option value="" selected="selected">--select owner--</option>
                         <?php
                            foreach ($custList->result() as $row){?>
-                        <option value="<?php echo $row->id ?>" <?php echo ($pur->owner_id == $row->id) ? 'selected' : '' ?>><?php echo $row->bakery_name ?></option>
+                        <option value="<?php echo $row->id ?>" <?php echo ($pur->owner_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
                         <?php
                            } ?>
                      </select>
