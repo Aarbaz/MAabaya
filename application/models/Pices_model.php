@@ -51,6 +51,17 @@ class Pices_model extends CI_Model {
 
     }
 
+   /*  public function update_makerStock($customer_id,$material_values, $data)
+    {
+        foreach($material_values as $row)
+        {
+            $this->db->where('material_id', $row);
+            $this->db->where('making_owner_id', $customer_id);
+            $this->db->update('maker_stock', $data);
+        }
+        return $this->db->affected_rows();
+        
+    } */
     /* public function getProduct()
     {
         $ids = "9,11,12";

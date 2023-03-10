@@ -194,7 +194,7 @@
                                                 </select>
                                                 <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
                                             </td>
-                                            <td class=""><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
+                                            <td class="material_ids"><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
                                             <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select Product--</option>
                                                     <?php 
@@ -203,9 +203,10 @@
                                                         $mat = explode(',', $row->material_name);
                                                         $cnt= count($mat);
                                                         for ($i=0; $i < $cnt; $i++) {
-                                                       print_r( $row);
-                                                    echo '<option label="" value="'.$mat[$i].'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
+                                                       //print_r( $row);
+                                                    echo '<option label="" data-material-id="'.$row->id.'" value="'.$mat[$i].'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
                                                     } }?>
+                                                    <input type="hidden" name="material_ids[]" id="material_ids" value="">
                                                 </select>
                                         </td>
                                             <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
@@ -297,21 +298,12 @@
                             <div class="form-group">
                                 <div class="col-sm-12">&nbsp;</div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-6 col-sm-offset-1">
-                                    <b>This receipt should be signed by the person having the authority. No complaints will be entertained if the same are received after 24 hours of the delivery.</b>
-                                </div>
-                                <div class="col-sm-3">
-                                    <p class="text-right">FOR <b>M.A Abaya Manufacturer</b></p>
-                                    <p class="text-right"><br />AUTHORISED SIGNATURE</p>
-                                </div>
-                                <div class="col-sm-2">&nbsp;</div>
-                            </div>                              
+                             
                             <div class="form-group">
                               <div class="col-sm-6 col-sm-offset-3">
                                 <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button type="reset" name="reload" class="btn btn-primary">Reset</button>                    
+                                <button type="reset" name="reload" class="btn btn-primary">Reset</button>           
                               </div>
                             </div>
 
@@ -625,6 +617,7 @@ if( round_amount!= null)
 /* --- */
 $('.submit-btn').click(function() {
       var selected_ids = [];
+      var material_ids = [];
       $('tr.row_one').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute = $(this).find('select option:selected').attr('data-id');
@@ -633,6 +626,14 @@ $('.submit-btn').click(function() {
             console.log(selected_ids);
         });
         $('#selected_ids').val(selected_ids.join(','));
+      $('tr td.material_ids').each(function() {
+            //var selectedValue = $(this).find('select').val();
+            var otherAttribute2 = $(this).find('select option:selected').attr('data-material-id');
+            console.log(' Other attribute value: ' + otherAttribute2);
+            material_ids.push(otherAttribute2);
+            console.log(material_ids);
+        });
+        $('#material_ids').val(material_ids.join(','));
 
     });
 })

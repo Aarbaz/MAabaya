@@ -10,7 +10,7 @@ class Pices extends CI_Controller
 		$this->load->model('Pices_model');
 		$this->load->model('Stock_model');
 		$this->load->model('Design_model');
-		$this->load->model('Product_model');
+		//$this->load->model('Product_model');
 		$this->load->model('Material_model');
 		$this->load->model('Making_model');
 		$this->load->model('Customer_model');
@@ -27,6 +27,7 @@ class Pices extends CI_Controller
 			$data['title'] = ucfirst('PCs Recive');
 			$data['username'] = $this->session->userdata('logged_in');
 			$data['products'] = $this->Pices_model->get_products_in_pcs();
+			$data["matList"] = $this->Purchaser_model->get_all_material();
 			$data['data_list'] = $this->Pices_model->get_products_in_pcs_list();
 			$this->load->view('layout/header', $data);
 			$this->load->view('layout/menubar');
@@ -41,17 +42,12 @@ class Pices extends CI_Controller
 	{
 		if($this->session->userdata('logged_in'))
         {		
-        	/* $data['title'] = ucwords('Add new Material Page');
-			$data['username'] = $this->session->userdata('logged_in');
-			$data['custList'] = $this->Pices_model->get_all_master();
-        	$data['materialList'] = $this->Making_model->get_all_material();
-        	$data['designs'] = $this->Design_model->get_all_design(); */
 
-      			$data['title'] = 'Add Purchaser Details';
-	            $data['username'] = $this->session->userdata('logged_in');
-				$data["custList"] = $this->Customer_model->get_mowner();
-				$data['materialList'] = $this->Purchaser_model->get_all_material();
-				$data['designs'] = $this->Design_model->get_all_design();
+			$data['title'] = 'Add Purchaser Details';
+			$data['username'] = $this->session->userdata('logged_in');
+			$data["custList"] = $this->Customer_model->get_mowner();
+			$data['materialList'] = $this->Purchaser_model->get_all_material();
+			$data['designs'] = $this->Design_model->get_all_design();
 
         	//$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
 	        $this->load->view('layout/header', $data);	        	       
@@ -78,8 +74,6 @@ class Pices extends CI_Controller
 		        "errors" => array('required' => " Please select %s. ")
 		    ),
 		);
-	
-		//$this->form_validation->set_rules('total_word[]', 'Total Amount in words', 'required');	
 
 		if ($this->form_validation->run() == false)
 		{			
@@ -89,13 +83,16 @@ class Pices extends CI_Controller
 		{						
 			$material = implode(',', $this->input->post('items[]'));
 			$material = trim($material,',');
+
 			$selected_ids = implode(',',$this->input->post('selected_ids'));
 			$selected_ids = trim($selected_ids,',');
 
-			/* $material_id = implode(',', $this->input->post('material_id[]'));
-			$material_id = trim($material_id, ','); */
+			$material_ids = implode(',',$this->input->post('material_ids'));
+			$material_ids = trim($material_ids,',');
+			
 			$hsn = implode(',', $this->input->post('hsn[]'));
 			$hsn = trim($hsn, ',');
+
 			$qnty = implode(',', $this->input->post('qnty[]'));
 			$qnty = trim($qnty, ',');
 
@@ -105,7 +102,7 @@ class Pices extends CI_Controller
 			$amount = implode(',', $this->input->post('amount[]'));
 			$amount = trim($amount,',');
 
-			$bakers_id = $this->input->post('customerName');
+			$customer_id = $this->input->post('customerName');
 			$invoice_no = $this->input->post('invoice_no');
 			$transport_charges = $this->input->post('trans_charge');
 			$other_charge = $this->input->post('other_charge');
@@ -126,78 +123,49 @@ class Pices extends CI_Controller
 			$sup_other = $this->input->post('sup_other');
 
 			$data = array(
-				'master_id' => $bakers_id,
+				'master_id' => $customer_id,
 				'mat_name'	=> 	$material,			
-				//'material_id'		=> $material_id,
+				'material_id'		=> $material_ids,
 				'design_number'		=> $hsn,
 				'pices'		=> $qnty,
 				'average'		=> $rate,
 				'material_used'	=> $amount,
-				/* 'total'		=> $total_amount,
-				'round_off_total'  => $total_round,
-				'total_in_words' => $total_word, */
-				//'invoice_date' => date('Y-m-d H:i:s')
-			);			
-			/* $data2 = array(
-				'product_id' => $product_id,
-				'stock_qty' => $postData['stock_q'],
-				'purchase_rate' => $postData['p_price'],
-				// 'p_design_number' => $postData['p_design_number'],
-			);
-			$Store = $this->Stock_model->add_record($data2); */
-			/* $data_pdf = array(
-				'customer' => $this->input->post('cust_name'),
-				'customer_address' => $this->input->post('cust_adds_txt'),
-				'gst' => $this->input->post('cust_gst'),
-				'invoice_no' => $invoice_no,
-				'product_name'	=> 	$material,			
-				// /'stk'		=> $stk,
-				'hsn'		=> $hsn,
-				'qnty'		=> $qnty,
-				'rate'		=> $rate,
-				'amount'	=> $amount,
-				'transport_charges'  => $transport_charges,
-				'other_charge'  => $other_charge,
-				'total_taxable_amount'  => $total_taxable_amount,
-				'igst_5_cent'  => $igst_5_cent,
-				'cgst_2_5_cent'  => $cgst_charge,
-				'sgst_2_5_cent'  => $sgst_charge,
-
-				'cgst_per'  => $cgst_per,				
-				'sgst_per'  => $sgst_per,				
-				'igst_per'  => $igst_per,				
-
-				'total'		=> $total_amount,
-				'round_off_total'  => $total_round,
-				'total_in_words' => $total_word,
-				'date_of_supply'  => $sup_date,
-				//'place_of_supply'  => $sup_place,
-				'other_notes'  => $sup_other
-			); */				
-
+			);						
+			
 			$insert = $this->Pices_model->create_record($data);
 			// Get the product and quantity values from your input
 			$selected_ids_values = explode(",", $selected_ids);
 			$product_values = $selected_ids_values; // Dynamic product values
 			$qnty_values = explode(",", $qnty);
 			$quantity_values = ($qnty_values); // Dynamic quantity values
-			//print_r($values);
 			
 			// Prepare the data to be inserted
-			$data2 = array();
+			$data2 = array(); 
 			for ($i = 0; $i < count($product_values); $i++) {
 				$data2[] = array(
 					'p_design_number' => $product_values[$i],
 					'stock_qty' => $quantity_values[$i]
 				);
 			}
+			$stk_data = array();
+			$material_ids_values = explode(",", $material_ids);
+			$material_values = $material_ids_values;
+			
+			$stk_values = explode(",", $amount);
+			$stock_value = ($stk_values);
+			for ($i = 0; $i < count($material_values); $i++) {
+				$stk_data[] = array(
+					'material_id' => $material_values[$i],
+					'quantity' => $stock_value[$i]
+				);
+			}
 			// Update Stock
-			// $stock = $this->Stock_model->add_record($data2);
+			
 			$this->db->trans_start(); // Start a transaction to ensure data consistency
 			foreach ($data2 as $row) {
 				$product_id = $row['p_design_number'];
 				$quantity = $row['stock_qty'];
-
+				
 				$this->db->where('p_design_number', $product_id);
 				$query = $this->db->get('stock');
 				$row = $query->row();
@@ -214,6 +182,29 @@ class Pices extends CI_Controller
 					$this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
 				}
 			}
+
+			foreach ($stk_data as $row) {
+				$materialId = $row['material_id'];
+				$quantiti = $row['quantity'];
+				$this->db->where('material_id', $materialId);
+				$this->db->where('making_owner_id', $customer_id);
+				$query = $this->db->get('maker_stock');
+				$row = $query->row();
+				if ($query->num_rows()) {
+					// If the product exists, update the quantity value in the database
+					$data23 = array(
+						'quantity' => $row->quantity - $quantiti
+					);
+					$this->db->where('material_id', $materialId);
+					$this->db->where('making_owner_id', $customer_id);
+					$this->db->update('maker_stock', $data23);
+				} else {
+					// If the product does not exist, insert a new row into the database
+					/* $this->db->insert('maker_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity)); */
+					$this->session->set_flashdata('error', 'error occured....');
+				}
+			}
+			//$stock = $this->Pices_model->update_makerStock($customer_id,$material_values,$stk_data);
 			$this->db->trans_complete(); // End the transaction
 
 			if ($this->db->trans_status() === false) {
@@ -315,6 +306,9 @@ class Pices extends CI_Controller
 				$selected_ids = implode(',',$this->input->post('selected_ids'));
 				$selected_ids = trim($selected_ids,',');
 
+				$material_ids = implode(',',$this->input->post('material_ids'));
+				$material_ids = trim($material_ids,',');
+
 				/* $material_id = implode(',', $this->input->post('material_id[]'));
 				$material_id = trim($material_id, ','); */
 				$hsn = implode(',', $this->input->post('hsn[]'));
@@ -328,7 +322,7 @@ class Pices extends CI_Controller
 				$amount = implode(',', $this->input->post('amount[]'));
 				$amount = trim($amount,',');
 
-				$bakers_id = $this->input->post('customerName');
+				$customer_id = $this->input->post('customerName');
 				$invoice_no = $this->input->post('invoice_no');
 				$transport_charges = $this->input->post('trans_charge');
 				$other_charge = $this->input->post('other_charge');
@@ -349,16 +343,16 @@ class Pices extends CI_Controller
 				$sup_other = $this->input->post('sup_other');
 
 				$data = array(
-					'master_id' => $bakers_id,
+					'master_id' => $customer_id,
 					'mat_name'	=> 	$material,			
-					//'material_id'		=> $material_id,
+					'material_id'		=> $material_ids,
 					'design_number'		=> $hsn,
 					'pices'		=> $qnty,
 					'average'		=> $rate,
 					'material_used'	=> $amount,
-					'total'		=> $total_amount,
+					/* 'total'		=> $total_amount,
 					'round_off_total'  => $total_round,
-					'total_in_words' => $total_word,
+					'total_in_words' => $total_word, */
 					//'invoice_date' => date('Y-m-d H:i:s')
 				);	
 				/* print_r($data);
