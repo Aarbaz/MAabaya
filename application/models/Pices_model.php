@@ -82,6 +82,11 @@ class Pices_model extends CI_Model {
         }
         print_r ($query->result());
     } */
+
+    public function create_history($json_data_array)
+    {
+        return $this->db->insert('history', $json_data_array);
+    }
     public function delete_by_id($id)
     {
         $this->db->where('sr_no', $id);

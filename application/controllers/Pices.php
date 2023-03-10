@@ -133,6 +133,12 @@ class Pices extends CI_Controller
 			);						
 			
 			$insert = $this->Pices_model->create_record($data);
+			$json_data = json_encode($data);
+			$json_data_array = array(
+					'entry_from' => 'MakingAdd',
+					'json_data' => $json_data,
+			);
+			$insert_json_data = $this->Pices_model->create_history($json_data_array);
 			// Get the product and quantity values from your input
 			$selected_ids_values = explode(",", $selected_ids);
 			$product_values = $selected_ids_values; // Dynamic product values
