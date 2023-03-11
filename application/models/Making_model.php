@@ -22,7 +22,7 @@ class Making_model extends CI_Model
 
     public function get_material_byID($id)
     {
-        $this->db->select("id, master_id,material_id,stock");
+        $this->db->select("id,purchaser_owner_id, making_owner_id,material_id,stock");
         $this->db->from("making");
         $this->db->where("id", $id);
         $query = $this->db->get();
@@ -55,7 +55,7 @@ class Making_model extends CI_Model
     public function get_all_making()
     {
         return $this->db
-            ->select("id, master_id,material_id,stock")
+            ->select("id, making_owner_id,material_id,stock")
             ->get("making");
     }
 

@@ -22,7 +22,7 @@
                         <option value="" selected="selected">--select owner--</option>
                         <?php
                            foreach ($custList->result() as $row){?>
-                        <option value="<?php echo $row->id ?>" <?php echo ($pur->owner_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
+                        <option value="<?php echo $row->id ?>" <?php echo ($pur->purchaser_owner_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
                         <?php
                            } ?>
                      </select>
@@ -62,7 +62,7 @@
                               <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
                            </td>
                            <td>
-                              <input type="text" class="form-control qnty" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo $stk[$i];?>">
+                              <input type="text" class="form-control qnty" id="stock_q" name="stock_q[]" placeholder="Quantity" value="<?php echo $stk[$i];?>">
                               <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
                            </td>
                            <td>

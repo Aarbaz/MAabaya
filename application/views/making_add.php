@@ -39,7 +39,7 @@
                <br>
                <div class="form-group">
                   <div class="col-sm-5">
-                     <label>Purchser Name</label>
+                     <label>Purchaser Name</label>
                      <!-- <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>"> -->
                      <select name="master_id" id="master_id" class="form-control">
                         <option value="" selected="selected">--select master--</option>
@@ -71,7 +71,7 @@
                         <tr>
                            <th>Material Name</th>
                            <th>Available Stock</th>
-                           <th>Stock/Quantity</th>
+                           <th>Quantity</th>
                         </tr>
                      </thead>
                      <tbody id="rows-list">
@@ -88,7 +88,7 @@
                               <input type="text" class="form-control stock_in" id="stock_in" name="stock_in[]" placeholder="Stock/Quantity"  value="" readonly>
                            </td>
                            <td>
-                              <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo set_value('price'); ?>">
+                              <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Quantity" value="<?php echo set_value('price'); ?>">
                            </td>
                            <td>
                               <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>

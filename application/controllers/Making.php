@@ -111,9 +111,14 @@ class Making extends CI_Controller
                 $stock_q = implode(",", $this->input->post("stock_q[]"));
                 $stock_q = trim($stock_q, ",");
 
+
+                $master_id = $this->input->post("master_id");
+                $master_name = $this->input->post("master_name");
+
                 $data = [
                     "material_id" => $material_id,
-                    "master_id" => strtoupper($postData["master_name"]),
+                    "purchaser_owner_id" => $master_id,
+                    "making_owner_id" => strtoupper($postData["master_name"]),
                     "stock" => $stock_q,
                 ];
 
@@ -126,14 +131,15 @@ class Making extends CI_Controller
                 $oldstock = $this->input->post("stock_in[]");
 
 
-                $master_id = $this->input->post("master_id");
+
 
                 $m = 0;
                 foreach ($stocks as $row) {
                     $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
                     $this->Purchaser_model->update_pstock_qty($dataStk,$master_id,$material_ids[$m]);
 
-                    $dataMak["master_id"] = $master_id;
+                    $dataMak["purchaser_owner_id"] = $master_id;
+                    $dataMak["making_owner_id"] = $master_name;
                     $dataMak["material_id"] = $material_ids[$m];
                     $dataMak["quantity"] = $stocks[$m];
                     $this->Making_model->add_making_qty($dataMak);
@@ -189,6 +195,8 @@ class Making extends CI_Controller
             $data["purList"] = $this->Making_model->get_all_making();
             $data["matList"] = $this->Purchaser_model->get_all_material();
             $data["custList"] = $this->Customer_model->get_mowner();
+            $data["PurchaserList"] = $this->Customer_model->get_powner();
+
 
             $this->load->view("layout/header", $data);
             $this->load->view("layout/menubar");
@@ -219,6 +227,8 @@ class Making extends CI_Controller
                 $data["purList"] = $this->Making_model->get_all_making();
                 $data["matList"] = $this->Purchaser_model->get_all_material();
                 $data["custList"] = $this->Customer_model->get_mowner();
+                $data["PurchaserList"] = $this->Customer_model->get_powner();
+
 
                 $data["prod"] = $cust_data;
 
@@ -235,7 +245,7 @@ class Making extends CI_Controller
                 $stock_q = implode(",", $this->input->post("stock_q[]"));
                 $stock_q = trim($stock_q, ",");
                 $data = [
-                    "master_id" => strtoupper($postData["master_name"]),
+                    "making_owner_id" => strtoupper($postData["master_name"]),
                     "material_id" => $material_id,
                     "stock" => $stock_q,
                 ];
@@ -269,6 +279,8 @@ class Making extends CI_Controller
                         "matList"
                     ] = $this->Purchaser_model->get_all_material();
                     $data["custList"] = $this->Customer_model->get_mowner();
+                    $data["PurchaserList"] = $this->Customer_model->get_powner();
+
 
                     $data["cust"] = $cust_data;
                     $this->load->view("layout/header", $data);
@@ -310,4 +322,42 @@ class Making extends CI_Controller
       $data = $this->Purchaser_model->get_pstock($id);
       echo json_encode($data);
     }
+
+    //Download pdf invoice
+  	public function download_pdf($cust_name, $invoice_id )
+  	{
+  		if(!$this->session->userdata('logged_in'))
+  		{
+  			redirect('Welcome');
+  		}
+
+  		elseif( $cust_name && $invoice_id )
+  		{
+  			$pdf_file = APPPATH.'invoice/'.rawurldecode($cust_name).'/'.$invoice_id.'.pdf';
+  			$file = $invoice_id.'.pdf';
+
+  			if (file_exists($pdf_file))
+  			{
+  				header("Content-Type: application/pdf");
+  				header("Content-Disposition: attachment;filename=\"$file\"" );
+  				readfile($pdf_file);
+  			}
+  			else
+  			{
+  				$this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
+  				redirect('Invoice');
+  			}
+  		}
+  		else
+  		{
+  			$data['title'] = ucwords('Page not found');
+          	$data['username'] = $this->session->userdata('logged_in');
+  			$this->load->view('layout/header', $data);
+  	        $this->load->view('layout/menubar');
+  			$this->load->view('errors/html/error_404');
+  			$this->load->view('layout/footer');
+  		}
+  	}
+
+
 }

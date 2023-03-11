@@ -32,7 +32,7 @@
                      <tr>
                         <td><?php echo $i; ?></td>
                         <td><?php
-                           $detail = $this->Customer_model->get_customer_byID($row->master_id);
+                           $detail = $this->Customer_model->get_customer_byID($row->making_owner_id);
                             echo $detail->name; ?></td>
                         <td>
                            <?php
@@ -52,7 +52,10 @@
                            <?php } ?>
                         </td>
                         <td>
-                           <a class="btn btn-primary btn-xs" title="Click to download" href=""><i class="glyphicon glyphicon-download"></i></a>&nbsp;
+                          <!-- <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->bakery_name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp; -->
+                          <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Making/download_pdf/').rawurlencode($row->id).'/'.$row->id;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
+
+                           <!-- <a class="btn btn-primary btn-xs" title="Click to download" href=""><i class="glyphicon glyphicon-download"></i></a>&nbsp; -->
                            <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Making/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
                            <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_making(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                         </td>

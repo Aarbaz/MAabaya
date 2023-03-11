@@ -99,7 +99,7 @@ class Purchaser extends CI_Controller
                 $amount = trim($amount, ",");
 
                 $data = [
-                    "owner_id" => strtoupper($postData["owner_name"]),
+                    "purchaser_owner_id" => strtoupper($postData["owner_name"]),
                     "material_id" => $material_name,
                     "price" => $rate,
                     "stock" => $qnty,
@@ -119,8 +119,32 @@ class Purchaser extends CI_Controller
                     $dataStk["quantity"] = $stock[$i];
                     $dataStk["price"] = $price[$i];
                     $dataStk["purchaser_id"] = $purchaser_id;
-                    $dataStk["owner_id"] = strtoupper($postData["owner_name"]);
-                    $this->Purchaser_model->add_purchaser_qty($dataStk);
+                    $dataStk["purchaser_owner_id"] = strtoupper($postData["owner_name"]);
+
+                    $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
+                    $this->db->where('material_id',$material_id[$i]);
+            				$query = $this->db->get('purchaser_stock');
+            				$row = $query->row();
+            				if ($query->num_rows()) {
+            					// If the product exists, update the quantity value in the database
+            					$data3 = array(
+            						'quantity' => $row->quantity + $stock[$i],
+            						'price' => $price[$i]
+            					);
+            					// print_r($data2);
+                      $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
+                      $this->db->where('material_id',$material_id[$i]);
+            					$this->db->update('purchaser_stock', $data3);
+            				} else {
+            					// If the product does not exist, insert a new row into the database
+            					// $this->db->insert('purchaser_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
+                      $this->Purchaser_model->add_purchaser_qty($dataStk);
+
+            				}
+
+                    // $this->Purchaser_model->add_purchaser_qty($dataStk);
+
+
                     $i++;
                 }
 
@@ -225,7 +249,7 @@ class Purchaser extends CI_Controller
                 $amount = trim($amount, ",");
 
                 $data = [
-                    "owner_id" => strtoupper($postData["owner_name"]),
+                    "purchaser_owner_id" => strtoupper($postData["owner_name"]),
                     "material_id" => $material_name,
                     "total_amount" => $amount,
                     "stock" => $qnty,
@@ -247,6 +271,31 @@ class Purchaser extends CI_Controller
                     $dataStk["quantity"] = $stock[$j];
                     $dataStk["price"] = $price[$j];
                     $dataStk["purchaser_id"] = $purchaser_id;
+
+
+                    // $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
+                    // $this->db->where('material_id',$material_id[$j]);
+            				// $query = $this->db->get('purchaser_stock');
+            				// $row = $query->row();
+            				// if ($query->num_rows()) {
+            				// 	// If the product exists, update the quantity value in the database
+            				// 	$data3 = array(
+            				// 		'quantity' => $row->quantity + $stock[$j],
+            				// 		'price' => $price[$j]
+            				// 	);
+            				// 	// print_r($data2);
+                    //   $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
+                    //   $this->db->where('material_id',$material_id[$j]);
+            				// 	$this->db->update('purchaser_stock', $data3);
+            				// } else {
+            				// 	// If the product does not exist, insert a new row into the database
+            				// 	// $this->db->insert('purchaser_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
+                    //   $this->Purchaser_model->add_purchaser_qty($dataStk);
+                    //
+                    //
+            				// }
+
+
                     $this->Purchaser_model->update_purchaser_qty($dataStk,$purchaser_id,$material_id[$j]);
                     $j++;
                 }

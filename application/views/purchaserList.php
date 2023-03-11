@@ -32,7 +32,7 @@
                      <tr>
                         <td><?php echo $i; ?></td>
                         <td><?php
-                           $detail = $this->Customer_model->get_customer_byID($row->owner_id);
+                           $detail = $this->Customer_model->get_customer_byID($row->purchaser_owner_id);
                            echo $detail->name; ?></td>
                         <td>
                            <?php

@@ -17,6 +17,24 @@
             echo form_open($url, 'class="form-horizontal" id="add_product_form"');
           ?>
           <div class="form-group">
+             <div class="col-sm-5">
+                <label>Purchaser Name</label>
+                <!-- <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>"> -->
+                <select name="master_id" id="master_id" class="form-control">
+                   <option value="" selected="selected">--select master--</option>
+                     <?php
+                         foreach ($PurchaserList->result() as $row){
+                             // echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
+                             ?>
+                             <option value="<?php echo $row->id ?>" <?php echo ($prod->purchaser_owner_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
+                             <?php
+                         } ?>
+
+                </select>
+             </div>
+             <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
+          </div>
+          <div class="form-group">
             <div class="col-sm-5">
 
           <label>Master Name</label>
@@ -25,7 +43,7 @@
             <option value="" selected="selected">--select master--</option>
               <?php
               foreach ($custList->result() as $row){?>
-                <option value="<?php echo $row->id ?>" <?php echo ($prod->master_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
+                <option value="<?php echo $row->id ?>" <?php echo ($prod->making_owner_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
                   <?php
               } ?>
           </select>
@@ -38,7 +56,7 @@
                               <thead>
                                   <tr>
                                       <th>Material Name</th>
-                                      <th>Stock/Quantity</th>
+                                      <th>Quantity</th>
                                   </tr>
                               </thead>
                               <?php
@@ -68,7 +86,7 @@
                                         <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
                                       </td>
                                       <td>
-                                        <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Stock/Quantity" value="<?php echo $stk[$i];?>">
+                                        <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Quantity" value="<?php echo $stk[$i];?>">
                                         <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
                                       </td>
                                       <td>
