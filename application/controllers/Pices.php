@@ -219,7 +219,7 @@ class Pices extends CI_Controller
 			}
 			if($insert == true)
 			{	
-				/* $QuantitySold = $qnty;
+				$QuantitySold = $qnty;
 				$ProductID = $material; 
 				$stock = 'stock';
 				$latestStock = $stock - $QuantitySold;
@@ -236,7 +236,7 @@ class Pices extends CI_Controller
 				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);				
 				//$pdf->SetFont('helvetica', '', 10);
 				$pdf->SetFont('times', '', 10);
-				$pdf_data = $this->load->view('invoice_pdf', $data_pdf, true);			
+				$pdf_data = $this->load->view('invoice_pieces', $data_pdf, true);			
 				$pdf->addPage();
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
 				
@@ -250,7 +250,7 @@ class Pices extends CI_Controller
 				ob_end_clean();
 				$pdf->Output($save_path, 'I');			
 				$pdf->Output($save_path, 'F');			
-				//file_put_contents($save_path, $pdf); */	
+				//file_put_contents($save_path, $pdf);	
 				$this->session->set_flashdata('success', 'Data Added successfully....');
 				redirect('Pices/');
 			}

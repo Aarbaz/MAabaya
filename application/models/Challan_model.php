@@ -10,12 +10,14 @@ class Challan_model extends CI_Model {
 
     public function get_all_products()
     {
-        return $this->db->get("products");
+        return $this->db->get("material");
     }
 
     public function get_all_customer()
     {
-        return $this->db->select('id, bakery_name, bakery_gst, bakery_area, bakery_city')->get('customers');
+        return $this->db->select('id, name')
+        ->where('role', 0)
+        ->get('customers');
     }
 
 	/* challan SQLs */
@@ -23,7 +25,7 @@ class Challan_model extends CI_Model {
     // get  challan list
     public function get_challan_list()
     {
-        return $this->db->select('sr_no,customer_id, challan_no, material, total, challan_bills.created_on, bakery_name,bakery_address, bakery_area, bakery_city')->order_by('sr_no','desc')
+        return $this->db->select('sr_no,customer_id, challan_no, material, total, challan_bills.created_on, name,address, ')->order_by('sr_no','desc')
         ->from('challan_bills')->join('customers', 'customers.id = challan_bills.customer_id')->get();
     }
 
@@ -58,7 +60,7 @@ class Challan_model extends CI_Model {
     // get  Invoice list
     public function get_invoice_list()
     {
-        return $this->db->select('sr_no, invoice_no, round_off_total, invoice_date, bakery_name,bakery_address,customer_id, customer_address, bakery_area, bakery_city')->order_by('sr_no','desc')
+        return $this->db->select('sr_no, invoice_no, round_off_total, invoice_date, name,address,customer_id, customer_address, ')->order_by('sr_no','desc')
         ->from('insider_bill')->join('customers', 'customers.id = insider_bill.customer_id')->get();
        /*  return $this->db->select('sr_no, invoice_no, round_off_total, invoice_date, customer_id,customer_address, product_name, invoice_date')->order_by('sr_no','desc')
         ->from('insider_bill')->get(); */

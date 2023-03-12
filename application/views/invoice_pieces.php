@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>invoice pdf</title>
+  <title>Invoice Pices</title>
   <style type="text/css">
     .center {text-align: center;}
     /*table.hdr tr {padding: 10px;}*/
@@ -18,7 +18,7 @@
   <table class="hdr" style="width: 100%">
     <tr><td colspan="4">&nbsp;</td></tr>  
     <tr>
-      <td width="20%"> CUSTOMER NAME </td>
+      <td width="20%"> Master NAME </td>
       <td width="35%"> <?php echo $customer; ?></td>
       <td width="20%"> INVOICE NO.</td>
       <td width="25%"> <?php echo $invoice_no; ?> </td>

@@ -22,7 +22,7 @@
 	  									<select name="customerName" id="customerName" class="form-control">
 	  										<option value="" selected="selected">--select customer--</option>
                                             <?php foreach ($custList->result() as $row){
-                                                echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->bakery_name.'</option>';
+                                                echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->name.'</option>';
                                             } ?>
                                             <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
                                         <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name"> 
@@ -205,11 +205,11 @@
                             </div>
                             <!--table withouot tax-->
                             <div class="form-group" id="table_without_tax">
-                                <table class="table table-bordered">
+                                <table class="table table-bordere<th>PRODUCT</th>d">
                                     <thead>
                                         <tr>                                            
                                             <th>Design No</th>
-                                            <th>PRODUCT</th>
+                                            <!--  -->
                                             <th>QNTY </th>                                            
                                             <th>RATE</th>
                                             <th>AMOUNT</th>
@@ -229,7 +229,7 @@
                                                 </select>
                                                 <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
                                             </td>
-                                            <td>
+                                            <td class="hide">
                                                 <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select product--</option>
                                                     <?php foreach ($productList->result() as $row){ 

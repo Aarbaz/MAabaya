@@ -260,14 +260,17 @@ class Invoice extends CI_Controller {
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
 				
 				$filename = $this->input->post('invoice_no').'.pdf';
+				print_r($data_pdf['customer']);
+				die();
 				$dir = APPPATH.'/invoice/'.$data_pdf['customer'].'/';
+				
 				if(!is_dir($dir))
 				{
 					mkdir($dir, 0777, true);
 				}
 				$save_path = $dir.$filename;	
 				ob_end_clean();
-				$pdf->Output($save_path, 'I');			
+				//$pdf->Output($save_path, 'I');			
 				$pdf->Output($save_path, 'F');			
 				//file_put_contents($save_path, $pdf);	
 				$this->session->set_flashdata('success', 'Invoice created successfully....');
@@ -285,11 +288,11 @@ class Invoice extends CI_Controller {
 	//Download pdf invoice
 	public function download_pdf($cust_name, $invoice_id )
 	{
+		
 		if(!$this->session->userdata('logged_in'))
 		{
 			redirect('Welcome');
 		}
-
 		elseif( $cust_name && $invoice_id )
 		{			
 			$pdf_file = APPPATH.'invoice/'.rawurldecode($cust_name).'/'.$invoice_id.'.pdf';
@@ -326,10 +329,10 @@ class Invoice extends CI_Controller {
 
 	public function deleteInvoice()
 	{
-		$bakery_name = $this->input->post('bakery_name');
+		$customer_name = $this->input->post('customer_name');
 		$invoice_number = $this->input->post('invoice_number');
 		
-		$pdf_file = APPPATH.'invoice/'.$bakery_name.'/'.$invoice_number.'.pdf';				
+		$pdf_file = APPPATH.'invoice/'.$customer_name.'/'.$invoice_number.'.pdf';				
 		//print_r($pdf_file);
 		/* if($this->input->post(' '))
 		{ */			
