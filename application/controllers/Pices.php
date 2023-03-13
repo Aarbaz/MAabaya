@@ -223,6 +223,11 @@ class Pices extends CI_Controller
 				$ProductID = $material; 
 				$stock = 'stock';
 				$latestStock = $stock - $QuantitySold;
+
+				$this->db->select('*');
+				$this->db->from('customers');
+				$this->db->where('is',$customerName);
+				$query = $this->db->get();
 				$data3 =array(
 					
 				);

@@ -15,7 +15,7 @@
 							<div class="form-group">						
 								<h3 class="text-center">Pices Recived</h3>
 							</div>
-							<div class="col-sm-5 leftbox">
+							 <div class="col-sm-5 "><!--leftbox -->
 								<div class="form-group ">
 									<label class="control-label col-sm-3">Master Name</label>
 									<div class="col-sm-9">
@@ -366,7 +366,10 @@ $(document).ready(function(){
                 });   
     // add new row
     $(document).on('click', '.add_more', function(){        
-        $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+        var prevOption = $('#table_without_tax tbody tr:last').find('.my-select').val();
+        var newRow = $(this).closest('tr').clone(true).find('.my-select').val(prevOption).end().insertAfter($(this).closest('tr'));
+
+       // $(this).find('.my-select').val(prevOption);
     }); 
     //Remove table row  
     $(document).on('click', '.remove', function(){
