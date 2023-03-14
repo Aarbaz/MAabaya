@@ -94,7 +94,8 @@
 									<div class="col-sm-8">&nbsp;&nbsp;
                                         <?php
 
-                                        $invoice_no = '';                
+                                        $invoice_no = '';    
+                                                   
                                         if(!empty($last_invoice->invoice_no))
                                         {
                                             $db_invoice = $last_invoice->invoice_no;

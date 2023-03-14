@@ -37,3 +37,14 @@ body {
 .hide{
 	display: none;
 }
+.label-success{
+	background-color: #43b968;
+    padding: 0.2em 0.6em 0.3em;
+    font-weight: 700;
+    line-height: -3;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25em;
+}

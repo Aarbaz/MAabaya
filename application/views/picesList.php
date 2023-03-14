@@ -60,6 +60,7 @@
                  } */
                   ?></td>
                 <td>
+                <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
                  <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Pices/editPices/').$row->sr_no;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->sr_no;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td>

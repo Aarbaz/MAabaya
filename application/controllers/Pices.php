@@ -29,6 +29,7 @@ class Pices extends CI_Controller
 			$data['products'] = $this->Pices_model->get_products_in_pcs();
 			$data["matList"] = $this->Purchaser_model->get_all_material();
 			$data['data_list'] = $this->Pices_model->get_products_in_pcs_list();
+			$data['invoice_list'] = $this->Challan_model->get_invoice_list();
 			$this->load->view('layout/header', $data);
 			$this->load->view('layout/menubar');
 			$this->load->view('picesList.php', $data);
@@ -49,7 +50,7 @@ class Pices extends CI_Controller
 			$data['materialList'] = $this->Purchaser_model->get_all_material();
 			$data['designs'] = $this->Design_model->get_all_design();
 
-        	//$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
+        	$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
 	        $this->load->view('layout/header', $data);	        	       
 	        $this->load->view('layout/menubar');
 			$this->load->view('pices_add', $data);
@@ -62,7 +63,7 @@ class Pices extends CI_Controller
 	}	
 	public function create()
 	{
-		
+		$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
 		$this->form_validation->set_rules('customerName', 'customer Name', 'required');	
 		// /$this->form_validation->set_rules('amount[]', 'Total Material', 'required');	
 		//$this->form_validation->set_rules('amount_with', 'Invoice Type', 'required');	
@@ -101,9 +102,8 @@ class Pices extends CI_Controller
 
 			$amount = implode(',', $this->input->post('amount[]'));
 			$amount = trim($amount,',');
-
-			$customer_id = $this->input->post('customerName');
 			$invoice_no = $this->input->post('invoice_no');
+			$customer_id = $this->input->post('customerName');
 			$transport_charges = $this->input->post('trans_charge');
 			$other_charge = $this->input->post('other_charge');
 			$total_taxable_amount = $this->input->post('total_tax_value');
@@ -180,7 +180,7 @@ class Pices extends CI_Controller
 					$data2 = array(
 						'stock_qty' => $row->stock_qty + $quantity
 					);
-					print_r($data2);
+					//print_r($data2);
 					$this->db->where('p_design_number', $product_id);
 					$this->db->update('stock', $data2);
 				} else {
@@ -226,10 +226,30 @@ class Pices extends CI_Controller
 
 				$this->db->select('*');
 				$this->db->from('customers');
-				$this->db->where('is',$customerName);
+				$this->db->where('id',$customer_id);
 				$query = $this->db->get();
-				$data3 =array(
-					
+				$maker_name = $query->row();
+				//$maker_name = json_decode($maker_name);
+
+				$this->db->select('*');
+				$this->db->from('material');
+				$this->db->where_in('id', $material_values);
+
+				$query = $this->db->get();
+				$results = $query->result();
+				$material_names = '';
+				foreach ($results as $result) {
+					$material_names .= $result->material_name . ', ';
+				}
+
+				// Remove the trailing comma and space
+				$material_names = rtrim($material_names, ', ');
+				$data_pdf =array(
+					'customer' => $maker_name->name,
+					'product_name' => $material_names,
+					'hsn' => $hsn,
+					'qnty' => $qnty,
+					'invoice_no' => $invoice_no,
 				);
 
 
