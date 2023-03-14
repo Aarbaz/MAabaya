@@ -4,7 +4,7 @@
   <style type="text/css">
     .center {text-align: center;}
     /*table.hdr tr {padding: 10px;}*/
-    table.hdr tr td {background-color: #e1e1e9; padding: 10px}
+    /* table.hdr tr td {background-color: #e1e1e9; padding: 10px} */
     #tax_table tr th.right{ text-align: right; }
     /*table td#adds {text-align: justify; } */
   </style>
@@ -20,11 +20,11 @@
     <tr>
       <td width="20%"> PURCHASER NAME </td>
       <td width="35%">
-        <!-- <?php echo $customer; ?> -->
+        <?php echo $purchaser_name; ?>
       </td>
       <td width="20%"> PURCHASER NO.</td>
       <td width="25%">
-        <!-- <?php echo $invoice_no; ?>  -->
+        <?php echo $purchaser_no; ?>
       </td>
     </tr>
     <tr>

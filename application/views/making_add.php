@@ -39,38 +39,27 @@
                <br>
                <?php
                $maker_no = '';
-               // print_r($makList);
-                if($makList){
-                  foreach ($makList->result() as $row)
-                  {
 
-                    if(!empty($row->maker_no))
-                    {
-                        $db_invoice = $row->maker_no;
-                        $num_part = substr($db_invoice, 3);
-                        $add_one = intval($num_part)+1;
+               if(!empty($makList->maker_no))
+               {
+                   $db_invoice = $makList->maker_no;
+                   $num_part = substr($db_invoice, 3);
+                   $add_one = intval($num_part)+1;
 
-                        if(strlen($add_one) < 3)
-                        {
-                            $ch_no = sprintf("%03u", $add_one);
-                            $maker_no = 'MAK'.$ch_no;
-                        }
-                        else
-                        {
-                            $maker_no = 'MAK'.$add_one;
-                        }
-                    }
-                    else
-                    {
-                        $maker_no = 'MAK001';
-                    }
-
-                  }
-                }
-                else
-                {
-                    $maker_no = 'MAK001';
-                }
+                   if(strlen($add_one) < 3)
+                   {
+                       $ch_no = sprintf("%03u", $add_one);
+                       $maker_no = 'MAK'.$ch_no;
+                   }
+                   else
+                   {
+                       $maker_no = 'MAK'.$add_one;
+                   }
+               }
+               else
+               {
+                   $maker_no = 'MAK001';
+               }
 
                ?>
                <input type="hidden" name="maker_no" value="<?php echo $maker_no; ?>">

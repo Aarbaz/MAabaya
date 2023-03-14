@@ -60,4 +60,18 @@ class Making_model extends CI_Model
     }
 
 
+    public function get_last_maker_insider()
+    {
+        return $this->db->select('maker_no')->order_by('id','desc')->limit(1)->get('making')->row();
+    }
+
+
+    public function get_maker_stock()
+    {
+          $this->db->select('*');
+          $this->db->from('maker_stock');
+          $this->db->join('making', 'making.id = maker_stock.maker_id');
+          return $this->db->get();
+    }
+
 }

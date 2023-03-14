@@ -4,7 +4,7 @@
   <style type="text/css">
     .center {text-align: center;}
     /*table.hdr tr {padding: 10px;}*/
-    table.hdr tr td {background-color: #e1e1e9; padding: 10px}
+    /* table.hdr tr td {background-color: #e1e1e9; padding: 10px} */
     #tax_table tr th.right{ text-align: right; }
     /*table td#adds {text-align: justify; } */
   </style>
@@ -18,15 +18,21 @@
   <table class="hdr" style="width: 100%">
     <tr><td colspan="4">&nbsp;</td></tr>
     <tr>
-      <td width="20%"> CUSTOMER NAME </td>
-      <td width="35%"> <?php echo $customer; ?></td>
-      <td width="20%"> INVOICE NO.</td>
-      <td width="25%"> <?php echo $invoice_no; ?> </td>
+      <td width="20%"> MASTER NAME </td>
+      <td width="35%">
+        <?php echo $master_name; ?>
+      </td>
+      <td width="20%"> MAKER NO.</td>
+      <td width="25%">
+        <?php echo $maker_no; ?>
+      </td>
     </tr>
     <tr>
       <td> ADDS. </td>
-      <td id="adds"> <?php echo $customer_address; ?> </td>
-      <td> INVOICE DATE </td>
+      <td id="adds">
+        <!-- <?php echo $customer_address; ?>  -->
+      </td>
+      <td> MAKER DATE </td>
       <td> <?php echo date('d F, Y'); ?> </td>
     </tr>
    <!--  <tr>
@@ -60,12 +66,15 @@
     <th style="width: 15%">AMOUNT</th>
   </tr>
   <?php
-    $mat = explode(',', $product_name);
-    $hsn = explode(',', $hsn);
+    // $mat = explode(',', $product_name);
+    $mat = explode(',', $material_names);
+    // $hsn = explode(',', $hsn);
+    $hsn = '12';
     $qnty = explode(',', $qnty);
-    $rate = explode(',', $rate);
-    $amount = explode(',', $amount);
-    $items = array('mat'=> $mat,'qnty'=>$qnty,'hsn'=>$hsn,'rate' => $rate, 'amount' => $amount);
+    // $rate = explode(',', $rate);
+    // $amount = explode(',', $amount);
+    // $items = array('mat'=> $mat,'qnty'=>$qnty,'rate' => $rate, 'amount' => $amount);
+    $items = array('mat'=> $mat,'qnty'=>$qnty);
     $len = count($items['mat']);
 
     $items2 = array();
@@ -73,10 +82,10 @@
     {
       $newArray = array();
       $newArray[] = $items['mat'][$i];
-      $newArray[] = $items['hsn'][$i];
+      // $newArray[] = $items['hsn'][$i];
       $newArray[] = $items['qnty'][$i];
-      $newArray[] = $items['rate'][$i];
-      $newArray[] = $items['amount'][$i];
+      // $newArray[] = $items['rate'][$i];
+      // $newArray[] = $items['amount'][$i];
       $items2[] = $newArray;
     }
 
@@ -90,11 +99,15 @@
         <tr>
           <td><?php echo $j; ?></td>
           <td><?php echo isset($items2[$i][0])?$items2[$i][0]:''; ?></td>
+          <td>-</td>
           <td><?php echo isset($items2[$i][1])?$items2[$i][1]:''; ?></td>
-          <td><?php echo isset($items2[$i][2]) ? $items2[$i][2] : '' ; ?></td>
-          <td><?php echo isset($items2[$i][3]) ? 'Rs. '.$items2[$i][3] : '' ; ?></td>
-          <td><?php echo isset($items2[$i][4]) ? $items2[$i][4] : '' ; ?></td>
+          <td>-</td>
+          <td>-</td>
+          <!-- <td><?php echo isset($items2[$i][2]) ? $items2[$i][2] : '' ; ?></td> -->
+          <!-- <td><?php echo isset($items2[$i][3]) ? 'Rs. '.$items2[$i][3] : '' ; ?></td> -->
+          <!-- <td><?php echo isset($items2[$i][4]) ? $items2[$i][4] : '' ; ?></td> -->
           <!-- <td><?php echo $items2[$i][4] ? 'Rs. '.$items2[$i][4] : '' ; ?></td> -->
+
         </tr>
       <?php
         $j++; }
@@ -124,7 +137,7 @@
     <td> <?php echo 'Rs. '. $total_taxable_amount; ?> </td>
   </tr> -->
 
-  <?php if($cgst_2_5_cent) {?>
+  <!-- <?php if($cgst_2_5_cent) {?>
   <tr>
     <th class="right">CGST @ <?php echo $cgst_per.'%'; ?></th>
     <td>&nbsp;</td>
@@ -142,8 +155,8 @@
     <td>&nbsp;</td>
     <td> <?php echo 'Rs. '. $igst_5_cent; ?> </td>
   </tr>
-  <?php } ?>
-  <tr>
+  <?php } ?> -->
+  <!-- <tr>
     <th class="right">TOTAL AMOUNT</th>
     <td>&nbsp;</td>
     <td> <?php echo 'Rs. '. $total; ?></td>
@@ -154,23 +167,18 @@
     <td> <?php echo 'Rs. '. $round_off_total; ?></td>
   </tr>
 </table>
-
-<div>&nbsp;</div>
-<div>
+<div class="row" style="display:flex;">
+<div class="col-sm-6">
   <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;Rupees <?php echo $total_in_words; ?> Only
+</div> -->
+<!-- <div class="col-sm-6">
+  <p style="margin:0px;">From <b>M.A Abaya Manufacturer </b></p>
+      <p style=" margin:0px;">AUTHORISED SIGNATURE</p>
+</div> -->
 </div>
-<div>&nbsp;<br /></div>
-<table width="100%" border="0">
-  <tr>
-    <td width="50%">
-      <b>Note:</b> This receipt should be signed by the person having the authority. No complaints will be entertained if the same are received after 24 hours of the delivery.</td>
-    <td width="50%">
-      <p style="text-align: right;">FOR <b>M.A Abaya Manufacturer </b></p>
-      <p>&nbsp;</p>
-      <p style="text-align: right;"><br />AUTHORISED SIGNATURE</p>
-    </td>
-  </tr>
-</table>
+<div>
+
+    </div>
 
 </body>
 </html>

@@ -35,16 +35,17 @@
 					  <tbody>
             <?php
 
-            if(isset($stocks)){
+            if(isset($purchaser_stock)){
               $i = 1;
 
-              foreach ($stocks->result() as $row ){?>
+              foreach ($purchaser_stock->result() as $row ){?>
 						  <tr>
                 <td><?php echo $i; ?></td>
   							<!-- <td><?php echo $row->product_name; ?></td> -->
-  							<td><?php echo $row->design_num; ?></td>
-                <td><?php echo $row->stock_qty; ?></td>
-                <td><?php echo $row->stock_qty; ?></td>
+  							<!-- <td><?php echo $sb_subject->name ?></td> -->
+  							<td><?php echo '$row->design_num;' ?></td>
+                <td><?php echo $row->quantity; ?></td>
+                <td><?php echo $row->quantity; ?></td>
 
                 <!-- <td><?php echo $row->prod_exp; ?></td>    -->
   						<!-- 	<td><?php echo $row->price; ?></td>  		 -->
@@ -75,16 +76,16 @@
 					  <tbody>
             <?php
 
-            if(isset($stocks)){
+            if(isset($maker_stocks)){
               $i = 1;
 
-              foreach ($stocks->result() as $row ){?>
+              foreach ($maker_stocks->result() as $row ){?>
 						  <tr>
                 <td><?php echo $i; ?></td>
   							<!-- <td><?php echo $row->product_name; ?></td> -->
-  							<td><?php echo $row->design_num; ?></td>
-                <td><?php echo $row->stock_qty; ?></td>
-                <td><?php echo $row->stock_qty; ?></td>
+  							<td><?php echo '$row->design_num'; ?></td>
+                <td><?php echo $row->quantity; ?></td>
+                <td><?php echo $row->quantity; ?></td>
                 <!-- <td><?php echo $row->prod_exp; ?></td>    -->
   						<!-- 	<td><?php echo $row->price; ?></td>  		 -->
                 <!-- <td>

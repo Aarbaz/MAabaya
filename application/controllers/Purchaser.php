@@ -142,53 +142,42 @@ class Purchaser extends CI_Controller
 
             				}
 
-                    // $this->Purchaser_model->add_purchaser_qty($dataStk);
 
 
                     $i++;
                 }
 
                 if ($insert > 0) {
+                  $customer_id=   strtoupper($postData["owner_name"]);
+                  $this->db->select('*');
+                  $this->db->from('customers');
+                  $this->db->where('id',$customer_id);
+                  $query = $this->db->get();
+                  $purchaser_name = $query->row();
 
-
-                  // $custList = $this->Customer_model->get_powner();
-                  //
-                  // print_r($custList);
-                  // die();
-                     // foreach ($custList as $row){
-                     //    if (strtoupper($postData["owner_name"] == $row->id){
-                     //     $name = $row->name
-                     //   }
-                       // else {
-                       //  $name = '',
-                       // }
-                     // }
-                     $material_ids = implode(",",$this->input->post("material_name[]"));
-                     $material_values = trim($material_name, ",");
-                     $material_ids_values = explode(",", $material_ids);
-                     $material_values = $material_ids_values;
-                     $this->db->select('*');
-                     $this->db->from('material');
-                     $this->db->where_in('id', $material_values);
-                     $query = $this->db->get();
-                    
-                     $results = $query->result();
-                     
-                     $material_names = '';
-                     foreach ($results as $result) {
-                       $material_names .= $result->material_name . ', ';
-                     }
-                     $material_names = rtrim($material_names, ', ');
+                  $material_ids = implode(",",$this->input->post("material_name[]"));
+                  $material_values = trim($material_name, ",");
+                  $material_ids_values = explode(",", $material_ids);
+                  $material_values = $material_ids_values;
+                  $this->db->select('*');
+                  $this->db->from('material');
+                  $this->db->where_in('id', $material_values);
+                  $query = $this->db->get();
+                  $results = $query->result();
+                  $material_names = '';
+                  foreach ($results as $result) {
+                  $material_names .= $result->material_name . ', ';
+                  }
+                  $material_names = rtrim($material_names, ', ');
 
                   $data_pdf = [
-                  "owner_name" =>  'ASAD',
-                  'material_names' => $material_names,
-                  'qnty' => $qnty,
-                  "amount" => $amount,
-                  'rate' => $rate,
-
+                    'purchaser_name' => $purchaser_name->name,
+                    'purchaser_no' => strtoupper($postData["purchaser_no"]),
+                    'material_names' => $material_names,
+                    'qnty' => $qnty,
+                    "amount" => $amount,
+                    'rate' => $rate,
               ];
-
 
 									$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 									$pdf->setPrintHeader(false);
@@ -199,19 +188,15 @@ class Purchaser extends CI_Controller
 									$pdf_data = $this->load->view("purchaser_pdf", $data_pdf, true);
 									$pdf->addPage();
 									$pdf->writeHTML($pdf_data, true, false, true, false, "");
-
-									// $filename = strtoupper($postData["purchaser_no"]).".pdf";
-									$filename = "asads" . ".pdf";
-									// $dir = APPPATH . "/invoice/" . $data_pdf["owner_name"] . "/";
-									$dir = APPPATH . "/invoice/" . $data_pdf["owner_name"] . "/";
+									$filename = strtoupper($postData["purchaser_no"]).".pdf";
+									$dir = APPPATH . "/purchaser/" . $data_pdf["purchaser_name"] . "/";
 									if (!is_dir($dir)) {
 											mkdir($dir, 0777, true);
 									}
 									$save_path = $dir . $filename;
 									ob_end_clean();
-									$pdf->Output($save_path, "I");
+									// $pdf->Output($save_path, "I");
 									$pdf->Output($save_path, "F");
-									//file_put_contents($save_path, $pdf);
 									$this->session->set_flashdata(
 											"success",
 											" Purchaser invoice created successfully...."

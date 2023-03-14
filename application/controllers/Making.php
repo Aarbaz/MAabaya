@@ -92,7 +92,9 @@ class Making extends CI_Controller
             if ($this->form_validation->run() == false) {
                 $data["title"] = ucwords("Add new Making Page");
                 $data["username"] = $this->session->userdata("logged_in");
-                $data["makList"] = $this->Making_model->get_all_making();
+                // $data["makList"] = $this->Making_model->get_all_making();
+                $data["makList"] = $this->Making_model->get_last_maker_insider();
+
                 $data["matList"] = $this->Purchaser_model->get_all_material();
                 $data["custList"] = $this->Customer_model->get_mowner();
                 $data["PurchaserList"] = $this->Customer_model->get_powner();
@@ -119,7 +121,7 @@ class Making extends CI_Controller
                 $data = [
                     "material_id" => $material_id,
                     "purchaser_owner_id" => $master_id,
-                    "making_owner_id" => strtoupper($postData["master_name"]),
+                    "making_owner_id" => $master_name,
                     "stock" => $stock_q,
                     "maker_no" => strtoupper($postData["maker_no"]),
                 ];
@@ -140,6 +142,7 @@ class Making extends CI_Controller
                     $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
                     $this->Purchaser_model->update_pstock_qty($dataStk,$master_id,$material_ids[$m]);
 
+                    $dataMak["maker_id"] = $product_id;
                     $dataMak["purchaser_owner_id"] = $master_id;
                     $dataMak["making_owner_id"] = $master_name;
                     $dataMak["material_id"] = $material_ids[$m];
@@ -150,6 +153,55 @@ class Making extends CI_Controller
                 }
 
                 if ($insert > 0) {
+
+
+                  $customer_id= $master_name;
+                  $this->db->select('*');
+                  $this->db->from('customers');
+                  $this->db->where('id',$customer_id);
+                  $query = $this->db->get();
+                  $master_name = $query->row();
+
+                  $material_ids = implode(",",$this->input->post("material_name[]"));
+                  $material_values = trim($material_name, ",");
+                  $material_ids_values = explode(",", $material_ids);
+                  $material_values = $material_ids_values;
+                  $this->db->select('*');
+                  $this->db->from('material');
+                  $this->db->where_in('id', $material_values);
+                  $query = $this->db->get();
+                  $results = $query->result();
+                  $material_names = '';
+                  foreach ($results as $result) {
+                  $material_names .= $result->material_name . ', ';
+                  }
+                  $material_names = rtrim($material_names, ', ');
+
+                  $data_pdf = [
+                    'master_name' => $master_name->name,
+                    'maker_no' => strtoupper($postData["maker_no"]),
+                    'material_names' => $material_names,
+                    'qnty' => $stock_q,
+              ];
+
+                  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                  $pdf->setPrintHeader(false);
+                  $pdf->setPrintFooter(false);
+                  $pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+                  //$pdf->SetFont('helvetica', '', 10);
+                  $pdf->SetFont("times", "", 10);
+                  $pdf_data = $this->load->view("making_pdf", $data_pdf, true);
+                  $pdf->addPage();
+                  $pdf->writeHTML($pdf_data, true, false, true, false, "");
+                  $filename = strtoupper($postData["maker_no"]).".pdf";
+                  $dir = APPPATH . "/maker/" . $data_pdf["master_name"] . "/";
+                  if (!is_dir($dir)) {
+                      mkdir($dir, 0777, true);
+                  }
+                  $save_path = $dir . $filename;
+                  ob_end_clean();
+                  // $pdf->Output($save_path, "I");
+                  $pdf->Output($save_path, "F");
                     $this->session->set_flashdata(
                         "success",
                         "Material added successfully."
@@ -171,7 +223,8 @@ class Making extends CI_Controller
             $data["title"] = ucwords("Add new Material Page");
             $data["username"] = $this->session->userdata("logged_in");
             $data["matList"] = $this->Purchaser_model->get_all_material();
-            $data["makList"] = $this->Making_model->get_all_making();
+            $data["makList"] = $this->Making_model->get_last_maker_insider();
+            // $data["makList"] = $this->Making_model->get_all_making();
             $data["custList"] = $this->Customer_model->get_mowner();
             $data["PurchaserList"] = $this->Customer_model->get_powner();
 

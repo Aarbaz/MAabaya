@@ -120,4 +120,13 @@ class Purchaser_model extends CI_Model
       return $this->db->select('purchaser_no')->order_by('id','desc')->limit(1)->get('purchaser')->row();
   }
 
+  public function get_purchaser_stock()
+	{
+		    $this->db->select('*');
+        $this->db->from('purchaser_stock');
+        $this->db->join('purchaser', 'purchaser.id = purchaser_stock.purchaser_id');
+        return $this->db->get();
+	}
+
+
 }
