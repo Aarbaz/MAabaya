@@ -17,6 +17,8 @@ class Purchaser extends CI_Controller
         $this->load->model("Stock_model");
         $this->load->model("Purchaser_model");
         $this->load->model("Customer_model");
+        $this->load->library("tcpdf");
+        $this->load->library("upload");
     }
 
     public function regexValidate($str)
@@ -73,7 +75,7 @@ class Purchaser extends CI_Controller
             if ($this->form_validation->run() == false) {
                 $data["title"] = ucwords("Add new Purcahser Page");
                 $data["username"] = $this->session->userdata("logged_in");
-                $data["purList"] = $this->Purchaser_model->get_all_purchaser();
+                $data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
                 $data["matList"] = $this->Purchaser_model->get_all_material();
                 $data["custList"] = $this->Customer_model->get_powner();
 
@@ -83,10 +85,7 @@ class Purchaser extends CI_Controller
                 $this->load->view("layout/footer");
             } else {
                 $postData = $this->input->post();
-                $material_name = implode(
-                    ",",
-                    $this->input->post("material_name[]")
-                );
+                $material_name = implode(",",$this->input->post("material_name[]"));
                 $material_name = trim($material_name, ",");
 
                 $qnty = implode(",", $this->input->post("stock_q[]"));
@@ -104,6 +103,7 @@ class Purchaser extends CI_Controller
                     "price" => $rate,
                     "stock" => $qnty,
                     "total_amount" => $amount,
+                    "purchaser_no" =>strtoupper($postData["purchaser_no"]),
                 ];
 
                 $insert = $this->Purchaser_model->add_purchaser($data);
@@ -149,20 +149,84 @@ class Purchaser extends CI_Controller
                 }
 
                 if ($insert > 0) {
-                    $this->session->set_flashdata(
-                        "success",
-                        "Material added successfully."
-                    );
-                    redirect("Purchaser");
+
+
+                  // $custList = $this->Customer_model->get_powner();
+                  //
+                  // print_r($custList);
+                  // die();
+                     // foreach ($custList as $row){
+                     //    if (strtoupper($postData["owner_name"] == $row->id){
+                     //     $name = $row->name
+                     //   }
+                       // else {
+                       //  $name = '',
+                       // }
+                     // }
+                     $material_values = implode(",",$this->input->post("material_name[]"));
+                     $material_values = trim($material_name, ",");
+
+                     $this->db->select('*');
+                     $this->db->from('material');
+                     $this->db->where_in('id', $material_values);
+                     echo $this->db->last_query();
+                     $query = $this->db->get();
+                     $results = $query->result();
+                     print_r($results);
+                     die();
+                     $material_names = '';
+                     foreach ($results as $result) {
+                       $material_names .= $result->material_name . ', ';
+                     }
+                     $material_names = rtrim($material_names, ', ');
+
+                  $data_pdf = [
+                  "owner_name" =>  'ASAD',
+                  'material_names' => $material_names,
+                  'qnty' => $qnty,
+                  "amount" => $amount,
+                  'rate' => $rate,
+
+              ];
+
+
+									$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+									$pdf->setPrintHeader(false);
+									$pdf->setPrintFooter(false);
+									$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+									//$pdf->SetFont('helvetica', '', 10);
+									$pdf->SetFont("times", "", 10);
+									$pdf_data = $this->load->view("purchaser_pdf", $data_pdf, true);
+									$pdf->addPage();
+									$pdf->writeHTML($pdf_data, true, false, true, false, "");
+
+									// $filename = strtoupper($postData["purchaser_no"]).".pdf";
+									$filename = "asads" . ".pdf";
+									// $dir = APPPATH . "/invoice/" . $data_pdf["owner_name"] . "/";
+									$dir = APPPATH . "/invoice/" . $data_pdf["owner_name"] . "/";
+									if (!is_dir($dir)) {
+											mkdir($dir, 0777, true);
+									}
+									$save_path = $dir . $filename;
+									ob_end_clean();
+									$pdf->Output($save_path, "I");
+									$pdf->Output($save_path, "F");
+									//file_put_contents($save_path, $pdf);
+									$this->session->set_flashdata(
+											"success",
+											" Purchaser invoice created successfully...."
+									);
+									redirect("Purchaser/");
+
                 } else {
                     $this->session->set_flashdata(
                         "failed",
                         "Some problem occurred, please try again."
                     );
                     $this->load->view("layout/header", $data);
-                    $data[
-                        "purList"
-                    ] = $this->Purchaser_model->get_all_purchaser();
+
+                    $data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
+
                     $this->load->view("layout/menubar");
                     $this->load->view("purchaser_add", $data);
                     $this->load->view("layout/footer");
@@ -171,7 +235,7 @@ class Purchaser extends CI_Controller
         } elseif ($this->session->userdata("logged_in")) {
             $data["title"] = ucwords("Add new Material Page");
             $data["username"] = $this->session->userdata("logged_in");
-            $data["purList"] = $this->Purchaser_model->get_all_purchaser();
+            $data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
             $data["matList"] = $this->Purchaser_model->get_all_material();
             $data["custList"] = $this->Customer_model->get_powner();
 

@@ -44,6 +44,35 @@
                   </div>
                </div>
                <br>
+
+
+               <?php
+               $purchaser_no = '';
+
+               if(!empty($purList->purchaser_no))
+               {
+                   $db_invoice = $purList->purchaser_no;
+                   $num_part = substr($db_invoice, 3);
+                   $add_one = intval($num_part)+1;
+
+                   if(strlen($add_one) < 3)
+                   {
+                       $ch_no = sprintf("%03u", $add_one);
+                       $purchaser_no = 'PUR'.$ch_no;
+                   }
+                   else
+                   {
+                       $purchaser_no = 'PUR'.$add_one;
+                   }
+               }
+               else
+               {
+                   $purchaser_no = 'PUR001';
+               }
+
+               ?>
+               <input type="hidden" name="purchaser_no" value="<?php echo $purchaser_no; ?>">
+
                <div class="form-group">
                   <div class="col-sm-5">
                      <label>Owner Name</label>

@@ -101,7 +101,7 @@ class Purchaser_model extends CI_Model
     }
     public function get_all_purchaser()
     {
-        return $this->db->select("id")->get("purchaser");
+        return $this->db->select("id,purchaser_no")->get("purchaser");
     }
 
     function get_pstock($id)
@@ -111,6 +111,13 @@ class Purchaser_model extends CI_Model
     $this->db->where("material_id", $id);
     $query = $this->db->get();
     return $query->row();
+  }
+
+
+  //get latest Purchaser no. insider
+  public function get_last_purchaser_insider()
+  {
+      return $this->db->select('purchaser_no')->order_by('id','desc')->limit(1)->get('purchaser')->row();
   }
 
 }

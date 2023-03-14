@@ -55,7 +55,7 @@ class Making_model extends CI_Model
     public function get_all_making()
     {
         return $this->db
-            ->select("id, making_owner_id,material_id,stock")
+            ->select("id, making_owner_id,material_id,stock,maker_no")
             ->get("making");
     }
 

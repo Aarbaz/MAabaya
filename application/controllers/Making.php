@@ -92,6 +92,7 @@ class Making extends CI_Controller
             if ($this->form_validation->run() == false) {
                 $data["title"] = ucwords("Add new Making Page");
                 $data["username"] = $this->session->userdata("logged_in");
+                $data["makList"] = $this->Making_model->get_all_making();
                 $data["matList"] = $this->Purchaser_model->get_all_material();
                 $data["custList"] = $this->Customer_model->get_mowner();
                 $data["PurchaserList"] = $this->Customer_model->get_powner();
@@ -120,6 +121,7 @@ class Making extends CI_Controller
                     "purchaser_owner_id" => $master_id,
                     "making_owner_id" => strtoupper($postData["master_name"]),
                     "stock" => $stock_q,
+                    "maker_no" => strtoupper($postData["maker_no"]),
                 ];
 
                 $insert = $this->Making_model->add_material($data);
@@ -169,6 +171,7 @@ class Making extends CI_Controller
             $data["title"] = ucwords("Add new Material Page");
             $data["username"] = $this->session->userdata("logged_in");
             $data["matList"] = $this->Purchaser_model->get_all_material();
+            $data["makList"] = $this->Making_model->get_all_making();
             $data["custList"] = $this->Customer_model->get_mowner();
             $data["PurchaserList"] = $this->Customer_model->get_powner();
 
