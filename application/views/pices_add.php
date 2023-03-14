@@ -105,16 +105,16 @@
                                             if(strlen($add_one) < 3)
                                             {
                                                 $ch_no = sprintf("%03u", $add_one);
-                                                $invoice_no = 'INV'.$ch_no;
+                                                $invoice_no = 'PIC'.$ch_no;
                                             }
                                             else
                                             {
-                                                $invoice_no = 'INV'.$add_one;
+                                                $invoice_no = 'PIC'.$add_one;
                                             }
                                         }
                                         else
                                         {                    
-                                            $invoice_no = 'INV001';
+                                            $invoice_no = 'PIC001';
                                         }                    
 
                                         ?>       
@@ -369,6 +369,7 @@ $(document).ready(function(){
     $(document).on('click', '.add_more', function(){        
         var prevOption = $('#table_without_tax tbody tr:last').find('.my-select').val();
         var newRow = $(this).closest('tr').clone(true).find('.my-select').val(prevOption).end().insertAfter($(this).closest('tr'));
+        $(newRow).find(':input:not(".my-select")').val('');
 
        // $(this).find('.my-select').val(prevOption);
     }); 
@@ -587,7 +588,8 @@ $('.amount').each(function(){
     {
         var amt = $(this).val();
         total += parseFloat(amt);                
-    }                       
+    }
+    console.log(total);                       
 });
 var crnt_val = parseFloat(total);
 
