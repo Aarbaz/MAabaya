@@ -66,7 +66,6 @@
     <th style="width: 15%">AMOUNT</th>
   </tr>
   <?php
-  print_r($material_names);
     // $mat = explode(',', $product_name);
     $mat = explode(',', $material_names);
     // $hsn = explode(',', $hsn);

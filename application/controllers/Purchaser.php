@@ -163,17 +163,17 @@ class Purchaser extends CI_Controller
                        //  $name = '',
                        // }
                      // }
-                     $material_values = implode(",",$this->input->post("material_name[]"));
+                     $material_ids = implode(",",$this->input->post("material_name[]"));
                      $material_values = trim($material_name, ",");
-
+                     $material_ids_values = explode(",", $material_ids);
+                     $material_values = $material_ids_values;
                      $this->db->select('*');
                      $this->db->from('material');
                      $this->db->where_in('id', $material_values);
-                     echo $this->db->last_query();
                      $query = $this->db->get();
+                    
                      $results = $query->result();
-                     print_r($results);
-                     die();
+                     
                      $material_names = '';
                      foreach ($results as $result) {
                        $material_names .= $result->material_name . ', ';
