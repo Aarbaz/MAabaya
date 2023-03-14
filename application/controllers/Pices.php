@@ -250,6 +250,7 @@ class Pices extends CI_Controller
 					'hsn' => $hsn,
 					'qnty' => $qnty,
 					'invoice_no' => $invoice_no,
+					'customer_address' => $maker_name->address,
 				);
 
 

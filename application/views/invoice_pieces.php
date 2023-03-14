@@ -24,8 +24,8 @@
       <td width="25%"> <?php echo $invoice_no; ?> </td>
     </tr>
     <tr style="border-bottom: 2px solid #000;">  
-      <!-- <td> ADDS. </td>
-      <td id="adds"> <?php echo $customer_address; ?> </td> -->
+      <td> ADDS. </td>
+      <td id="adds"> <?php echo $customer_address; ?> </td>
       <td> INVOICE DATE </td>
       <td> <?php echo date('d F, Y'); ?> </td>
     </tr>
