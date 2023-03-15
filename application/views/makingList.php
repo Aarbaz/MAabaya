@@ -53,7 +53,7 @@
                         </td>
                         <td>
                           <!-- <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->bakery_name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp; -->
-                          <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Making/download_pdf/').rawurlencode($row->id).'/'.$row->id;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
+                          <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Making/download_pdf/').rawurlencode($row->making_owner_id).'/'.$row->maker_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
 
                            <!-- <a class="btn btn-primary btn-xs" title="Click to download" href=""><i class="glyphicon glyphicon-download"></i></a>&nbsp; -->
                            <!-- <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Making/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;

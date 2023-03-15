@@ -18,7 +18,7 @@
           ?>
           <h3 class="text-center">Purchaser Stock</h3>
           <br>
-          <table id="purchaser_stock" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          <table id="purchaser_stocks" class="table table-striped table-bordered" cellspacing="0" width="100%">
     				<thead>
   						<tr>
               <th>Sr No</th>
@@ -43,8 +43,45 @@
                 <td><?php echo $i; ?></td>
   							<!-- <td><?php echo $row->product_name; ?></td> -->
   							<!-- <td><?php echo $sb_subject->name ?></td> -->
-  							<td><?php echo '$row->design_num;' ?></td>
-                <td><?php echo $row->quantity; ?></td>
+  							<td><?php
+
+                $customer_id= $row->purchaser_owner_id;
+                $this->db->select('*');
+                $this->db->from('customers');
+                $this->db->where('id',$customer_id);
+                $query = $this->db->get();
+                $purchaser_name = $query->row();
+                $cust_name = $purchaser_name->name;
+
+                echo $cust_name;
+
+                ?></td>
+                <td><?php
+                 $material_ids =  $row->material_id;
+                // $material_ids = implode(",",$row->material_id);
+                // $material_values = trim($material_ids, ",");
+                $material_ids_values = explode(",", $material_ids);
+                $material_values = $material_ids_values;
+                $this->db->select('*');
+                $this->db->from('material');
+                $this->db->where_in('id', $material_values);
+                $query = $this->db->get();
+                $results = $query->result();
+                // print_r($results);
+                  $material_names = '';
+
+                foreach ($results as $result) {
+                $material_names = $result->material_name . ', ';
+                }
+                $material_names = rtrim($material_names, ', ');
+               print_r($material_names);
+
+                // $material_names = $results->material_name;
+
+                //echo $material_names;
+
+
+                ?></td>
                 <td><?php echo $row->quantity; ?></td>
 
                 <!-- <td><?php echo $row->prod_exp; ?></td>    -->
@@ -83,7 +120,19 @@
 						  <tr>
                 <td><?php echo $i; ?></td>
   							<!-- <td><?php echo $row->product_name; ?></td> -->
-  							<td><?php echo '$row->design_num'; ?></td>
+  							<td><?php
+
+                $customer_id= $row->making_owner_id;
+                $this->db->select('*');
+                $this->db->from('customers');
+                $this->db->where('id',$customer_id);
+                $query = $this->db->get();
+                $purchaser_name = $query->row();
+                $cust_name = $purchaser_name->name;
+
+                echo $cust_name;
+
+                ?></td>
                 <td><?php echo $row->quantity; ?></td>
                 <td><?php echo $row->quantity; ?></td>
                 <!-- <td><?php echo $row->prod_exp; ?></td>    -->
@@ -195,7 +244,7 @@
 <script type="text/javascript">
 var mytable;
 $(document).ready(function(){
-  mytable = $('#purchaser_stock').dataTable({"pageLength": 25});
+  mytable = $('#purchaser_stocks').dataTable({"pageLength": 25});
   $("[data-toggle=tooltip]").tooltip();
 
 
@@ -205,8 +254,8 @@ $(document).ready(function(){
   mytable2 = $('#pieces_stock').dataTable({"pageLength": 25});
   $("[data-toggle=tooltip]").tooltip();
 
-  mytable3 = $('#sell_stock').dataTable({"pageLength": 25});
-  $("[data-toggle=tooltip]").tooltip();
+  // mytable3 = $('#sell_stock').dataTable({"pageLength": 25});
+  // $("[data-toggle=tooltip]").tooltip();
 
   setTimeout(function() {
     $(".show_hide").alert('close');

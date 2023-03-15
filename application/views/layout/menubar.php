@@ -76,17 +76,19 @@
        <li>
 					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Design');?>">Designs</a>
 				</li>
-				<!-- <li>
-					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Challan');?>">Challan</a>
-				</li> -->
+
 				<li>
 					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Invoice');?>">Invoice</a>
 				</li>
-        <li>
-          <!-- <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Balance');?>">Balance</a> -->
-        </li>
+
         <li>
           <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Stock');?>">Inventory</a>
+        </li>
+        <li>
+					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer');?>">Customer</a>
+				</li>
+        <li>
+          <!-- <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Balance');?>">Balance</a> -->
         </li>
 			</ul>
     	</div>

@@ -182,11 +182,11 @@ class Customer extends CI_Controller {
 	    {
 	    	$postData = $this->input->post();
 
-			$this->form_validation->set_rules('name', 'Bakery Name', 'required|alpha_numeric_spaces');
-			$this->form_validation->set_rules('owner_name', 'Owner Name', 'required|alpha_numeric_spaces');
-			$this->form_validation->set_rules('city', 'City', 'alpha_numeric_spaces');
-			$this->form_validation->set_rules('phone', 'Phone number', 'numeric|min_length[10]|max_length[12]');
-			$this->form_validation->set_rules('email', 'Email ID', 'valid_email');
+			$this->form_validation->set_rules('bakery_name', 'Name', 'required|alpha_numeric_spaces');
+			// $this->form_validation->set_rules('owner_name', 'Owner Name', 'required|alpha_numeric_spaces');
+			// $this->form_validation->set_rules('city', 'City', 'alpha_numeric_spaces');
+			// $this->form_validation->set_rules('phone', 'Phone number', 'numeric|min_length[10]|max_length[12]');
+			// $this->form_validation->set_rules('email', 'Email ID', 'valid_email');
 
 	      	if ($this->form_validation->run() == false)
 	        {
@@ -202,15 +202,15 @@ class Customer extends CI_Controller {
 			else
 			{
 				$data = array(
-					'name' => strtoupper($postData['name']),
-					'owner_name' => strtoupper($postData['owner_name']),
-					'owner_phone' => $postData['phone'],
-					'owner_email' => $postData['email'],
-					'bakery_gst' => $postData['gst'],
-					'bakery_address' => ucwords($postData['bakery_adds']),
-					'bakery_area' => ucwords($postData['area']),
-					'bakery_city' => ucwords($postData['city']),
-					'last_amount' => $postData['last_amount']
+					'name' => strtoupper($postData['bakery_name']),
+					// 'owner_name' => strtoupper($postData['owner_name']),
+					// 'owner_phone' => $postData['phone'],
+					// 'owner_email' => $postData['email'],
+					// 'bakery_gst' => $postData['gst'],
+					'address' => ucwords($postData['address']),
+					// 'bakery_area' => ucwords($postData['area']),
+					// 'bakery_city' => ucwords($postData['city']),
+					// 'last_amount' => $postData['last_amount']
 				);
 
 				$cust_id = $postData['cust_id'];

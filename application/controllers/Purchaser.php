@@ -452,4 +452,49 @@ class Purchaser extends CI_Controller
             }
         }
     }
+
+
+    //Download pdf Purchaser
+  	public function download_pdf($purchaser_id, $purchaser_no)
+  	{
+      $customer_id= $purchaser_id;
+      $this->db->select('*');
+      $this->db->from('customers');
+      $this->db->where('id',$customer_id);
+      $query = $this->db->get();
+      $purchaser_name = $query->row();
+      $cust_name = $purchaser_name->name;
+  		if(!$this->session->userdata('logged_in'))
+  		{
+  			redirect('Welcome');
+  		}
+
+  		elseif( $cust_name && $purchaser_no )
+  		{
+  			$pdf_file = APPPATH.'purchaser/'.rawurldecode($cust_name).'/'.$purchaser_no.'.pdf';
+  			$file = $purchaser_no.'.pdf';
+
+  			if (file_exists($pdf_file))
+  			{
+  				header("Content-Type: application/pdf");
+  				header("Content-Disposition: attachment;filename=\"$file\"" );
+  				readfile($pdf_file);
+  			}
+  			else
+  			{
+  				$this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
+  				redirect('Purchaser');
+  			}
+  		}
+  		else
+  		{
+  			$data['title'] = ucwords('Page not found');
+          	$data['username'] = $this->session->userdata('logged_in');
+  			$this->load->view('layout/header', $data);
+  	        $this->load->view('layout/menubar');
+  			$this->load->view('errors/html/error_404');
+  			$this->load->view('layout/footer');
+  		}
+  	}
+
 }

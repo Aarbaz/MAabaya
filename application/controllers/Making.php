@@ -379,18 +379,25 @@ class Making extends CI_Controller
       echo json_encode($data);
     }
 
-    //Download pdf invoice
-  	public function download_pdf($cust_name, $invoice_id )
+    //Download pdf Maker
+  	public function download_pdf($master_id, $maker_no )
   	{
+      $customer_id= $master_id;
+      $this->db->select('*');
+      $this->db->from('customers');
+      $this->db->where('id',$customer_id);
+      $query = $this->db->get();
+      $master_name = $query->row();
+      $cust_name = $master_name->name;
   		if(!$this->session->userdata('logged_in'))
   		{
   			redirect('Welcome');
   		}
 
-  		elseif( $cust_name && $invoice_id )
+  		elseif( $cust_name && $maker_no )
   		{
-  			$pdf_file = APPPATH.'invoice/'.rawurldecode($cust_name).'/'.$invoice_id.'.pdf';
-  			$file = $invoice_id.'.pdf';
+  			$pdf_file = APPPATH.'maker/'.rawurldecode($cust_name).'/'.$maker_no.'.pdf';
+  			$file = $maker_no.'.pdf';
 
   			if (file_exists($pdf_file))
   			{
@@ -401,7 +408,7 @@ class Making extends CI_Controller
   			else
   			{
   				$this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
-  				redirect('Invoice');
+  				redirect('Making');
   			}
   		}
   		else

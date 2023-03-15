@@ -7,11 +7,11 @@
 				<div class="panel-heading">
 				  <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Customer/logout');?>">Log Out</a></span></h4>
 				</div>
-				
+
         <div class="panel-body">
-          <p>
+          <!-- <p>
             <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Customer/add_new');?>">Add New Customer</a>
-          </p><br />
+          </p><br /> -->
           <?php
             if( $this->session->flashdata('success') )
             { echo '<div class="alert alert-success show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Success!</strong> '.$this->session->flashdata('success').'</p></div>'; }
@@ -24,12 +24,12 @@
   							<th>Customer Name</th>
   							<!-- <th>Phone No</th> -->
                 <th>Address</th>
-                <!-- <th class="hide">Last Amount</th>     -->            
+                <!-- <th class="hide">Last Amount</th>     -->
                 <th>Action</th>
   						</tr>
 					  </thead>
 
-					  
+
 					  <tbody>
               <?php
               if(isset($customer)){
@@ -37,23 +37,23 @@
                 foreach ($customer->result() as $row){  ?>
   						  <tr>
                   <td><?php echo $i; ?></td>
-    							<td><?php echo $row->bakery_name; ?></td>
-    										
-                  <!-- <td><?php echo $row->owner_phone; ?></td> -->       
-                  <td><?php echo $row->bakery_address.'<br />'; ?></td>  
+    							<td><?php echo $row->name; ?></td>
+
+                  <!-- <td><?php echo $row->owner_phone; ?></td> -->
+                  <td><?php echo $row->address.'<br />'; ?></td>
 
     							<td>
                     <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Customer/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
 
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_customer(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button></td>
                 </tr>
-              <?php $i++; } 
-              } ?>  
+              <?php $i++; }
+              } ?>
             </tbody>
           </table>
-        </div>			
+        </div>
     	</div>
-    </div>    		
+    </div>
 	</div>
 </div>
 
@@ -66,21 +66,21 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h4 class="modal-title custom_align" id="Heading">Delete this Customer</h4>
       </div>
-      
+
       <div class="modal-body">
         <div class="alert alert-danger">
           <span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to delete this Record?
-        </div>     
+        </div>
         <p class="statusMsgDel text-center"></p>
       </div>
-        
+
       <div class="modal-footer ">
         <button type="button" class="btn btn-success" id="yes" ><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
       </div>
     </form>
     </div>
-    <!-- /.modal-content --> 
+    <!-- /.modal-content -->
   </div>
 </div>
 <!--ends delete-->
@@ -95,7 +95,7 @@
 var mytable;
 $(document).ready(function(){
   mytable = $('#datatable').dataTable({"pageLength": 25});
-  $("[data-toggle=tooltip]").tooltip();  
+  $("[data-toggle=tooltip]").tooltip();
 
   setTimeout(function() {
     $(".show_hide").alert('close');
@@ -119,10 +119,10 @@ function delete_customer(row_id)
                 $('.modal-body').css('opacity', '.5');
             },
             success:function(msg){
-              if( msg.status =='passed') 
+              if( msg.status =='passed')
               {
                 $('.statusMsgDel').empty();
-                $('.statusMsgDel').html('<span class="text-success">'+msg.result+'</span>');                    
+                $('.statusMsgDel').html('<span class="text-success">'+msg.result+'</span>');
                 setTimeout(function(){
                   $('#delete').modal('hide');
                   location.reload();
@@ -136,12 +136,10 @@ function delete_customer(row_id)
               }
 
               $('.btn-default').removeAttr("disabled");
-              $('.modal-body').css('opacity', '');               
+              $('.modal-body').css('opacity', '');
             }
         });
     })
-    
+
 }
 </script>
-
-
