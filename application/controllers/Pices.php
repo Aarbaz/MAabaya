@@ -50,7 +50,7 @@ class Pices extends CI_Controller
 			$data['materialList'] = $this->Purchaser_model->get_all_material();
 			$data['designs'] = $this->Design_model->get_all_design();
 
-        	$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
+        	$data['last_invoice'] = $this->Pices_model->get_last_invoice_pices();
 	        $this->load->view('layout/header', $data);	        	       
 	        $this->load->view('layout/menubar');
 			$this->load->view('pices_add', $data);
@@ -63,7 +63,7 @@ class Pices extends CI_Controller
 	}	
 	public function create()
 	{
-		$data['last_invoice'] = $this->Challan_model->get_last_invoice_insider();
+		$data['last_invoice'] = $this->Pices_model->get_last_invoice_pices();
 		$this->form_validation->set_rules('customerName', 'customer Name', 'required');	
 		// /$this->form_validation->set_rules('amount[]', 'Total Material', 'required');	
 		//$this->form_validation->set_rules('amount_with', 'Invoice Type', 'required');	
@@ -130,6 +130,7 @@ class Pices extends CI_Controller
 				'pices'		=> $qnty,
 				'average'		=> $rate,
 				'material_used'	=> $amount,
+				'invoice_no'	=> $invoice_no,
 			);						
 			
 			$insert = $this->Pices_model->create_record($data);
@@ -267,14 +268,14 @@ class Pices extends CI_Controller
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
 				
 				$filename = $this->input->post('invoice_no').'.pdf';
-				$dir = APPPATH.'/invoice/'.$data_pdf['customer'].'/';
+				$dir = APPPATH.'/pices_invoice/'.$data_pdf['customer'].'/';
 				if(!is_dir($dir))
 				{
 					mkdir($dir, 0777, true);
 				}
 				$save_path = $dir.$filename;	
 				ob_end_clean();
-				$pdf->Output($save_path, 'I');			
+				//$pdf->Output($save_path, 'I');			
 				$pdf->Output($save_path, 'F');			
 				//file_put_contents($save_path, $pdf);	
 				$this->session->set_flashdata('success', 'Data Added successfully....');

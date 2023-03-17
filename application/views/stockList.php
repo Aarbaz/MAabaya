@@ -57,30 +57,25 @@
 
                 ?></td>
                 <td><?php
-                 $material_ids =  $row->material_id;
-                // $material_ids = implode(",",$row->material_id);
-                // $material_values = trim($material_ids, ",");
+                 $material_ids =  $row->materials_id;
+                /* // $material_ids = implode(",",$row->material_id);
+                // $material_values = trim($material_ids, ",");*/
                 $material_ids_values = explode(",", $material_ids);
-                $material_values = $material_ids_values;
-                $this->db->select('*');
+                $material_values = $material_ids_values; 
+                $this->db->select('material_name');
                 $this->db->from('material');
                 $this->db->where_in('id', $material_values);
                 $query = $this->db->get();
                 $results = $query->result();
+                //echo $this->db->last_query();
                 // print_r($results);
                   $material_names = '';
+                  $material_names = array(); // Initialize an empty array to hold the material names
 
-                foreach ($results as $result) {
-                $material_names = $result->material_name . ', ';
+                  foreach ($results as $result) {
+                    echo $result->material_name . "<br>";
                 }
-                $material_names = rtrim($material_names, ', ');
-               print_r($material_names);
-
-                // $material_names = $results->material_name;
-
-                //echo $material_names;
-
-
+                  
                 ?></td>
                 <td><?php echo $row->quantity; ?></td>
 
@@ -119,7 +114,6 @@
               foreach ($maker_stocks->result() as $row ){?>
 						  <tr>
                 <td><?php echo $i; ?></td>
-  							<!-- <td><?php echo $row->product_name; ?></td> -->
   							<td><?php
 
                 $customer_id= $row->making_owner_id;
@@ -129,14 +123,36 @@
                 $query = $this->db->get();
                 $purchaser_name = $query->row();
                 $cust_name = $purchaser_name->name;
-
-                echo $cust_name;
+                // print_r($row);
+               echo $cust_name;
 
                 ?></td>
+               
+                <td>
+                  <?php 
+                  $material_ids =  $row->material_id;
+                  /* // $material_ids = implode(",",$row->material_id);
+                  // $material_values = trim($material_ids, ",");*/
+                  $material_ids_values = explode(",", $material_ids);
+                  $material_values = $material_ids_values; 
+                  $this->db->select('material_name');
+                  $this->db->from('material');
+                  $this->db->where_in('id', $material_values);
+                  $query = $this->db->get();
+                  $results = $query->result();
+                  //echo $this->db->last_query();
+                  // print_r($results);
+                    $material_names = '';
+                    $material_names = array(); // Initialize an empty array to hold the material names
+  
+                    foreach ($results as $result) {
+                      echo $result->material_name . "<br>";
+                  }
+                    
+                  ?>
+                </td>
+
                 <td><?php echo $row->quantity; ?></td>
-                <td><?php echo $row->quantity; ?></td>
-                <!-- <td><?php echo $row->prod_exp; ?></td>    -->
-  						<!-- 	<td><?php echo $row->price; ?></td>  		 -->
                 <!-- <td>
                  <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Product/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>

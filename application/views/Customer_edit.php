@@ -26,28 +26,28 @@
 
             <div class="form-group hide">
               <div class="col-sm-5">
-                <input type="text" class="form-control" name="owner_name" value="<?php echo set_value('owner_name', $cust->owner_name); ?>">
+                <input type="text" class="form-control" name="owner_name" value="">
               </div>
               <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
             <div class="form-group hide">
               <div class="col-sm-5">
-                <input type="text" class="form-control" name="gst" placeholder="GST No" value="<?php echo set_value('gst', $cust->bakery_gst);?>">
+                <input type="text" class="form-control" name="gst" placeholder="GST No" value="">
               </div>
               <div class="col-sm-6"> <?php echo form_error('gst', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
             <div class="form-group">
               <div class="col-sm-5">
-                <textarea class="form-control" name="bakery_adds" placeholder="Bakery Adds"><?php echo set_value('address',$cust->address); ?></textarea>
+                <textarea class="form-control" name="bakery_adds" placeholder="Customer Adds"><?php echo set_value('address',$cust->address); ?></textarea>
               </div>
               <div class="col-sm-6"> <?php echo form_error('address', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
             <div class="form-group hide">
               <div class="col-sm-5">
-                <input type="text" class="form-control" id="area" name="area" placeholder="Area" value="<?php echo set_value('area', $cust->bakery_area);?>">
+                <input type="text" class="form-control" id="area" name="area" placeholder="Area" value="">
               </div>
               <div class="col-sm-6"> <?php echo form_error('area', '<p class="text-danger">', '</p>'); ?></div>
             </div>
@@ -55,35 +55,35 @@
 
             <div class="form-group hide">
               <div class="col-sm-5">
-                <input type="text" class="form-control" id="city" name="city" placeholder="city" value="<?php echo set_value('city',$cust->bakery_city); ?>">
+                <input type="text" class="form-control" id="city" name="city" placeholder="city" value="">
               </div>
               <div class="col-sm-6"> <?php echo form_error('city', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
             <div class="form-group hide">
               <div class="col-sm-5">
-                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="<?php echo set_value('phone',$cust->owner_phone); ?>">
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="">
               </div>
               <div class="col-sm-6"> <?php echo form_error('phone', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
             <div class="form-group hide">
               <div class="col-sm-5">
-                <input type="text" class="form-control" id="email" name="email" placeholder="Email ID" value="<?php echo set_value('email',$cust->owner_email); ?>">
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email ID" value="">
               </div>
               <div class="col-sm-6"> <?php echo form_error('email', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
             <div class="form-group hide">
               <div class="col-sm-5">
-                <input type="text" class="form-control" id="last_amount" name="last_amount" placeholder="Last Amount" value="<?php echo set_value('last_amount',$cust->last_amount); ?>">
+                <input type="text" class="form-control" id="last_amount" name="last_amount" placeholder="Last Amount" value="">
               </div>
               <div class="col-sm-6"> <?php echo form_error('last_amount', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
           <div class="form-group">
             <div class="col-sm-5">
-              <?php echo form_submit('edit_customer','Edit Customer','class="btn btn-success"'); ?>
+              <?php echo form_submit('edit_customer','Update Customer','class="btn btn-success"'); ?>
             </div>
              <div class="col-sm-6">
               <?php
@@ -92,13 +92,9 @@
               ?>
              </div>
           </div>
-      <?php echo form_close();  ?>
         </div>
     	</div>
+      <?php echo form_close();  ?>
     </div>
 	</div>
-</div>
-
-
-
-</div><!--close main div-->
+<!--close main div-->

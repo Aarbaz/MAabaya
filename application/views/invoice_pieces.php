@@ -54,13 +54,17 @@
   <tr style="background-color: #e1e1e9">
     <th style="width: 10%">Sr. No</th>
     <th style="width: 40%">PARTICULARS</th>
-    <th style="width: 30%">Design No</th>
-    <th style="width: 20%">QNTY</th>
+    <th style="width: 10%">Design No</th>
+    <th style="width: 10%">QNTY</th>
+    <th style="width: 15%">RATE</th>
+    <th style="width: 15%">AMOUNT</th>
   </tr>
   <?php
     $mat = explode(',', $product_name);
     $hsn = explode(',', $hsn);
-    $qnty = explode(',', $qnty);                          
+    $qnty = explode(',', $qnty); 
+    $rate = "";
+    $amount = " ";                         
     $items = array('mat'=> $mat,'qnty'=>$qnty,'hsn'=>$hsn); 
     $len = count($items['mat']);                        
     

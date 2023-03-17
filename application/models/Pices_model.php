@@ -51,6 +51,10 @@ class Pices_model extends CI_Model {
 
     }
 
+    public function get_last_invoice_pices()
+    {
+        return $this->db->select('invoice_no')->order_by('sr_no','desc')->limit(1)->get('product_pices')->row();    
+    }
    /*  public function update_makerStock($customer_id,$material_values, $data)
     {
         foreach($material_values as $row)
