@@ -43,7 +43,14 @@
                                     <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new');?>">Add Customer</a> 
                                     </div>
 								</div>
-                               	
+                                <div class="form-group hide">
+									<label class="control-label col-sm-3">Customer Name</label>
+									<div class="col-sm-9" id="addds_holder">
+                                        <input type="text" name="customerName1" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
+                                        <!-- <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
+                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">  -->        
+                                    </div>
+								</div>	
 								<div class="form-group hide">
 									<label class="control-label col-sm-3">Address</label>
 									<div class="col-sm-9" id="addds_holder">
@@ -164,23 +171,19 @@
 					
                             <!--table withouot tax-->
                             <div class="form-group" id="table_without_tax">
-                                <div class="container" id="table-container">
-                                    
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>                                            
-                                            <!-- <th>Design No</th> -->
+                                            <th>Design No</th>
                                             <th>Material Name</th>
-                                            <!-- <th>Pices</th>
-                                            <th>Average</th>    -->                                         
+                                            <th>Pices</th>
+                                            <th>Average</th>                                            
                                             <th>Total Material Used</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <div class="row select-row">
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Seelct Design</label>
-                                            <div class="col-sm-4   ">
+                                        <tr class="row_one">
+                                            <td>
                                                 <select name="hsn[]" id="hsn"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
                                                     <?php foreach ($designs->result() as $row){ 
@@ -191,21 +194,7 @@
                                                     } ?>
                                                 </select>
                                                 <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
-                                            </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Total Pices</label>
-                                        <div class="col-sm-4" id="addds_holder">
-                                            <input type="text" name="customerName1" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
-                                            <!-- <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                            <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">  -->        
-                                        </div>
-                                    </div>
-                                    </div>
-                                        <tr class="row_one">
-                                            <!-- <td>
-                                                
-                                            </td> -->
+                                            </td>
                                             <td class="material_ids"><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
                                             <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select Product--</option>
@@ -221,16 +210,16 @@
                                                     <input type="hidden" name="material_ids[]" id="material_ids" value="">
                                                 </select>
                                         </td>
-                                           
+                                            <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
+                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                             <td>
-                                                <input type="text" name="amount[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="text" name="amount[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3" readonly="readonly">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                </div>
                             </div>                            
                             <!--ends here-->
                             <div class="form-group hide">
@@ -316,7 +305,6 @@
                                 <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>           
-                                <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>           
                               </div>
                             </div>
 
@@ -653,89 +641,6 @@ $('.submit-btn').click(function() {
         });
         $('#material_ids').val(material_ids.join(','));
 
-    });
-    // $('#duplicate-table-btn').click(function() {
-    // var originalTable = $('#table_without_tax');
-    // // Create a new table element
-    // var newTable = $('<table>').addClass('table table-bordered');
-    // // Clone the header row
-    // var headerRow = originalTable.find('thead tr').clone();
-    // newTable.append(headerRow);
-    
-
-    // // Clone the data rows
-    // var dataRows = originalTable.find('tbody tr');
-    // dataRows.each(function() {
-    // var newRow = $(this).clone();
-    // newTable.append(newRow);
-    // var select_row = originalTable.find('.select-row').clone();
-    // newTable.append(select_row);
-    // });
-
-    // // Append the new table to the container
-    // $('#table-container').append(newTable);
-    // });
-
-    $('#duplicate-table-btn').click(function() {
-        var htmlStructure = "";
-        htmlStructure += ` <div class="form-group">
-                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Seelct Design</label>
-                                            <div class="col-sm-4   ">
-                                                <select name="hsn[]" id="hsn"  class="form-control my-select">
-                                                    <option value="">--select design no--</option>
-                                                    <?php foreach ($designs->result() as $row){ 
-                                                        $selected = set_select("hsn[]", $row->design_num);
-                                                        $data_id = $row->id;
-                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
-                                                    
-                                                    } ?>
-                                                </select>
-                                                <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
-                                            </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Total Pices</label>
-                                        <div class="col-sm-4" id="addds_holder">
-                                            <input type="text" name="customerName1" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
-                                            <!-- <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                            <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">  -->        
-                                        </div>
-                                    </div>
-                                    <div class="form-group" id=""> <table class="table table-bordered"><thead><tr>                                            
-                                            <th>Design No</th>
-                                                                                      
-                                            <th>Total Material Used</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="row_one">
-                                            
-                                            <td class="material_ids"><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
-                                            <select name="items[]" id="items" class="form-control">
-                                                    <option value="">--select Product--</option>
-                                                    <?php 
-                                                    foreach ($materialList->result() as $row){
-                                                        
-                                                        $mat = explode(',', $row->material_name);
-                                                        $cnt= count($mat);
-                                                        for ($i=0; $i < $cnt; $i++) {
-                                                       //print_r( $row);
-                                                    echo '<option label="" data-material-id="'.$row->id.'" value="'.$mat[$i].'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
-                                                    } }?>
-                                                    <input type="hidden" name="material_ids[]" id="material_ids" value="">
-                                                </select>
-                                        </td>
-                                           
-                                            <td>
-                                                <input type="text" name="amount[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
-                                                <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
-                                                &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div> `;
-        $('#table-container').append(htmlStructure);
     });
 })
 
