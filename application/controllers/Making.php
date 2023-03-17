@@ -145,7 +145,7 @@ class Making extends CI_Controller
                     $dataMak["maker_id"] = $product_id;
                     $dataMak["purchaser_owner_id"] = $master_id;
                     $dataMak["making_owner_id"] = $master_name;
-                    $dataMak["material_id"] = $material_ids[$m];
+                    $dataMak["materials_id"] = $material_ids[$m];
                     $dataMak["quantity"] = $stocks[$m];
                     $this->Making_model->add_making_qty($dataMak);
 

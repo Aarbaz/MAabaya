@@ -115,14 +115,14 @@ class Purchaser extends CI_Controller
 
                 $i = 0;
                 foreach ($stock as $row) {
-                    $dataStk["material_id"] = $material_id[$i];
+                    $dataStk["materials_id"] = $material_id[$i];
                     $dataStk["quantity"] = $stock[$i];
                     $dataStk["price"] = $price[$i];
                     $dataStk["purchaser_id"] = $purchaser_id;
                     $dataStk["purchaser_owner_id"] = strtoupper($postData["owner_name"]);
 
                     $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
-                    $this->db->where('material_id',$material_id[$i]);
+                    $this->db->where('materials_id',$material_id[$i]);
             				$query = $this->db->get('purchaser_stock');
             				$row = $query->row();
             				if ($query->num_rows()) {
@@ -133,7 +133,7 @@ class Purchaser extends CI_Controller
             					);
             					// print_r($data2);
                       $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
-                      $this->db->where('material_id',$material_id[$i]);
+                      $this->db->where('materials_id',$material_id[$i]);
             					$this->db->update('purchaser_stock', $data3);
             				} else {
             					// If the product does not exist, insert a new row into the database

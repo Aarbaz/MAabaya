@@ -12,7 +12,7 @@ class Purchaser_model extends CI_Model
     public function update_purchaser_qty($data, $id, $mid)
     {
         $this->db->where("purchaser_id", $id);
-        $this->db->where("material_id", $mid);
+        $this->db->where("materials_id", $mid);
         $this->db->update("purchaser_stock", $data);
         return $this->db->affected_rows();
     }
@@ -108,7 +108,7 @@ class Purchaser_model extends CI_Model
   {
     $this->db->select("id, quantity");
     $this->db->from("purchaser_stock");
-    $this->db->where("material_id", $id);
+    $this->db->where("materials_id", $id);
     $query = $this->db->get();
     return $query->row();
   }

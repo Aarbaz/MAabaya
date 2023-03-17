@@ -61,7 +61,7 @@
                 /* // $material_ids = implode(",",$row->material_id);
                 // $material_values = trim($material_ids, ",");*/
                 $material_ids_values = explode(",", $material_ids);
-                $material_values = $material_ids_values; 
+                $material_values = $material_ids_values;
                 $this->db->select('material_name');
                 $this->db->from('material');
                 $this->db->where_in('id', $material_values);
@@ -75,7 +75,7 @@
                   foreach ($results as $result) {
                     echo $result->material_name . "<br>";
                 }
-                  
+
                 ?></td>
                 <td><?php echo $row->quantity; ?></td>
 
@@ -127,14 +127,14 @@
                echo $cust_name;
 
                 ?></td>
-               
+
                 <td>
-                  <?php 
-                  $material_ids =  $row->material_id;
+                  <?php
+                  $material_ids =  $row->materials_id;
                   /* // $material_ids = implode(",",$row->material_id);
                   // $material_values = trim($material_ids, ",");*/
                   $material_ids_values = explode(",", $material_ids);
-                  $material_values = $material_ids_values; 
+                  $material_values = $material_ids_values;
                   $this->db->select('material_name');
                   $this->db->from('material');
                   $this->db->where_in('id', $material_values);
@@ -144,11 +144,11 @@
                   // print_r($results);
                     $material_names = '';
                     $material_names = array(); // Initialize an empty array to hold the material names
-  
+
                     foreach ($results as $result) {
                       echo $result->material_name . "<br>";
                   }
-                    
+
                   ?>
                 </td>
 
