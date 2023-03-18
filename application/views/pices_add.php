@@ -165,7 +165,7 @@
                             <!--table withouot tax-->
                             <div class="form-group" id="table_without_tax">
                                 <div class="container" id="table-container">
-                                    
+                                <input type="hidden" name="steps" value="0" id="steps">
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>                                            
@@ -601,10 +601,16 @@ $('.submit-btn').click(function() {
     // // Append the new table to the container
     // $('#table-container').append(newTable);
     // });
-
+    var count = 0;
     $('#duplicate-table-btn').click(function() {
+        var step_no = $("#steps").val();
+        //console.log(step_no);
+        count++;
+        $("#steps").val(count);
         var htmlStructure = "";
-        <?php $t++?>
+        <?php $t++
+        
+        ?>
         htmlStructure += ` <hr>
          <div class="form-group select-row">
                                         <label class="control-label col-sm-2 text-left" style="    text-align: left;">Select Design</label>

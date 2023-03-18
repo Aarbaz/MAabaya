@@ -103,7 +103,7 @@ class Pices extends CI_Controller
 				$material_ids = trim($material_ids,',');
 
 			} */
-    for ($j=0; $j < 2; $j++) { 
+   /*  for ($j=0; $j < 2; $j++) { 
 		# code...
     	$output_data[$j] = array(
 				'design_number' => $this->input->post('hsn_'.$j.'[]'),
@@ -111,13 +111,46 @@ class Pices extends CI_Controller
 				'materials_ids' => $this->input->post('items_'.$j.'[]'),
 				'total_material' => $this->input->post('total_material_'.$j.'[]'),
 			);
-			print_r($output_data[$j]);
+			//print_r($output_data[$j]);
 	}
 		//}
-		
+		$result = array(); */
+		$steps = $this->input->post('steps');
+		//print_r($steps);
+// Loop through each design number
+for ($i = 0; $i <= $steps; $i++) {
+    // Create a new array for this design
+    $design = array(
+        'design_number' => $this->input->post('hsn_'.$i.'[]'),
+        'materials_ids' => $this->input->post('items_'.$i.'[]'),
+        'total_material' => $this->input->post('total_material_'.$i.'[]'),
+        'total_piece' => $this->input->post('total_piece_'.$i.'[]')
+    );
+    // Add the new design to the result array
+    $result[] = $design;
+}
+
+// Convert the result array to JSON
+$json = json_encode($result);
+$data = $json;
+$k = 0;
+foreach ($data as $row) {
+	$k++;
+    $design_number = $row['design_number'][$k];
+    $materials_ids = implode(',', $row['materials_ids']);
+    $total_material = implode(',', $row['total_material']);
+    $total_piece = $row['total_piece'][$k];
+    $this->db->insert('product_pices', array(
+        'design_number' => $design_number,
+        'material_id' => $materials_ids,
+        'material_used' => $total_material,
+        'total_piece' => $total_piece
+    ));
+}
+print_r($data);
 		// Output the data in JSON format
 		die();
-		json_encode($output_data);
+	
 			/* ----------------------------------------------------------------------- */
 
 
