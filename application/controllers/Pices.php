@@ -82,57 +82,45 @@ class Pices extends CI_Controller
 		}
 		else
 		{						
-			$material = implode(',', $this->input->post('items[]'));
-			$material = trim($material,',');
+								
+			/* ----------------------------------------------------------------------- */
 
-			$selected_ids = implode(',',$this->input->post('selected_ids'));
-			$selected_ids = trim($selected_ids,',');
+			/* for ($i=0; $i < 10; $i++) { 
+				# code...
+				$items = implode(',',$this->input->post('items_'.$i.''));
+				$items = trim($items,',');
+				$selected_ids = implode(',',$this->input->post('selected_ids_'.$i.''));
+				$selected_ids = trim($selected_ids,',');
 
-			$material_ids = implode(',',$this->input->post('material_ids'));
-			$material_ids = trim($material_ids,',');
-			
-			$hsn = implode(',', $this->input->post('hsn[]'));
-			$hsn = trim($hsn, ',');
+				
+				$total_piece = implode(',', $this->input->post('total_piece_'.$i.'[]'));
+				$total_piece = trim($total_piece, ',');
 
-			$qnty = implode(',', $this->input->post('qnty[]'));
-			$qnty = trim($qnty, ',');
+				$material = implode(',', $this->input->post('material_ids_'.$i.'[]'));
+				$material = trim($material,',');
 
-			$rate = implode(',', $this->input->post('rate[]'));
-			$rate = trim($rate, ',');
+				$material_ids = implode(',',$this->input->post('material_ids_'.$i.''));
+				$material_ids = trim($material_ids,',');
 
-			$amount = implode(',', $this->input->post('amount[]'));
-			$amount = trim($amount,',');
-			$invoice_no = $this->input->post('invoice_no');
-			$customer_id = $this->input->post('customerName');
-			$transport_charges = $this->input->post('trans_charge');
-			$other_charge = $this->input->post('other_charge');
-			$total_taxable_amount = $this->input->post('total_tax_value');
-			$igst_5_cent = $this->input->post('igst_charge');
-			$cgst_charge = $this->input->post('cgst_charge');
-			$sgst_charge = $this->input->post('sgst_charge');
+			} */
+    for ($j=0; $j < 2; $j++) { 
+		# code...
+    	$output_data[$j] = array(
+				'design_number' => $this->input->post('hsn_'.$j.'[]'),
+				'total_piece' => $this->input->post('total_piece_'.$j.'[]'),
+				'materials_ids' => $this->input->post('items_'.$j.'[]'),
+				'total_material' => $this->input->post('total_material_'.$j.'[]'),
+			);
+			print_r($output_data[$j]);
+	}
+		//}
+		
+		// Output the data in JSON format
+		die();
+		json_encode($output_data);
+			/* ----------------------------------------------------------------------- */
 
-			$cgst_per = $this->input->post('cgst_per');
-			$sgst_per = $this->input->post('sgst_per');
-			$igst_per = $this->input->post('igst_per');
 
-			$total_amount = $this->input->post('total_amount');
-			$total_round = $this->input->post('total_round');
-			$total_word = $this->input->post('total_word');
-			$sup_date = $this->input->post('sup_date');
-			//$sup_place = $this->input->post('sup_place');
-			$sup_other = $this->input->post('sup_other');
-
-			$data = array(
-				'master_id' => $customer_id,
-				'mat_name'	=> 	$material,			
-				'material_id'		=> $material_ids,
-				'design_number'		=> $hsn,
-				'pices'		=> $qnty,
-				'average'		=> $rate,
-				'material_used'	=> $amount,
-				'invoice_no'	=> $invoice_no,
-			);						
-			
 			$insert = $this->Pices_model->create_record($data);
 			$json_data = json_encode($data);
 			$json_data_array = array(
@@ -193,7 +181,7 @@ class Pices extends CI_Controller
 			foreach ($stk_data as $row) {
 				$materialId = $row['material_id'];
 				$quantiti = $row['quantity'];
-				$this->db->where('material_id', $materialId);
+				$this->db->where('materials_id', $materialId);
 				$this->db->where('making_owner_id', $customer_id);
 				$query = $this->db->get('maker_stock');
 				$row = $query->row();
@@ -202,7 +190,7 @@ class Pices extends CI_Controller
 					$data23 = array(
 						'quantity' => $row->quantity - $quantiti
 					);
-					$this->db->where('material_id', $materialId);
+					$this->db->where('materials_id', $materialId);
 					$this->db->where('making_owner_id', $customer_id);
 					$this->db->update('maker_stock', $data23);
 				} else {
@@ -467,6 +455,42 @@ class Pices extends CI_Controller
 			}
 			echo json_encode($resp);
 		}
+	}
+
+	//Download pdf invoice
+	public function downloadPdf($cust_name, $invoice_id )
+	{
+		
+		if(!$this->session->userdata('logged_in'))
+		{
+			redirect('Welcome');
+		}
+		elseif( $cust_name && $invoice_id )
+		{			
+			$pdf_file = APPPATH.'pices_invoice/'.rawurldecode($cust_name).'/'.$invoice_id.'.pdf';
+			$file = $invoice_id.'.pdf';
+
+			if (file_exists($pdf_file))
+			{
+				header("Content-Type: application/pdf");
+				header("Content-Disposition: attachment;filename=\"$file\"" );
+				readfile($pdf_file);
+			}
+			else
+			{				
+				$this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
+				redirect('Invoice');
+			}
+		}	
+		else
+		{
+			$data['title'] = ucwords('Page not found');
+        	$data['username'] = $this->session->userdata('logged_in');  
+			$this->load->view('layout/header', $data);	       
+	        $this->load->view('layout/menubar');
+			$this->load->view('errors/html/error_404');
+			$this->load->view('layout/footer');
+		}		
 	}
 }
 ?>

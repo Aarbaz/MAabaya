@@ -177,11 +177,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php $t=0 ?>
                                     <div class="row select-row">
                                     <div class="form-group">
-                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Seelct Design</label>
+                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Select Design</label>
                                             <div class="col-sm-4   ">
-                                                <select name="hsn[]" id="hsn"  class="form-control my-select">
+                                                <select name="hsn_<?php echo $t?>[]" id="hsn"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
                                                     <?php foreach ($designs->result() as $row){ 
                                                         $selected = set_select("hsn[]", $row->design_num);
@@ -190,15 +191,14 @@
                                                     
                                                     } ?>
                                                 </select>
-                                                <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
+                                                <input type="hidden" name='selected_ids_<?php echo $t?>[]' id="selected_ids" value="">
                                             </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-sm-2 text-left" style="    text-align: left;">Total Pices</label>
-                                        <div class="col-sm-4" id="addds_holder">
-                                            <input type="text" name="customerName1" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
-                                            <!-- <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                            <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">  -->        
+                                        <div class="col-sm-4" id="">
+                                            <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece" class="form-control" value="<?php echo set_value('total_piece');?>">
+                                                  
                                         </div>
                                     </div>
                                     </div>
@@ -207,7 +207,7 @@
                                                 
                                             </td> -->
                                             <td class="material_ids"><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
-                                            <select name="items[]" id="items" class="form-control">
+                                            <select name="items_<?php echo $t ?>[]" id="items" class="form-control">
                                                     <option value="">--select Product--</option>
                                                     <?php 
                                                     foreach ($materialList->result() as $row){
@@ -218,12 +218,12 @@
                                                        //print_r( $row);
                                                     echo '<option label="" data-material-id="'.$row->id.'" value="'.$mat[$i].'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
                                                     } }?>
-                                                    <input type="hidden" name="material_ids[]" id="material_ids" value="">
+                                                    <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
                                                 </select>
                                         </td>
                                            
                                             <td>
-                                                <input type="text" name="amount[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
@@ -232,81 +232,7 @@
                                 </table>
                                 </div>
                             </div>                            
-                            <!--ends here-->
-                            <div class="form-group hide">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>TRANSPORT CHARGES</b>
-                                </div>
-                                <div class="col-sm-3">
-                                    <input type="text" name="trans_charge" class="form-control only_num" id="trans_charge" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div>
-                            <div class="form-group hide">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>OTHER</b>
-                                </div>
-                                <div class="col-sm-3"> 
-                                    <input type="text" name="other_charge" id="other_charge" class="only_num form-control" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div>
-
-                            <div class="form-group hide">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>TOTAL TAXABLE VALUE</b>
-                                </div>
-                                <div class="col-sm-3">
-                                    <input type="text" name="total_tax_value" class="form-control" id="total_tax_value" readonly="readonly" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div>
-
-                            <div class="form-group in_state hide">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>CGST @ <input type="number" step="0.5" name="cgst_per" id="cgst_per" style="display: inline; width: 40%">%</b>
-                                </div>
-                                <div class="col-sm-3">
-                                    <input type="text" name="cgst_charge" class="form-control" id="cgst_charge" readonly="readonly" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div>
-
-                            <div class="form-group in_state hide">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>SGST @ <input type="number" step="0.5" name="sgst_per" id="sgst_per" style="display: inline; width: 40%">%</b>
-                                </div>
-                                <div class="col-sm-3"> 
-                                    <input type="text" name="sgst_charge" id="sgst_charge" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div>
-
-                            <div class="form-group out_state hide">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>IGST @ <input type="number" step="0.5" name="igst_per" id="igst_per" style="display: inline; width: 40%">%</b>
-                                </div>
-                                <div class="col-sm-3"> 
-                                    <input type="text" name="igst_charge" id="igst_charge" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div> 
-                            <div class="form-group hide">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>TOTAL</b>
-                                </div>
-                                <div class="col-sm-3"> 
-                                    <input type="text" name="total_amount" id="total_amount" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div>
-
-                            <div class="form-group hide">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>ROUND OFF TOTAL</b>
-                                </div>
-                                <div class="col-sm-3"> 
-                                    <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div>                                                        
-                            <div class="form-group hide">
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    <b>IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
-                                </div>
-                            </div>
+                           
                             <div class="form-group">
                                 <div class="col-sm-12">&nbsp;</div>
                             </div>
@@ -359,13 +285,13 @@ $(document).ready(function(){
                 });
 
                 //show AMOUNT by qnty*rate
-                $('.amount').on('focus', function(){                    
+                /* $('.amount').on('focus', function(){                    
                     var ro  = $(this).parents('tr');
                     var qnty = ro.find('.qnty').val();
                     var rate = ro.find('.rate').val();
                     var the_amount = (qnty*rate).toFixed(2);
                     $(this).val(the_amount);        
-                });    
+                }); */    
                 $('.qnty, .rate').on('change', function(){
                     var ro  = $(this).closest('tr');
                     var qnty = ro.find('.qnty').val();
@@ -464,7 +390,7 @@ $(document).ready(function(){
                 $('#table_with_tax').show();  
                 $('#table_without_tax').hide();
                 //show AMOUNT by qnty*rate
-                $('.amount, .rate').on('focus', function(){                    
+                /* $('.amount, .rate').on('focus', function(){                    
                     var ro  = $(this).parents('tr');
                     var tot_amount = ro.find("input[name*= 'amount_with_tax']").val();
                     if(tot_amount !== undefined)
@@ -475,7 +401,7 @@ $(document).ready(function(){
                         ro.find('.amount').val(unit_price);        
                         ro.find('.rate').val(price);
                     }
-                });   
+                });  */  
                 
             }
             else
@@ -496,13 +422,13 @@ $(document).ready(function(){
                 });
 
                 //show AMOUNT by qnty*rate
-                $('.amount').on('focus', function(){                    
+               /*  $('.amount').on('focus', function(){                    
                     var ro  = $(this).parents('tr');
                     var qnty = ro.find('.qnty').val();
                     var rate = ro.find('.rate').val();
                     var the_amount = (qnty*rate).toFixed(2);
                     $(this).val(the_amount);        
-                });    
+                }); */    
                 $('.qnty, .rate').on('change', function(){
                     var ro  = $(this).closest('tr');
                     var qnty = ro.find('.qnty').val();
@@ -522,13 +448,13 @@ $(document).ready(function(){
             $('#total_tax_value').on('focus', function(){ 
                 var crnt_val = parseFloat($(this).val());
                 total = 0;
-                $('.amount').each(function(){                                
+               /*  $('.amount').each(function(){                                
                     if( $(this).val() !== '' )
                     {
                         var amt = $(this).val();
                         total += parseFloat(amt);                
                     }                       
-                });
+                }); */
 
                 var other_charge = $('#other_charge').val() != '' ? $('#other_charge').val() : 0;
                 var trans_charge = $('#trans_charge').val() != '' ? $('#trans_charge').val() : 0;        
@@ -595,14 +521,14 @@ $(document).ready(function(){
 
 console.log("in total_amount");
 total = 0;
-$('.amount').each(function(){                                
+$/* ('.amount').each(function(){                                
     if( $(this).val() !== '' )
     {
         var amt = $(this).val();
         total += parseFloat(amt);                
     }
     console.log(total);                       
-});
+}); */
 var crnt_val = parseFloat(total);
 
 var other_charge = $('#other_charge').val() != '' ? $('#other_charge').val() : 0;
@@ -636,7 +562,7 @@ if( round_amount!= null)
 $('.submit-btn').click(function() {
       var selected_ids = [];
       var material_ids = [];
-      $('tr.row_one').each(function() {
+      $('.select-row').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute = $(this).find('select option:selected').attr('data-id');
             console.log(' Other attribute value: ' + otherAttribute);
@@ -678,10 +604,12 @@ $('.submit-btn').click(function() {
 
     $('#duplicate-table-btn').click(function() {
         var htmlStructure = "";
-        htmlStructure += ` <div class="form-group">
-                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Seelct Design</label>
+        <?php $t++?>
+        htmlStructure += ` <hr>
+         <div class="form-group select-row">
+                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Select Design</label>
                                             <div class="col-sm-4   ">
-                                                <select name="hsn[]" id="hsn"  class="form-control my-select">
+                                                <select name="hsn_<?php echo $t?>[]" id="hsn"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
                                                     <?php foreach ($designs->result() as $row){ 
                                                         $selected = set_select("hsn[]", $row->design_num);
@@ -690,15 +618,13 @@ $('.submit-btn').click(function() {
                                                     
                                                     } ?>
                                                 </select>
-                                                <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
+                                                <input type="hidden" name="selected_ids_<?php echo $t?>[]" id="selected_ids" value="">
                                             </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-sm-2 text-left" style="    text-align: left;">Total Pices</label>
                                         <div class="col-sm-4" id="addds_holder">
-                                            <input type="text" name="customerName1" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
-                                            <!-- <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                            <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">  -->        
+                                            <input type="text" name="total_piece_<?php echo $t ?>[]" id="total_piece" class="form-control" value="<?php echo set_value('total_piece');?>">      
                                         </div>
                                     </div>
                                     <div class="form-group" id=""> <table class="table table-bordered"><thead><tr>                                            
@@ -710,8 +636,8 @@ $('.submit-btn').click(function() {
                                     <tbody>
                                         <tr class="row_one">
                                             
-                                            <td class="material_ids"><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
-                                            <select name="items[]" id="items" class="form-control">
+                                            <td class="material_ids">
+                                            <select name="items_<?php echo $t?>[]" id="items" class="form-control">
                                                     <option value="">--select Product--</option>
                                                     <?php 
                                                     foreach ($materialList->result() as $row){
@@ -722,12 +648,12 @@ $('.submit-btn').click(function() {
                                                        //print_r( $row);
                                                     echo '<option label="" data-material-id="'.$row->id.'" value="'.$mat[$i].'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
                                                     } }?>
-                                                    <input type="hidden" name="material_ids[]" id="material_ids" value="">
+                                                    <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
                                                 </select>
                                         </td>
                                            
                                             <td>
-                                                <input type="text" name="amount[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
