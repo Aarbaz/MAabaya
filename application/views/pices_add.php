@@ -243,7 +243,7 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>           
                                 <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>           
-                                <button type="button" name="" class="btn btn-primary" id="check">Click</button>           
+                               <!--  <button type="button" name="" class="btn btn-primary" id="check">Click</button>  -->          
                               </div>
                             </div>
 
