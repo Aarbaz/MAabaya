@@ -212,11 +212,12 @@
                                                     <?php 
                                                     foreach ($materialList->result() as $row){
                                                         
+                                                        //$mat = explode(',', $row->material_name);
                                                         $mat = explode(',', $row->material_name);
                                                         $cnt= count($mat);
                                                         for ($i=0; $i < $cnt; $i++) {
                                                        //print_r( $row);
-                                                    echo '<option label="" data-material-id="'.$row->id.'" value="'.$mat[$i].'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
+                                                    echo '<option label="" data-material-id="'.$row->id.'" value="'.$row->id.'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
                                                     } }?>
                                                     <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
                                                 </select>
@@ -658,7 +659,7 @@ $('.submit-btn').click(function() {
                                                         $cnt= count($mat);
                                                         for ($i=0; $i < $cnt; $i++) {
                                                        //print_r( $row);
-                                                    echo '<option label="" data-material-id="'.$row->id.'" value="'.$mat[$i].'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
+                                                    echo '<option label="" data-material-id="'.$row->id.'" value="'.$row->id.'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
                                                     } }?>
                                                     <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
                                                 </select>

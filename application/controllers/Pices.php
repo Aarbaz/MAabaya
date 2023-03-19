@@ -84,7 +84,7 @@ class Pices extends CI_Controller
 		{						
 			/* $selected_ids = implode(',',$this->input->post('selected_ids'));*/
 			$selected_ids = trim($this->input->post('selected_ids'),','); 
-		
+			$customer_id = $this->input->post('customerName');
 			/* ----------------------------------------------------------------------- */
 
 			/* for ($i=0; $i < 10; $i++) { 
@@ -124,10 +124,11 @@ class Pices extends CI_Controller
 				// Create a new array for this design
 				$design = array(
 					'design_number' => $this->input->post('hsn_'.$i.'[]'),
+					'material_ids' => $this->input->post('material_ids_'.$i.'[]'),
 					'materials_ids' => $this->input->post('items_'.$i.'[]'),
 					'total_material' => $this->input->post('total_material_'.$i.'[]'),
 					'total_piece' => $this->input->post('total_piece_'.$i.'[]'),
-					'selected_ids' => $this->input->post('selected_ids_'.$i.'[]')
+					'customer_id' => $this->input->post('customerName'),
 				);
 				// Add the new design to the result array
 				$result[] = $design;
@@ -137,8 +138,7 @@ class Pices extends CI_Controller
 			$json = json_encode($result);
 			$data = $json;
 			$k = 0;
-			/* print_r($data);
-				die(); */
+
 			$array = json_decode($data, true);
 
 			foreach ($array as $row) {
@@ -154,21 +154,25 @@ class Pices extends CI_Controller
 					'total_piece' => $total_piece
 				)); */
 				$insert_data = [
-					'design_number' => $row['design_number'][$k],
-					'mat_name' => implode(',', $row['materials_ids']),
+					'design_number' => $row['design_number'][0],
+					'material_id' => implode(',', $row['materials_ids']),
+					//'material_id' => implode(',', $row['material_ids']),
+					//'mat_name' => implode(',', $row['materials_name']),
 					'material_used' => implode(',', $row['total_material']),
-					'total_piece' => $row['total_piece'][$k]
+					'total_piece' => $row['total_piece'][0],
+					'master_id' => $row['customer_id'][0]
 				];
-				
+				/* print_r($insert_data);
+				die(); */
 				$this->db->insert('product_pices', $insert_data);
 				/* ----------------Insert in History table---------------------------- */
-				$json_data = json_encode($data);
-				$json_data_array = array(
-						'entry_from' => 'MakingAdd',
-						'json_data' => $json_data,
-				);
-				$insert_json_data = $this->Pices_model->create_history($json_data_array);
+				//$json_data = json_encode($data);
 			}
+			$json_data_array = array(
+					'entry_from' => 'MakingAdd',
+					'json_data' => $json,
+			);
+			$insert_json_data = $this->Pices_model->create_history($json_data_array);
 
 	
 			/* ----------------------------------------------------------------------- */

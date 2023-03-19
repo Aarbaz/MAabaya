@@ -33,7 +33,7 @@
               $i = 1;
               
               foreach ($data_list->result() as $row){  
-                $mat_name1 = explode(',', $row->mat_name);
+                $mat_name1 = explode(',', $row->material_id);
                 $design_number = explode(',', $row->design_number);
                 //$pices = explode(',', $row->pices);
                 $count_mat_name1 = count($design_number)
@@ -50,7 +50,7 @@
   							<td><?php echo $row->pices; ?></td> -->
                 <td><?php 
                   for ($p=0; $p < 5; $p++) { 
-                    echo (isset($mat_name1[$p])?$mat_name1[$p]:"").' - '.(isset($design_number[$p])?$design_number[$p]:"").'- '.(isset($pices[$p])?$pices[$p]:"");// 
+                    echo (isset($mat_name1[$p])?$mat_name1[$p]:"").' - '.(isset($design_number[$p])?$design_number[$p]:"").'- '.($row->total_piece);// 
                   
                     echo "</br>";  }
                   /* foreach ($matList->result() as $col){
