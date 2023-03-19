@@ -82,7 +82,9 @@ class Pices extends CI_Controller
 		}
 		else
 		{						
-								
+			/* $selected_ids = implode(',',$this->input->post('selected_ids'));*/
+			$selected_ids = trim($this->input->post('selected_ids'),','); 
+		
 			/* ----------------------------------------------------------------------- */
 
 			/* for ($i=0; $i < 10; $i++) { 
@@ -113,54 +115,67 @@ class Pices extends CI_Controller
 			);
 			//print_r($output_data[$j]);
 	}
-		//}
-		$result = array(); */
-		$steps = $this->input->post('steps');
-		//print_r($steps);
-// Loop through each design number
-for ($i = 0; $i <= $steps; $i++) {
-    // Create a new array for this design
-    $design = array(
-        'design_number' => $this->input->post('hsn_'.$i.'[]'),
-        'materials_ids' => $this->input->post('items_'.$i.'[]'),
-        'total_material' => $this->input->post('total_material_'.$i.'[]'),
-        'total_piece' => $this->input->post('total_piece_'.$i.'[]')
-    );
-    // Add the new design to the result array
-    $result[] = $design;
-}
+					//}
+					$result = array(); */
+					$steps = $this->input->post('steps');
+					//print_r($steps);
+			// Loop through each design number
+			for ($i = 0; $i <= $steps; $i++) {
+				// Create a new array for this design
+				$design = array(
+					'design_number' => $this->input->post('hsn_'.$i.'[]'),
+					'materials_ids' => $this->input->post('items_'.$i.'[]'),
+					'total_material' => $this->input->post('total_material_'.$i.'[]'),
+					'total_piece' => $this->input->post('total_piece_'.$i.'[]'),
+					'selected_ids' => $this->input->post('selected_ids_'.$i.'[]')
+				);
+				// Add the new design to the result array
+				$result[] = $design;
+			}
 
-// Convert the result array to JSON
-$json = json_encode($result);
-$data = $json;
-$k = 0;
-foreach ($data as $row) {
-	$k++;
-    $design_number = $row['design_number'][$k];
-    $materials_ids = implode(',', $row['materials_ids']);
-    $total_material = implode(',', $row['total_material']);
-    $total_piece = $row['total_piece'][$k];
-    $this->db->insert('product_pices', array(
-        'design_number' => $design_number,
-        'material_id' => $materials_ids,
-        'material_used' => $total_material,
-        'total_piece' => $total_piece
-    ));
-}
-print_r($data);
-		// Output the data in JSON format
-		die();
+			// Convert the result array to JSON
+			$json = json_encode($result);
+			$data = $json;
+			$k = 0;
+			/* print_r($data);
+				die(); */
+			$array = json_decode($data, true);
+
+			foreach ($array as $row) {
+				$k++;
+				/* $design_number = $row['design_number'][$k];
+				$materials_ids = implode(',', $row['materials_ids']);
+				$total_material = implode(',', $row['total_material']);
+				$total_piece = $row['total_piece'][$k];
+				$this->db->insert('product_pices', array(
+					'design_number' => $design_number,
+					'material_id' => $materials_ids,
+					'material_used' => $total_material,
+					'total_piece' => $total_piece
+				)); */
+				$insert_data = [
+					'design_number' => $row['design_number'][$k],
+					'mat_name' => implode(',', $row['materials_ids']),
+					'material_used' => implode(',', $row['total_material']),
+					'total_piece' => $row['total_piece'][$k]
+				];
+				
+				$this->db->insert('product_pices', $insert_data);
+				/* ----------------Insert in History table---------------------------- */
+				$json_data = json_encode($data);
+				$json_data_array = array(
+						'entry_from' => 'MakingAdd',
+						'json_data' => $json_data,
+				);
+				$insert_json_data = $this->Pices_model->create_history($json_data_array);
+			}
+
 	
 			/* ----------------------------------------------------------------------- */
 
 
-			$insert = $this->Pices_model->create_record($data);
-			$json_data = json_encode($data);
-			$json_data_array = array(
-					'entry_from' => 'MakingAdd',
-					'json_data' => $json_data,
-			);
-			$insert_json_data = $this->Pices_model->create_history($json_data_array);
+			//$insert = $this->Pices_model->create_record($data);
+			
 			// Get the product and quantity values from your input
 			$selected_ids_values = explode(",", $selected_ids);
 			$product_values = $selected_ids_values; // Dynamic product values

@@ -243,6 +243,7 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>           
                                 <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>           
+                                <button type="button" name="" class="btn btn-primary" id="check">Click</button>           
                               </div>
                             </div>
 
@@ -562,13 +563,18 @@ if( round_amount!= null)
 $('.submit-btn').click(function() {
       var selected_ids = [];
       var material_ids = [];
-      $('.select-row').each(function() {
+      /* $('.my-select').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute = $(this).find('select option:selected').attr('data-id');
             console.log(' Other attribute value: ' + otherAttribute);
             selected_ids.push(otherAttribute);
             console.log(selected_ids);
-        });
+        }); */
+        $(".my-select").each(function() {
+            var selectedOption = $(this).find(":selected");
+            var otherAttribute = selectedOption.attr('data-id');
+            selected_ids.push(otherAttribute);
+            });
         $('#selected_ids').val(selected_ids.join(','));
       $('tr td.material_ids').each(function() {
             //var selectedValue = $(this).find('select').val();
@@ -624,7 +630,7 @@ $('.submit-btn').click(function() {
                                                     
                                                     } ?>
                                                 </select>
-                                                <input type="hidden" name="selected_ids_<?php echo $t?>[]" id="selected_ids" value="">
+                                                <input type="hidden" name="selected_ids_<?php echo $t?>[]" id="" value="">
                                             </div>
                                     </div>
                                     <div class="form-group">
