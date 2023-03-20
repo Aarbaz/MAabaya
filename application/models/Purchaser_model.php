@@ -126,11 +126,14 @@ class Purchaser_model extends CI_Model
         $this->db->from('purchaser_stock');
         $this->db->join('purchaser', 'purchaser.id = purchaser_stock.purchaser_id','left');
         return $this->db->get();
-        /* $query = $this->db->get();
-        $purchaser_name = $query->row();
-        print_r($purchaser_name);
-        die(); */
+
 	}
+
+
+  public function create_history($json_data_array)
+  {
+      return $this->db->insert('history', $json_data_array);
+  }
 
 
 }

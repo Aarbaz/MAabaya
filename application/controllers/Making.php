@@ -127,6 +127,15 @@ class Making extends CI_Controller
                 ];
 
                 $insert = $this->Making_model->add_material($data);
+
+
+                $json_data = json_encode($data);
+          			$json_data_array = array(
+          					'entry_from' => '1',
+          					'json_data' => $json_data,
+          			);
+          			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
+
                 $product_id = $this->db->insert_id();
 
 
@@ -147,7 +156,35 @@ class Making extends CI_Controller
                     $dataMak["making_owner_id"] = $master_name;
                     $dataMak["materials_id"] = $material_ids[$m];
                     $dataMak["quantity"] = $stocks[$m];
-                    $this->Making_model->add_making_qty($dataMak);
+
+
+                    $this->db->where('making_owner_id', $master_name);
+                    $this->db->where('materials_id',$material_ids[$m]);
+                    $querys = $this->db->get('maker_stock');
+                    $rows = $querys->row();
+
+                    // print_r($query->num_rows());
+                    // die();
+                    if ($querys->num_rows()) {
+                      // If the product exists, update the quantity value in the database
+                      // print_r($rows->quantity);
+                      // die();
+                      $data3 = array(
+                        'quantity' => $rows->quantity + $stocks[$m],
+                        // 'price' => $price[$i]
+                      );
+                      // print_r($data3);
+                      // die();
+                      $this->db->where('making_owner_id', $master_name);
+                      $this->db->where('materials_id',$material_ids[$m]);
+                      $this->db->update('maker_stock', $data3);
+                    } else {
+                      // If the product does not exist, insert a new row into the database
+                      // $this->db->insert('purchaser_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
+                      $this->Making_model->add_making_qty($dataMak);
+
+                    }
+
 
                     $m++;
                 }

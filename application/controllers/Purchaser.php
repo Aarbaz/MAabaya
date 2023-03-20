@@ -107,6 +107,15 @@ class Purchaser extends CI_Controller
                 ];
 
                 $insert = $this->Purchaser_model->add_purchaser($data);
+
+
+                $json_data = json_encode($data);
+          			$json_data_array = array(
+          					'entry_from' => '0',
+          					'json_data' => $json_data,
+          			);
+          			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
+
                 $purchaser_id = $this->db->insert_id();
 
                 $material_id = $this->input->post("material_name[]");
