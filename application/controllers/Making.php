@@ -128,14 +128,6 @@ class Making extends CI_Controller
 
                 $insert = $this->Making_model->add_material($data);
 
-
-                $json_data = json_encode($data);
-          			$json_data_array = array(
-          					'entry_from' => '1',
-          					'json_data' => $json_data,
-          			);
-          			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
-
                 $product_id = $this->db->insert_id();
 
 
@@ -189,6 +181,14 @@ class Making extends CI_Controller
                     $m++;
                 }
 
+
+                $json_data = json_encode($data);
+          			$json_data_array = array(
+          					'entry_from' => '1',
+          					'json_data' => $json_data,
+          			);
+          			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
+                
                 if ($insert > 0) {
 
 

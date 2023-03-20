@@ -109,14 +109,9 @@ class Purchaser extends CI_Controller
                 $insert = $this->Purchaser_model->add_purchaser($data);
 
 
-                $json_data = json_encode($data);
-          			$json_data_array = array(
-          					'entry_from' => '0',
-          					'json_data' => $json_data,
-          			);
-          			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
 
-                $purchaser_id = $this->db->insert_id();
+
+                $purchaser_ids = $this->db->insert_id();
 
                 $material_id = $this->input->post("material_name[]");
                 $stock = $this->input->post("stock_q[]");
@@ -127,7 +122,7 @@ class Purchaser extends CI_Controller
                     $dataStk["materials_id"] = $material_id[$i];
                     $dataStk["quantity"] = $stock[$i];
                     $dataStk["price"] = $price[$i];
-                    $dataStk["purchaser_id"] = $purchaser_id;
+                    $dataStk["purchaser_id"] = $purchaser_ids;
                     $dataStk["purchaser_owner_id"] = strtoupper($postData["owner_name"]);
 
                     $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
@@ -155,6 +150,14 @@ class Purchaser extends CI_Controller
 
                     $i++;
                 }
+
+                $json_data = json_encode($data);
+          			$json_data_array = array(
+          					'entry_from' => '0',
+          					'json_data' => $json_data,
+          			);
+          			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
+                
 
                 if ($insert > 0) {
                   $customer_id=   strtoupper($postData["owner_name"]);

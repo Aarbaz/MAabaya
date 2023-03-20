@@ -44,7 +44,7 @@
   							<!-- <td><?php echo $row->product_name; ?></td> -->
   							<!-- <td><?php echo $sb_subject->name ?></td> -->
   							<td><?php
-
+                // print_r($customer_id);
                 $customer_id= $row->purchaser_owner_id;
                 $this->db->select('*');
                 $this->db->from('customers');
