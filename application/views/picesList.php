@@ -33,10 +33,10 @@
               $i = 1;
               
               foreach ($data_list->result() as $row){  
-                $mat_name1 = explode(',', $row->mat_name);
+                $mat_name1 = explode(',', $row->material_id);
                 $design_number = explode(',', $row->design_number);
-                $pices = explode(',', $row->pices);
-                $count_mat_name1 = count($mat_name1)
+                //$pices = explode(',', $row->pices);
+                $count_mat_name1 = count($design_number)
                 
                 ?>
 						  <tr>
@@ -49,8 +49,8 @@
   							<td><?php echo $row->design_number; ?></td>
   							<td><?php echo $row->pices; ?></td> -->
                 <td><?php 
-                  for ($p=0; $p < $count_mat_name1; $p++) { 
-                    echo $mat_name1[$p].' - '.$design_number[$p].'- '.$pices[$p];
+                  for ($p=0; $p < 5; $p++) { 
+                    echo (isset($mat_name1[$p])?$mat_name1[$p]:"").' - '.(isset($design_number[$p])?$design_number[$p]:"").'- '.($row->total_piece);// 
                   
                     echo "</br>";  }
                   /* foreach ($matList->result() as $col){
@@ -60,7 +60,7 @@
                  } */
                   ?></td>
                 <td>
-                <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/pices_invoice/download_pdf/').rawurlencode($row->name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
+                <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Pices/downloadPdf/').rawurlencode($row->name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
                  <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Pices/editPices/').$row->sr_no;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->sr_no;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td>
