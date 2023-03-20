@@ -8,36 +8,122 @@ class Material extends CI_Controller {
 	 3. edit() is called to update single material
 	*/
 
-	public function __construct() 
+	public function __construct()
     {
-        parent::__construct();     
+        parent::__construct();
         $this->load->library('form_validation');
-        $this->load->model('Material_model');  
+        $this->load->model('Material_model');
+        $this->load->model('Purchaser_model');
         $this->load->model('Vendor_model');
     }
-	public function index()
+
+
+		public function index()
+		{
+			if($this->session->userdata('logged_in'))
+	        {
+	        	$data['title'] = ucfirst('Material List');
+	        	$data['username'] = $this->session->userdata('logged_in');
+	        	$data['materials'] = $this->Purchaser_model->get_all_material();
+	        	// $data['vendors'] = $this->Vendor_model->get_all_vendors();
+		        $this->load->view('layout/header', $data);
+		        $this->load->view('layout/menubar');
+				$this->load->view('materialList', $data);
+				$this->load->view('layout/footer');
+			}
+			else
+			{
+				redirect('welcome');
+			}
+		}
+
+
+		public function fetch_by_id($id){
+				$id = $this->Purchaser_model->get_material_byID($id);
+		}
+
+		public function deleteMaterial()
 	{
-		if($this->session->userdata('logged_in'))
-        {		
-        	$data['title'] = ucfirst('Material List');
-        	$data['username'] = $this->session->userdata('logged_in');
-        	$data['materials'] = $this->Material_model->get_all_material();
-        	$data['vendors'] = $this->Vendor_model->get_all_vendors();
-	        $this->load->view('layout/header', $data);	        
-	        $this->load->view('layout/menubar');
-			$this->load->view('materialList', $data);
-			$this->load->view('layout/footer');		
+		if( $this->input->post('id'))
+		{
+			$id = $this->input->post('id');
+			$upd = $this->Purchaser_model->delete_by_mid($id);
+			if($upd > 0)
+			{
+				$resp['status'] = 'passed';
+				$resp['result'] = 'Material deleted successfully.';
+			}
+			else
+			{
+				$resp['status'] = 'failed';
+				$resp['result'] = 'Some problem occurred, please try again';
+			}
+			echo json_encode($resp);
+		}
+	}
+
+
+	public function edit_material(){
+
+			$this->form_validation->set_rules('material_name', 'Material name', 'required');
+			if ($this->form_validation->run() == false)
+	{
+		$this->index();
+	}
+	else
+	{
+					$material_name = $this->input->post('material_name');
+					$id = $this->input->post('id');
+					$data = array(
+							'material_name' => $material_name,
+					);
+					if ($id) {
+							$data = array(
+									'id' => $id,
+									'material_name' => $material_name,
+							);
+							$insert = $this->Purchaser_model->update_record($id,$data);
+					}
+					else{
+							$insert = $this->Purchaser_model->create_material($data);
+					}
+
+					if($insert == true)
+		{
+							$this->session->set_flashdata('success', 'Updated successfully....');
+			redirect('Material/');
 		}
 		else
 		{
-			redirect('welcome');
-		}
+			$this->session->set_flashdata('fail', "Sorry! there was some error.");
+			redirect(base_url('/index.php/Material'));
+					}
+			}
 	}
-    
+
+	// public function index()
+	// {
+	// 	if($this->session->userdata('logged_in'))
+  //       {
+  //       	$data['title'] = ucfirst('Material List');
+  //       	$data['username'] = $this->session->userdata('logged_in');
+  //       	$data['materials'] = $this->Material_model->get_all_material();
+  //       	$data['vendors'] = $this->Vendor_model->get_all_vendors();
+	//         $this->load->view('layout/header', $data);
+	//         $this->load->view('layout/menubar');
+	// 		$this->load->view('materialList', $data);
+	// 		$this->load->view('layout/footer');
+	// 	}
+	// 	else
+	// 	{
+	// 		redirect('welcome');
+	// 	}
+	// }
+
 	//this is callback () to check unique combination of material & vendor
 	public function unique_check()
     {
-		$mat_name = $this->input->post('mat_name');	
+		$mat_name = $this->input->post('mat_name');
 		$vendorName = $this->input->post('vendorName');
 		$this->db->select('id');
 		$this->db->from('materials');
@@ -53,35 +139,35 @@ class Material extends CI_Controller {
 		{
 			return true;
 		}
-	}   
+	}
 	 public function mode_validate($value)
     {
 		/*if($value == 'Cheque')
 		{
-			$this->form_validation->set_rules('cheque_no', 'Cheque No', 'trim|required');  
-			$this->form_validation->set_message('mode_validate', "Please enter cheque No");   		
+			$this->form_validation->set_rules('cheque_no', 'Cheque No', 'trim|required');
+			$this->form_validation->set_message('mode_validate', "Please enter cheque No");
 			return false;
 		}
 		elseif($value == 'IMPS')
 		{
 			$this->form_validation->set_rules('trn_no', 'Transaction No', 'trim|required');
-			$this->form_validation->set_message('mode_validate', "Please enter Transaction No");   		
+			$this->form_validation->set_message('mode_validate', "Please enter Transaction No");
 			return false;
 		}*/
 		if ($this->input->post('bill_amount')=='' && $this->input->post('paid')=='')
 		{
-			$this->form_validation->set_message('mode_validate', "Please enter Bill Amount/Paid Amount"); 	
+			$this->form_validation->set_message('mode_validate', "Please enter Bill Amount/Paid Amount");
 			return false;
 		}
 		else
 		{
 			return true;
 		}
-	}   
+	}
 	// Add new MATERIAL form
 	public function add_new()
 	{
-		
+
 		if( $this->input->post('add_material') != NULL )
 		{
 			$this->form_validation->set_rules('vendorName', 'Vendor Name', 'trim|required');
@@ -90,14 +176,14 @@ class Material extends CI_Controller {
      		$this->form_validation->set_rules('mode', 'Payment Mode', 'required|callback_mode_validate');
      		$this->form_validation->set_rules('cheque_no', 'Cheque No', 'trim');
      		$this->form_validation->set_rules('trn_no', 'Transaction No', 'trim');
-     		
-			if ($this->form_validation->run() == false)
-			{			
-				$data['title'] = ucwords('Add new Material');
-	        	$data['username'] = $this->session->userdata('logged_in');   
-	        	$data['vendors'] = $this->Material_model->get_all_vendors();     	
 
-		        $this->load->view('layout/header', $data);	       
+			if ($this->form_validation->run() == false)
+			{
+				$data['title'] = ucwords('Add new Material');
+	        	$data['username'] = $this->session->userdata('logged_in');
+	        	$data['vendors'] = $this->Material_model->get_all_vendors();
+
+		        $this->load->view('layout/header', $data);
 		        $this->load->view('layout/menubar');
 				$this->load->view('material_add', $data);
 				$this->load->view('layout/footer');
@@ -133,11 +219,11 @@ class Material extends CI_Controller {
 					'hsn' => strtoupper($hsn),
 					'batch_no' => strtoupper($batch),
 					'quantity' => $qnty,
-					'rate' => $rate,	
+					'rate' => $rate,
 					'invoice' => $invoice,
 					'challan' => $challan,
-					'vendor' => $vendorName,	
-					'last_amount'	=> $last_bal,		
+					'vendor' => $vendorName,
+					'last_amount'	=> $last_bal,
 					'bill_amount' => $bill_amount,
 					'paid_amount' => $paid,
 					'new_amount'  => $update_new_bal,
@@ -148,8 +234,8 @@ class Material extends CI_Controller {
 
 				$data_update = array('debit_balance' => $update_new_bal);
 
-				$insert = $this->Material_model->add_material($add_data);								
-				$update = $this->Vendor_model->update_vendor($data_update, $vendorName);			
+				$insert = $this->Material_model->add_material($add_data);
+				$update = $this->Vendor_model->update_vendor($data_update, $vendorName);
 				if($insert > 0)
 				{
 					$this->session->set_flashdata('success', 'Material payment added successfully.');
@@ -158,7 +244,7 @@ class Material extends CI_Controller {
 				else
 				{
 					$this->session->set_flashdata('failed', 'Some problem occurred, please try again.');
-					$this->load->view('layout/header', $data);	       
+					$this->load->view('layout/header', $data);
 			        $this->load->view('layout/menubar');
 					$this->load->view('material_add', $data);
 					$this->load->view('layout/footer');
@@ -167,29 +253,29 @@ class Material extends CI_Controller {
      	}
 
 		elseif($this->session->userdata('logged_in'))
-        {		
+        {
         	$data['title'] = ucwords('Add new Material');
-        	$data['username'] = $this->session->userdata('logged_in');  
-        	$data['vendors'] = $this->Material_model->get_all_vendors();      	
+        	$data['username'] = $this->session->userdata('logged_in');
+        	$data['vendors'] = $this->Material_model->get_all_vendors();
 
-	        $this->load->view('layout/header', $data);	       
+	        $this->load->view('layout/header', $data);
 	        $this->load->view('layout/menubar');
 			$this->load->view('material_add', $data);
-			$this->load->view('layout/footer');		
+			$this->load->view('layout/footer');
 		}
 		else
 		{
 			redirect('Welcome');
 		}
-	} 	
+	}
 
 	//form to UPDATE Material
 	public function edit()
 	{
-		$mat_id = $this->input->post('mat_id');		
+		$mat_id = $this->input->post('mat_id');
 		if( $mat_id)
-		{						
-			$cust_data = $this->Material_model->get_material_byID($mat_id);			
+		{
+			$cust_data = $this->Material_model->get_material_byID($mat_id);
 			if($cust_data)
 			{
 				$resp['result'] =	 $cust_data;
@@ -221,23 +307,23 @@ class Material extends CI_Controller {
 		}
 
 		if ($this->form_validation->run() == FALSE)
-        {      
-			$response['result'] = 'Please select Vendor, month and year.';        	
-        	$response['status']   = 'failed';        	
+        {
+			$response['result'] = 'Please select Vendor, month and year.';
+        	$response['status']   = 'failed';
         }
 
 		if( $cust_name && $frm_mth &&  $frm_yr)
-		{        	
-        	$db_data = $this->Material_model->vendor_ledger_byDate($cust_name,$frm_mth,$frm_yr,$to_mth,$to_yr)->result_array();			
-			$ledger_row = array();		
+		{
+        	$db_data = $this->Material_model->vendor_ledger_byDate($cust_name,$frm_mth,$frm_yr,$to_mth,$to_yr)->result_array();
+			$ledger_row = array();
 
 			if( count($db_data) > 0)
 			{
-				//$data['db_data'] = $db_data;				
+				//$data['db_data'] = $db_data;
 				$filename = $db_data[0]['vendor_name'].'-ledger.xls';
 				header("Content-Type: application/vnd.ms-excel");
 				header("Content-Disposition: attachment; filename=\"$filename\"");
-				$isPrintHeader = false;   
+				$isPrintHeader = false;
 				$excelTable = '';
           		$excelTable .= '<table border="1"><tr><td colspan="8"><h3 style="text-align: center"><b>'.$db_data[0]['vendor_name'].'</h3></td></tr>
                   <tr><td colspan="8"><h4 style="text-align: center"><b>'.
@@ -250,14 +336,14 @@ class Material extends CI_Controller {
            			<th>NEW AMOUNT</th> <th>PAY MODE</th> <th>TRN No.</th> <th>CHEQUE No</th>
            			<th>DATE</th></tr>';
 
-		        foreach ($db_data as $data_row) 
+		        foreach ($db_data as $data_row)
 		        {
-		        	$data_row['buy_date'] = date('d F, Y', strtotime($data_row['buy_date']) );    
+		        	$data_row['buy_date'] = date('d F, Y', strtotime($data_row['buy_date']) );
 		        	$excelTable.= '<tr><td>'.
 		            $data_row['last_amount'].'</td><td>'.$data_row['bill_amount'].'</td><td>'.
 		            $data_row['paid_amount'].'</td><td>'.$data_row['new_amount'].'</td><td>'.
 		            $data_row['pay_mode'].'</td><td>'.$data_row['transaction_no'].'</td><td>'.
-		            $data_row['cheque_no'].'</td><td>'.$data_row['buy_date'].'</td></tr>';     
+		            $data_row['cheque_no'].'</td><td>'.$data_row['buy_date'].'</td></tr>';
 		        }
 
 				$response['result']	=  "data:application/vnd.ms-excel;base64,".base64_encode($excelTable);
@@ -266,10 +352,10 @@ class Material extends CI_Controller {
 				//echo json_encode($response);
 			}
 			else
-			{	
-				$response['result'] = 'Sorry! no record found';        	
-        		$response['status'] = 'failed';        	
-			}								
+			{
+				$response['result'] = 'Sorry! no record found';
+        		$response['status'] = 'failed';
+			}
 		}
 		echo json_encode($response);
 	}
@@ -280,24 +366,24 @@ class Material extends CI_Controller {
 		header("location:". site_url('?status=loggedout'));
 	}
 
-	public function deleteMaterial()
-	{
-		if($this->input->post('row_id'))
-		{			
-			$id = $this->input->post('row_id');
-			$upd = $this->Material_model->delete_by_id($id);
-			if($upd > 0)
-			{
-				$resp['status'] = 'passed';
-				$resp['result'] = 'Material deleted successfully.';
-			}
-			else
-			{
-				$resp['status'] = 'failed';
-				$resp['result'] = 'Some problem occurred, please try again';
-			}
-			echo json_encode($resp);
-		}
-	}
+	// public function deleteMaterial()
+	// {
+	// 	if($this->input->post('row_id'))
+	// 	{
+	// 		$id = $this->input->post('row_id');
+	// 		$upd = $this->Material_model->delete_by_id($id);
+	// 		if($upd > 0)
+	// 		{
+	// 			$resp['status'] = 'passed';
+	// 			$resp['result'] = 'Material deleted successfully.';
+	// 		}
+	// 		else
+	// 		{
+	// 			$resp['status'] = 'failed';
+	// 			$resp['result'] = 'Some problem occurred, please try again';
+	// 		}
+	// 		echo json_encode($resp);
+	// 	}
+	// }
 
 }

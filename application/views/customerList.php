@@ -23,7 +23,7 @@
   							<th>Sr No</th>
   							<th>Customer Name</th>
   							<!-- <th>Phone No</th> -->
-                <th>Address</th>
+                <th>Type</th>
                 <!-- <th class="hide">Last Amount</th>     -->
                 <th>Action</th>
   						</tr>
@@ -40,7 +40,28 @@
     							<td><?php echo $row->name; ?></td>
 
                   <!-- <td><?php echo $row->owner_phone; ?></td> -->
-                  <td><?php echo $row->address.'<br />'; ?></td>
+                  <td>
+
+                    <!-- <?php echo $row->role.'<br />'; ?> -->
+                    <?php
+                      if ($row->role == '0') {
+                        $name = 'Purchaser';
+                        // code...
+                      }
+                      elseif ($row->role == '1' ) {
+                        $name = 'Maker';
+
+                      }
+                      else {
+                        // code...
+                      }
+                    echo $name;
+
+                    ?>
+
+
+
+                  </td>
 
     							<td>
                     <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Customer/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;

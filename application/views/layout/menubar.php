@@ -88,6 +88,9 @@
 					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer');?>">Customer</a>
 				</li>
         <li>
+         <a class="btn btn-default" role="button" href="<?php echo base_url('/index.php/Material');?>">Material</a>
+       </li>
+        <li>
           <!-- <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Balance');?>">Balance</a> -->
         </li>
 			</ul>
