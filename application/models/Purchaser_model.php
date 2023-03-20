@@ -26,22 +26,7 @@ class Purchaser_model extends CI_Model
     }
 
 
-    public function create_material($data)
-    {
-        return $this->db->insert("material", $data);
-    }
 
-    public function update_material($id, $data)
-    {
-        $this->db->where("id", $id);
-        $this->db->update("material", $data);
-        return $this->db->affected_rows();
-    }
-
-    public function get_all_material()
-    {
-        return $this->db->select("id, material_name")->get("material");
-    }
 
     public function add_purchaser($data)
     {
@@ -93,12 +78,8 @@ class Purchaser_model extends CI_Model
             ->result_array();
     }
 
-    public function getMaterialDetailbyId($id)
-    {
-        $this->db->where("id", $id);
-        $query = $this->db->get("material");
-        return $query->result();
-    }
+
+
     public function get_all_purchaser()
     {
         return $this->db->select("id,purchaser_no")->get("purchaser");
@@ -135,5 +116,55 @@ class Purchaser_model extends CI_Model
       return $this->db->insert('history', $json_data_array);
   }
 
+
+  public function create_material($data)
+  {
+      return $this->db->insert("material", $data);
+  }
+
+  public function update_material($id, $data)
+  {
+      $this->db->where("id", $id);
+      $this->db->update("material", $data);
+      return $this->db->affected_rows();
+  }
+
+  public function get_all_material()
+  {
+      return $this->db->select("id, material_name")->get("material");
+  }
+
+  public function getMaterialDetailbyId($id)
+  {
+      $this->db->where("id", $id);
+      $query = $this->db->get("material");
+      return $query->result();
+  }
+
+  public function get_material_byID($id)
+  {
+      $this->db->select('id,material_name');
+    $this->db->from('material');
+      $this->db->where('id',$id);
+      $query = $this->db->get();
+      $data= $query->row();
+      $data = json_encode($data);
+      print_r($data);
+  }
+
+
+    public function delete_by_mid($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('material');
+        return $this->db->affected_rows();
+    }
+
+    public function update_record($id,$data)
+    {
+        $this->db->where('id', $id);
+    $this->db->update('material', $data);
+    return $this->db->affected_rows();
+    }
 
 }
