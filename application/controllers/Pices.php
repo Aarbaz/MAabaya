@@ -16,10 +16,10 @@ class Pices extends CI_Controller
 		$this->load->model('Customer_model');
 		$this->load->model('Purchaser_model');
 		$this->load->library('tcpdf');
-        $this->load->model('Challan_model'); 
+        $this->load->model('Challan_model');
 		$this->load->library('upload');
 		//$this->load->helper('pdf_helper');
-		$this->load->helper('url'); 
+		$this->load->helper('url');
 	}
 
     public function index(){
@@ -42,7 +42,7 @@ class Pices extends CI_Controller
 	public function add_new()
 	{
 		if($this->session->userdata('logged_in'))
-        {		
+        {
 
 			$data['title'] = 'Add Purchaser Details';
 			$data['username'] = $this->session->userdata('logged_in');
@@ -51,62 +51,62 @@ class Pices extends CI_Controller
 			$data['designs'] = $this->Design_model->get_all_design();
 
         	$data['last_invoice'] = $this->Pices_model->get_last_invoice_pices();
-	        $this->load->view('layout/header', $data);	        	       
+	        $this->load->view('layout/header', $data);
 	        $this->load->view('layout/menubar');
 			$this->load->view('pices_add', $data);
-			$this->load->view('layout/footer');		
+			$this->load->view('layout/footer');
 		}
 		else
 		{
 			redirect('Welcome');
 		}
-	}	
+	}
 	public function create()
 	{
 		$data['last_invoice'] = $this->Pices_model->get_last_invoice_pices();
-		$this->form_validation->set_rules('customerName', 'customer Name', 'required');	
-		// /$this->form_validation->set_rules('amount[]', 'Total Material', 'required');	
-		//$this->form_validation->set_rules('amount_with', 'Invoice Type', 'required');	
+		$this->form_validation->set_rules('customerName', 'customer Name', 'required');
+		// /$this->form_validation->set_rules('amount[]', 'Total Material', 'required');
+		//$this->form_validation->set_rules('amount_with', 'Invoice Type', 'required');
 		$validation = array(
 		    array(
 		        'field' => 'items[]',
-		        'label' => 'Product', 
-		        'rules' => 'required', 
+		        'label' => 'Product',
+		        'rules' => 'required',
 		        "errors" => array('required' => " Please select %s. ")
 		    ),
 		);
 
 		if ($this->form_validation->run() == false)
-		{			
-			$this->add_new();		
+		{
+			$this->add_new();
 		}
 		else
-		{						
+		{
 			/* $selected_ids = implode(',',$this->input->post('selected_ids'));*/
-			$selected_ids = trim($this->input->post('selected_ids'),','); 
+			$selected_ids = trim($this->input->post('selected_ids'),',');
 			$customer_id = $this->input->post('customerName');
 			$all_material_ids = implode(',',$this->input->post('all_material_ids'));
 			$all_material_ids = trim($all_material_ids,',');
 
 			$qnty = implode(',', $this->input->post('qnty[]'));
-			$qnty = trim($qnty, ','); 
+			$qnty = trim($qnty, ',');
 
 			$rate = implode(',', $this->input->post('rate[]'));
 			$rate = trim($rate, ',');
 
 			/* $amount = implode(',', $this->input->post('amount[]'));
 			$amount = trim($amount,','); */
-		
+
 			/* ----------------------------------------------------------------------- */
 
-			/* for ($i=0; $i < 10; $i++) { 
+			/* for ($i=0; $i < 10; $i++) {
 				# code...
 				$items = implode(',',$this->input->post('items_'.$i.''));
 				$items = trim($items,',');
 				$selected_ids = implode(',',$this->input->post('selected_ids_'.$i.''));
 				$selected_ids = trim($selected_ids,',');
 
-				
+
 				$total_piece = implode(',', $this->input->post('total_piece_'.$i.'[]'));
 				$total_piece = trim($total_piece, ',');
 
@@ -117,7 +117,7 @@ class Pices extends CI_Controller
 				$material_ids = trim($material_ids,',');
 
 			} */
-   /*  for ($j=0; $j < 2; $j++) { 
+   /*  for ($j=0; $j < 2; $j++) {
 		# code...
     	$output_data[$j] = array(
 				'design_number' => $this->input->post('hsn_'.$j.'[]'),
@@ -179,41 +179,41 @@ class Pices extends CI_Controller
 				$this->db->insert('product_pices', $insert_data);
 				/* ----------------Insert in History table---------------------------- */
 				//$json_data = json_encode($data);
-				
+
 			}
-	
+
 			$json_data_array = array(
 					'entry_from' => 'MakingAdd',
 					'json_data' => $json,
 			);
 			//$insert_json_data = $this->Pices_model->create_history($json_data_array);
 
-			
+
 			/* ----------------------------------------------------------------------- */
 
 
 			//$insert = $this->Pices_model->create_record($data);
-			
+
 			// Get the product and quantity values from your input
-			
+
 			$selected_ids_values = explode(",", $selected_ids);
 			$product_values = $selected_ids_values; // Dynamic product values
 			$qnty_values = explode(",", $qnty);
 			$quantity_values = ($qnty_values); // Dynamic quantity values
-			
+
 			// Prepare the data to be inserted
-			$data2 = array(); 
+			$data2 = array();
 			for ($i = 0; $i < count($product_values); $i++) {
 				$data2[] = array(
 					'p_design_number' => $design['design_number'][$i],
 					'stock_qty' => $quantity_values[$i]
 				);
 			}
-	
+
 			$stk_data = array();
 			$material_ids_values = explode(",", $all_material_ids);
 			$material_values = $material_ids_values;
-			
+
 			//$stk_values = explode(",", $row['total_material']);
 			$stock_value = ($row['total_material']);
 			for ($i = 0; $i < count($material_values); $i++) {
@@ -225,12 +225,12 @@ class Pices extends CI_Controller
 			}
 			// die();
 			// Update Stock
-			
-			$this->db->trans_start(); // Start a transaction to ensure data consistency
+
+			// $this->db->trans_start(); // Start a transaction to ensure data consistency
 			foreach ($data2 as $row) {
 				$product_id = $row['p_design_number'];
 				$quantity = $row['stock_qty'];
-				
+
 				$this->db->where('p_design_number', $product_id);
 				$query = $this->db->get('stock');
 				$row = $query->row();
@@ -263,40 +263,40 @@ class Pices extends CI_Controller
 				$this->db->where('making_owner_id', $customer_id);
 				$query = $this->db->get('maker_stock');
 				$rslt = $query->row();
-				
-				
+
+
 				if ($query->num_rows()) {
 					// If the product exists, update the quantity value in the database
 					// print_r($rslt->quantity);
 					// print_r($quantiti);
-
+          $final_value= $rslt->quantity - $quantiti;
 					$data23 = array(
-						'quantity' => $rslt->quantity - $quantiti,
+						'quantity' => (string)$final_value,
 					);
 				/* 	print_r($data23);
 					die(); */
 					//$material_values = trim($materialId3, ",");
 					/* $material_ids_values = explode(",", $materialId3[$m]);
 					$material_values = $material_ids_values; */
-					
+
 					$string = $materialId3;
 					$m_array = explode(",", $string);
 					// print_r($m_array);
-					
+
 				//$this->db->set('quantity', $quantiti);
 				//$this->db->where_in('materials_id', array($material_values));
 				/* $this->db->where_in('materials_id', $materialId3[$m]);
 				$this->db->where('making_owner_id', 2);
 				//echo $this->db->last_query(); // Debug output
 				$this->db->update('maker_stock',$data23); */
-				
+
 				$this->db->where('making_owner_id', $customer_id);
 				$this->db->where('materials_id',$m_array[$m]);
 				$this->db->update('maker_stock', $data23);
-				
-				echo $this->db->last_query();
-				print_r($data23);
-					
+
+				// echo $this->db->last_query();
+				// print_r($data23);
+
 				} else {
 					// If the product does not exist, insert a new row into the database
 					/* $this->db->insert('maker_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity)); */
@@ -304,18 +304,29 @@ class Pices extends CI_Controller
 				}
 				$m++;
 			}
-			die();
+
+//       $data = array(
+//         'quantity' => 20
+//
+// );
+
+// $this->db->where('id', $id);
+// $this->db->where('making_owner_id', 2);
+// print_r($this->db->update('maker_stock', $data));
+// echo $this->db->last_query();
+
+			// die();
 			//$stock = $this->Pices_model->update_makerStock($customer_id,$material_values,$stk_data);
-			$this->db->trans_complete(); // End the transaction
+			// $this->db->trans_complete(); // End the transaction
 
 			if ($this->db->trans_status() === false) {
 				// Handle transaction failure
 				$this->session->set_flashdata('success', 'Stock Updated successfully....');
 			}
 			if($insert == true)
-			{	
+			{
 				$QuantitySold = $qnty;
-				$ProductID = $material; 
+				$ProductID = $material;
 				$stock = 'stock';
 				$latestStock = $stock - $QuantitySold;
 
@@ -350,28 +361,28 @@ class Pices extends CI_Controller
 
 
 				$this->load->library('tcpdf/tcpdf.php');
-				
-				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);				
+
+				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 				$pdf->setPrintHeader(false);
 				$pdf->setPrintFooter(false);
-				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);				
+				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
 				//$pdf->SetFont('helvetica', '', 10);
 				$pdf->SetFont('times', '', 10);
-				$pdf_data = $this->load->view('invoice_pieces', $data_pdf, true);			
+				$pdf_data = $this->load->view('invoice_pieces', $data_pdf, true);
 				$pdf->addPage();
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
-				
+
 				$filename = $this->input->post('invoice_no').'.pdf';
 				$dir = APPPATH.'/pices_invoice/'.$data_pdf['customer'].'/';
 				if(!is_dir($dir))
 				{
 					mkdir($dir, 0777, true);
 				}
-				$save_path = $dir.$filename;	
+				$save_path = $dir.$filename;
 				ob_end_clean();
-				//$pdf->Output($save_path, 'I');			
-				$pdf->Output($save_path, 'F');			
-				//file_put_contents($save_path, $pdf);	
+				//$pdf->Output($save_path, 'I');
+				$pdf->Output($save_path, 'F');
+				//file_put_contents($save_path, $pdf);
 				$this->session->set_flashdata('success', 'Data Added successfully....');
 				redirect('Pices/');
 			}
@@ -379,13 +390,13 @@ class Pices extends CI_Controller
 			{
 				$this->session->set_flashdata('fail', "Sorry! there was some error.");
 				redirect(base_url('/index.php/Pices/add_new'));
-			}					
-		}		
+			}
+		}
 	}
 
 	public function editPices($pices_id)
 	{
-		
+
   		if(!$this->session->userdata('logged_in'))
     	{
 			redirect('Welcome');
@@ -399,7 +410,7 @@ class Pices extends CI_Controller
 				$data['materialList'] = $this->Purchaser_model->get_all_material();
 				$data['designs'] = $this->Design_model->get_all_design();
 				$data["pices"] = $pice_data;
-				
+
 				/* print_r($data);
 				die(); */
 	            $this->load->view('layout/header', $data);
@@ -411,8 +422,8 @@ class Pices extends CI_Controller
 	    	$postData = $this->input->post();
 		/* var_dump($postData);
 		die(); */
-			$this->form_validation->set_rules('customerName', 'customer Name', 'required');	
-			//$this->form_validation->set_rules('amount[]', 'Total Material', 'required');	
+			$this->form_validation->set_rules('customerName', 'customer Name', 'required');
+			//$this->form_validation->set_rules('amount[]', 'Total Material', 'required');
 
 	      	if ($this->form_validation->run() == false)
 	        {
@@ -429,7 +440,7 @@ class Pices extends CI_Controller
 			{
 				$material = implode(',', $this->input->post('items[]'));
 				$material = trim($material,',');
-				
+
 				$selected_ids = implode(',',$this->input->post('selected_ids'));
 				$selected_ids = trim($selected_ids,',');
 
@@ -471,7 +482,7 @@ class Pices extends CI_Controller
 
 				$data = array(
 					'master_id' => $customer_id,
-					'mat_name'	=> 	$material,			
+					'mat_name'	=> 	$material,
 					'material_id'		=> $material_ids,
 					'design_number'		=> $hsn,
 					'pices'		=> $qnty,
@@ -481,7 +492,7 @@ class Pices extends CI_Controller
 					'round_off_total'  => $total_round,
 					'total_in_words' => $total_word, */
 					//'invoice_date' => date('Y-m-d H:i:s')
-				);	
+				);
 				/* print_r($data);
 				die(); */
 				$update = $this->Pices_model->update_records($data,$pices_id);
@@ -491,7 +502,7 @@ class Pices extends CI_Controller
 				$qnty_values = explode(",", $qnty);
 				$quantity_values = ($qnty_values); // Dynamic quantity values
 				//print_r($values);
-				
+
 				// Prepare the data to be inserted
 				$data2 = array();
 				for ($i = 0; $i < count($product_values); $i++) {
@@ -566,13 +577,13 @@ class Pices extends CI_Controller
 	//Download pdf invoice
 	public function downloadPdf($cust_name, $invoice_id )
 	{
-		
+
 		if(!$this->session->userdata('logged_in'))
 		{
 			redirect('Welcome');
 		}
 		elseif( $cust_name && $invoice_id )
-		{			
+		{
 			$pdf_file = APPPATH.'pices_invoice/'.rawurldecode($cust_name).'/'.$invoice_id.'.pdf';
 			$file = $invoice_id.'.pdf';
 
@@ -583,20 +594,20 @@ class Pices extends CI_Controller
 				readfile($pdf_file);
 			}
 			else
-			{				
+			{
 				$this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
 				redirect('Invoice');
 			}
-		}	
+		}
 		else
 		{
 			$data['title'] = ucwords('Page not found');
-        	$data['username'] = $this->session->userdata('logged_in');  
-			$this->load->view('layout/header', $data);	       
+        	$data['username'] = $this->session->userdata('logged_in');
+			$this->load->view('layout/header', $data);
 	        $this->load->view('layout/menubar');
 			$this->load->view('errors/html/error_404');
 			$this->load->view('layout/footer');
-		}		
+		}
 	}
 }
 ?>
