@@ -174,8 +174,8 @@
                                         <tr>
                                             <!-- <th>Design No</th> -->
                                             <th>Material Name</th>
-                                            <!-- <th>Pices</th>
-                                            <th>Average</th>    -->
+                                            <th>Pices</th>
+                                            <th>Average</th>   
                                             <th>Total Material Used</th>
                                         </tr>
                                     </thead>
@@ -223,9 +223,12 @@
                                                     echo '<option label="" data-material-id="'.$row->id.'" value="'.$row->id.'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
                                                     } }?>
                                                     <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
+                                                    <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
                                                 </select>
                                         </td>
-
+                                        <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
+                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
+                                                
                                             <td>
                                                 <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
@@ -685,7 +688,7 @@ $('.submit-btn').click(function() {
             material_ids.push(otherAttribute2);
             console.log(material_ids);
         });
-        $('#material_ids').val(material_ids.join(','));
+        $('#all_material_ids').val(material_ids.join(','));
 
     });
     // $('#duplicate-table-btn').click(function() {

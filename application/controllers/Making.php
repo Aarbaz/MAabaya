@@ -155,8 +155,8 @@ class Making extends CI_Controller
                     $querys = $this->db->get('maker_stock');
                     $rows = $querys->row();
 
-                    // print_r($query->num_rows());
-                    // die();
+                    /* print_r($rows);
+                    die(); */
                     if ($querys->num_rows()) {
                       // If the product exists, update the quantity value in the database
                       // print_r($rows->quantity);
@@ -165,11 +165,12 @@ class Making extends CI_Controller
                         'quantity' => $rows->quantity + $stocks[$m],
                         // 'price' => $price[$i]
                       );
-                      // print_r($data3);
-                      // die();
+                      
                       $this->db->where('making_owner_id', $master_name);
                       $this->db->where('materials_id',$material_ids[$m]);
                       $this->db->update('maker_stock', $data3);
+                      /* print_r($material_ids);
+                      die(); */
                     } else {
                       // If the product does not exist, insert a new row into the database
                       // $this->db->insert('purchaser_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
