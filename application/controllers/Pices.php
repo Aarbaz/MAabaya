@@ -225,7 +225,7 @@ class Pices extends CI_Controller
 			}
 			// die();
 			// Update Stock
-
+      // anna ye remove kiya tha
 			// $this->db->trans_start(); // Start a transaction to ensure data consistency
 			foreach ($data2 as $row) {
 				$product_id = $row['p_design_number'];
@@ -317,6 +317,7 @@ class Pices extends CI_Controller
 
 			// die();
 			//$stock = $this->Pices_model->update_makerStock($customer_id,$material_values,$stk_data);
+      // anna ye remove kiya tha
 			// $this->db->trans_complete(); // End the transaction
 
 			if ($this->db->trans_status() === false) {
