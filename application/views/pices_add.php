@@ -190,7 +190,7 @@
                                                     <?php foreach ($designs->result() as $row){
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
-                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->id.'" '. set_select("hsn[]", $row->id).'>'.$row->design_num.'</option>';
 
                                                     } ?>
                                                 </select>
@@ -391,13 +391,13 @@ $(document).ready(function(){
                 });
 
                 //show AMOUNT by qnty*rate
-                /* $('.amount').on('focus', function(){
+                $('.amount').on('focus', function(){
                     var ro  = $(this).parents('tr');
                     var qnty = ro.find('.qnty').val();
                     var rate = ro.find('.rate').val();
                     var the_amount = (qnty*rate).toFixed(2);
                     $(this).val(the_amount);
-                }); */
+                });
                 $('.qnty, .rate').on('change', function(){
                     var ro  = $(this).closest('tr');
                     var qnty = ro.find('.qnty').val();
@@ -496,7 +496,7 @@ $(document).ready(function(){
                 $('#table_with_tax').show();
                 $('#table_without_tax').hide();
                 //show AMOUNT by qnty*rate
-                /* $('.amount, .rate').on('focus', function(){
+                $('.amount, .rate').on('focus', function(){
                     var ro  = $(this).parents('tr');
                     var tot_amount = ro.find("input[name*= 'amount_with_tax']").val();
                     if(tot_amount !== undefined)
@@ -507,7 +507,7 @@ $(document).ready(function(){
                         ro.find('.amount').val(unit_price);
                         ro.find('.rate').val(price);
                     }
-                });  */
+                }); 
 
             }
             else
@@ -528,13 +528,13 @@ $(document).ready(function(){
                 });
 
                 //show AMOUNT by qnty*rate
-               /*  $('.amount').on('focus', function(){
+                $('.amount').on('focus', function(){
                     var ro  = $(this).parents('tr');
                     var qnty = ro.find('.qnty').val();
                     var rate = ro.find('.rate').val();
                     var the_amount = (qnty*rate).toFixed(2);
                     $(this).val(the_amount);
-                }); */
+                });
                 $('.qnty, .rate').on('change', function(){
                     var ro  = $(this).closest('tr');
                     var qnty = ro.find('.qnty').val();
@@ -731,11 +731,11 @@ $('.submit-btn').click(function() {
                                                     <?php foreach ($designs->result() as $row){
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
-                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->id.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
 
                                                     } ?>
                                                 </select>
-                                                <input type="hidden" name="selected_ids_<?php echo $t?>[]" id="" value="">
+                                                <input type="hidden" name="selected_ids_<?php echo $t?>[]" id="selected_ids" value="">
                                             </div>
                                     </div>
                                     <div class="form-group">
@@ -745,16 +745,17 @@ $('.submit-btn').click(function() {
                                         </div>
                                     </div>
                                     <div class="form-group" id=""> <table class="table table-bordered"><thead><tr>
-                                            <th>Design No</th>
-
+                                    <th>Material Name</th>
+                                            <th>Pices</th>
+                                            <th>Average</th>   
                                             <th>Total Material Used</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="row_one">
-
+                                    <tr class="row_one">
+                        
                                             <td class="material_ids">
-                                            <select name="items_<?php echo $t?>[]" id="items" class="form-control">
+                                            <select name="items_<?php echo $t ?>[]" id="items" class="form-control">
                                                     <option value="">--select Product--</option>
                                                     <?php
                                                     foreach ($materialList->result() as $row){
@@ -762,21 +763,23 @@ $('.submit-btn').click(function() {
                                                         $mat = explode(',', $row->material_name);
                                                         $cnt= count($mat);
                                                         for ($i=0; $i < $cnt; $i++) {
-                                                       //print_r( $row);
+                                                       
                                                     echo '<option label="" data-material-id="'.$row->id.'" value="'.$row->id.'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
                                                     } }?>
                                                     <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
+                                                    <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
                                                 </select>
                                         </td>
-
+                                        <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
+                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
+                                                
                                             <td>
                                                 <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
                                         </tr>
-                                    </tbody>
-                                </table>
+ 
                             </div> `;
         $('#table-container').append(htmlStructure);
     });

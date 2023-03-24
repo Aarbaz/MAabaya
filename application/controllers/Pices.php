@@ -82,8 +82,8 @@ class Pices extends CI_Controller
 		}
 		else
 		{
-			/* $selected_ids = implode(',',$this->input->post('selected_ids'));*/
-			$selected_ids = trim($this->input->post('selected_ids'),',');
+		/* 	$selected_ids = implode(',',$this->input->post('selected_ids'));
+			$selected_ids = trim($this->input->post('selected_ids'),','); */
 			$customer_id = $this->input->post('customerName');
 			$all_material_ids = implode(',',$this->input->post('all_material_ids'));
 			$all_material_ids = trim($all_material_ids,',');
@@ -93,50 +93,14 @@ class Pices extends CI_Controller
 
 			$rate = implode(',', $this->input->post('rate[]'));
 			$rate = trim($rate, ',');
-
-			/* $amount = implode(',', $this->input->post('amount[]'));
-			$amount = trim($amount,','); */
-
-			/* ----------------------------------------------------------------------- */
-
-			/* for ($i=0; $i < 10; $i++) {
-				# code...
-				$items = implode(',',$this->input->post('items_'.$i.''));
-				$items = trim($items,',');
-				$selected_ids = implode(',',$this->input->post('selected_ids_'.$i.''));
-				$selected_ids = trim($selected_ids,',');
-
-
-				$total_piece = implode(',', $this->input->post('total_piece_'.$i.'[]'));
-				$total_piece = trim($total_piece, ',');
-
-				$material = implode(',', $this->input->post('material_ids_'.$i.'[]'));
-				$material = trim($material,',');
-
-				$material_ids = implode(',',$this->input->post('material_ids_'.$i.''));
-				$material_ids = trim($material_ids,',');
-
-			} */
-   /*  for ($j=0; $j < 2; $j++) {
-		# code...
-    	$output_data[$j] = array(
-				'design_number' => $this->input->post('hsn_'.$j.'[]'),
-				'total_piece' => $this->input->post('total_piece_'.$j.'[]'),
-				'materials_ids' => $this->input->post('items_'.$j.'[]'),
-				'total_material' => $this->input->post('total_material_'.$j.'[]'),
-			);
-			//print_r($output_data[$j]);
-	}
-					//}
-					$result = array(); */
-					$steps = $this->input->post('steps');
-					//print_r($steps);
-			// Loop through each design number
+			
+			$steps = $this->input->post('steps');
+			
 			for ($i = 0; $i <= $steps; $i++) {
 				// Create a new array for this design
 				$design = array(
 					'design_number' => $this->input->post('hsn_'.$i.'[]'),
-					'material_ids' => $this->input->post('material_ids_'.$i.'[]'),
+					// 'material_ids' => $this->input->post('material_ids_'.$i.'[]'),
 					'materials_ids' => $this->input->post('items_'.$i.'[]'),
 					'total_material' => $this->input->post('total_material_'.$i.'[]'),
 					'total_piece' => $this->input->post('total_piece_'.$i.'[]'),
@@ -145,26 +109,18 @@ class Pices extends CI_Controller
 				// Add the new design to the result array
 				$result[] = $design;
 			}
-
+			
 			// Convert the result array to JSON
 			$json = json_encode($result);
+			
 			$data = $json;
 			$k = 0;
-
+			
 			$array = json_decode($data, true);
 
 			foreach ($array as $row) {
 				$k++;
-				/* $design_number = $row['design_number'][$k];
-				$materials_ids = implode(',', $row['materials_ids']);
-				$total_material = implode(',', $row['total_material']);
-				$total_piece = $row['total_piece'][$k];
-				$this->db->insert('product_pices', array(
-					'design_number' => $design_number,
-					'material_id' => $materials_ids,
-					'material_used' => $total_material,
-					'total_piece' => $total_piece
-				)); */
+			
 				$insert_data = [
 					'design_number' => $row['design_number'][0],
 					'material_id' => implode(',', $row['materials_ids']),
@@ -172,24 +128,98 @@ class Pices extends CI_Controller
 					//'mat_name' => implode(',', $row['materials_name']),
 					'material_used' => implode(',', $row['total_material']),
 					'total_piece' => $row['total_piece'][0],
-					'master_id' => $row['customer_id'][0]
+					'master_id' => $row['customer_id']
 				];
-				/* print_r($insert_data);
-				die(); */
-				$this->db->insert('product_pices', $insert_data);
-				/* ----------------Insert in History table---------------------------- */
-				//$json_data = json_encode($data);
+				// $this->db->insert('product_pices', $insert_data);
+				
+				$data2 = array();
+			// for ($i = 0; $i < 2; $i++) {
+				$data2[] = array(
+					'p_design_number' => $insert_data['design_number'],
+					'stock_qty' => $insert_data['total_piece']
+				);
+			// }
+				$d = 0;
+				/* foreach ($data2 as $row) {
+					$product_id = $row['p_design_number'][$d];
+					$quantity = $row['stock_qty'][$d];
+					
+					$this->db->where('p_design_number', $product_id);
+					$query = $this->db->get('stock');
+					$row = $query->row();
+					if ($query->num_rows()) {
+						// If the product exists, update the quantity value in the database
+						$data3 = array(
+							'stock_qty' => $row->stock_qty + $quantity
+						);					
+						$this->db->where('p_design_number', $product_id);
+						$this->db->update('stock', $data3);
 
+					} else {
+						// If the product does not exist, insert a new row into the database
+						$this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
+					}
+					$d++;
+				} */
+			
+				$materialData = array(
+					'materials_id' => $insert_data['material_id'],
+					'quantity' => $insert_data['material_used']
+				);
+	
+				/* $materialId2 = $materialData['materials_id'];
+				$materialId3 = explode(",", $materialId2); */
+
+				$product_id = $materialData['materials_id'];
+				$product_id2 = explode(",", $product_id);
+				
+				$quantity = $materialData['quantity'];
+				$mat_q = $quantity;
+				$material_q = explode(",", $mat_q);
+				/* $this->db->select('*');
+				$this->db->from('maker_stock');
+				$this->db->where_in('id', array($product_id2));
+				$query = $this->db->get();
+				$row_result = $query->row(); */
+				$id_array = $product_id2;
+				$id_list = implode(",", $id_array);
+				$query = "SELECT * FROM maker_stock WHERE id IN ($id_list)";
+				$row_result = $this->db->query($query)->result();
+				
+				if ($row_result) {
+					// If the product exists, update the quantity value in the database
+					// Loop through the array and get the materials_id value from each object
+					$mat = 0;
+					foreach ($row_result as $item) {
+						$materials_qty = $item->quantity;
+						
+						$data4 = array(
+							'quantity' => $materials_qty - $material_q[$mat]
+						);
+						$this->db->where('materials_id', $id_list);
+						$this->db->update('maker_stock', $data4);
+						//echo $this->db->last_query();
+						$mat++;
+					}
+				} else {
+					// If the product does not exist, insert a new row into the database
+					$this->db->insert('maker_stock', array('materials_id' => $product_id, 'quantity' => $quantity));
+				}
+				
 			}
-
+			die();
+		
+			
 			$json_data_array = array(
 					'entry_from' => 'MakingAdd',
 					'json_data' => $json,
 			);
+
 			//$insert_json_data = $this->Pices_model->create_history($json_data_array);
 
 
 			/* ----------------------------------------------------------------------- */
+<<<<<<< Updated upstream
 
 
 			//$insert = $this->Pices_model->create_record($data);
@@ -252,64 +282,40 @@ class Pices extends CI_Controller
 			$materialId2 = implode(',',$materialId);
 			$materialId3 = trim($materialId2,',');
 
+=======
+			
+			
+>>>>>>> Stashed changes
 			$m = 0;
-			$m_value = $stk_data;
-			foreach ($m_value as $row) {
-				$quantiti = $row['m_quantity'];
-
-				// print_r($quantiti);
+			foreach ($materialData as $row) {
+				$product_id = $row['materials_id'];
+				$quantity = $row['quantity'];
 
 				$this->db->where('materials_id', $materialId3[$m]);
-				$this->db->where('making_owner_id', $customer_id);
 				$query = $this->db->get('maker_stock');
-				$rslt = $query->row();
-
-
+				$row = $query->row();
+				
+				$mat_q = $quantity;
+				$material_q = explode(",", $mat_q);
 				if ($query->num_rows()) {
 					// If the product exists, update the quantity value in the database
-					// print_r($rslt->quantity);
-					// print_r($quantiti);
-          $final_value= $rslt->quantity - $quantiti;
-					$data23 = array(
-						'quantity' => (string)$final_value,
+					$data4 = array(
+						'quantity' => $row->quantity - $material_q[$m]
 					);
-				/* 	print_r($data23);
-					die(); */
-					//$material_values = trim($materialId3, ",");
-					/* $material_ids_values = explode(",", $materialId3[$m]);
-					$material_values = $material_ids_values; */
-
-					$string = $materialId3;
-					$m_array = explode(",", $string);
-					// print_r($m_array);
-
-				//$this->db->set('quantity', $quantiti);
-				//$this->db->where_in('materials_id', array($material_values));
-				/* $this->db->where_in('materials_id', $materialId3[$m]);
-				$this->db->where('making_owner_id', 2);
-				//echo $this->db->last_query(); // Debug output
-				$this->db->update('maker_stock',$data23); */
-
-				$this->db->where('making_owner_id', $customer_id);
-				$this->db->where('materials_id',$m_array[$m]);
-				$this->db->update('maker_stock', $data23);
-
-				// echo $this->db->last_query();
-				// print_r($data23);
-
+					
+					$this->db->where('materials_id', $product_id[$m]);
+					$this->db->update('maker_stock', $data4);
+					//echo $this->db->last_query();
 				} else {
 					// If the product does not exist, insert a new row into the database
-					/* $this->db->insert('maker_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity)); */
-					$this->session->set_flashdata('error', 'error occured....');
+					$this->db->insert('maker_stock', array('materials_id' => $product_id, 'quantity' => $quantity));
 				}
 				$m++;
 			}
 
-//       $data = array(
-//         'quantity' => 20
-//
-// );
+			$insert = $this->Pices_model->create_record($data);
 
+<<<<<<< Updated upstream
 // $this->db->where('id', $id);
 // $this->db->where('making_owner_id', 2);
 // print_r($this->db->update('maker_stock', $data));
@@ -318,6 +324,9 @@ class Pices extends CI_Controller
 			// die();
 			//$stock = $this->Pices_model->update_makerStock($customer_id,$material_values,$stk_data);
 			// $this->db->trans_complete(); // End the transaction
+=======
+			// Get the product and quantity values from your input
+>>>>>>> Stashed changes
 
 			if ($this->db->trans_status() === false) {
 				// Handle transaction failure
@@ -524,7 +533,7 @@ class Pices extends CI_Controller
 					$data2 = array(
 						'stock_qty' => $row->stock_qty + $quantity
 					);
-					print_r($data2);
+					//print_r($data2);
 					$this->db->where('p_design_number', $product_id);
 					$this->db->update('stock', $data2);
 				} else {
