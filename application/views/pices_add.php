@@ -190,7 +190,7 @@
                                                     <?php foreach ($designs->result() as $row){
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
-                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->id.'" '. set_select("hsn[]", $row->id).'>'.$row->design_num.'</option>';
+                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->id .'" '. set_select("hsn[]", $row->id  ).'>'.$row->design_num.'</option>';
 
                                                     } ?>
                                                 </select>
@@ -230,7 +230,7 @@
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                                 
                                             <td>
-                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="text" name="total_material[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
@@ -249,7 +249,7 @@
                                 <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>
-                                <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>
+                              <!--   <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button> -->
                                <!--  <button type="button" name="" class="btn btn-primary" id="check">Click</button>  -->
                               </div>
                             </div>
@@ -774,7 +774,7 @@ $('.submit-btn').click(function() {
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                                 
                                             <td>
-                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="text" name="total_material[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>

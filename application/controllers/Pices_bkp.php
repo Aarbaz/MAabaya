@@ -93,26 +93,7 @@ class Pices extends CI_Controller
 
 			$rate = implode(',', $this->input->post('rate[]'));
 			$rate = trim($rate, ',');
-
-			$total_material = implode(',', $this->input->post('total_material[]'));
-			$total_material = trim($total_material, ',');
-
-			$material_used_array = explode(",", $total_material);
-			// echo count($material_used_array);
 			
-			$material_ids_array = explode(",", $all_material_ids);
-			// echo count($material_ids_array);
-			// Loop through the arrays and update the quantity for each material ID
-			for ($i = 0; $i < count($material_ids_array); $i++) {
-				// Get the previous quantity for the material ID
-				$prev_quantity = $this->db->get_where('maker_stock', array('materials_id' => $material_ids_array[$i]))->row()->quantity;
-				
-				// Update the quantity for the material ID with the previous quantity + new quantity
-				$data = array('quantity' => $prev_quantity - $material_used_array[$i]);
-				$this->db->where('materials_id', $material_ids_array[$i]);
-				$this->db->update('maker_stock', $data);
-			}
-			///die();
 			/* $amount = implode(',', $this->input->post('amount[]'));
 			$amount = trim($amount,','); */
 
@@ -190,13 +171,12 @@ class Pices extends CI_Controller
 					'material_id' => implode(',', $row['materials_ids']),
 					//'material_id' => implode(',', $row['material_ids']),
 					//'mat_name' => implode(',', $row['materials_name']),
-					'material_used' => $total_material,
+					'material_used' => implode(',', $row['total_material']),
 					'total_piece' => $row['total_piece'][0],
 					'master_id' => $row['customer_id'][0]
 				];
 
-				$insert = $this->db->insert('product_pices', $insert_data);
-				
+				$this->db->insert('product_pices', $insert_data);
 				/* ----------------Insert in History table---------------------------- */
 				//$json_data = json_encode($data);
 				$data2 = array();
@@ -206,10 +186,7 @@ class Pices extends CI_Controller
 					'stock_qty' => $insert_data['total_piece']
 				);
 			// }
-				$mat_stock_data[] = array(
-					'materials_id' => $insert_data['material_id'],
-					'smaterial_used_qty' => $insert_data['material_used']
-				);
+			
 			
 			//print_r($data2);
 			//die();
@@ -245,15 +222,14 @@ class Pices extends CI_Controller
 			$materialId3 = explode(",", $materialId2);
 			
 			$m = 0;
-			/* foreach ($materialData as $row) {
+			foreach ($materialData as $row) {
 				$product_id = $row['materials_id'];
 				$quantity = $row['quantity'];
-				$materialId = explode(",", $product_id);
-				$this->db->where('materials_id', $materialId[$m]);
+
+				$this->db->where('materials_id', $materialId3[$m]);
 				$query = $this->db->get('maker_stock');
-				echo $this->db->last_query();
 				$row = $query->row();
-				print_r($materialId);
+				// print_r($row);
 				
 				$mat_q = $quantity;
 				$material_q = explode(",", $mat_q);
@@ -272,7 +248,7 @@ class Pices extends CI_Controller
 					$this->db->insert('maker_stock', array('materials_id' => $product_id, 'quantity' => $quantity));
 				}
 				$m++;
-			} */
+			}
 		}
 		// die();
 
@@ -287,7 +263,7 @@ class Pices extends CI_Controller
 			/* ----------------------------------------------------------------------- */
 
 
-			//$insert = $this->Pices_model->create_record($data);
+			$insert = $this->Pices_model->create_record($data);
 
 			// Get the product and quantity values from your input
 			
