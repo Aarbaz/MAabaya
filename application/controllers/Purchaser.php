@@ -157,7 +157,7 @@ class Purchaser extends CI_Controller
           					'json_data' => $json_data,
           			);
           			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
-                
+
 
                 if ($insert > 0) {
                   $customer_id=   strtoupper($postData["owner_name"]);

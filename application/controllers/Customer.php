@@ -103,14 +103,14 @@ class Customer extends CI_Controller {
 			{
 				$data = array(
 					'name' => strtoupper($postData['name']),
-					'owner_name' => strtoupper($postData['owner_name']),
-					'owner_phone' => $postData['phone'],
-					'owner_email' => $postData['email'],
-					'bakery_gst' => $postData['gst'],
-					'bakery_address' => ucwords($postData['bakery_adds']),
-					'bakery_area' => ucwords($postData['area']),
-					'bakery_city' => ucwords($postData['city']),
-					'last_amount' => $postData['last_amount']
+					// 'owner_name' => strtoupper($postData['owner_name']),
+					// 'owner_phone' => $postData['phone'],
+					// 'owner_email' => $postData['email'],
+					// 'bakery_gst' => $postData['gst'],
+					'address' => ucwords($postData['address']),
+					// 'bakery_area' => ucwords($postData['area']),
+					// 'bakery_city' => ucwords($postData['city']),
+					// 'last_amount' => $postData['last_amount']
 				);
 
 				$insert = $this->Customer_model->add_customer($data);

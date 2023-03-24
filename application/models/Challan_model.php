@@ -2,7 +2,7 @@
 //defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Challan_model extends CI_Model {
-	
+
     public function get_all_material()
     {
         return $this->db->get("materials");
@@ -15,7 +15,7 @@ class Challan_model extends CI_Model {
 
     public function get_all_customer()
     {
-        return $this->db->select('id, name')
+        return $this->db->select('id, name,address')
         ->where('role', 0)
         ->get('customers');
     }
@@ -32,7 +32,7 @@ class Challan_model extends CI_Model {
     //get latest challan no.
     public function get_last_challan()
     {
-    	return $this->db->select('challan_no')->order_by('sr_no',"desc")->limit(1)->get('challan_bills')->row(); 
+    	return $this->db->select('challan_no')->order_by('sr_no',"desc")->limit(1)->get('challan_bills')->row();
     }
 
    //add new challan
@@ -44,7 +44,7 @@ class Challan_model extends CI_Model {
     public function create_balance($data)
     {
         return $this->db->insert('balance', $data);
-    } 
+    }
 
     //delete a challan
     public function delete_by_id($id)
@@ -52,7 +52,7 @@ class Challan_model extends CI_Model {
         $this->db->where('sr_no', $id);
         $this->db->delete('challan_bills');
         return $this->db->affected_rows();
-    }       	
+    }
 
     //end challan queries
 
@@ -69,9 +69,9 @@ class Challan_model extends CI_Model {
     //get latest INVOICE no. insider
     public function get_last_invoice_insider()
     {
-        return $this->db->select('invoice_no')->order_by('sr_no','desc')->limit(1)->get('insider_bill')->row();    
+        return $this->db->select('invoice_no')->order_by('sr_no','desc')->limit(1)->get('insider_bill')->row();
     }
-    
+
     //add new INVOICE no. insider
     public function create_invoice_insider($data)
     {
@@ -83,8 +83,8 @@ class Challan_model extends CI_Model {
         $this->db->where('sr_no', $id);
         $this->db->delete('insider_bill');
         return $this->db->affected_rows();
-    }     
- 
-    
+    }
+
+
 
 }

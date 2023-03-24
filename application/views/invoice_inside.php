@@ -8,11 +8,11 @@
                     <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Invoice/logout');?>">Log Out</a></span>
                     </h4>
                 </div>
-				
-				<div class="panel-body">	
-					<div class="challan-div">			     
+
+				<div class="panel-body">
+					<div class="challan-div">
 						<form id="insider_invoice_form" name="insider_invoice_form" class="form-horizontal" action="<?php echo site_url('Invoice/add_insider_invoice');?>" method="post">
-							<div class="form-group">						
+							<div class="form-group">
 								<h3 class="text-center">TAX INVOICE</h3>
 							</div>
 							<div class="col-sm-5 leftbox">
@@ -25,12 +25,12 @@
                                                 echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->name.'</option>';
                                             } ?>
                                             <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name"> 
+                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">
                                             <!-- <option value="other">Other</option> -->
-	  									</select> 								
+	  									</select>
 							   		</div>
                                     <div class="col-sm-2">
-                                    <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new');?>">Add Customer</a> 
+                                    <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new');?>">Add Customer</a>
                                     </div>
 								</div>
                                 <div class="form-group hide">
@@ -38,24 +38,24 @@
 									<div class="col-sm-9" id="addds_holder">
                                         <input type="text" name="customerName1" id="customerName" class="form-control" value="<?php echo set_value('customerName');?>">
                                         <!-- <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">  -->        
+                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">  -->
                                     </div>
-								</div>	
+								</div>
 								<div class="form-group">
 									<label class="control-label col-sm-3">Address</label>
 									<div class="col-sm-9" id="addds_holder">
                                         <input type="text" name="cust_adds_txt" id="cust_adds_txt" class="form-control" value="<?php echo set_value('cust_adds_txt');?>">
                                         <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                        <input type="hidden" name="cust_name1" value="<?php echo set_value('cust_name');?>" id="cust_name1">         
+                                        <input type="hidden" name="cust_name1" value="<?php echo set_value('cust_name');?>" id="cust_name1">
                                     </div>
-								</div>	
+								</div>
 								<div class="form-group hide">
 									<label class="control-label col-sm-3">Buyer's GST</label>
 									<div class="col-sm-9">
                                         <input type="text" name="cust_gst_txt" id="cust_gst_txt" class="form-control " value="<?php echo set_value('cust_gst_txt');?>" readonly="readonly">
                                         <input type="hidden" name="cust_gst" value="<?php echo set_value('cust_gst');?>" id="cust_gst">
 							   		</div>
-								</div> 
+								</div>
                                 <div class="form-group hide">
                                     <label class="control-label col-sm-3">Select Region</label>
                                     <div class="col-sm-9">
@@ -65,7 +65,7 @@
                                             <option value="out" <?php echo set_select('region','out');?>>Out of Maharashtra</option>
                                         </select>
                                     </div>
-                                </div>   
+                                </div>
                                 <div class="form-group hide">
                                     <label class="control-label col-sm-3">Invoice Type</label>
                                     <div class="col-sm-9">
@@ -75,7 +75,7 @@
                                             <option value="without" <?php echo set_select('amount_with','without');?>>Amount Without GST</option>
                                         </select>
                                     </div>
-                                </div>                                                                                             
+                                </div>
 							</div>
 							<div class="col-sm-1">&nbsp;</div>
 							<div class="col-sm-6 leftbox inv">
@@ -84,7 +84,7 @@
 									<div class="col-sm-8">&nbsp;&nbsp;
                                         <?php
 
-                                        $invoice_no = '';                
+                                        $invoice_no = '';
                                         if(!empty($last_invoice->invoice_no))
                                         {
                                             $db_invoice = $last_invoice->invoice_no;
@@ -102,35 +102,35 @@
                                             }
                                         }
                                         else
-                                        {                    
+                                        {
                                             $invoice_no = 'INV001';
-                                        }                    
+                                        }
 
-                                        ?>       
+                                        ?>
                                         <?php echo '<b>'.$invoice_no.'</b>';?>
-                                        <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">          
+                                        <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
                                     </div>
 								</div>
 								<div class="form-group">
 									<label class="control-label col-sm-4">INVOICE DATE</label>
 									<div class="col-sm-8">&nbsp;&nbsp;&nbsp;<?php echo date('d/m/Y');?></div>
-								</div>	
+								</div>
 								<div class="form-group hide">
 									<label class="control-label col-sm-4">DATE OF SUPPLY</label>
 									<div class="col-sm-8">&nbsp;<input type="date" name="sup_date" value="<?php echo set_value('sup_date');?>" class="form-control">
 									</div>
-								</div>	
+								</div>
 								<div class="form-group hide">
 									<label class="control-label col-sm-4">PLACE OF SUPPLY</label>
 									<div class="col-sm-8">
 										<input type="text" name="sup_place" value="<?php echo set_value('sup_place');?>" class="form-control">
 									</div>
-								</div>	
+								</div>
 								<div class="form-group hide">
 									<label class="control-label col-sm-4">OTHER</label>
 									<div class="col-sm-8"><input type="text" name="sup_other" value="<?php echo set_value('sup_other');?>" class="form-control">
 									</div>
-								</div>																																								
+								</div>
 							</div>
                             <div class="col-sm-12">&nbsp;</div>
                             <div class="form-group"><br />
@@ -140,7 +140,7 @@
                             </div>
 
                             <div class="form-group"><br />
-                                <div class="col-sm-8 col-sm-offset-2">                
+                                <div class="col-sm-8 col-sm-offset-2">
                                     <?php
                                     if($this->session->flashdata('pass'))
                                     {
@@ -156,11 +156,11 @@
                                     }
                                   ?>
                                 </div>
-                            </div>                             
+                            </div>
 							<div class="form-group" id="table_with_tax">
                                 <table class="table table-bordered">
                                     <thead>
-                                        <tr>                                            
+                                        <tr>
                                             <th>PRODUCT</th>
                                             <th>HSN</th>
                                             <th>QNTY @kg</th>
@@ -174,7 +174,7 @@
                                             <td>
                                                 <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select product--</option>
-                                                    <?php foreach ($productList->result() as $row){ 
+                                                    <?php foreach ($productList->result() as $row){
                                                     echo '<option value="'.$row->product_name.'" '. set_select("items[]", $row->product_name).'>'.$row->product_name.'</option>';
                                                     } ?>
                                                 </select>
@@ -182,17 +182,17 @@
                                             <td>
                                                 <select name="hsn[]" id="hsn1"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
-                                                    <?php foreach ($designs->result() as $row){ 
+                                                    <?php foreach ($designs->result() as $row){
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
                                                     echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
-                                                    
+
                                                     } ?>
                                                 </select>
                                                 <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
                                             </td>
                                             <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>
-                                            <td><input type="text" name="amount_with_tax[]" class="amount_with_tax only_num form-control" size="3" maxlength="7"></td>                      
+                                            <td><input type="text" name="amount_with_tax[]" class="amount_with_tax only_num form-control" size="3" maxlength="7"></td>
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                             <td>
                                                 <input type="text" name="amount[]" class="amount form-control" style="width: 40%; display: inline;" value="" size="3" readonly="readonly">&nbsp;
@@ -207,10 +207,10 @@
                             <div class="form-group" id="table_without_tax">
                                 <table class="table table-bordere<th>PRODUCT</th>d">
                                     <thead>
-                                        <tr>                                            
+                                        <tr>
                                             <th>Design No</th>
                                             <!--  -->
-                                            <th>QNTY </th>                                            
+                                            <th>QNTY </th>
                                             <th>RATE</th>
                                             <th>AMOUNT</th>
                                         </tr>
@@ -220,11 +220,11 @@
                                         <td class="">
                                             <select name="hsn[]" id="hsn"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
-                                                    <?php foreach ($designs->result() as $row){ 
+                                                    <?php foreach ($designs->result() as $row){
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
                                                     echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
-                                                    
+
                                                     } ?>
                                                 </select>
                                                 <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
@@ -232,13 +232,13 @@
                                             <td class="hide">
                                                 <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select product--</option>
-                                                    <?php foreach ($productList->result() as $row){ 
+                                                    <?php foreach ($productList->result() as $row){
                                                     echo '<option label="" value="'.$row->product_name.'" '. set_select("items[]", $row->product_name).'>'.$row->product_name.'</option>';
                                                     } ?>
                                                 </select>
                                             </td>
-                                            
-                                            <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
+
+                                            <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                             <td>
                                                 <input type="text" name="amount[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3" readonly="readonly">&nbsp;
@@ -248,7 +248,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>                            
+                            </div>
                             <!--ends here-->
                             <div class="form-group hide">
                                 <div class="col-sm-2 col-sm-offset-6">
@@ -262,7 +262,7 @@
                                 <div class="col-sm-2 col-sm-offset-6">
                                     <b>OTHER</b>
                                 </div>
-                                <div class="col-sm-3"> 
+                                <div class="col-sm-3">
                                     <input type="text" name="other_charge" id="other_charge" class="only_num form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
@@ -289,7 +289,7 @@
                                 <div class="col-sm-2 col-sm-offset-6">
                                     <b>SGST @ <input type="number" step="0.5" name="sgst_per" id="sgst_per" style="display: inline; width: 40%">%</b>
                                 </div>
-                                <div class="col-sm-3"> 
+                                <div class="col-sm-3">
                                     <input type="text" name="sgst_charge" id="sgst_charge" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
@@ -298,15 +298,15 @@
                                 <div class="col-sm-2 col-sm-offset-6">
                                     <b>IGST @ <input type="number" step="0.5" name="igst_per" id="igst_per" style="display: inline; width: 40%">%</b>
                                 </div>
-                                <div class="col-sm-3"> 
+                                <div class="col-sm-3">
                                     <input type="text" name="igst_charge" id="igst_charge" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
-                            </div> 
+                            </div>
                             <div class="form-group">
                                 <div class="col-sm-2 col-sm-offset-6">
                                     <b>TOTAL AMOUNT</b>
                                 </div>
-                                <div class="col-sm-3"> 
+                                <div class="col-sm-3">
                                     <input type="text" name="total_amount" id="total_amount" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
@@ -315,10 +315,10 @@
                                 <div class="col-sm-2 col-sm-offset-6">
                                     <b>ROUND OFF TOTAL</b>
                                 </div>
-                                <div class="col-sm-3"> 
+                                <div class="col-sm-3">
                                     <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
-                            </div>                                                        
+                            </div>
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-1">
                                     <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
@@ -336,12 +336,12 @@
                                     <p class="text-right"><br />AUTHORISED SIGNATURE</p>
                                 </div>
                                 <div class="col-sm-2">&nbsp;</div>
-                            </div>                              
+                            </div>
                             <div class="form-group">
                               <div class="col-sm-6 col-sm-offset-3">
                                 <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button type="reset" name="reload" class="btn btn-primary">Reset</button>                    
+                                <button type="reset" name="reload" class="btn btn-primary">Reset</button>
                               </div>
                             </div>
 
@@ -354,7 +354,7 @@
                     <p class="text-right">for M.A Abaya Manufacturer</p>
 				</div>
     		</div>
-    	</div>    		
+    	</div>
 	</div>
 </div>
 </div><!--close main div-->
@@ -368,9 +368,9 @@ $(document).ready(function(){
     $('#table_with_tax').hide();
     setTimeout(function(){
         $('.successMsg, .err_db').fadeIn().fadeOut().fadeIn().fadeOut('slow');
-    }, 3000);    
-    $('#items, .qnty, .amount_with_tax, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');                         
-                $('#table_with_tax').hide();  
+    }, 3000);
+    $('#items, .qnty, .amount_with_tax, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');
+                $('#table_with_tax').hide();
                 $('#table_without_tax').show();
                 //set product rate on change
                 $("select[name^='items']").on('change', function(){
@@ -384,35 +384,35 @@ $(document).ready(function(){
                 });
 
                 //show AMOUNT by qnty*rate
-                $('.amount').on('focus', function(){                    
+                $('.amount').on('focus', function(){
                     var ro  = $(this).parents('tr');
                     var qnty = ro.find('.qnty').val();
                     var rate = ro.find('.rate').val();
                     var the_amount = (qnty*rate).toFixed(2);
-                    $(this).val(the_amount);        
-                });    
+                    $(this).val(the_amount);
+                });
                 $('.qnty, .rate').on('change', function(){
                     var ro  = $(this).closest('tr');
                     var qnty = ro.find('.qnty').val();
                     var rate = ro.find('.rate').val();
-                 
+
                     if(qnty && rate)
                     {
                         var the_amount = (qnty*rate).toFixed(2);
-                        ro.find('.amount').val(the_amount);      
+                        ro.find('.amount').val(the_amount);
                     }
-                });   
+                });
     // add new row
-    $(document).on('click', '.add_more', function(){        
+    $(document).on('click', '.add_more', function(){
         $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
-    }); 
-    //Remove table row  
+    });
+    //Remove table row
     $(document).on('click', '.remove', function(){
       var $tr = $(this).closest('tr');
       if ($tr.index() != '0') {
         $tr.remove();
       }
-    }); 
+    });
 
     $(document).on('click', '.hsn', function(){
         $(this).val('1901');
@@ -427,7 +427,7 @@ $(document).ready(function(){
         }
     });
 
-    //show IGSC OR CGST and SGST hilton 
+    //show IGSC OR CGST and SGST hilton
     $('#region').click(function(){
         var reg = $(this).val();
         if(reg == 'in')
@@ -440,17 +440,17 @@ $(document).ready(function(){
             $('.out_state').fadeIn('slow');
             $('.in_state').fadeOut('slow');
         }
-    });   
+    });
     //add only NUMBER and .
     $('.only_num').on('keyup', function(){
         var val = $(this).val();
         if(isNaN(val))
         {
             val = val.replace(/[^0-9\.]/g,'');
-            if(val.split('.').length>2) 
-            val = val.replace(/\.+$/,"");       
+            if(val.split('.').length>2)
+            val = val.replace(/\.+$/,"");
         }
-        $(this).val(val); 
+        $(this).val(val);
     });
 
     //show customer address on customer name change event
@@ -459,17 +459,17 @@ $(document).ready(function(){
         // alert();
         var cust_id = $("#customerName option:selected").val();
 
-        for (var key = 0; key < cust_list.length; key++) 
+        for (var key = 0; key < cust_list.length; key++)
         {
             if( cust_list[key].id == cust_id )
             {
-                $("#cust_adds_txt").val(cust_list[key].bakery_area+', '+cust_list[key].bakery_city);
-                $("#cust_adds").val(cust_list[key].bakery_area+', '+cust_list[key].bakery_city);
-                $("#cust_name").val(cust_list[key].bakery_name);
-                $("#cust_gst_txt").val(cust_list[key].bakery_gst);
-                $("#cust_gst").val(cust_list[key].bakery_gst);
+                // $("#cust_adds_txt").val(cust_list[key].bakery_area+', '+cust_list[key].bakery_city);
+                // $("#cust_adds").val(cust_list[key].bakery_area+', '+cust_list[key].bakery_city);
+                $("#cust_adds_txt").val(cust_list[key].address);
+                // $("#cust_gst_txt").val(cust_list[key].bakery_gst);
+                // $("#cust_gst").val(cust_list[key].bakery_gst);
             }
-        }         
+        }
     });
 
 
@@ -479,31 +479,31 @@ $(document).ready(function(){
         if(a_w_t != '')
         {
             if(a_w_t == 'with')
-            { 
-               // $('#insider_invoice_form')[0].reset(); 
-                $('#items, .qnty, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');              
-                $('#table_with_tax').show();  
+            {
+               // $('#insider_invoice_form')[0].reset();
+                $('#items, .qnty, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');
+                $('#table_with_tax').show();
                 $('#table_without_tax').hide();
                 //show AMOUNT by qnty*rate
-                $('.amount, .rate').on('focus', function(){                    
+                $('.amount, .rate').on('focus', function(){
                     var ro  = $(this).parents('tr');
                     var tot_amount = ro.find("input[name*= 'amount_with_tax']").val();
                     if(tot_amount !== undefined)
-                    {                        
-                        var qnty = ro.find(".qnty").val() ? ro.find(".qnty").val() : 1;                        
-                        var amount = ((tot_amount*100)/105).toFixed(2);                    
-                        var rate = (amount/qnty).toFixed(2);                        
-                        ro.find('.amount').val(unit_price);        
+                    {
+                        var qnty = ro.find(".qnty").val() ? ro.find(".qnty").val() : 1;
+                        var amount = ((tot_amount*100)/105).toFixed(2);
+                        var rate = (amount/qnty).toFixed(2);
+                        ro.find('.amount').val(unit_price);
                         ro.find('.rate').val(price);
                     }
-                });   
-                
+                });
+
             }
             else
             {
-               // $('#insider_invoice_form')[0].reset();    
-               $('#items, .qnty, .amount_with_tax, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');                         
-                $('#table_with_tax').hide();  
+               // $('#insider_invoice_form')[0].reset();
+               $('#items, .qnty, .amount_with_tax, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');
+                $('#table_with_tax').hide();
                 $('#table_without_tax').show();
                 //set product rate on change
                 $("select[name^='items']").on('change', function(){
@@ -517,43 +517,43 @@ $(document).ready(function(){
                 });
 
                 //show AMOUNT by qnty*rate
-                $('.amount').on('focus', function(){                    
+                $('.amount').on('focus', function(){
                     var ro  = $(this).parents('tr');
                     var qnty = ro.find('.qnty').val();
                     var rate = ro.find('.rate').val();
                     var the_amount = (qnty*rate).toFixed(2);
-                    $(this).val(the_amount);        
-                });    
+                    $(this).val(the_amount);
+                });
                 $('.qnty, .rate').on('change', function(){
                     var ro  = $(this).closest('tr');
                     var qnty = ro.find('.qnty').val();
                     var rate = ro.find('.rate').val();
-                 
+
                     if(qnty && rate)
                     {
                         var the_amount = (qnty*rate).toFixed(2);
-                        ro.find('.amount').val(the_amount);      
+                        ro.find('.amount').val(the_amount);
                     }
-                });                            
+                });
             }   //end else brace
 
             //total taxable value before gst
             var total = 0, total_in_word = 0;
             //total Amount before GST
-            $('#total_tax_value').on('focus', function(){ 
+            $('#total_tax_value').on('focus', function(){
                 var crnt_val = parseFloat($(this).val());
                 total = 0;
-                $('.amount').each(function(){                                
+                $('.amount').each(function(){
                     if( $(this).val() !== '' )
                     {
                         var amt = $(this).val();
-                        total += parseFloat(amt);                
-                    }                       
+                        total += parseFloat(amt);
+                    }
                 });
 
                 var other_charge = $('#other_charge').val() != '' ? $('#other_charge').val() : 0;
-                var trans_charge = $('#trans_charge').val() != '' ? $('#trans_charge').val() : 0;        
-                total +=  parseFloat(other_charge) + parseFloat(trans_charge);  
+                var trans_charge = $('#trans_charge').val() != '' ? $('#trans_charge').val() : 0;
+                total +=  parseFloat(other_charge) + parseFloat(trans_charge);
                 if(total != crnt_val)
                 {
                     $(this).val(total.toFixed(2));
@@ -568,7 +568,7 @@ $(document).ready(function(){
                     cgst = parseFloat(cgst);
                     var tax = parseFloat( (total*cgst)/100 );
                     $(this).val(tax.toFixed(2));
-                }                
+                }
             });
 
             $('#sgst_charge').on('focus', function(){
@@ -579,7 +579,7 @@ $(document).ready(function(){
                     var tax = parseFloat( (total*sgst)/100 );
                     $(this).val(tax.toFixed(2));
                 }
-            });  
+            });
 
             $('#igst_charge').on('focus', function(){
                 var igst = $('#igst_per').val();
@@ -592,12 +592,12 @@ $(document).ready(function(){
             });
 
                 //total with TAX
-           
 
-            $('#total_round').on('focus', function(){ 
-                var rupee = Math.round( $('#total_amount').val() );      
+
+            $('#total_round').on('focus', function(){
+                var rupee = Math.round( $('#total_amount').val() );
                 $(this).val(rupee);
-            }); 
+            });
 
             // amount in WORDS
             $("#total_word").on('focus', function(){
@@ -606,28 +606,28 @@ $(document).ready(function(){
                 {
                     var total_words = NumToWord(total_in_word);
                     $(this).val(total_words);
-                }                
+                }
             });
 
         }   //end main if
-    });         
+    });
     $('#total_amount').on('focus', function(){
 
 
 console.log("in total_amount");
 total = 0;
-$('.amount').each(function(){                                
+$('.amount').each(function(){
     if( $(this).val() !== '' )
     {
         var amt = $(this).val();
-        total += parseFloat(amt);                
-    }                       
+        total += parseFloat(amt);
+    }
 });
 var crnt_val = parseFloat(total);
 
 var other_charge = $('#other_charge').val() != '' ? $('#other_charge').val() : 0;
-var trans_charge = $('#trans_charge').val() != '' ? $('#trans_charge').val() : 0;        
-total +=  parseFloat(other_charge) + parseFloat(trans_charge);  
+var trans_charge = $('#trans_charge').val() != '' ? $('#trans_charge').val() : 0;
+total +=  parseFloat(other_charge) + parseFloat(trans_charge);
 if(total != crnt_val)
 {
     $(this).val(total.toFixed(2));
@@ -640,7 +640,7 @@ var igst = $('#igst_charge').val() != '' ? parseFloat($('#igst_charge').val()) :
 /* var total_with_tax = parseFloat($('#total_tax_value').val()) + cgst + sgst + igst ; */
 var total_with_tax = parseFloat(total) + 0 + 0 + 0 ;
 total_with_tax      = total_with_tax.toFixed(2);
-$(this).val(total_with_tax); 
+$(this).val(total_with_tax);
 //total round amount
 $('#total_round').val(Math.round(total_with_tax));
 //total in words
@@ -648,7 +648,7 @@ var round_amount = $('#total_round').val();
 if( round_amount!= null)
 {
     var total_words = NumToWord(round_amount);
-    $("#total_word").val(total_words);   
+    $("#total_word").val(total_words);
 }
 
 });
