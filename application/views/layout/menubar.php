@@ -70,12 +70,9 @@
 					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Making');?>">Making</a>
         </li>
 
-         <li>
-					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Pices');?>">Pices</a>
-				</li>
-       <li>
-					<a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Design');?>">Designs</a>
-				</li>
+        <li>
+         <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Pices');?>">Pices</a>
+       </li>
 
 				<li>
 					<a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Invoice');?>">Invoice</a>
@@ -90,6 +87,10 @@
         <li>
          <a class="btn btn-default" role="button" href="<?php echo base_url('/index.php/Material');?>">Material</a>
        </li>
+
+     <li>
+        <a  class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Design');?>">Designs</a>
+      </li>
         <li>
           <!-- <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Balance');?>">Balance</a> -->
         </li>
