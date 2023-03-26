@@ -105,17 +105,22 @@ class Pices extends CI_Controller
 			// Loop through the arrays and update the quantity for each material ID
 			for ($i = 0; $i < count($material_ids_array); $i++) {
 				// Get the previous quantity for the material ID
-				$prev_quantity = $this->db->get_where('maker_stock', array('materials_id' => $material_ids_array[$i]))->row()->quantity;
-				
+			/* 	$prev_quantity = $this->db->get_where('maker_stock', array('materials_id' => $material_ids_array[$i]))->row()->quantity; */
+				$material_ids = $material_ids_array[$i];
+				$this->db->where_in('materials_id', $material_ids);
+				$this->db->where('making_owner_id', $customer_id);
+				$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
 				// Update the quantity for the material ID with the previous quantity + new quantity
 				$data = array('quantity' => $prev_quantity - $material_used_array[$i]);
 				$this->db->where('materials_id', $material_ids_array[$i]);
+				$this->db->where('making_owner_id', $customer_id);
 				$this->db->update('maker_stock', $data);
+				//echo $this->db->last_query();
 			}
-			///die();
 			/* $amount = implode(',', $this->input->post('amount[]'));
 			$amount = trim($amount,','); */
-
+			
+			//die();
 			/* ----------------------------------------------------------------------- */
 
 			/* for ($i=0; $i < 10; $i++) {
@@ -160,6 +165,7 @@ class Pices extends CI_Controller
 					'total_material' => $this->input->post('total_material_'.$i.'[]'),
 					'total_piece' => $this->input->post('total_piece_'.$i.'[]'),
 					'customer_id' => $this->input->post('customerName'),
+					'invoice_no' => $this->input->post('invoice_no'),
 				);
 				// Add the new design to the result array
 				$result[] = $design;
@@ -192,9 +198,10 @@ class Pices extends CI_Controller
 					//'mat_name' => implode(',', $row['materials_name']),
 					'material_used' => $total_material,
 					'total_piece' => $row['total_piece'][0],
-					'master_id' => $row['customer_id'][0]
+					'master_id' => $row['customer_id'][0],
+					'invoice_no' => $row['invoice_no']
 				];
-
+				
 				$insert = $this->db->insert('product_pices', $insert_data);
 				
 				/* ----------------Insert in History table---------------------------- */
@@ -366,7 +373,7 @@ class Pices extends CI_Controller
 				}
 				$save_path = $dir.$filename;
 				ob_end_clean();
-				//$pdf->Output($save_path, 'I');
+				$pdf->Output($save_path, 'I');
 				$pdf->Output($save_path, 'F');
 				//file_put_contents($save_path, $pdf);
 				$this->session->set_flashdata('success', 'Data Added successfully....');
@@ -582,7 +589,7 @@ class Pices extends CI_Controller
 			else
 			{
 				$this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
-				redirect('Invoice');
+				redirect('Pices');
 			}
 		}
 		else
