@@ -52,6 +52,10 @@
                         $name = 'Maker';
 
                       }
+                      elseif ($row->role == '2' ) {
+                        $name = 'Customer';
+
+                      }
                       else {
                         // code...
                       }
