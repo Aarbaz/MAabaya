@@ -125,7 +125,7 @@ class Purchaser extends CI_Controller
                     $dataStk["purchaser_id"] = $purchaser_ids;
                     $dataStk["purchaser_owner_id"] = strtoupper($postData["owner_name"]);
 
-                    $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
+                    // $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
                     $this->db->where('materials_id',$material_id[$i]);
             				$query = $this->db->get('purchaser_stock');
             				$row = $query->row();
@@ -133,10 +133,10 @@ class Purchaser extends CI_Controller
             					// If the product exists, update the quantity value in the database
             					$data3 = array(
             						'quantity' => $row->quantity + $stock[$i],
-            						'price' => $price[$i]
+            						// 'price' => $price[$i]
             					);
             					// print_r($data2);
-                      $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
+                      // $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
                       $this->db->where('materials_id',$material_id[$i]);
             					$this->db->update('purchaser_stock', $data3);
             				} else {

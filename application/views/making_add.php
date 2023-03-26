@@ -64,10 +64,9 @@
                ?>
                <input type="hidden" name="maker_no" value="<?php echo $maker_no; ?>">
 
-               <div class="form-group">
+               <!-- <div class="form-group">
                   <div class="col-sm-5">
                      <label>Purchaser Name</label>
-                     <!-- <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>"> -->
                      <select name="master_id" id="master_id" class="form-control">
                         <option value="" selected="selected">--select master--</option>
                           <?php
@@ -78,7 +77,7 @@
                      </select>
                   </div>
                   <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
-               </div>
+               </div> -->
                <div class="form-group">
                   <div class="col-sm-5">
                      <label>Master Name</label>

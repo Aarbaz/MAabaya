@@ -115,12 +115,12 @@ class Making extends CI_Controller
                 $stock_q = trim($stock_q, ",");
 
 
-                $master_id = $this->input->post("master_id");
+                // $master_id = $this->input->post("master_id");
                 $master_name = $this->input->post("master_name");
 
                 $data = [
                     "material_id" => $material_id,
-                    "purchaser_owner_id" => $master_id,
+                    // "purchaser_owner_id" => $master_id,
                     "making_owner_id" => $master_name,
                     "stock" => $stock_q,
                     "maker_no" => strtoupper($postData["maker_no"]),
@@ -144,7 +144,7 @@ class Making extends CI_Controller
                     $this->Purchaser_model->update_pstock_qty($dataStk,$master_id,$material_ids[$m]);
 
                     $dataMak["maker_id"] = $product_id;
-                    $dataMak["purchaser_owner_id"] = $master_id;
+                    // $dataMak["purchaser_owner_id"] = $master_id;
                     $dataMak["making_owner_id"] = $master_name;
                     $dataMak["materials_id"] = $material_ids[$m];
                     $dataMak["quantity"] = $stocks[$m];
@@ -165,7 +165,7 @@ class Making extends CI_Controller
                         'quantity' => $rows->quantity + $stocks[$m],
                         // 'price' => $price[$i]
                       );
-                      
+
                       $this->db->where('making_owner_id', $master_name);
                       $this->db->where('materials_id',$material_ids[$m]);
                       $this->db->update('maker_stock', $data3);
@@ -189,7 +189,7 @@ class Making extends CI_Controller
           					'json_data' => $json_data,
           			);
           			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
-                
+
                 if ($insert > 0) {
 
 

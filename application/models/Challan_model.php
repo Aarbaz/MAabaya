@@ -16,7 +16,7 @@ class Challan_model extends CI_Model {
     public function get_all_customer()
     {
         return $this->db->select('id, name,address')
-        ->where('role', 0)
+        ->where('role', 2)
         ->get('customers');
     }
 

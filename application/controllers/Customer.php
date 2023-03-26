@@ -108,6 +108,7 @@ class Customer extends CI_Controller {
 					// 'owner_email' => $postData['email'],
 					// 'bakery_gst' => $postData['gst'],
 					'address' => ucwords($postData['address']),
+					'role' => '2',
 					// 'bakery_area' => ucwords($postData['area']),
 					// 'bakery_city' => ucwords($postData['city']),
 					// 'last_amount' => $postData['last_amount']
