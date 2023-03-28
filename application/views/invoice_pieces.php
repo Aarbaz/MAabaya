@@ -53,9 +53,9 @@
 <table border="1" cellspacing="0" cellpadding="3" width="100%">
   <tr style="background-color: #e1e1e9">
     <th style="width: 10%">Sr. No</th>
-    <th style="width: 40%">PARTICULARS</th>
-    <th style="width: 10%">Design No</th>
-    <th style="width: 10%">QNTY</th>
+    <th style="width: 45%">PARTICULARS</th>
+    <th style="width: 10%">Pcs</th>
+    <!-- <th style="width: 10%">QNTY</th> -->
     <th style="width: 15%">RATE</th>
     <th style="width: 15%">AMOUNT</th>
   </tr>
@@ -84,16 +84,61 @@
     $items2 = array_filter(array_map('array_filter', $items2));
     if($all_items > 0)
     {
-      for($i=0;$i<20;$i++){?>
-        <tr>
-          <td><?php echo $j; ?></td>
-          <td><?php echo isset($items2[$i][0])?$items2[$i][0]:''; ?></td>
-          <td><?php echo isset($items2[$i][1])?$items2[$i][1]:''; ?></td>
-          <td><?php echo isset($items2[$i][2]) ? $items2[$i][2] : '' ; ?></td>
-        </tr>
+      //print_r($json_data['data_json']);
+      $array_data = json_decode($json_data['data_json'], true);
+      //for($i=0;$i<$all_items;$i++){?>
+        
+        <?php $j=1;
+            foreach ($array_data as $data) {
+             
+              $design_number = $data['design_number'][0];
+              $this->db->select('id,design_num');
+              $this->db->from('designs');
+              $this->db->where('id',$design_number);
+              $query = $this->db->get();
+              $design_data= $query->row();
+
+              $materials_ids = $data['materials_ids'];
+              $total_materials = $data['total_material'];
+              $total_piece = $data['total_piece'][0];
+              $labour_charge = $data['labour_charge'][0];
+              
+              
+              echo "<tr>";
+              echo "<td>$j</td>";
+              echo "<td> $design_data->design_num<br>";
+              
+              foreach ($materials_ids as $material_id) {
+                $this->db->select('*');
+                $this->db->from('material');
+                $this->db->where('id', $material_id);
+
+                $query = $this->db->get();
+                $results = $query->result();
+                foreach ($results as $material) {
+                  echo $material->material_name ."<br>";
+                }
+              }
+              
+              echo "</td>";
+              echo "<td>$total_piece</td>";
+              echo "<td>";
+              foreach ($total_materials as $total_material) {
+                echo $total_material;
+              }
+              echo "</td>";
+              
+              echo "<td>$labour_charge</td>";
+              echo "</tr>";
+              $j++;
+            }
+          ?>
+         
+         
+          
       <?php
         $j++; }
-    } ?>
+    //} ?>
 </table>
 
 <table width="100%" id="tax_table">

@@ -94,10 +94,15 @@ class Pices extends CI_Controller
 			$rate = implode(',', $this->input->post('rate[]'));
 			$rate = trim($rate, ',');
 
-			$total_material = implode(',', $this->input->post('total_material[]'));
-			$total_material = trim($total_material, ',');
-
-			$material_used_array = explode(",", $total_material);
+			/* $total_material = implode(',', $this->input->post('total_material[]'));
+			$total_material = trim($total_material, ','); */
+			
+			$total_material_used = implode(',', $this->input->post('total_material_used'));
+			$total_material_used = trim($total_material_used, ',');
+			
+			$material_used_array = explode(",", $total_material_used);
+			/* print_r($total_material_used);
+			die(); */
 			// echo count($material_used_array);
 			
 			$material_ids_array = explode(",", $all_material_ids);
@@ -163,9 +168,11 @@ class Pices extends CI_Controller
 					// 'material_ids' => $this->input->post('material_ids_'.$i.'[]'),
 					'materials_ids' => $this->input->post('items_'.$i.'[]'),
 					'total_material' => $this->input->post('total_material_'.$i.'[]'),
+					'total_material_used' => $this->input->post('total_material_used[]'),
 					'total_piece' => $this->input->post('total_piece_'.$i.'[]'),
 					'customer_id' => $this->input->post('customerName'),
 					'invoice_no' => $this->input->post('invoice_no'),
+					'labour_charge' => $this->input->post('karigari_'.$i.'[]'),
 				);
 				// Add the new design to the result array
 				$result[] = $design;
@@ -173,7 +180,8 @@ class Pices extends CI_Controller
 			
 			// Convert the result array to JSON
 			$json = json_encode($result);
-			
+			/* print_r($json);
+			die(); */
 			$data = $json;
 			$k = 0;
 
@@ -196,13 +204,13 @@ class Pices extends CI_Controller
 					'material_id' => implode(',', $row['materials_ids']),
 					//'material_id' => implode(',', $row['material_ids']),
 					//'mat_name' => implode(',', $row['materials_name']),
-					'material_used' => $total_material,
+					'material_used' => $total_material_used,
 					'total_piece' => $row['total_piece'][0],
 					'master_id' => $row['customer_id'][0],
 					'invoice_no' => $row['invoice_no']
 				];
 				
-				$insert = $this->db->insert('product_pices', $insert_data);
+				//$insert = $this->db->insert('product_pices', $insert_data);
 				
 				/* ----------------Insert in History table---------------------------- */
 				//$json_data = json_encode($data);
@@ -288,7 +296,17 @@ class Pices extends CI_Controller
 					'json_data' => $json,
 			);
 			//die();
-			//$insert_json_data = $this->Pices_model->create_history($json_data_array);
+			$insert_json_data = $this->Pices_model->create_history($json_data_array);
+
+			$json_data = array(
+				'data_json' => $json,
+				'master_id' => $this->input->post('customerName'),
+				'invoice_no' => $this->input->post('invoice_no'),
+				'invoice_no' => $this->input->post('invoice_no'),
+			);
+			/* print_r($json);
+			die(); */
+			$insert = $this->db->insert('product_pices', $json_data);
 
 
 			/* ----------------------------------------------------------------------- */
@@ -350,6 +368,7 @@ class Pices extends CI_Controller
 					'qnty' => $qnty,
 					'invoice_no' => $invoice_no,
 					'customer_address' => $maker_name->address,
+					'json_data' => $json_data,
 				);
 
 

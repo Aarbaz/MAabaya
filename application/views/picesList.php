@@ -22,7 +22,7 @@
   						<tr>
               <th>Sr No</th>
               <th>Master Name</th>
-  							<th>Material Name - Design Number - Pices</th>
+  							<th>Design Number - Pices</th>
                 <th>Action</th>
   						</tr>
 					  </thead>
@@ -31,41 +31,49 @@
             <?php
             if(isset($data_list)){
               $i = 1;
-              
-              foreach ($data_list->result() as $row){  
-                $mat_name1 = explode(',', $row->material_id);
-                $design_number = explode(',', $row->design_number);
-                //$pices = explode(',', $row->pices);
-                $count_mat_name1 = count($design_number)
+              foreach ($data_list->result() as $row) {
+                # code...
+                $array_data = json_decode($row->data_json, true);
+              }
+              foreach ($array_data as $data) {
+             
+                $design_number = $data['design_number'][0];
+                $materials_ids = $data['materials_ids'];
+                $this->db->select('id,design_num');
+                $this->db->from('designs');
+                $this->db->where('id',$design_number);
+                $query = $this->db->get();
+                $design_data= $query->row();
                 
-                ?>
-						  <tr>
-              
+                echo "<tr>";
+                echo "<td>$i</td>";
+                echo "<td>$row->name</td>";
+                echo "<td>Design Number - <b>$design_data->design_num</b><br>";
                 
-               
-                <td><?php echo $i; ?></td>
-                <td><?php echo $row->name; ?></td>
-  							<!-- <td><?php echo $row->mat_name; ?></td>
-  							<td><?php echo $row->design_number; ?></td>
-  							<td><?php echo $row->pices; ?></td> -->
-                <td><?php 
-                  for ($p=0; $p < 5; $p++) { 
-                    echo (isset($mat_name1[$p])?$mat_name1[$p]:"").' - '.(isset($design_number[$p])?$design_number[$p]:"").'- '.($row->total_piece);// 
-                  
-                    echo "</br>";  }
-                  /* foreach ($matList->result() as $col){
-                    if ($material_id[$p] == $col->id) {
-                      echo $col->material_name.' - '.$stk[$p].' Meters - '.$total_amount[$p].' Rs';
-                    }
-                 } */
-                  ?></td>
+                foreach ($materials_ids as $material_id) {
+                  $this->db->select('*');
+                  $this->db->from('material');
+                  $this->db->where('id', $material_id);
+  
+                  $query = $this->db->get();
+                  $results = $query->result();
+                  foreach ($results as $material) {
+                    echo $material->material_name ."<br>";
+                  }
+                }
+                
+                echo "</td>"; ?>
                 <td>
                 <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Pices/downloadPdf/').rawurlencode($row->name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
-                 <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Pices/editPices/').$row->sr_no;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                 <a class="btn btn-primary btn-xs hide" title="Click to edit" href="<?php echo base_url('/index.php/Pices/editPices/').$row->sr_no;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->sr_no;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td>
-						  </tr>
-            <?php $i++; } } ?>
+               <?php echo "</tr>";
+                $i++;
+              }
+              ?>
+            
+            <?php $i++;  } ?>
             </tbody>
           </table>
         </div>

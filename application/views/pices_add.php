@@ -204,6 +204,14 @@
 
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Karigari</label>
+                                        <div class="col-sm-4" id="">
+                                            <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="form-control" value="<?php echo set_value('karigari');?>">
+
+                                        </div>
+                                    </div>
+                                   
                                     </div>
                                         <tr class="row_one">
                                             <!-- <td>
@@ -229,8 +237,9 @@
                                         <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                                 
-                                            <td>
-                                                <input type="text" name="total_material[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                            <td class="total_used_materials">
+                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="hidden" name="total_material_used[]" id="total_material_used" value="">
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
@@ -250,6 +259,7 @@
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>
                                 <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>
+                                <button type="button" name="" class="btn btn-primary" id="remove-div">Remove</button>
                               </div>
                             </div>
 
@@ -667,6 +677,7 @@ if( round_amount!= null)
 $('.submit-btn').click(function() {
       var selected_ids = [];
       var material_ids = [];
+      var total_material_used = [];
       /* $('.my-select').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute = $(this).find('select option:selected').attr('data-id');
@@ -688,6 +699,15 @@ $('.submit-btn').click(function() {
             console.log(material_ids);
         });
         $('#all_material_ids').val(material_ids.join(','));
+
+      $('tr td.total_used_materials').each(function() {
+            //var selectedValue = $(this).find('select').val();
+            var otherAttribute3 = $(this).find(".amount").val();
+            console.log(' Other attribute value: ' + otherAttribute3);
+            total_material_used.push(otherAttribute3);
+            console.log(total_material_used);
+        });
+        $('#total_material_used').val(total_material_used.join(','));
 
     });
     // $('#duplicate-table-btn').click(function() {
@@ -722,7 +742,8 @@ $('.submit-btn').click(function() {
 
         ?>
         htmlStructure += ` <hr>
-         <div class="form-group select-row">
+        <div class="new-div">
+         <div class="form-group select-row" >
                                         <label class="control-label col-sm-2 text-left" style="    text-align: left;">Select Design</label>
                                             <div class="col-sm-4   ">
                                                 <select name="hsn_<?php echo $t?>[]" id="hsn"  class="form-control my-select">
@@ -741,6 +762,13 @@ $('.submit-btn').click(function() {
                                         <label class="control-label col-sm-2 text-left" style="    text-align: left;">Total Pices</label>
                                         <div class="col-sm-4" id="addds_holder">
                                             <input type="text" name="total_piece_<?php echo $t ?>[]" id="total_piece" class="form-control" value="<?php echo set_value('total_piece');?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-2 text-left" style="    text-align: left;">Karigari</label>
+                                        <div class="col-sm-4" id="">
+                                            <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="form-control" value="<?php echo set_value('karigari');?>">
+
                                         </div>
                                     </div>
                                     <div class="form-group" id=""> <table class="table table-bordered"><thead><tr>
@@ -772,13 +800,14 @@ $('.submit-btn').click(function() {
                                         <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                                 
-                                            <td>
-                                                <input type="text" name="total_material[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                            <td class="total_used_materials">
+                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
                                         </tr>
  
+                            </div>
                             </div> `;
         $('#table-container').append(htmlStructure);
     });
@@ -796,4 +825,13 @@ $('.submit-btn').click(function() {
             }
         });
     });
+    $('#remove-div').click(function() {
+				$('#table-container div.select-row:last-child').remove();
+                var len=$('#table-container .new-div').length;
+    if(len>1){
+    $("#table-container .new-div").last().remove();
+    }else{
+    alert('Not able to Delete');
+    }
+			});
 </script>
