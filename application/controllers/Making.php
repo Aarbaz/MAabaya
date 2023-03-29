@@ -143,22 +143,22 @@ class Making extends CI_Controller
                     $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
                     $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
 
-                    $this->db->where('product_id',$material_id[$m]);
-            				$query = $this->db->get('stock');
-            				$row = $query->row();
+                    // $this->db->where('product_id',$material_ids[$m]);
+            				// $query1 = $this->db->get('stock');
+            				// $rows = $query1->row();
+                    //
+                    // if ($query1->num_rows()) {
+                    //   // If the product exists, update the quantity value in the database
+                    //   $data_return = array(
+                    //     'stock_qty' => $rows->stock_qty[$m] - $stocks[$m],
+                    //     // 'price' => $price[$i]
+                    //   );
+                    //   $this->db->where('product_id',$material_ids[$m]);
+                    //   $this->db->update('stock', $data_return);
+                    // }
 
-                    if ($query->num_rows()) {
-                      // If the product exists, update the quantity value in the database
-                      $data3 = array(
-                        'stock_qty' => $row->stock_qty - $stocks[$m],
-                        // 'price' => $price[$i]
-                      );
-                      $this->db->where('product_id',$material_ids[$m]);
-                      $this->db->update('stock', $data3);
-                    }
-
-                    // $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
-                    // $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
+                    $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
+                    $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
 
                     $dataMak["maker_id"] = $product_id;
                     // $dataMak["purchaser_owner_id"] = $master_id;
