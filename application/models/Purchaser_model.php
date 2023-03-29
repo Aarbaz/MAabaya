@@ -9,6 +9,11 @@ class Purchaser_model extends CI_Model
         return $this->db->insert_id();
     }
 
+    public function add_purchaser_stk($dataStk)
+    {
+        $this->db->insert("stock", $dataStk);
+        return $this->db->insert_id();
+    }
     public function update_purchaser_qty($data, $id, $mid)
     {
         $this->db->where("purchaser_id", $id);
@@ -17,7 +22,7 @@ class Purchaser_model extends CI_Model
         return $this->db->affected_rows();
     }
 
-    public function update_pstock_qty($data, $id,$mid)
+    public function update_pstock_qty($data,$mid)
     {
         // $this->db->where("purchaser_owner_id", $id);
         $this->db->where("materials_id", $mid);
@@ -25,7 +30,13 @@ class Purchaser_model extends CI_Model
         return $this->db->affected_rows();
     }
 
-
+    public function update_Dstock($data,$mid)
+    {
+        // $this->db->where("purchaser_owner_id", $id);
+        $this->db->where("product_id", $mid);
+        $this->db->update("stock", $data);
+        return $this->db->affected_rows();
+    }
 
 
     public function add_purchaser($data)

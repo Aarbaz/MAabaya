@@ -141,7 +141,24 @@ class Making extends CI_Controller
                 $m = 0;
                 foreach ($stocks as $row) {
                     $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
-                    $this->Purchaser_model->update_pstock_qty($dataStk,$master_id,$material_ids[$m]);
+                    $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
+
+                    $this->db->where('product_id',$material_id[$m]);
+            				$query = $this->db->get('stock');
+            				$row = $query->row();
+
+                    if ($query->num_rows()) {
+                      // If the product exists, update the quantity value in the database
+                      $data3 = array(
+                        'stock_qty' => $row->stock_qty - $stocks[$m],
+                        // 'price' => $price[$i]
+                      );
+                      $this->db->where('product_id',$material_ids[$m]);
+                      $this->db->update('stock', $data3);
+                    }
+
+                    // $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
+                    // $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
 
                     $dataMak["maker_id"] = $product_id;
                     // $dataMak["purchaser_owner_id"] = $master_id;
@@ -201,7 +218,7 @@ class Making extends CI_Controller
                   $master_name = $query->row();
 
                   $material_ids = implode(",",$this->input->post("material_name[]"));
-                  $material_values = trim($material_name, ",");
+                  $material_values = trim($material_ids, ",");
                   $material_ids_values = explode(",", $material_ids);
                   $material_values = $material_ids_values;
                   $this->db->select('*');

@@ -148,6 +148,31 @@ class Purchaser extends CI_Controller
 
 
 
+                    $this->db->where('product_id',$material_id[$i]);
+            				$query = $this->db->get('stock');
+            				$row = $query->row();
+            				if ($query->num_rows()) {
+            					// If the product exists, update the quantity value in the database
+            					$data3 = array(
+            						'stock_qty' => $row->stock_qty + $stock[$i],
+            						// 'price' => $price[$i]
+            					);
+            					// print_r($data2);
+                      // $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
+                      $this->db->where('product_id',$material_id[$i]);
+            					$this->db->update('stock', $data3);
+            				} else {
+                      $dataDStk["product_id"] = $material_id[$i];
+                        $dataDStk["stock_qty"] = $stock[$i];
+            					// If the product does not exist, insert a new row into the database
+            					// $this->db->insert('purchaser_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
+                      $this->Purchaser_model->add_purchaser_stk($dataDStk);
+
+            				}
+
+
+
+
                     $i++;
                 }
 
