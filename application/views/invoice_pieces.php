@@ -21,7 +21,7 @@
       <td width="20%"> Master Name </td>
       <td width="35%"> <?php echo $customer; ?></td>
       <td width="20%"> INVOICE NO.</td>
-      <td width="25%"> <?php echo $invoice_no; ?> </td>
+      <td width="25%"> <?php echo ($invoice_no); ?> </td>
     </tr>
     <tr style="border-bottom: 2px solid #000;">
       <td> ADDS. </td>

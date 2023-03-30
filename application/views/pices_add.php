@@ -517,6 +517,13 @@ $(document).ready(function(){
                         ro.find('.rate').val(price);
                     }
                 }); 
+                $('.amount').on('focus', function(){
+                    var ro  = $(this).parents('tr');
+                    var qnty = ro.find('.qnty').val();
+                    var rate = ro.find('.rate').val();
+                    var the_amount = (qnty*rate).toFixed(2);
+                    $(this).val(the_amount);
+                });
 
             }
             else
@@ -734,6 +741,7 @@ $('.submit-btn').click(function() {
     var count = 0;
     $('#duplicate-table-btn').click(function() {
         var step_no = $("#steps").val();
+        
         //console.log(step_no);
         count++;
         $("#steps").val(count);
@@ -810,6 +818,13 @@ $('.submit-btn').click(function() {
                             </div>
                             </div> `;
         $('#table-container').append(htmlStructure);
+        $('.amount').on('focus', function(){
+                    var ro  = $(this).parents('tr');
+                    var qnty = ro.find('.qnty').val();
+                    var rate = ro.find('.rate').val();
+                    var the_amount = (qnty*rate).toFixed(2);
+                    $(this).val(the_amount);
+                });
     });
 })
 
@@ -826,12 +841,13 @@ $('.submit-btn').click(function() {
         });
     });
     $('#remove-div').click(function() {
-				$('#table-container div.select-row:last-child').remove();
+				/* $('#table-container div.select-row:last-child').remove();
                 var len=$('#table-container .new-div').length;
     if(len>1){
     $("#table-container .new-div").last().remove();
     }else{
     alert('Not able to Delete');
-    }
+    } */
+    $('.new-div:last').remove();
 			});
 </script>

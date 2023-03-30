@@ -101,16 +101,12 @@ class Pices extends CI_Controller
 			$total_material_used = trim($total_material_used, ',');
 			
 			$material_used_array = explode(",", $total_material_used);
-			/* print_r($total_material_used);
-			die(); */
-			// echo count($material_used_array);
 			
 			$material_ids_array = explode(",", $all_material_ids);
 			// echo count($material_ids_array);
 			// Loop through the arrays and update the quantity for each material ID
 			for ($i = 0; $i < count($material_ids_array); $i++) {
 				// Get the previous quantity for the material ID
-			/* 	$prev_quantity = $this->db->get_where('maker_stock', array('materials_id' => $material_ids_array[$i]))->row()->quantity; */
 				$material_ids = $material_ids_array[$i];
 				$this->db->where_in('materials_id', $material_ids);
 				$this->db->where('making_owner_id', $customer_id);
@@ -123,9 +119,6 @@ class Pices extends CI_Controller
 				//echo $this->db->last_query();
 			}
 			/* $amount = implode(',', $this->input->post('amount[]'));
-			$amount = trim($amount,','); */
-			
-			//die();
 			/* ----------------------------------------------------------------------- */
 
 			/* for ($i=0; $i < 10; $i++) {
@@ -146,20 +139,8 @@ class Pices extends CI_Controller
 				$material_ids = trim($material_ids,',');
 
 			} */
-   /*  for ($j=0; $j < 2; $j++) {
-		# code...
-    	$output_data[$j] = array(
-				'design_number' => $this->input->post('hsn_'.$j.'[]'),
-				'total_piece' => $this->input->post('total_piece_'.$j.'[]'),
-				'materials_ids' => $this->input->post('items_'.$j.'[]'),
-				'total_material' => $this->input->post('total_material_'.$j.'[]'),
-			);
-			//print_r($output_data[$j]);
-	}
-					//}
-					$result = array(); */
+
 					$steps = $this->input->post('steps');
-					//print_r($steps);
 			// Loop through each design number
 			for ($i = 0; $i <= $steps; $i++) {
 				// Create a new array for this design
@@ -180,8 +161,6 @@ class Pices extends CI_Controller
 			
 			// Convert the result array to JSON
 			$json = json_encode($result);
-			/* print_r($json);
-			die(); */
 			$data = $json;
 			$k = 0;
 
@@ -189,16 +168,6 @@ class Pices extends CI_Controller
 
 			foreach ($array as $row) {
 				$k++;
-				/* $design_number = $row['design_number'][$k];
-				$materials_ids = implode(',', $row['materials_ids']);
-				$total_material = implode(',', $row['total_material']);
-				$total_piece = $row['total_piece'][$k];
-				$this->db->insert('product_pices', array(
-					'design_number' => $design_number,
-					'material_id' => $materials_ids,
-					'material_used' => $total_material,
-					'total_piece' => $total_piece
-				)); */
 				$insert_data = [
 					'design_number' => $row['design_number'][0],
 					'material_id' => implode(',', $row['materials_ids']),
@@ -210,27 +179,17 @@ class Pices extends CI_Controller
 					'invoice_no' => $row['invoice_no']
 				];
 				
-				//$insert = $this->db->insert('product_pices', $insert_data);
-				
-				/* ----------------Insert in History table---------------------------- */
-				//$json_data = json_encode($data);
 				$data2 = array();
-			// for ($i = 0; $i < 2; $i++) {
+
 				$data2[] = array(
 					'p_design_number' => $insert_data['design_number'],
 					'stock_qty' => $insert_data['total_piece']
 				);
-			// }
+
 				$mat_stock_data[] = array(
 					'materials_id' => $insert_data['material_id'],
 					'smaterial_used_qty' => $insert_data['material_used']
 				);
-			
-			//print_r($data2);
-			//die();
-			// Update Stock
-
-			// $this->db->trans_start(); // Start a transaction to ensure data consistency
 			foreach ($data2 as $row) {
 				$product_id = $row['p_design_number'];
 				$quantity = $row['stock_qty'];
@@ -255,47 +214,18 @@ class Pices extends CI_Controller
 				'materials_id' => $insert_data['material_id'],
 				'quantity' => $insert_data['material_used']
 			);
-			// print_r($materialData);
 			$materialId2 = $materialData[0]['materials_id'];
 			$materialId3 = explode(",", $materialId2);
 			
 			$m = 0;
-			/* foreach ($materialData as $row) {
-				$product_id = $row['materials_id'];
-				$quantity = $row['quantity'];
-				$materialId = explode(",", $product_id);
-				$this->db->where('materials_id', $materialId[$m]);
-				$query = $this->db->get('maker_stock');
-				echo $this->db->last_query();
-				$row = $query->row();
-				print_r($materialId);
-				
-				$mat_q = $quantity;
-				$material_q = explode(",", $mat_q);
-				if ($query->num_rows()) {
-					// If the product exists, update the quantity value in the database
-					$data4 = array(
-						'quantity' => $row->quantity - $material_q[$m]
-					);
-					// print_r($data4);
-					
-					$this->db->where('materials_id', $product_id[$m]);
-					$this->db->update('maker_stock', $data4);
-					//echo $this->db->last_query();
-				} else {
-					// If the product does not exist, insert a new row into the database
-					$this->db->insert('maker_stock', array('materials_id' => $product_id, 'quantity' => $quantity));
-				}
-				$m++;
-			} */
+			
 		}
-		// die();
-
+		
 			$json_data_array = array(
 					'entry_from' => 'MakingAdd',
 					'json_data' => $json,
 			);
-			//die();
+
 			$insert_json_data = $this->Pices_model->create_history($json_data_array);
 
 			$json_data = array(
@@ -303,31 +233,8 @@ class Pices extends CI_Controller
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
 			);
-			/* print_r($json);
-			die(); */
+
 			$insert = $this->db->insert('product_pices', $json_data);
-
-
-			/* ----------------------------------------------------------------------- */
-
-
-			//$insert = $this->Pices_model->create_record($data);
-
-			// Get the product and quantity values from your input
-			
-//       $data = array(
-//         'quantity' => 20
-//
-// );
-
-// $this->db->where('id', $id);
-// $this->db->where('making_owner_id', 2);
-// print_r($this->db->update('maker_stock', $data));
-// echo $this->db->last_query();
-
-			// die();
-			//$stock = $this->Pices_model->update_makerStock($customer_id,$material_values,$stk_data);
-			// $this->db->trans_complete(); // End the transaction
 
 			if ($this->db->trans_status() === false) {
 				// Handle transaction failure
