@@ -60,7 +60,7 @@
     <th style="width: 15%">AMOUNT</th>
   </tr>
   <?php
-    $mat = explode(',', $product_name);
+    /* $mat = explode(',', $product_name);
     // $hsn = explode(',', $hsn);
     $qnty = explode(',', $qnty);
     $rate = "";
@@ -68,6 +68,8 @@
     $items = array('mat'=> $mat,'qnty'=>$qnty,'hsn'=>$hsn);
     $len = count($items['mat']);
 
+
+    print_r( $items );
     $items2 = array();
     for ($i=0; $i < $len; $i++)
     {
@@ -81,9 +83,9 @@
     $j = 1;
     $all_items = count($items2);
 
-    $items2 = array_filter(array_map('array_filter', $items2));
-    if($all_items > 0)
-    {
+    $items2 = array_filter(array_map('array_filter', $items2)); */
+   /*  if($all_items > 0)
+    { */
       //print_r($json_data['data_json']);
       $array_data = json_decode($json_data['data_json'], true);
       //for($i=0;$i<$all_items;$i++){?>
@@ -107,7 +109,8 @@
               echo "<tr>";
               echo "<td>$j</td>";
               echo "<td> $design_data->design_num<br>";
-              
+              $jk=0;
+              $tot_am=0;
               foreach ($materials_ids as $material_id) {
                 $this->db->select('*');
                 $this->db->from('material');
@@ -115,20 +118,38 @@
 
                 $query = $this->db->get();
                 $results = $query->result();
-                foreach ($results as $material) {
-                  echo $material->material_name ."<br>";
-                }
+
+              //  print_r($results);
+
+              //   print_r($total_materials);
+              foreach ($results  as $key => $value) {
+                # code...
+
+               echo $value->material_name .$total_materials[$jk]." <br>";
+                $tot_am=floatval($tot_am) + floatval($total_materials[$jk]);
+               $jk++;
+
               }
               
-              echo "</td>";
+                // foreach ($results as $material) {
+                //   echo $material->material_name ."<br>";
+                // }
+              
+              }
+             
+ 
+              echo number_format((float)$tot_am, 2, '.', '')." </td>";
+              // echo " </td>";
               echo "<td>$total_piece</td>";
-              echo "<td>";
+              
+              echo "<td>$labour_charge</td>";
+              $tot_amount = $total_piece * $labour_charge;
+              echo "<td>$tot_amount</td>";
+              /* echo "<td>";
               foreach ($total_materials as $total_material) {
                 echo $total_material;
               }
-              echo "</td>";
-              
-              echo "<td>$labour_charge</td>";
+              echo "</td>"; */
               echo "</tr>";
               $j++;
             }
@@ -137,7 +158,7 @@
          
           
       <?php
-        $j++; }
+        //$j++; }
     //} ?>
 </table>
 

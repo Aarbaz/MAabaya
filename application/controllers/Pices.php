@@ -302,7 +302,6 @@ class Pices extends CI_Controller
 				'data_json' => $json,
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
-				'invoice_no' => $this->input->post('invoice_no'),
 			);
 			/* print_r($json);
 			die(); */

@@ -30,47 +30,105 @@
 					  <tbody>
             <?php
             if(isset($data_list)){
+
+            
               $i = 1;
+
+              // print_r($data_list->result());
               foreach ($data_list->result() as $row) {
                 # code...
-                $array_data = json_decode($row->data_json, true);
-              }
-              foreach ($array_data as $data) {
-             
-                $design_number = $data['design_number'][0];
-                $materials_ids = $data['materials_ids'];
-                $this->db->select('id,design_num');
-                $this->db->from('designs');
-                $this->db->where('id',$design_number);
+             $master_id1=$row->master_id;
+
+             $master_name=$row->name;
+      
+
+                $this->db->select('data_json');
+                $this->db->from('product_pices');
+                $this->db->where('master_id',$master_id1);
                 $query = $this->db->get();
-                $design_data= $query->row();
+                $piece_data= $query->result();
+
+// print_r( $piece_data);
+// die();
+$data_json_list=array();
+foreach ($piece_data as $piece_list) {
+  # code...
+$data_json_list[]=$piece_list->data_json;
+// print_r($data_json);
+
+}
+
+              //  die();
+              
+if(1==1)
+{
+
+             //   $array_data = json_decode($row->data_json, true);
+// $cus_ids=array();
+//                 foreach($array_data as $cus_list)
+//                 {
+//                   $cus_ids[]=$cus_list['customer_id'];
+//                 }
+
+               //print_r($data_json_list);
+
+             
+           
+              echo "<tr>";
+              echo "<td>$i</td>";
+              echo "<td> $master_name</td>";
+              echo "<td>";
+              foreach ($data_json_list as $key => $value) {
+                # code...
+                // echo $value;
+                $data_json_list = json_decode($value, true);
+
+                foreach ($data_json_list as $data) {
+                  // print_r($data );
                 
-                echo "<tr>";
-                echo "<td>$i</td>";
-                echo "<td>$row->name</td>";
-                echo "<td>Design Number - <b>$design_data->design_num</b><br>";
-                
-                foreach ($materials_ids as $material_id) {
-                  $this->db->select('*');
-                  $this->db->from('material');
-                  $this->db->where('id', $material_id);
-  
+                  $design_number = $data['design_number'][0];
+                  $materials_ids = $data['materials_ids'];
+                  $total_piece = $data['total_piece'][0];
+               
+                  $this->db->select('design_num');
+                  $this->db->from('designs');
+                  $this->db->where('id',$design_number);
                   $query = $this->db->get();
-                  $results = $query->result();
-                  foreach ($results as $material) {
-                    echo $material->material_name ."<br>";
-                  }
-                }
+                  $design_number_result= $query->result();
+                  
+                  /* foreach ($materials_ids as $material_id) {
+                    $this->db->select('*');
+                    $this->db->from('material');
+                    $this->db->where('id', $material_id);
                 
-                echo "</td>"; ?>
-                <td>
-                <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Pices/downloadPdf/').rawurlencode($row->name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
-                 <a class="btn btn-primary btn-xs hide" title="Click to edit" href="<?php echo base_url('/index.php/Pices/editPices/').$row->sr_no;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
-                  <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->sr_no;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
-                </td>
-               <?php echo "</tr>";
-                $i++;
+                    $query = $this->db->get();
+                    $results = $query->result();
+                    foreach ($results as $material) {
+                      echo $material->material_name ."<br>";
+                    }
+                  } */
+                  $design_name=$design_number_result[0]->design_num;
+                
+                 echo "$design_name  -  $total_piece";
+                 echo "<br>";
+                }
+
               }
+            
+
+              echo "</td>"; ?>
+              <td>
+              <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Pices/downloadPdf/').rawurlencode($master_name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
+               <a class="btn btn-primary btn-xs hide" title="Click to edit" href="<?php echo base_url('/index.php/Pices/editPices/').$row->sr_no;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->sr_no;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
+              </td>
+             <?php echo "</tr>";
+           
+              }
+            }
+/* 
+              print_r($array_data );
+              die() */
               ?>
             
             <?php $i++;  } ?>

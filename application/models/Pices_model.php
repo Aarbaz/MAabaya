@@ -23,11 +23,14 @@ class Pices_model extends CI_Model {
         // Decode the JSON string into an associative array
         $jsonArray = json_decode($data, true);
 
-        $this->db->select('*');
-        $this->db->order_by('sr_no','desc');
+        $this->db->select('master_id,customers.name,invoice_no,sr_no');
+       // $this->db->order_by('sr_no','desc');
+       $this->db->group_by('master_id'); 
+
+       $this->db->join('customers', 'customers.id = product_pices.master_id');
         $this->db->from('product_pices');
-        $this->db->join('material', 'material.id = product_pices.master_id');
-        $this->db->join('customers', 'customers.id = product_pices.master_id');
+        /* $this->db->join('material', 'material.id = product_pices.master_id');
+        $this->db->join('customers', 'customers.id = product_pices.master_id'); */
         return $this->db->get();
     }
     public function get_pices_byID($pices_id)
