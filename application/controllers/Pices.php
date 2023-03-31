@@ -272,12 +272,10 @@ class Pices extends CI_Controller
 					'product_name' => $material_names,
 					'hsn' => $hsn,
 					'qnty' => $qnty,
-					'invoice_no' => $invoice_no,
+					'invoice_no' => $this->input->post('invoice_no'),
 					'customer_address' => $maker_name->address,
 					'json_data' => $json_data,
 				);
-
-
 				$this->load->library('tcpdf/tcpdf.php');
 
 				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);

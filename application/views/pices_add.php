@@ -754,7 +754,7 @@ $('.submit-btn').click(function() {
          <div class="form-group select-row" >
                                         <label class="control-label col-sm-2 text-left" style="    text-align: left;">Select Design</label>
                                             <div class="col-sm-4   ">
-                                                <select name="hsn_<?php echo $t?>[]" id="hsn"  class="form-control my-select">
+                                                <select name="hsn_`+count+`[]" id="hsn"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
                                                     <?php foreach ($designs->result() as $row){
                                                         $selected = set_select("hsn[]", $row->design_num);
@@ -763,19 +763,19 @@ $('.submit-btn').click(function() {
 
                                                     } ?>
                                                 </select>
-                                                <input type="hidden" name="selected_ids_<?php echo $t?>[]" id="selected_ids" value="">
+                                                <input type="hidden" name="selected_ids_`+count+`[]" id="selected_ids" value="">
                                             </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-sm-2 text-left" style="    text-align: left;">Total Pices</label>
                                         <div class="col-sm-4" id="addds_holder">
-                                            <input type="text" name="total_piece_<?php echo $t ?>[]" id="total_piece" class="form-control" value="<?php echo set_value('total_piece');?>">
+                                            <input type="text" name="total_piece_`+count+`[]" id="total_piece" class="form-control" value="<?php echo set_value('total_piece');?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-sm-2 text-left" style="    text-align: left;">Karigari</label>
                                         <div class="col-sm-4" id="">
-                                            <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="form-control" value="<?php echo set_value('karigari');?>">
+                                            <input type="text" name='karigari_`+count+`[]' id="karigari" class="form-control" value="<?php echo set_value('karigari');?>">
 
                                         </div>
                                     </div>
@@ -790,7 +790,7 @@ $('.submit-btn').click(function() {
                                     <tr class="row_one">
                         
                                             <td class="material_ids">
-                                            <select name="items_<?php echo $t ?>[]" id="items" class="form-control">
+                                            <select name="items_`+count+`[]" id="items" class="form-control">
                                                     <option value="">--select Product--</option>
                                                     <?php
                                                     foreach ($materialList->result() as $row){
@@ -801,7 +801,7 @@ $('.submit-btn').click(function() {
                                                        
                                                     echo '<option label="" data-material-id="'.$row->id.'" value="'.$row->id.'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
                                                     } }?>
-                                                    <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
+                                                    <input type="hidden" name="material_ids_`+count+`[]" id="material_ids" value="">
                                                     <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
                                                 </select>
                                         </td>
@@ -809,7 +809,7 @@ $('.submit-btn').click(function() {
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                                 
                                             <td class="total_used_materials">
-                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="text" name="total_material_`+count+`[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
