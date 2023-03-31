@@ -296,7 +296,7 @@ class Pices extends CI_Controller
 				}
 				$save_path = $dir.$filename;
 				ob_end_clean();
-				$pdf->Output($save_path, 'I');
+				//$pdf->Output($save_path, 'I');
 				$pdf->Output($save_path, 'F');
 				//file_put_contents($save_path, $pdf);
 				$this->session->set_flashdata('success', 'Data Added successfully....');

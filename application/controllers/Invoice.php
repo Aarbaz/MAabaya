@@ -171,7 +171,7 @@ class Invoice extends CI_Controller {
 			);
 
 			$data_pdf = array(
-				'customer' => $this->input->post('cust_name'),
+				'customer' => $this->input->post('customerName'),
 				'customer_address' => $this->input->post('cust_adds_txt'),
 				'gst' => $this->input->post('cust_gst'),
 				'invoice_no' => $invoice_no,
@@ -216,7 +216,11 @@ class Invoice extends CI_Controller {
 						'stock_qty' => $quantity_values[$i]
 					);
 				}
-
+				$this->db->select('*');
+				$this->db->from('customers');
+				$this->db->where('id',$bakers_id);
+				$query = $this->db->get();
+				$customers_name = $query->row();
 				// Update Stock
 				// $stock = $this->Stock_model->add_record($data2);
 				$this->db->trans_start(); // Start a transaction to ensure data consistency
@@ -262,7 +266,7 @@ class Invoice extends CI_Controller {
 				$filename = $this->input->post('invoice_no').'.pdf';
 				// print_r($data_pdf['customer']);
 				// die();
-				$dir = APPPATH.'/invoice/'.$data_pdf['customer'].'/';
+				$dir = APPPATH.'/invoice/'.$customers_name->name.'/';
 
 				if(!is_dir($dir))
 				{
