@@ -54,7 +54,7 @@
   <tr style="background-color: #e1e1e9">
     <th style="width: 10%">Sr. No</th>
     <th style="width: 40%">PARTICULARS</th>
-    <th style="width: 10%">Design No</th>
+    <!-- <th style="width: 10%">Design No</th> -->
     <th style="width: 10%">QNTY</th>
     <th style="width: 15%">RATE</th>
     <th style="width: 15%">AMOUNT</th>
@@ -66,13 +66,13 @@
     $rate = explode(',', $rate);
     $amount = explode(',', $amount);                          
     $items = array('mat'=> $mat,'qnty'=>$qnty,'hsn'=>$hsn,'rate' => $rate, 'amount' => $amount); 
-    $len = count($items['mat']);                        
+    $len = count($items['hsn']);                        
     
     $items2 = array();
     for ($i=0; $i < $len; $i++)
     { 
       $newArray = array();
-      $newArray[] = $items['mat'][$i];
+      //$newArray[] = $items['mat'][$i];
       $newArray[] = $items['hsn'][$i];
       $newArray[] = $items['qnty'][$i];
       $newArray[] = $items['rate'][$i];
@@ -93,7 +93,7 @@
           <td><?php echo isset($items2[$i][1])?$items2[$i][1]:''; ?></td>
           <td><?php echo isset($items2[$i][2]) ? $items2[$i][2] : '' ; ?></td>
           <td><?php echo isset($items2[$i][3]) ? 'Rs. '.$items2[$i][3] : '' ; ?></td>
-          <td><?php echo isset($items2[$i][4]) ? $items2[$i][4] : '' ; ?></td>
+          <!-- <td><?php echo isset($items2[$i][4]) ? $items2[$i][4] : '' ; ?></td> -->
           <!-- <td><?php echo $items2[$i][4] ? 'Rs. '.$items2[$i][4] : '' ; ?></td> -->
         </tr>    
       <?php
