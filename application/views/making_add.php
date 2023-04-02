@@ -168,7 +168,9 @@
                   <div class="form-group">
                      <label class="control-label col-sm-3">Master Name</label>
                      <div class="col-sm-9" id="design_holder">
-                        <input type="text" name="master_name" id="master_name" class="form-control" value="">
+                        <input type="text" name="master_name_inside" id="master_name_inside" class="form-control" value="">
+                        <div class="col-sm-12"> <?php echo form_error('master_name_inside', '<p class="text-danger">', '</p>'); ?></div>
+
                         <input type="hidden" name="id" value="">
                      </div>
                   </div>

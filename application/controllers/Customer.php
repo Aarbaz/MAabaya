@@ -14,6 +14,7 @@ class Customer extends CI_Controller {
         $this->load->library('form_validation');
         $this->load->model('Customer_model');
         $this->load->model('Purchaser_model');
+        $this->load->model('Making_model');
     }
 
     public function index2()
@@ -322,23 +323,25 @@ class Customer extends CI_Controller {
 
 	public function add_mowner(){
 
-			$this->form_validation->set_rules('master_name', 'Master name', 'required');
+			$this->form_validation->set_rules('master_name_inside', 'Master name', 'required');
 			if ($this->form_validation->run() == false) {
-					$data["title"] = ucwords("Add new Purcahser Page");
+					$data["title"] = ucwords("Add new Making Page");
 					$data["username"] = $this->session->userdata("logged_in");
-					$data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
+					// $data["makList"] = $this->Making_model->get_all_making();
+					$data["makList"] = $this->Making_model->get_last_maker_insider();
+
 					$data["matList"] = $this->Purchaser_model->get_all_material();
-					$data["custList"] = $this->Customer_model->get_powner();
+					$data["custList"] = $this->Customer_model->get_mowner();
+					$data["PurchaserList"] = $this->Customer_model->get_powner();
 
 					$this->load->view("layout/header", $data);
 					$this->load->view("layout/menubar");
-					$this->load->view("purchaser_add", $data);
+					$this->load->view("making_add", $data);
 					$this->load->view("layout/footer");
-
 			}
 	else
 	{
-					$master_name = $this->input->post('master_name');
+					$master_name = $this->input->post('master_name_inside');
 					$id = $this->input->post('id');
 					$data = array(
 							'name' => $master_name,
