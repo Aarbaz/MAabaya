@@ -22,7 +22,7 @@
     				<thead>
   						<tr>
               <th>Sr No</th>
-              <th>Purchaser Name</th>
+              <!-- <th>Purchaser Name</th> -->
 
   							<th>Material Name</th>
                 <th>Quantity (In meters)</th>
@@ -43,7 +43,7 @@
                 <td><?php echo $i; ?></td>
   							<!-- <td><?php echo $row->product_name; ?></td> -->
   							<!-- <td><?php echo $sb_subject->name ?></td> -->
-  							<td><?php
+  							<!-- <td><?php
                 // print_r($customer_id);
                 $customer_id= $row->purchaser_owner_id;
                 $this->db->select('*');
@@ -55,7 +55,7 @@
 
                 echo $cust_name;
 
-                ?></td>
+                ?></td> -->
                 <td><?php
                  $material_ids =  $row->materials_id;
                 /* // $material_ids = implode(",",$row->material_id);
@@ -96,7 +96,7 @@
     				<thead>
   						<tr>
               <th>Sr No</th>
-  							<th>Master Name</th>
+  							<!-- <th>Master Name</th> -->
   							<th>Material Name</th>
                 <th>Quantity (In meters)</th>
                 <!-- <th>Expiry Date</th> -->
@@ -114,7 +114,7 @@
               foreach ($maker_stocks->result() as $row ){?>
 						  <tr>
                 <td><?php echo $i; ?></td>
-  							<td><?php
+  							<!-- <td><?php
 
                 $customer_id= $row->making_owner_id;
                 $this->db->select('*');
@@ -126,7 +126,7 @@
                 // print_r($row);
                echo $cust_name;
 
-                ?></td>
+                ?></td> -->
 
                 <td>
                   <?php

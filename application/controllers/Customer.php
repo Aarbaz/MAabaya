@@ -13,6 +13,7 @@ class Customer extends CI_Controller {
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('Customer_model');
+        $this->load->model('Purchaser_model');
     }
 
     public function index2()
@@ -29,8 +30,8 @@ class Customer extends CI_Controller {
 
 	        $this->load->view('layout/header', $data);
 	        $this->load->view('layout/menubar');
-			$this->load->view('customerList', $data);
-			$this->load->view('layout/footer');
+					$this->load->view('customerList', $data);
+					$this->load->view('layout/footer');
 		}
 		else
 		{
@@ -265,15 +266,30 @@ class Customer extends CI_Controller {
 	}
 
 	public function add_powner(){
+		// $this->load->library('form_validation');
+		// $this->form_validation->set_rules('owner_name_inside', 'Owner name', 'required');
+		$this->form_validation->set_rules(
+				"owner_name_inside",
+				"Owner Name",
+				"trim|required"
+		);
+		if ($this->form_validation->run() == false) {
+				$data["title"] = ucwords("Add new Purcahser Page");
+				$data["username"] = $this->session->userdata("logged_in");
+				$data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
+				$data["matList"] = $this->Purchaser_model->get_all_material();
+				$data["custList"] = $this->Customer_model->get_powner();
 
-			$this->form_validation->set_rules('owner_name', 'Owner name', 'required');
-			if ($this->form_validation->run() == false)
-	{
-		$this->index();
-	}
-	else
-	{
-					$owner_name = $this->input->post('owner_name');
+				$this->load->view("layout/header", $data);
+				$this->load->view("layout/menubar");
+				$this->load->view("purchaser_add", $data);
+				$this->load->view("layout/footer");
+
+		}
+        else
+        {
+
+					$owner_name = $this->input->post('owner_name_inside');
 					$id = $this->input->post('id');
 					$data = array(
 							'name' => $owner_name,
@@ -307,10 +323,19 @@ class Customer extends CI_Controller {
 	public function add_mowner(){
 
 			$this->form_validation->set_rules('master_name', 'Master name', 'required');
-			if ($this->form_validation->run() == false)
-	{
-		$this->index();
-	}
+			if ($this->form_validation->run() == false) {
+					$data["title"] = ucwords("Add new Purcahser Page");
+					$data["username"] = $this->session->userdata("logged_in");
+					$data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
+					$data["matList"] = $this->Purchaser_model->get_all_material();
+					$data["custList"] = $this->Customer_model->get_powner();
+
+					$this->load->view("layout/header", $data);
+					$this->load->view("layout/menubar");
+					$this->load->view("purchaser_add", $data);
+					$this->load->view("layout/footer");
+
+			}
 	else
 	{
 					$master_name = $this->input->post('master_name');

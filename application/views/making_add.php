@@ -89,7 +89,7 @@
                            } ?>
                      </select>
                   </div>
-                  <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
+                  <div class="col-sm-12"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
                </div>
                <div class="form-group" id="table_without_tax">
                   <table class="table table-bordered">
@@ -120,6 +120,19 @@
                               <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
                               &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
                            </td>
+                        </tr>
+                        <tr class="row_two">
+                             <td>
+                               <div class="col-sm-12"> <?php echo form_error('material_name[]', '<p class="text-danger">', '</p>'); ?></div>
+
+                             </td>
+                             <td>
+
+                             </td>
+                             <td>
+                               <div class="col-sm-12"> <?php echo form_error('stock_q[]', '<p class="text-danger">', '</p>'); ?></div>
+
+                             </td>
                         </tr>
                      </tbody>
                   </table>

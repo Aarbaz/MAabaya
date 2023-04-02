@@ -18,22 +18,24 @@
   <table class="hdr" style="width: 100%">
     <tr><td colspan="4">&nbsp;</td></tr>
     <tr>
-      <td width="20%"> MASTER NAME </td>
+      <td width="20%"> Master Name </td>
       <td width="35%">
-        <?php echo $master_name; ?>
+        <b><?php echo $master_name; ?></b>
       </td>
-      <td width="20%"> MAKER NO.</td>
+      <td width="20%"> Maker No.</td>
       <td width="25%">
-        <?php echo $maker_no; ?>
+        <b><?php echo $maker_no; ?></b>
       </td>
     </tr>
     <tr>
-      <td> ADDS. </td>
-      <td id="adds">
-        <!-- <?php echo $customer_address; ?>  -->
+      <td>
+        <!-- ADDS.  -->
       </td>
-      <td> MAKER DATE </td>
-      <td> <?php echo date('d F, Y'); ?> </td>
+      <td id="adds">
+        <!-- <?php echo $customer_address; ?> -->
+      </td>
+      <td> Maker Date </td>
+      <td> <b><?php echo date('d F, Y'); ?> </b></td>
     </tr>
    <!--  <tr>
       <td> BUYER'S GST </td>
@@ -58,10 +60,10 @@
 
 <table border="1" cellspacing="0" cellpadding="3" width="100%">
   <tr style="background-color: #e1e1e9">
-    <th style="width: 10%">Sr. No</th>
-    <th style="width: 40%">PARTICULARS</th>
+    <th style="width: 10%"><b>Sr. No</b></th>
+    <th style="width: 40%"><b>Particulars</b></th>
     <!-- <th style="width: 10%">Design No</th> -->
-    <th style="width: 50%">QNTY</th>
+    <th style="width: 50%"><b>Qty</b></th>
     <!-- <th style="width: 15%">RATE</th>
     <th style="width: 15%">AMOUNT</th> -->
   </tr>
@@ -69,7 +71,7 @@
     // $mat = explode(',', $product_name);
     $mat = explode(',', $material_names);
     // $hsn = explode(',', $hsn);
-    $hsn = '12';
+    // $hsn = '12';
     $qnty = explode(',', $qnty);
     // $rate = explode(',', $rate);
     // $amount = explode(',', $amount);
@@ -88,6 +90,11 @@
       // $newArray[] = $items['amount'][$i];
       $items2[] = $newArray;
     }
+
+
+
+    $Final_total_qty = $items['qnty'];
+    $Final_total_qty = array_sum($Final_total_qty);
 
     $j = 1;
     $all_items = count($items2);
@@ -156,12 +163,13 @@
     <td> <?php echo 'Rs. '. $igst_5_cent; ?> </td>
   </tr>
   <?php } ?> -->
-  <!-- <tr>
-    <th class="right">TOTAL AMOUNT</th>
-    <td>&nbsp;</td>
-    <td> <?php echo 'Rs. '. $total; ?></td>
-  </tr>
   <tr>
+    <th ><b>Total Quantity</b></th>
+    <!-- <td>&nbsp;</td> -->
+    <td > <?php echo $Final_total_qty .' Meters.' ?></td>
+  </tr>
+
+  <!--<tr>
     <th  class="right">ROUND OFF TOTAL</th>
     <td>&nbsp;</td>
     <td> <?php echo 'Rs. '. $round_off_total; ?></td>

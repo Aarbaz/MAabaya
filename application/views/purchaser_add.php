@@ -85,7 +85,7 @@
                            } ?>
                      </select>
                   </div>
-                  <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
+                  <div class="col-sm-12"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
                </div>
                <div class="form-group" id="table_without_tax">
                   <table class="table table-bordered">
@@ -93,7 +93,7 @@
                         <tr>
                            <th>Material Name</th>
                            <th>Meters</th>
-                           <th>Per Peter Price</th>
+                           <th>Per Meter Price</th>
                            <th>Total Price</th>
                         </tr>
                      </thead>
@@ -114,13 +114,28 @@
                               <input type="text" class="form-control rate" id="price" name="p_price[]" placeholder="Price"  value="<?php echo set_value('price'); ?>">
                            </td>
                            <td>
-                              <input type="text" class="form-control amount" id="price_total" name="price_total[]" placeholder="Total Amount" value="<?php echo set_value('price_total'); ?>" readonly="readonly">
+                              <input type="text" class="form-control amount" id="price_total" name="price_total[]" placeholder="Total Amount" value="" readonly="readonly">
                            </td>
                            <td>
                               <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
                               &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
                            </td>
                         </tr>
+                          <tr class="row_two">
+                               <td>
+                                 <div class="col-sm-12"> <?php echo form_error('material_name[]', '<p class="text-danger">', '</p>'); ?></div>
+
+                               </td>
+                               <td>
+                                 <div class="col-sm-12"> <?php echo form_error('stock_q[]', '<p class="text-danger">', '</p>'); ?></div>
+
+                               </td>
+                               <td>
+                                 <div class="col-sm-12"> <?php echo form_error('p_price[]', '<p class="text-danger">', '</p>'); ?></div>
+
+                               </td>
+                          </tr>
+
                      </tbody>
                   </table>
                </div>
@@ -156,6 +171,8 @@
                      <label class="control-label col-sm-3">Material Name</label>
                      <div class="col-sm-9" id="design_holder">
                         <input type="text" name="material_name" id="material_name" class="form-control" value="">
+                        <div class="col-sm-12"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
+
                         <input type="hidden" name="id" value="">
                      </div>
                   </div>
@@ -186,7 +203,9 @@
                   <div class="form-group">
                      <label class="control-label col-sm-3">Owner Name</label>
                      <div class="col-sm-9" id="design_holder">
-                        <input type="text" name="owner_name" id="owner_name" class="form-control" value="">
+                        <input type="text" name="owner_name_inside" id="owner_name_inside" class="form-control" value="">
+                        <div class="col-sm-12"> <?php echo form_error('owner_name_inside', '<p class="text-danger">', '</p>'); ?></div>
+
                         <input type="hidden" name="id" value="">
                      </div>
                   </div>

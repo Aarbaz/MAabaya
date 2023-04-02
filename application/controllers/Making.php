@@ -62,6 +62,16 @@ class Making extends CI_Controller
             "Master Name",
             "trim|required"
         );
+        $this->form_validation->set_rules(
+            "material_name[]",
+            "Material Name",
+            "trim|required"
+        );
+        $this->form_validation->set_rules(
+            "stock_q[]",
+            "Quantity",
+            "trim|required"
+        );
         // $this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
         // $this->form_validation->set_rules('stock_q', 'Product Amount', 'trim|required|numeric');
         // $this->form_validation->set_rules('p_design_number', 'Design Number', 'trim|required');
@@ -70,23 +80,23 @@ class Making extends CI_Controller
         // $this->form_validation->set_rules('meter', 'Meter', 'trim');
         // $this->form_validation->set_rules('product_exp', 'Expiry Date', 'trim|required');
         // $this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
-        $validation = [
-            [
-                "field" => "material_name[]",
-                "label" => "Material",
-                "rules" => "required",
-                "errors" => ["required" => " Please select %s. "],
-            ],
-        ];
-
-        $validation2 = [
-            [
-                "field" => "stock_q[]",
-                "label" => "Stock",
-                "rules" => "required",
-                "errors" => ["required" => " Please select %s. "],
-            ],
-        ];
+        // $validation = [
+        //     [
+        //         "field" => "material_name[]",
+        //         "label" => "Material",
+        //         "rules" => "required",
+        //         "errors" => ["required" => " Please select %s. "],
+        //     ],
+        // ];
+        //
+        // $validation2 = [
+        //     [
+        //         "field" => "stock_q[]",
+        //         "label" => "Stock",
+        //         "rules" => "required",
+        //         "errors" => ["required" => " Please select %s. "],
+        //     ],
+        // ];
 
         if ($this->input->post("add_making") != null) {
             if ($this->form_validation->run() == false) {
@@ -244,7 +254,7 @@ class Making extends CI_Controller
                   $pdf->setPrintFooter(false);
                   $pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
                   //$pdf->SetFont('helvetica', '', 10);
-                  $pdf->SetFont("times", "", 10);
+                  $pdf->SetFont("", "", 10);
                   $pdf_data = $this->load->view("making_pdf", $data_pdf, true);
                   $pdf->addPage();
                   $pdf->writeHTML($pdf_data, true, false, true, false, "");

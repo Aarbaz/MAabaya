@@ -21,6 +21,7 @@
                         <th>Sr No</th>
                         <th>Master Name</th>
                         <th>Material/Quantity</th>
+                        <th>Date</th>
                         <th>Action</th>
                      </tr>
                   </thead>
@@ -50,6 +51,9 @@
                                ?>
                            <br>
                            <?php } ?>
+                        </td>
+                        <td>
+                            <?php echo date('d M Y, h:i:s a', strtotime($row->create_date) ); ?>
                         </td>
                         <td>
                           <!-- <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->bakery_name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp; -->

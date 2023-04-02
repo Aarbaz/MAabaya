@@ -21,7 +21,10 @@
                         <th>Sr No</th>
                         <th>Owner Name</th>
                         <th>Material/Quantity/Amount</th>
+                        <th>Date</th>
                         <th>Action</th>
+
+
                      </tr>
                   </thead>
                   <tbody>
@@ -51,6 +54,10 @@
                            <br>
                            <?php } ?>
                         </td>
+                          <td>
+                            <?php echo date('d M Y, h:i:s a', strtotime($row->create_date) ); ?>
+                          </td>
+
                         <td>
                           <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Purchaser/download_pdf/').rawurlencode($row->purchaser_owner_id).'/'.$row->purchaser_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
 

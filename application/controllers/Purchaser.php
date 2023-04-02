@@ -67,6 +67,21 @@ class Purchaser extends CI_Controller
             "Owner Name",
             "trim|required"
         );
+        $this->form_validation->set_rules(
+            "material_name[]",
+            "Material Name",
+            "trim|required"
+        );
+        $this->form_validation->set_rules(
+            "stock_q[]",
+            "Meters",
+            "trim|required"
+        );
+        $this->form_validation->set_rules(
+            "p_price[]",
+            "Per Meter Price",
+            "trim|required"
+        );
         // $this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
         // $this->form_validation->set_rules('stock_q', 'Product Amount', 'trim|required|numeric');
         // $this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
@@ -221,7 +236,7 @@ class Purchaser extends CI_Controller
 									$pdf->setPrintFooter(false);
 									$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
 									//$pdf->SetFont('helvetica', '', 10);
-									$pdf->SetFont("times", "", 10);
+									$pdf->SetFont("", "", 10);
 									$pdf_data = $this->load->view("purchaser_pdf", $data_pdf, true);
 									$pdf->addPage();
 									$pdf->writeHTML($pdf_data, true, false, true, false, "");
@@ -456,8 +471,18 @@ class Purchaser extends CI_Controller
             "required"
         );
         if ($this->form_validation->run() == false) {
-            $this->index();
-        } else {
+    				$data["title"] = ucwords("Add new Purcahser Page");
+    				$data["username"] = $this->session->userdata("logged_in");
+    				$data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
+    				$data["matList"] = $this->Purchaser_model->get_all_material();
+    				$data["custList"] = $this->Customer_model->get_powner();
+
+    				$this->load->view("layout/header", $data);
+    				$this->load->view("layout/menubar");
+    				$this->load->view("purchaser_add", $data);
+    				$this->load->view("layout/footer");
+
+    		} else {
             $material_name = $this->input->post("material_name");
             $id = $this->input->post("id");
             $data = [
