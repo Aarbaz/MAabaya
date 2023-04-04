@@ -184,83 +184,141 @@
 <div class="row" style="display:flex;">
 <div class="col-sm-6">
 <b>Amount In Words:</b>&nbsp;&nbsp;&nbsp;&nbsp;  <?php
-function convert_number_to_words($number) {
-    $words = array(
-        0 => 'Zero',
-        1 => 'One',
-        2 => 'Two',
-        3 => 'Three',
-        4 => 'Four',
-        5 => 'Five',
-        6 => 'Six',
-        7 => 'Seven',
-        8 => 'Eight',
-        9 => 'Nine',
-        10 => 'Ten',
-        11 => 'Eleven',
-        12 => 'Twelve',
-        13 => 'Thirteen',
-        14 => 'Fourteen',
-        15 => 'Fifteen',
-        16 => 'Sixteen',
-        17 => 'Seventeen',
-        18 => 'Eighteen',
-        19 => 'Nineteen',
-        20 => 'Twenty',
-        30 => 'Thirty',
-        40 => 'Forty',
-        50 => 'Fifty',
-        60 => 'Sixty',
-        70 => 'Seventy',
-        80 => 'Eighty',
-        90 => 'Ninety'
-    );
+// function convert_number_to_words($number) {
+//     $words = array(
+//         0 => 'Zero',
+//         1 => 'One',
+//         2 => 'Two',
+//         3 => 'Three',
+//         4 => 'Four',
+//         5 => 'Five',
+//         6 => 'Six',
+//         7 => 'Seven',
+//         8 => 'Eight',
+//         9 => 'Nine',
+//         10 => 'Ten',
+//         11 => 'Eleven',
+//         12 => 'Twelve',
+//         13 => 'Thirteen',
+//         14 => 'Fourteen',
+//         15 => 'Fifteen',
+//         16 => 'Sixteen',
+//         17 => 'Seventeen',
+//         18 => 'Eighteen',
+//         19 => 'Nineteen',
+//         20 => 'Twenty',
+//         30 => 'Thirty',
+//         40 => 'Forty',
+//         50 => 'Fifty',
+//         60 => 'Sixty',
+//         70 => 'Seventy',
+//         80 => 'Eighty',
+//         90 => 'Ninety'
+//     );
+//
+//     if (!is_numeric($number)) {
+//         return false;
+//     }
+//
+//     if ($number < 0) {
+//         return 'Minus ' . convert_number_to_words(abs($number));
+//     }
+//
+//     $digits = sprintf("%04d", $number); // add leading zeros
+//
+//     $thousands = $words[$digits[0]];
+//     $hundreds = $words[$digits[1]];
+//     $tens = $words[$digits[2]];
+//     $ones = $words[$digits[3]];
+//
+//     $result = '';
+//
+//     if ($digits[0] > 0) {
+//         $result .= "$thousands Thousand ";
+//     }
+//
+//     if ($digits[1] > 0) {
+//         $result .= "$hundreds Hundred ";
+//     }
+//
+//     if ($digits[2] > 0) {
+//         if ($digits[2] == 1) {
+//             $result .= $words[$digits[2] . $digits[3]];
+//             $ones = '';
+//         } else {
+//             $result .= $tens . ' ';
+//         }
+//     }
+//
+//     if ($digits[3] > 0 && $digits[2] != 1) {
+//         $result .= $ones . ' ';
+//     }
+//
+//     $result .=  "Zero Rupees Only";
+//
+//     return ucfirst(trim($result));
+// }
+//
+// $number = $Final_total_amt;
+// $words = convert_number_to_words($number);
+// echo $words;
 
-    if (!is_numeric($number)) {
-        return false;
+function numberToWords($number) {
+  $words = array(
+    '0' => 'ZERO', '1' => 'ONE', '2' => 'TWO', '3' => 'THREE', '4' => 'FOUR',
+    '5' => 'FIVE', '6' => 'SIX', '7' => 'SEVEN', '8' => 'EIGHT', '9' => 'NINE',
+    '10' => 'TEN', '11' => 'ELEVEN', '12' => 'TWELVE', '13' => 'THIRTEEN',
+    '14' => 'FOURTEEN', '15' => 'FIFTEEN', '16' => 'SIXTEEN', '17' => 'SEVENTEEN',
+    '18' => 'EIGHTEEN', '19' => 'NINETEEN', '20' => 'TWENTY', '30' => 'THIRTY',
+    '40' => 'FORTY', '50' => 'FIFTY', '60' => 'SIXTY', '70' => 'SEVENTY',
+    '80' => 'EIGHTY', '90' => 'NINETY'
+  );
+
+  $units = array(
+    '', 'THOUSAND ', 'LAKH ', 'CRORE '
+  );
+
+  // Convert to integer and remove commas
+  $number = (int) str_replace(',', '', $number);
+
+  // Return zero if the number is zero
+  if ($number == 0) {
+    return $words[0] . ' RUPEES ONLY';
+  }
+
+  // Break the number into chunks of two digits
+  $chunks = array_reverse(str_split(str_pad($number, ceil(strlen($number) / 2) * 2, '0', STR_PAD_LEFT), 2));
+
+  // Convert each chunk to words
+  $result = '';
+  foreach ($chunks as $i => $chunk) {
+    if ($chunk == '00') continue;
+
+    $chunkResult = '';
+    $digit = $chunk[0];
+    $tens = $chunk[1];
+
+    if ($tens == '1') {
+      $chunkResult .= $words[$tens . $digit] . ' ';
+    } else {
+      if ($tens != '0') {
+        $chunkResult .= $words[$tens . '0'] . ' ';
+      }
+      if ($digit != '0') {
+        $chunkResult .= $words[$digit] . ' ';
+      }
     }
 
-    if ($number < 0) {
-        return 'Minus ' . convert_number_to_words(abs($number));
-    }
+    $chunkResult .= $units[$i];
 
-    $digits = sprintf("%04d", $number); // add leading zeros
+    $result = $chunkResult . $result;
+  }
 
-    $thousands = $words[$digits[0]];
-    $hundreds = $words[$digits[1]];
-    $tens = $words[$digits[2]];
-    $ones = $words[$digits[3]];
-
-    $result = '';
-
-    if ($digits[0] > 0) {
-        $result .= "$thousands Thousand ";
-    }
-
-    if ($digits[1] > 0) {
-        $result .= "$hundreds Hundred ";
-    }
-
-    if ($digits[2] > 0) {
-        if ($digits[2] == 1) {
-            $result .= $words[$digits[2] . $digits[3]];
-            $ones = '';
-        } else {
-            $result .= $tens . ' ';
-        }
-    }
-
-    if ($digits[3] > 0 && $digits[2] != 1) {
-        $result .= $ones . ' ';
-    }
-
-    $result .=  "Zero Rupees Only";
-
-    return ucfirst(trim($result));
+  // Add "RUPEES ONLY" to the result and return it
+  return ucwords(trim($result)) . 'RUPEES ONLY';
 }
-
-$number = $Final_total_amt;
-$words = convert_number_to_words($number);
+$amount = $Final_total_amt;
+$words = numberToWords($amount);
 echo $words;
 ?>
 </div>

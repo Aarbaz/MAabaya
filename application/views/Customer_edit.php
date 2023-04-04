@@ -37,13 +37,20 @@
               </div>
               <div class="col-sm-6"> <?php echo form_error('gst', '<p class="text-danger">', '</p>'); ?></div>
             </div>
+            <?php
 
-            <div class="form-group hide">
+            if ($cust->role == '2') {
+            ?>
+            <div class="form-group ">
               <div class="col-sm-5">
                 <textarea class="form-control" name="bakery_adds" placeholder="Customer Adds"><?php echo set_value('address',$cust->address); ?></textarea>
               </div>
               <div class="col-sm-6"> <?php echo form_error('address', '<p class="text-danger">', '</p>'); ?></div>
             </div>
+            <?php
+            }
+             ?>
+
 
             <div class="form-group hide">
               <div class="col-sm-5">

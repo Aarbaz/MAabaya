@@ -36,7 +36,22 @@
               <div class="col-sm-6"> <?php echo form_error('gst', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
+
             <div class="form-group">
+              <div class="col-sm-5">
+                <select name="customer_type" id="customer_type" class="form-control" onchange="myFunction()">
+                   <option value="" selected="selected">Select Type</option>
+                   <option value="2" >Customer</option>
+                   <option value="0" >Purchaser</option>
+                   <option value="1" >Maker</option>
+
+
+                </select>
+              </div>
+              <div class="col-sm-6"> <?php echo form_error('customer_type', '<p class="text-danger">', '</p>'); ?></div>
+            </div>
+
+            <div class="form-group" id="address_div" style="display:none">
               <div class="col-sm-5">
                 <textarea class="form-control" id="address" name="address" placeholder="Shop Adds"><?php echo set_value('address'); ?></textarea>
               </div>
@@ -101,3 +116,17 @@
 <!--END footer section-->
 
 </div><!--close main div-->
+<script>
+
+function myFunction() {
+  var x = document.getElementById("customer_type").value;
+  var selected = x;
+      if(selected == '2'){
+        $( "#address_div" ).show();
+      }
+      else {
+          $( "#address_div" ).hide();
+      }
+}
+// });
+</script>

@@ -33,9 +33,8 @@
                <?php
                   echo form_open('Purchaser/add_new', 'class="form-horizontal" id="add_purchaser_form"');
                   ?>
-               <div class="row">
-                  <!-- <div class="col-md-1">
-                     </div> -->
+               <!-- <div class="row">
+
                   <div class="col-md-1">
                      <span class="btn btn-primary btn-sm" onclick="add_new_owner()">Add New Owner</span>
                   </div>
@@ -43,7 +42,7 @@
                      <span class="btn btn-primary btn-sm" onclick="add_new_material()">Add New Material</span>
                   </div>
                </div>
-               <br>
+               <br> -->
 
 
                <?php

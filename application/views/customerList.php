@@ -9,9 +9,16 @@
 				</div>
 
         <div class="panel-body">
-          <!-- <p>
+
+          <!-- <div class="row">
+            <div class="col-md-1">
+               <span class="btn btn-primary btn-sm" onclick="add_new_customer()">Add New Customer</span>
+            </div>
+          </div>
+          <br /> -->
+          <p>
             <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Customer/add_new');?>">Add New Customer</a>
-          </p><br /> -->
+          </p>
           <?php
             if( $this->session->flashdata('success') )
             { echo '<div class="alert alert-success show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Success!</strong> '.$this->session->flashdata('success').'</p></div>'; }
@@ -116,7 +123,54 @@
 
 </div><!--close main div-->
 
+<div class="modal fade" id="add_customer" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <form id="add_customer_form" method="post" action="<?php echo site_url('/Customer/add_powner');?>">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+               <h4 class="modal-title custom_align" id="Heading">Add Customer</h4>
+            </div>
+            <div class="modal-body">
+               <div class="col-sm-12">
+                  <div class="form-group">
+                     <label class="control-label col-sm-3">Customer Name</label>
+                     <div class="col-sm-9" id="customer">
+                        <input type="text" name="customer_name_inside" id="customer_name_inside" class="form-control" value="">
+                        <div class="col-sm-12"> <?php echo form_error('customer_name_inside', '<p class="text-danger">', '</p>'); ?></div>
+                        <br>
+                        <select name="customer_type" id="customer_type" class="form-control">
+                           <option value="" selected="selected">--select --</option>
+                           <option value="0" >Purchaser</option>
+                           <option value="1" >Maker</option>
+                           <option value="2" >Cutomer</option>
+
+                        </select>
+                        <input type="hidden" name="id" value="">
+                     </div>
+                  </div>
+               </div>
+               <p class="statusMsgDel text-center"></p>
+            </div>
+            <div class="modal-footer " style="margin-top: 50px;">
+               <div class="col-sm-12">
+                  <button type="submit" class="btn btn-success" id="insert_update" ><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Close</button>
+               </div>
+            </div>
+         </form>
+      </div>
+      <!-- /.modal-content -->
+   </div>
+</div>
+
 <script type="text/javascript">
+
+
+function add_new_customer(){
+    $('#add_customer').modal('show');
+}
+
 var mytable;
 $(document).ready(function(){
   mytable = $('#datatable').dataTable({"pageLength": 25});

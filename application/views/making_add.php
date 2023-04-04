@@ -33,10 +33,10 @@
                <?php
                   echo form_open('Making/add_new', 'class="form-horizontal" id="add_product_form"');
                   ?>
-               <p>
+               <!-- <p>
                   <span class="btn btn-primary btn-sm" onclick="add_new_master()">Add New Master</span>
                </p>
-               <br>
+               <br> -->
                <?php
                $maker_no = '';
 

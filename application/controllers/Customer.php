@@ -79,7 +79,8 @@ class Customer extends CI_Controller {
 	// Add new customer form
 	public function add_new()
 	{
-		$this->form_validation->set_rules('name', 'Bakery Name', 'required|alpha_numeric_spaces');
+		$this->form_validation->set_rules('name', 'Name', 'required|alpha_numeric_spaces');
+		$this->form_validation->set_rules('customer_type', 'Customer Type', 'required|required');
 		/* $this->form_validation->set_rules('owner_name', 'Owner Name', 'required|alpha_numeric_spaces'); */
 		/* $this->form_validation->set_rules('area', 'Area', "required|regex_match[/^[a-zA-Z0-9\.\-\,\'\s]+$/]",
 			array('regex_match' =>'Please enter valid area')); */
@@ -103,14 +104,20 @@ class Customer extends CI_Controller {
 			}
 			else
 			{
+
+				$customer_type = $this->input->post('customer_type');
+
+
+
 				$data = array(
-					'name' => strtoupper($postData['name']),
+					'name' => $postData['name'],
 					// 'owner_name' => strtoupper($postData['owner_name']),
 					// 'owner_phone' => $postData['phone'],
 					// 'owner_email' => $postData['email'],
 					// 'bakery_gst' => $postData['gst'],
 					'address' => ucwords($postData['address']),
-					'role' => '2',
+
+					'role' => $customer_type,
 					// 'bakery_area' => ucwords($postData['area']),
 					// 'bakery_city' => ucwords($postData['city']),
 					// 'last_amount' => $postData['last_amount']
@@ -121,7 +128,8 @@ class Customer extends CI_Controller {
 				{
 					// alert("Customer added successfully.");
 					$this->session->set_flashdata('success', 'Customer added successfully.');
-					redirect('Invoice/create');
+					// redirect('Invoice/create');
+					redirect('Customer');
 				}
 				else
 				{
@@ -205,7 +213,7 @@ class Customer extends CI_Controller {
 			else
 			{
 				$data = array(
-					'name' => strtoupper($postData['bakery_name']),
+					'name' => $postData['bakery_name'],
 					// 'owner_name' => strtoupper($postData['owner_name']),
 					// 'owner_phone' => $postData['phone'],
 					// 'owner_email' => $postData['email'],
@@ -270,10 +278,12 @@ class Customer extends CI_Controller {
 		// $this->load->library('form_validation');
 		// $this->form_validation->set_rules('owner_name_inside', 'Owner name', 'required');
 		$this->form_validation->set_rules(
-				"owner_name_inside",
-				"Owner Name",
+				"customer_name_inside",
+				"Name",
 				"trim|required"
 		);
+
+
 		if ($this->form_validation->run() == false) {
 				$data["title"] = ucwords("Add new Purcahser Page");
 				$data["username"] = $this->session->userdata("logged_in");
@@ -290,14 +300,15 @@ class Customer extends CI_Controller {
         else
         {
 
-					$owner_name = $this->input->post('owner_name_inside');
+					$owner_name = $this->input->post('customer_name_inside');
 					$id = $this->input->post('id');
+					$customer_type = $this->input->post('customer_type');
+
 					$data = array(
 							'name' => $owner_name,
-							'role' => '0',
+							'role' => $customer_type,
 					);
-				 /*  print_r($id);
-					die(); */
+
 					if ($id) {
 							$data = array(
 									'id' => $id,
@@ -311,7 +322,8 @@ class Customer extends CI_Controller {
 					if($insert == true)
 		{
 							$this->session->set_flashdata('success', 'Added successfully....');
-			redirect('Purchaser/add_new');
+			// redirect('Purchaser/add_new');
+			redirect('Customer');
 		}
 		else
 		{
