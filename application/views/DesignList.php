@@ -10,7 +10,8 @@
 
         <div class="panel-body">
           <p>
-            <span class="btn btn-primary btn-sm" onclick="add_new_design()">Add New</span>
+            <!-- <span class="btn btn-primary btn-sm" onclick="add_new_design()">Add New</span> -->
+            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Design/add_design');?>">Add New</a>
           </p><br />
           <?php
             if( $this->session->flashdata('success') )
@@ -33,10 +34,11 @@
               foreach ($designs->result() as $row){  ?>
 						  <tr>
                 <td><?php  echo  $i;?></td>
-               
+
                 <td><?php echo $row->design_num; ?></td>
                 <td>
-                 <button class="btn btn-primary btn-xs editBtn" title="Click to edit" id="<?php echo $row->id;?>" ><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
+                 <!-- <button class="btn btn-primary btn-xs editBtn" title="Click to edit" id="<?php echo $row->id;?>" ><i class="glyphicon glyphicon-pencil"></i></button>&nbsp; -->
+                 <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Design/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_design(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td>
 						  </tr>
@@ -91,10 +93,10 @@
             <div class="form-group">
 									<label class="control-label col-sm-3">Design Number</label>
 									<div class="col-sm-9" id="design_holder">
-                                        <input type="text" name="design_number" id="design_number" class="form-control" value="">   
-                                        <input type="hidden" name="id" value="">  
+                                        <input type="text" name="design_number" id="design_number" class="form-control" value="">
+                                        <input type="hidden" name="id" value="">
                                     </div>
-								</div>	
+								</div>
             </div>
         <p class="statusMsgDel text-center"></p>
       </div>

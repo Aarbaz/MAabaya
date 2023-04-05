@@ -11,7 +11,7 @@ class Design_model extends CI_Model {
     {
         return $this->db->insert('designs', $data);
     }
-    
+
     public function get_design_byID($id)
     {
         $this->db->select('id,design_num');
@@ -22,6 +22,16 @@ class Design_model extends CI_Model {
         $data = json_encode($data);
         print_r($data);
     }
+
+
+    public function get_design($id)
+    {
+      $this->db->from('designs');
+        $this->db->where('id',$id);
+        return $this->db->get()->row();
+        //return $query->row();
+    }
+
     public function update_record($id,$data)
     {
         $this->db->where('id', $id);

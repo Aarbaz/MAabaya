@@ -164,13 +164,66 @@ class Material extends CI_Controller {
 			return true;
 		}
 	}
-	// Add new MATERIAL form
+	// Add new MATERIAL form_new
+
+	public function add_material()
+	{
+			$this->form_validation->set_rules(
+					"material_name",
+					"Material name",
+					"required"
+			);
+			if ($this->form_validation->run() == false) {
+					$data["title"] = ucwords("Add new Purcahser Page");
+					$data["username"] = $this->session->userdata("logged_in");
+					$data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
+					$data["matList"] = $this->Purchaser_model->get_all_material();
+					// $data["custList"] = $this->Customer_model->get_powner();
+
+					$this->load->view("layout/header", $data);
+					$this->load->view("layout/menubar");
+					$this->load->view("material_add", $data);
+					$this->load->view("layout/footer");
+
+			} else {
+					$material_name = $this->input->post("material_name");
+					$id = $this->input->post("id");
+					$data = [
+							"material_name" => $material_name,
+					];
+
+					if ($id) {
+							$data = [
+									"id" => $id,
+									"material_name" => $material_name,
+							];
+							$insert = $this->Purchaser_model->update_material($id, $data);
+					} else {
+							$insert = $this->Purchaser_model->create_material($data);
+					}
+
+					if ($insert == true) {
+							$this->session->set_flashdata(
+									"success",
+									"Added successfully...."
+							);
+							redirect("Material");
+					} else {
+							$this->session->set_flashdata(
+									"fail",
+									"Sorry! there was some error."
+							);
+							redirect(base_url("/index.php/Material"));
+					}
+			}
+	}
+	// Add new MATERIAL form_old
 	public function add_new()
 	{
 
 		if( $this->input->post('add_material') != NULL )
 		{
-			$this->form_validation->set_rules('vendorName', 'Vendor Name', 'trim|required');
+				$this->form_validation->set_rules('vendorName', 'Vendor Name', 'trim|required');
      		$this->form_validation->set_rules('bill_amount', 'Bill Amount', 'trim');
      		$this->form_validation->set_rules('paid', 'Paid Amount', 'trim');
      		$this->form_validation->set_rules('mode', 'Payment Mode', 'required|callback_mode_validate');
@@ -269,8 +322,105 @@ class Material extends CI_Controller {
 		}
 	}
 
-	//form to UPDATE Material
-	public function edit()
+	//form to UPDATE Material new
+
+	//form to UPDATE customer
+	public function edit($cust_id )
+	{
+		// $cust_data = $this->Customer_model->get_customer_byID($cust_id);
+		$cust_data = $this->Purchaser_model->get_material_byID($cust_id);
+		// print_r($cust_id);
+		// die();
+
+		if(!$this->session->userdata('logged_in'))
+		{
+			redirect('Welcome');
+		}
+
+		elseif( $cust_id && $this->input->post('edit_material') == NULL )
+		{
+			if($cust_data)
+				{
+					$data['title'] = 'Edit Material Details';
+						$data['username'] = $this->session->userdata('logged_in');
+						$data['cust'] = $cust_data;
+						$this->load->view('layout/header', $data);
+						$this->load->view('layout/menubar');
+					$this->load->view('material_edit');
+					$this->load->view('layout/footer');
+				}
+			else
+			{
+					$data['title'] = 'Page not found';
+					$data['username'] = $this->session->userdata('logged_in');
+					$this->load->view('layout/header', $data);
+					$this->load->view('layout/menubar');
+					$this->load->view('errors/html/error_404');
+					$this->load->view('layout/footer');
+			}
+	}
+		elseif( $this->input->post('edit_material') != NULL )
+		{
+			$postData = $this->input->post();
+
+			$this->form_validation->set_rules('material_name', 'Name', 'required|alpha_numeric_spaces');
+		// $this->form_validation->set_rules('owner_name', 'Owner Name', 'required|alpha_numeric_spaces');
+		// $this->form_validation->set_rules('city', 'City', 'alpha_numeric_spaces');
+		// $this->form_validation->set_rules('phone', 'Phone number', 'numeric|min_length[10]|max_length[12]');
+		// $this->form_validation->set_rules('email', 'Email ID', 'valid_email');
+
+			if ($this->form_validation->run() == false)
+			{
+			$data['title'] = 'Edit Material Details';
+			$data['username'] = $this->session->userdata('logged_in');
+			$data['cust'] = $cust_data;
+
+			$this->load->view('layout/header', $data);
+			$this->load->view('layout/menubar');
+			$this->load->view('material_edit');
+			$this->load->view('layout/footer');
+				}
+		else
+		{
+			$material_name = $this->input->post('material_name');
+			$id = $this->input->post('cust_id');
+			$data = array(
+					'material_name' => $material_name,
+			);
+			if ($id) {
+					$data = array(
+							'id' => $id,
+							'material_name' => $material_name,
+					);
+					$insert = $this->Purchaser_model->update_record($id,$data);
+			}
+			else{
+					$insert = $this->Purchaser_model->create_material($data);
+			}
+
+
+			if($insert != -1)
+			{
+				$this->session->set_flashdata('success', 'Material details updated successfully.');
+				redirect('Material');
+			}
+			else
+			{
+				$this->session->set_flashdata('failed', 'Some problem occurred, please try again.');
+				$data['title'] = ucwords('Edit Material Details');
+				$data['username'] = $this->session->userdata('logged_in');
+				$data['cust'] = $cust_data;
+				$this->load->view('layout/header', $data);
+				$this->load->view('layout/menubar');
+				$this->load->view('material_edit');
+				$this->load->view('layout/footer');
+			}
+			}
+		}
+	}
+
+	//form to UPDATE Material old
+	public function edit_old()
 	{
 		$mat_id = $this->input->post('mat_id');
 		if( $mat_id)

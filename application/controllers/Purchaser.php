@@ -463,57 +463,57 @@ class Purchaser extends CI_Controller
         echo json_encode($detail);
     }
 
-    public function add_material()
-    {
-        $this->form_validation->set_rules(
-            "material_name",
-            "Material name",
-            "required"
-        );
-        if ($this->form_validation->run() == false) {
-    				$data["title"] = ucwords("Add new Purcahser Page");
-    				$data["username"] = $this->session->userdata("logged_in");
-    				$data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
-    				$data["matList"] = $this->Purchaser_model->get_all_material();
-    				$data["custList"] = $this->Customer_model->get_powner();
-
-    				$this->load->view("layout/header", $data);
-    				$this->load->view("layout/menubar");
-    				$this->load->view("purchaser_add", $data);
-    				$this->load->view("layout/footer");
-
-    		} else {
-            $material_name = $this->input->post("material_name");
-            $id = $this->input->post("id");
-            $data = [
-                "material_name" => $material_name,
-            ];
-
-            if ($id) {
-                $data = [
-                    "id" => $id,
-                    "material_name" => $material_name,
-                ];
-                $insert = $this->Purchaser_model->update_material($id, $data);
-            } else {
-                $insert = $this->Purchaser_model->create_material($data);
-            }
-
-            if ($insert == true) {
-                $this->session->set_flashdata(
-                    "success",
-                    "Added successfully...."
-                );
-                redirect("Purchaser/add_new");
-            } else {
-                $this->session->set_flashdata(
-                    "fail",
-                    "Sorry! there was some error."
-                );
-                redirect(base_url("/index.php/Purchaser"));
-            }
-        }
-    }
+    // public function add_material()
+    // {
+    //     $this->form_validation->set_rules(
+    //         "material_name",
+    //         "Material name",
+    //         "required"
+    //     );
+    //     if ($this->form_validation->run() == false) {
+    // 				$data["title"] = ucwords("Add new Purcahser Page");
+    // 				$data["username"] = $this->session->userdata("logged_in");
+    // 				$data["purList"] = $this->Purchaser_model->get_last_purchaser_insider();
+    // 				$data["matList"] = $this->Purchaser_model->get_all_material();
+    // 				$data["custList"] = $this->Customer_model->get_powner();
+    //
+    // 				$this->load->view("layout/header", $data);
+    // 				$this->load->view("layout/menubar");
+    // 				$this->load->view("purchaser_add", $data);
+    // 				$this->load->view("layout/footer");
+    //
+    // 		} else {
+    //         $material_name = $this->input->post("material_name");
+    //         $id = $this->input->post("id");
+    //         $data = [
+    //             "material_name" => $material_name,
+    //         ];
+    //
+    //         if ($id) {
+    //             $data = [
+    //                 "id" => $id,
+    //                 "material_name" => $material_name,
+    //             ];
+    //             $insert = $this->Purchaser_model->update_material($id, $data);
+    //         } else {
+    //             $insert = $this->Purchaser_model->create_material($data);
+    //         }
+    //
+    //         if ($insert == true) {
+    //             $this->session->set_flashdata(
+    //                 "success",
+    //                 "Added successfully...."
+    //             );
+    //             redirect("Purchaser/add_new");
+    //         } else {
+    //             $this->session->set_flashdata(
+    //                 "fail",
+    //                 "Sorry! there was some error."
+    //             );
+    //             redirect(base_url("/index.php/Purchaser"));
+    //         }
+    //     }
+    // }
 
 
     //Download pdf Purchaser

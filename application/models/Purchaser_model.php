@@ -152,7 +152,7 @@ class Purchaser_model extends CI_Model
       return $query->result();
   }
 
-  public function get_material_byID($id)
+  public function get_material_byID_old($id)
   {
       $this->db->select('id,material_name');
     $this->db->from('material');
@@ -163,7 +163,13 @@ class Purchaser_model extends CI_Model
       print_r($data);
   }
 
-
+  public function get_material_byID($id)
+  {
+    $this->db->from('material');
+      $this->db->where('id',$id);
+      return $this->db->get()->row();
+      //return $query->row();
+  }
     public function delete_by_mid($id)
     {
         $this->db->where('id', $id);

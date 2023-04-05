@@ -10,7 +10,9 @@
 
         <div class="panel-body">
           <p>
-            <span class="btn btn-primary btn-sm" onclick="add_new_design()">Add New</span>
+            <!-- <span class="btn btn-primary btn-sm" onclick="add_new_design()">Add New</span> -->
+            <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Material/add_material');?>">Add New</a>
+
           </p><br />
           <?php
             if( $this->session->flashdata('success') )
@@ -36,7 +38,9 @@
 
                 <td><?php echo $row->material_name; ?></td>
                 <td>
-                 <button class="btn btn-primary btn-xs editBtn" title="Click to edit" id="<?php echo $row->id;?>" ><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
+                  <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Material/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+
+                 <!-- <button class="btn btn-primary btn-xs editBtn" title="Click to edit" id="<?php echo $row->id;?>" ><i class="glyphicon glyphicon-pencil"></i></button>&nbsp; -->
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_design(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td>
 						  </tr>
@@ -164,26 +168,26 @@ function delete_design(id)
 function add_new_design(){
     $('#add_design').modal('show');
 }
-$(document).on('click', '.editBtn', function(){
-   var id = $(this).attr('id');
-   $('#add_design').modal('show');
-
-   $.ajax({
-       type: 'ajax',
-       method: 'post',
-       url: '<?php echo site_url(); ?>/Material/fetch_by_id/'+id,
-       data: {},
-       async: false,
-       //dataType: 'json',
-       success: function(data){
-           console.log(data);
-           var data = JSON.parse(data);
-          $("input[name=id]").val(data.id);
-          $("input[name=material_name]").val(data.material_name);
-       },
-       error: function(){
-           alert('Could not displaying data');
-       },
-   });
-});
+// $(document).on('click', '.editBtn', function(){
+//    var id = $(this).attr('id');
+//    $('#add_design').modal('show');
+//
+//    $.ajax({
+//        type: 'ajax',
+//        method: 'post',
+//        url: '<?php echo site_url(); ?>/Material/fetch_by_id/'+id,
+//        data: {},
+//        async: false,
+//        //dataType: 'json',
+//        success: function(data){
+//            console.log(data);
+//            var data = JSON.parse(data);
+//           $("input[name=id]").val(data.id);
+//           $("input[name=material_name]").val(data.material_name);
+//        },
+//        error: function(){
+//            alert('Could not displaying data');
+//        },
+//    });
+// });
 </script>

@@ -10,18 +10,18 @@
 
         <div class="panel-body">
           <p data-placement="top" data-toggle="tooltip">
-            <a class="btn btn-info btn-sm" href="<?php echo base_url('/index.php/Material/');?>">Go back to Material list</a>
+            <a class="btn btn-info btn-sm" href="<?php echo base_url('/index.php/Design/');?>">Go back to Design list</a>
           </p>
           <?php
-            $url = 'Material/edit/'.$cust->id;
-            echo form_open($url, 'class="form-horizontal" id="add_material_form"');
+            $url = 'Design/edit/'.$cust->id;
+            echo form_open($url, 'class="form-horizontal" id="add_design_form"');
           ?>
             <div class="form-group">
               <div class="col-sm-5">
-                <input type="text" class="form-control" id="material_name" name="material_name" value="<?php echo set_value('name', $cust->material_name); ?>">
+                <input type="text" class="form-control" id="design_name" name="design_name" value="<?php echo set_value('name', $cust->design_num); ?>">
                 <input type="hidden" name="cust_id" value="<?php echo $cust->id; ?>">
               </div>
-              <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
+              <div class="col-sm-6"> <?php echo form_error('design_name', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
             <div class="form-group hide">
@@ -85,7 +85,7 @@
 
           <div class="form-group">
             <div class="col-sm-5">
-              <?php echo form_submit('edit_material','Update Material','class="btn btn-success"'); ?>
+              <?php echo form_submit('edit_design','Update Design','class="btn btn-success"'); ?>
             </div>
              <div class="col-sm-6">
               <?php
