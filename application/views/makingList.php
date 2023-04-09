@@ -8,7 +8,7 @@
             </div>
             <div class="panel-body">
                <p>
-                  <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Making/add_new');?>">Add New Making</a>
+                  <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Making/add_new');?>">Add New </a>
                </p>
                <br />
                <?php
