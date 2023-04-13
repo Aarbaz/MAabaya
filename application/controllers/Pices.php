@@ -7,6 +7,7 @@ class Pices extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->library('form_validation');
+		$this->load->helper('form');
 		$this->load->model('Pices_model');
 		$this->load->model('Stock_model');
 		$this->load->model('Design_model');
@@ -63,24 +64,33 @@ class Pices extends CI_Controller
 	}
 	public function create()
 	{
+		$steps2 = $this->input->post('steps');
 		$data['last_invoice'] = $this->Pices_model->get_last_invoice_pices();
 		$this->form_validation->set_rules('customerName', 'customer Name', 'required');
+		$this->form_validation->set_rules('hsn_0[]', 'Select Design', 'trim|required');
+		$this->form_validation->set_rules('qnty[]', 'Quantity', 'required');
+		$this->form_validation->set_rules('rate[]', 'Rate', 'required');
 		// /$this->form_validation->set_rules('amount[]', 'Total Material', 'required');
 		//$this->form_validation->set_rules('amount_with', 'Invoice Type', 'required');
 		$validation = array(
 		    array(
-		        'field' => 'items[]',
+		        'field' => 'qnty[]',
 		        'label' => 'Product',
 		        'rules' => 'required',
 		        "errors" => array('required' => " Please select %s. ")
 		    ),
 		);
+		// $this->form_validation->set_rules($validation);
 
 		if ($this->form_validation->run() == false)
 		{
+			$response['result'] = $this->form_validation->error_array();        	
+        	$response['status']   = 'failed';
+			//echo "wnp";die();
 			$this->add_new();
 		}
 		else
+		//die();
 		{
 		/* 	$selected_ids = implode(',',$this->input->post('selected_ids'));
 			$selected_ids = trim($this->input->post('selected_ids'),','); */
@@ -103,9 +113,23 @@ class Pices extends CI_Controller
 			$material_used_array = explode(",", $total_material_used);
 			
 			$material_ids_array = explode(",", $all_material_ids);
-			// echo count($material_ids_array);
+		
 			// Loop through the arrays and update the quantity for each material ID
 			for ($i = 0; $i < count($material_ids_array); $i++) {
+				// Check if the material ID exists in the maker_stock table for the customer ID
+				$this->db->where('materials_id', $material_ids_array[$i]);
+				$this->db->where('making_owner_id', $customer_id);
+				$q_result = $this->db->get('maker_stock')->result();
+
+				if(empty($q_result)) {
+					// Insert a new row with the material ID and quantity 0
+					$m_data = array(
+						'materials_id' => $material_ids_array[$i],
+						'making_owner_id' => $customer_id,
+						'quantity' => 0
+					);
+					$this->db->insert('maker_stock', $m_data);
+				}
 				// Get the previous quantity for the material ID
 				$material_ids = $material_ids_array[$i];
 				$this->db->where_in('materials_id', $material_ids);
@@ -116,6 +140,27 @@ class Pices extends CI_Controller
 				$this->db->where('materials_id', $material_ids_array[$i]);
 				$this->db->where('making_owner_id', $customer_id);
 				$this->db->update('maker_stock', $data);
+
+				// update stock table
+				$this->db->where('product_id', $material_ids_array[$i]);
+				$q_result = $this->db->get('stock')->result();
+
+				if(empty($q_result)) {
+					// Insert a new row with the material ID and quantity 0
+					$m_data = array(
+						'product_id' => $material_ids_array[$i],
+						'stock_qty' => 0
+					);
+					$this->db->insert('stock', $m_data);
+				}
+				// Get the previous quantity for the stock table product ID
+				$material_ids = $material_ids_array[$i];
+				$this->db->where_in('product_id', $material_ids);
+				$prev_quantity = $this->db->get('stock')->row()->stock_qty;
+				// Update the quantity for the material ID with the previous quantity + new quantity
+				$data = array('stock_qty' => $prev_quantity - $material_used_array[$i]);
+				$this->db->where('product_id', $material_ids_array[$i]);
+				$this->db->update('stock', $data);
 				//echo $this->db->last_query();
 			}
 			/* $amount = implode(',', $this->input->post('amount[]'));
@@ -296,7 +341,8 @@ class Pices extends CI_Controller
 				}
 				$save_path = $dir.$filename;
 				ob_end_clean();
-				//$pdf->Output($save_path, 'I');
+				/* $pdf->Output($save_path, 'I');
+				die(); */
 				$pdf->Output($save_path, 'F');
 				//file_put_contents($save_path, $pdf);
 				$this->session->set_flashdata('success', 'Data Added successfully....');

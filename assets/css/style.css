@@ -48,3 +48,18 @@ body {
     vertical-align: baseline;
     border-radius: 0.25em;
 }
+.text-right{
+	text-align: right;
+}
+.text-left{
+	text-align: left;
+}
+.text-bold{
+	font-weight: bold;
+}
+.border-top-1{
+	border-top: 1px solid #3c3d41;
+}
+.padding-15{
+	padding: 15px;
+}

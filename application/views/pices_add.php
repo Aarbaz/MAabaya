@@ -701,6 +701,10 @@ $('.submit-btn').click(function() {
       $('tr td.material_ids').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute2 = $(this).find('select option:selected').attr('data-material-id');
+            if (!otherAttribute2 || otherAttribute2=="undefined") {
+                alert("Select Material");
+                return;
+            }
             console.log(' Other attribute value: ' + otherAttribute2);
             material_ids.push(otherAttribute2);
             console.log(material_ids);
@@ -710,6 +714,10 @@ $('.submit-btn').click(function() {
       $('tr td.total_used_materials').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute3 = $(this).find(".amount").val();
+            if (!otherAttribute3 || otherAttribute3=="undefined") {
+                alert("Select Material");
+                return;
+            }
             console.log(' Other attribute value: ' + otherAttribute3);
             total_material_used.push(otherAttribute3);
             console.log(total_material_used);

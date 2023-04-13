@@ -83,16 +83,17 @@ class Invoice extends CI_Controller {
 	{
 
 		$this->form_validation->set_rules('customerName', 'customer Name', 'required');
-		//$this->form_validation->set_rules('region', 'Region', 'required');
-		//$this->form_validation->set_rules('amount_with', 'Invoice Type', 'required');
-		$validation = array(
+		/* $this->form_validation->set_rules('hsn', 'Select Design', 'required');
+		$this->form_validation->set_rules('qnty', 'Quantity', 'required');
+		$this->form_validation->set_rules('rate', 'Rate', 'required'); */
+		/* $validation = array(
 		    array(
 		        'field' => 'items[]',
 		        'label' => 'Product',
 		        'rules' => 'required',
 		        "errors" => array('required' => " Please select %s. ")
 		    ),
-		);
+		); */
 
 		//$this->form_validation->set_rules($validation);
 		//$this->form_validation->set_rules('qnty[]', 'Quantity', 'required');

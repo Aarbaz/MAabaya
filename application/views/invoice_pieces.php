@@ -7,6 +7,9 @@
    /*  table.hdr tr td {background-color: #e1e1e9; padding: 10px} */
     #tax_table tr th.right{ text-align: right; }
     /*table td#adds {text-align: justify; } */
+    .bold{
+      font-weight:bold;
+    }
   </style>
 </head>
 <body>
@@ -24,8 +27,8 @@
       <td width="25%"> <?php echo $invoice_no; ?> </td>
     </tr>
     <tr style="border-bottom: 2px solid #000;">
-      <td> ADDS. </td>
-      <td id="adds"> <?php echo $customer_address; ?> </td>
+      <!-- <td> ADDS. </td>
+      <td id="adds"> <?php echo $customer_address; ?> </td> -->
       <td> INVOICE DATE </td>
       <td> <?php echo date('d F, Y'); ?> </td>
     </tr>
@@ -91,6 +94,8 @@
       //for($i=0;$i<$all_items;$i++){?>
         
         <?php $j=1;
+        $grandPiece_total = 0;
+        $grandAmount_total = 0;
             foreach ($array_data as $data) {
              
               $design_number = $data['design_number'][0];
@@ -103,6 +108,7 @@
               $materials_ids = $data['materials_ids'];
               $total_materials = $data['total_material'];
               $total_piece = $data['total_piece'][0];
+              $grandPiece_total += $total_piece;
               $labour_charge = $data['labour_charge'][0];
               
               
@@ -124,11 +130,24 @@
               //   print_r($total_materials);
               foreach ($results  as $key => $value) {
                 # code...
-
-               echo $value->material_name .$total_materials[$jk]." <br>";
+            /*     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+               echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>"; */
                 $tot_am=floatval($tot_am) + floatval($total_materials[$jk]);
+                echo "<table>";
+                echo "<tr>";
+                echo " <td>";
+                echo $value->material_name;
+                echo " </td>";
+                echo " <td>";
+                echo $total_materials[$jk];
+                echo " </td>";
+                echo "</tr>";
+                echo "</table>";
                $jk++;
+                
 
+
+              
               }
               
                 // foreach ($results as $material) {
@@ -137,13 +156,17 @@
               
               }
              
- 
-              echo number_format((float)$tot_am, 2, '.', '')." </td>";
+              /* echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; */
+              
+                echo "Total";
+                echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                echo number_format((float)$tot_am, 2, '.', '')."</td>";
               // echo " </td>";
               echo "<td>$total_piece</td>";
               
               echo "<td>$labour_charge</td>";
               $tot_amount = $total_piece * $labour_charge;
+              $grandAmount_total += $tot_amount;
               echo "<td>$tot_amount</td>";
               /* echo "<td>";
               foreach ($total_materials as $total_material) {
@@ -156,21 +179,19 @@
           ?>
          
          
-          
+         <tr>
+           <td>&nbsp;</td>
+           <th class="right">TOTAL</th>
+           <td> <?php echo $grandPiece_total; ?></td>
+           <td>&nbsp;</td>
+           <td> <?php echo 'Rs. '. $grandAmount_total; ?></td>
+  </tr> 
       <?php
         //$j++; }
     //} ?>
 </table>
 
-<table width="100%" id="tax_table">
-  <tr>
-    <td colspan="3">&nbsp;&nbsp;</td>
-  </tr>
-  <tr>
-    <td colspan="3">&nbsp;&nbsp;</td>
-  </tr>
 
-</table>
 <div>
 
     </div>
