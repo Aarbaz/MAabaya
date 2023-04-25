@@ -14,6 +14,7 @@ class Invoice extends CI_Controller {
 		$this->load->model('Design_model');
 		$this->load->model('Product_model');
 		$this->load->model('Material_model');
+		$this->load->model('Balance_model');
 		$this->load->library('upload');
 		//$this->load->helper('pdf_helper');
 		$this->load->helper('url');
@@ -173,8 +174,31 @@ class Invoice extends CI_Controller {
 				'invoice_date' => date('Y-m-d H:i:s')
 			);
 
+			$data_balance = array(
+				'customer_id' => $bakers_id,
+				'bill_no' => $invoice_no,
+				'total_bill'	=> $amount,
+				'paid_bill'  => $paid_amount,
+				'balance_bill'  => $balance_amount,
+				'updated_on' => date('Y-m-d H:i:s')
+			);
+
+			$data_ledger = array(
+				'customer' => $bakers_id,
+				'invoice' => $invoice_no,
+				'quantity'		=> $qnty,
+				'rate'		=> $rate,
+				'paid_amount'  => $paid_amount,
+				'last_amount'  => $balance_amount,
+				'dated' => date('Y-m-d H:i:s')
+			);
+			$this->db->select('*');
+			$this->db->from('customers');
+			$this->db->where('id',$bakers_id);
+			$query = $this->db->get();
+			$customers_name = $query->row();
 			$data_pdf = array(
-				'customer' => $this->input->post('customerName'),
+				'customer' => $customers_name->name,
 				'customer_address' => $this->input->post('cust_adds_txt'),
 				'gst' => $this->input->post('cust_gst'),
 				'invoice_no' => $invoice_no,
@@ -210,6 +234,8 @@ class Invoice extends CI_Controller {
 			$qnty_values = explode(",", $qnty);
 			$quantity_values = ($qnty_values);
 			$insert = $this->Challan_model->create_invoice_insider($data);
+			$insert = $this->Challan_model->create_balance($data_balance);
+			$insert = $this->Balance_model->add_customer_ledger($data_ledger);
 
 
 			if($insert == true)
@@ -221,11 +247,7 @@ class Invoice extends CI_Controller {
 						'stock_qty' => $quantity_values[$i]
 					);
 				}
-				$this->db->select('*');
-				$this->db->from('customers');
-				$this->db->where('id',$bakers_id);
-				$query = $this->db->get();
-				$customers_name = $query->row();
+
 				// Update Stock
 				// $stock = $this->Stock_model->add_record($data2);
 				$this->db->trans_start(); // Start a transaction to ensure data consistency
@@ -279,7 +301,7 @@ class Invoice extends CI_Controller {
 				}
 				$save_path = $dir.$filename;
 				ob_end_clean();
-				//$pdf->Output($save_path, 'I');
+				// $pdf->Output($save_path, 'I');
 				$pdf->Output($save_path, 'F');
 				//file_put_contents($save_path, $pdf);
 				$this->session->set_flashdata('success', 'Invoice created successfully....');

@@ -7,18 +7,18 @@
         <div class="panel-heading">
           <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Balance/logout');?>">Log Out</a></span></h4>
         </div>
-        
+
         <div class="panel-body">
           <p data-placement="top" data-toggle="tooltip">
             <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Balance/');?>">Go back to Balance list</a>
-          </p><hr />           
-          <?php            
+          </p><hr />
+          <?php
             echo form_open('Balance/ledger', 'class="form-horizontal" id="add_material_form"');
           ?>
             <div class="form-group">
               <table class="table table-bordered">
                 <thead>
-                  <tr>                    
+                  <tr>
                     <th>Product Name</th>
                     <th>HSN</th>
                     <th>Batch No</th>
@@ -26,15 +26,13 @@
                     <th>RATE</th>
                   </tr>
                 </thead>
-               
+
                 <tbody>
-                  <tr class="row_one">                    
+                  <tr class="row_one">
                     <td>
                       <select name="mat_name[]" class="form-control">
                         <option value="">--select--</option>
-                        <?php foreach ($productList->result() as $row){
-                          echo '<option value="'.$row->product_name.'" '.set_select('mat_name',$row->id).'>'.$row->product_name.'</option>';
-                        } ?>
+                        
                       </select>
                     </td>
                     <td><input type="text" name="hsn[]" class="form-control" value=""></td>
@@ -44,10 +42,10 @@
                       <button type="button" name="add_more" id="add_more" class="btn btn-success btn-sm add_more"><b>+</b></button>
                       &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                     </td>
-                  </tr>                                                         
+                  </tr>
                 </tbody>
               </table>
-            </div> 
+            </div>
 
             <div class="form-group">
               <div class="col-sm-2">Invoice No</div>
@@ -59,28 +57,28 @@
 
             <div class="form-group">
               <div class="col-sm-2">Challan No</div>
-              <div class="col-sm-4">                
+              <div class="col-sm-4">
                 <input type="text" style="width: 60%; display: inline;" class="form-control" id="challan" name="challan" value="<?php echo set_value('challan'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('challan', '<p class="text-danger">', '</p>'); ?></div>
-            </div>  
+            </div>
 
             <div class="form-group">
               <div class="col-sm-2">Customer</div>
-              <div class="col-sm-4">                  
+              <div class="col-sm-4">
                 <select name="vendorName" id="vendorName" style="width: 60%; display: inline;" class="form-control">
                   <option value="">-- select Customer --</option>
                   <?php foreach ($custList->result() as $row){
-                    echo '<option value="'.$row->id.'" '.set_select('vendorName',$row->id).'>'.$row->bakery_name.'</option>';
+                    echo '<option value="'.$row->id.'" '.set_select('vendorName',$row->id).'>'.$row->name.'</option>';
                   } ?>
                 </select>
               </div>
               <div class="col-sm-6"> <?php echo form_error('vendorName', '<p class="text-danger">', '</p>'); ?></div>
-            </div>                                           
-      
+            </div>
+
             <div class="form-group">
               <div class="col-sm-2">Last Amount</div>
-              <div class="col-sm-4">                  
+              <div class="col-sm-4">
                 <input type="text" readonly="readonly" style="width: 60%; display: inline;" class="form-control" id="last_bal" name="last_bal">
               </div>
               <div class="col-sm-6"></div>
@@ -88,32 +86,32 @@
 
             <div class="form-group">
               <div class="col-sm-2">Bill Amount</div>
-              <div class="col-sm-4">                  
-                <input type="text" style="width: 60%; display: inline;" class="form-control" id="bill_amount" name="bill_amount" value="<?php echo set_value('bill_amount'); ?>">        
+              <div class="col-sm-4">
+                <input type="text" style="width: 60%; display: inline;" class="form-control" id="bill_amount" name="bill_amount" value="<?php echo set_value('bill_amount'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('bill_amount', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
             <div class="form-group">
               <div class="col-sm-2">Paid Amount</div>
-              <div class="col-sm-4">                
-                <input type="text" style="width: 60%; display: inline;" class="form-control" id="paid" name="paid" value="<?php echo set_value('paid'); ?>">        
+              <div class="col-sm-4">
+                <input type="text" style="width: 60%; display: inline;" class="form-control" id="paid" name="paid" value="<?php echo set_value('paid'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('paid', '<p class="text-danger">', '</p>'); ?></div>
-            </div> 
+            </div>
 
             <div class="form-group">
               <div class="col-sm-2">New Balance</div>
-              <div class="col-sm-4">                
-                <input type="text" style="width: 60%; display: inline;" class="form-control" id="new_bal" name="new_bal" readonly="readonly" value="<?php echo set_value('new_bal'); ?>">        
+              <div class="col-sm-4">
+                <input type="text" style="width: 60%; display: inline;" class="form-control" id="new_bal" name="new_bal" readonly="readonly" value="<?php echo set_value('new_bal'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('new_bal', '<p class="text-danger">', '</p>'); ?></div>
-            </div>  
+            </div>
 
             <div class="form-group">
               <div class="col-sm-2">Payment Mode</div>
-              <div class="col-sm-4">                
-                <div>                  
+              <div class="col-sm-4">
+                <div>
                   <label class="radio-inline">
                     <input type="radio" name="mode" value="Cash" id="mode1" <?php echo  set_radio('mode', 'Cash'); ?>>&nbsp;Cash
                   </label>
@@ -125,30 +123,30 @@
                   </label>
                 </div>
               </div>
-              <div class="col-sm-6"> <?php echo form_error('mode', '<p class="text-danger">', '</p>'); ?></div>  
+              <div class="col-sm-6"> <?php echo form_error('mode', '<p class="text-danger">', '</p>'); ?></div>
             </div>
             <div class="form-group" id="chk_row">
               <div class="col-sm-2">Cheque No</div>
               <div class="col-sm-4">
-                <input type="text" style="width: 60%; display: inline;" class="form-control" id="cheque_no" name="cheque_no" value="<?php echo set_value('cheque_no'); ?>">        
+                <input type="text" style="width: 60%; display: inline;" class="form-control" id="cheque_no" name="cheque_no" value="<?php echo set_value('cheque_no'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('cheque_no', '<p class="text-danger">', '</p>'); ?></div>
-            </div> 
+            </div>
             <div class="form-group" id="imps_row">
               <div class="col-sm-2">Transaction No</div>
-              <div class="col-sm-4">                
-                <input type="text" style="width: 60%; display: inline;" class="form-control" id="trn_no" name="trn_no" value="<?php echo set_value('trn_no'); ?>">        
+              <div class="col-sm-4">
+                <input type="text" style="width: 60%; display: inline;" class="form-control" id="trn_no" name="trn_no" value="<?php echo set_value('trn_no'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('trn_no', '<p class="text-danger">', '</p>'); ?></div>
-            </div>             
+            </div>
 
 
 
             <div class="form-group">
-              <div class="col-sm-5">              
+              <div class="col-sm-5">
                 <?php echo form_submit('add_material','Add Balance','class="btn btn-success"'); ?>
               </div>
-              <div class="col-sm-6"> 
+              <div class="col-sm-6">
                 <?php
                   if( $this->session->flashdata('failed') )
                   { echo '<p class="text-danger">'.$this->session->flashdata('failed').'</p>'; }
@@ -156,9 +154,9 @@
               </div>
           </div>
       <?php echo form_close();  ?>
-        </div>      
+        </div>
       </div>
-    </div>        
+    </div>
   </div>
 </div>
 
@@ -166,10 +164,10 @@
 <div class="container-fluid footer">
   <div class="row">
     <div class="col-sm-1">&nbsp;</div>
-    <div class="col-sm-5">Made with <span style="color: #e25555;"><i class="glyphicon glyphicon-heart"></i></span> By Shareef Ansari</div>      
+    <div class="col-sm-5">Made with <span style="color: #e25555;"><i class="glyphicon glyphicon-heart"></i></span> By Shareef Ansari</div>
     <div class="col-sm-5">
       <p class="text-right"><i class="glyphicon glyphicon-envelope"></i> ashareefeng@gmail.com &nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-earphone"></i>  90295 79146</p>
-    </div>      
+    </div>
   </div>
 </div>
 <!--END footer section-->
@@ -179,30 +177,30 @@
 <script type="text/javascript">
   $(document).ready(function(){
     //add new rows
-    $(".add_more").click(function(){    
+    $(".add_more").click(function(){
         $(".row_one:first").clone(true).find(':input').val('').end().insertAfter(".row_one:last");
     });
 
     setTimeout(function() {
         $('.successMsg, .err_db').fadeIn().fadeOut().fadeIn().fadeOut('slow');
-    }, 3000); 
-    
+    }, 3000);
+
     //remove selcted row
     $(document).on('click', '.remove', function(){
       var $tr = $(this).closest('tr');
       if ($tr.index() != '0') {
         $tr.remove();
       }
-    }); 
+    });
 
     //show customer address on customer name change event
     var cust_list = <?php echo json_encode($custList->result()); ?>;
     $("#vendorName").on('change', function(){
       var cust_id = $("#vendorName option:selected").val();
-      for (var key = 0; key < cust_list.length; key++) 
+      for (var key = 0; key < cust_list.length; key++)
       {
         if( cust_list[key].id == cust_id )
-        {            
+        {
           $("#last_bal").val(cust_list[key].last_amount);
         }
       }
@@ -252,8 +250,7 @@
       }
       new_balance = last_bal+new_balance;
       $('#new_bal').val(new_balance);;
-    }); 
+    });
 
   });
 </script>
-

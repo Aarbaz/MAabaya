@@ -2,7 +2,7 @@
 //defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Balance_model extends CI_Model {
-	
+
     public function get_all_material()
     {
         return $this->db->get('materials');
@@ -16,7 +16,8 @@ class Balance_model extends CI_Model {
     public function get_all_customer()
     {
         //return $this->db->get('customers');
-        return $this->db->select('id, bakery_name, bakery_gst, bakery_area, bakery_city, last_amount')->get('customers');
+        // return $this->db->select('id, bakery_name, bakery_gst, bakery_area, bakery_city, last_amount')->get('customers');
+        return $this->db->select('id, name')->get('customers');
     }
 
     public function update_customer($data, $id)
@@ -32,17 +33,17 @@ class Balance_model extends CI_Model {
     public function get_challan_list($customerName=null, $from_date=null, $to_date=null)
     {
         if($customerName && !$from_date && !$to_date)
-        {            
+        {
             $this->db->select('sr_no,customer_id, challan_no as bill_no, total, paid, balance, created_on as date_on');
             $this->db->where('customer_id', $customerName);
             $this->db->from('challan_bills');
             return $this->db->get();
         }
         elseif($customerName && $from_date && $to_date)
-        {               
+        {
             //$this->db->where("order_datetime BETWEEN '2018-10-01' AND '2018-10-3'","", FALSE);
 
-            //$this->db->where('sell_date BETWEEN "'. date('Y-m-d', strtotime($start_date)). '" and "'. date('Y-m-d', strtotime($end_date)).'"');            
+            //$this->db->where('sell_date BETWEEN "'. date('Y-m-d', strtotime($start_date)). '" and "'. date('Y-m-d', strtotime($end_date)).'"');
             $this->db->select('sr_no,customer_id, challan_no as bill_no, total, paid, balance, created_on as date_on');
             $this->db->where('customer_id', $customerName);
             $this->db->where('created_on >=', $from_date);
@@ -61,14 +62,14 @@ class Balance_model extends CI_Model {
     //get latest challan no.
     public function get_last_challan()
     {
-    	return $this->db->select('challan_no')->order_by('sr_no',"desc")->limit(1)->get('challan_bills')->row(); 
+    	return $this->db->select('challan_no')->order_by('sr_no',"desc")->limit(1)->get('challan_bills')->row();
     }
 
    //add new challan
     public function create_challan($data)
     {
         return $this->db->insert('challan_bills', $data);
-    } 
+    }
 
     //delete a challan
     public function delete_by_id($id)
@@ -76,22 +77,22 @@ class Balance_model extends CI_Model {
         $this->db->where('sr_no', $id);
         $this->db->delete('challan_bills');
         return $this->db->affected_rows();
-    }       	
+    }
     //update bulk rows
     public function update_challan($update_data)
     {
-        return $this->db->update_batch('challan_bills', $update_data, 'sr_no'); 
+        return $this->db->update_batch('challan_bills', $update_data, 'sr_no');
     }
 
     //insert bulk rows in Balance_model
     public function insert_balance($insert_data)
     {
-        return $this->db->insert_batch('balance', $insert_data); 
+        return $this->db->insert_batch('balance', $insert_data);
     }
     //get data by bill_no from balance
     public function get_balance($billno)
     {
-        return $this->db->where('bill_no', $billno)->order_by('id','ASC')->get('balance'); 
+        return $this->db->where('bill_no', $billno)->order_by('id','ASC')->get('balance');
     }
 
     //end challan queries
@@ -107,7 +108,7 @@ class Balance_model extends CI_Model {
             return $this->db->get();
         }
         elseif($customerName && $from_date && $to_date)
-        {               
+        {
             $this->db->select('sr_no,customer_id, invoice_no as bill_no, round_off_total as total, paid, balance,invoice_date as date_on');
             $this->db->where('customer_id', $customerName);
             $this->db->where('invoice_date >=', $from_date);
@@ -125,38 +126,38 @@ class Balance_model extends CI_Model {
     //get latest INVOICE no. insider
     public function get_last_invoice_insider()
     {
-        return $this->db->select('invoice_no')->order_by('sr_no','desc')->limit(1)->get('insider_bill')->row();    
+        return $this->db->select('invoice_no')->order_by('sr_no','desc')->limit(1)->get('insider_bill')->row();
     }
-    
+
     //add new INVOICE no. insider
     public function create_invoice_insider($data)
     {
         return $this->db->insert('insider_bill', $data);
     }
-    
+
     //update bulk rows
     public function update_invoice($update_data)
     {
-        return $this->db->update_batch('insider_bill', $update_data, 'sr_no'); 
-    }    
+        return $this->db->update_batch('insider_bill', $update_data, 'sr_no');
+    }
     //delete invoice
     public function delete_invoice_by_id($id)
     {
         $this->db->where('sr_no', $id);
         $this->db->delete('insider_bill');
         return $this->db->affected_rows();
-    }     
+    }
     //get customer ledger blance data
     public function get_ledger_balance($customer_id)
     {
         $this->db->where('customer_id', $customer_id)->order_by('id', 'ASC');
         return $this->db->get('ledger_balance');
-    }  
+    }
 
     //insert bulk rows in Balance_model
     public function ledger_balance($insert_data)
     {
-        return $this->db->insert_batch('ledger_balance', $insert_data); 
+        return $this->db->insert_batch('ledger_balance', $insert_data);
     }
 
     /*customer ledger balance table related queries */
@@ -166,12 +167,12 @@ class Balance_model extends CI_Model {
     {
         if($id)
         {
-            return $this->db->select('customer_ledger_balance.*,customers.bakery_name,customer_ledger_balance.last_amount')
+            return $this->db->select('customer_ledger_balance.*,customers.name,customer_ledger_balance.last_amount')
          ->from('customer_ledger_balance')->where('customer_ledger_balance.id', $id)->order_by('customer_ledger_balance.id ASC')
          ->join('customers', 'customer_ledger_balance.customer = customers.id')->get()->row();
         }
 
-        return $this->db->select('customer_ledger_balance.*,customers.bakery_name,customers.last_amount')
+        return $this->db->select('customer_ledger_balance.*,customers.name')
          ->from('customer_ledger_balance')->order_by('customer_ledger_balance.id ASC')
          ->join('customers', 'customer_ledger_balance.customer = customers.id')->get();
     }
@@ -190,7 +191,8 @@ class Balance_model extends CI_Model {
 
         if($to_mnth && $to_yr)
         {
-            $this->db->select('customer_ledger_balance.*,customers.bakery_name,customers.bakery_address,customers.bakery_area,customers.bakery_city,customer_ledger_balance.last_amount')
+            // $this->db->select('customer_ledger_balance.*,customers.name,customers.address,customers.bakery_area,customers.bakery_city,customer_ledger_balance.last_amount')
+            $this->db->select('customer_ledger_balance.*,customers.name,customers.address,customer_ledger_balance.last_amount')
                 ->from('customer_ledger_balance')
                 ->where('customer_ledger_balance.customer', $cust_id)
                 ->where('customer_ledger_balance.dated >=', $frm_date)
@@ -201,14 +203,15 @@ class Balance_model extends CI_Model {
         }
         else
         {
-            $this->db->select('customer_ledger_balance.*,customers.bakery_name,customers.bakery_address,customers.bakery_area,customers.bakery_city,customer_ledger_balance.last_amount')
+            // $this->db->select('customer_ledger_balance.*,customers.name,customers.address,customers.bakery_area,customers.bakery_city,customer_ledger_balance.last_amount')
+            $this->db->select('customer_ledger_balance.*,customers.name,customers.address,customer_ledger_balance.last_amount')
             ->from('customer_ledger_balance')
             ->where('customer_ledger_balance.customer', $cust_id)
             ->where('customer_ledger_balance.dated >=', $frm_date)
             ->where('customer_ledger_balance.dated <=', $to_date1)
             ->order_by('customer_ledger_balance.id ASC')
             ->join('customers', 'customer_ledger_balance.customer = customers.id');
-            return $this->db->get();   
+            return $this->db->get();
         }
     }
 
