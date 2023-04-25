@@ -141,6 +141,8 @@ class Invoice extends CI_Controller {
 			$total_amount = $this->input->post('total_amount');
 			$total_round = $this->input->post('total_round');
 			$total_word = $this->input->post('total_word');
+			$paid_amount = $this->input->post('paid_amount');
+			$balance_amount = $this->input->post('balance_amount');
 			$sup_date = $this->input->post('sup_date');
 			//$sup_place = $this->input->post('sup_place');
 			$sup_other = $this->input->post('sup_other');
@@ -166,8 +168,8 @@ class Invoice extends CI_Controller {
 				'date_of_supply'  => $sup_date,
 				//'place_of_supply'  => $sup_place,
 				'other_notes'  => $sup_other,
-				'paid'  => '0.00',
-				'balance'  => $total_round,
+				'paid'  => $paid_amount,
+				'balance'  => $balance_amount,
 				'invoice_date' => date('Y-m-d H:i:s')
 			);
 
@@ -198,7 +200,9 @@ class Invoice extends CI_Controller {
 				'total_in_words' => $total_word,
 				'date_of_supply'  => $sup_date,
 				//'place_of_supply'  => $sup_place,
-				'other_notes'  => $sup_other
+				'other_notes'  => $sup_other,
+				'paid'  => $paid_amount,
+				'balance'  => $balance_amount
 			);
 
 			$selected_ids_values = explode(",", $selected_ids);
