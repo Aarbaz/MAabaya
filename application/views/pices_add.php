@@ -14,7 +14,7 @@
 						<span class="btn btn-primary btn-sm" onclick="add_new_design()">Add New</span>
 					</p><br />
 					<div class="challan-div">
-						<form id="insider_invoice_form" name="insider_invoice_form" class="form-horizontal" action="<?php echo site_url('Pices/create');?>" method="post">
+						<form id="pices_add_form" name="pices_add_form" class="form-horizontal pices_add_form" action="<?php echo site_url('Pices/create');?>" method="post">
 							<div class="form-group">
 								<h3 class="text-center">Pices Recived</h3>
 							</div>
@@ -379,6 +379,7 @@ $(document).on('click', '.editBtn', function(){
 });
 
 $(document).ready(function(){
+    
     //hide invoice data table on load
     //$('#table_with_tax, #table_without_tax').hide();
     $('#table_with_tax').hide();
@@ -438,7 +439,7 @@ $(document).ready(function(){
         $(this).val('1901');
     });
 
-    $('#insider_invoice_form').validate({
+    $('#pices_add_form').validate({
         rules: {
             customerName: "required",
             region: "required",
@@ -500,7 +501,7 @@ $(document).ready(function(){
         {
             if(a_w_t == 'with')
             {
-               // $('#insider_invoice_form')[0].reset();
+               // $('#pices_add_form')[0].reset();
                 $('#items, .qnty, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');
                 $('#table_with_tax').show();
                 $('#table_without_tax').hide();
@@ -528,7 +529,7 @@ $(document).ready(function(){
             }
             else
             {
-               // $('#insider_invoice_form')[0].reset();
+               // $('#pices_add_form')[0].reset();
                $('#items, .qnty, .amount_with_tax, .rate, .amount, #trans_charge, #other_charge, #total_tax_value, #cgst_charge, #sgst_charge, #igst_charge, #total_amount, #total_round, #total_word').val('');
                 $('#table_with_tax').hide();
                 $('#table_without_tax').show();
@@ -681,17 +682,13 @@ if( round_amount!= null)
 
     });
 /* --- */
-$('.submit-btn').click(function() {
+// $('.submit-btn').click(function() {
+    $('form.pices_add_form').on('submit', function(event) {
+    
+        event.preventDefault();
       var selected_ids = [];
       var material_ids = [];
       var total_material_used = [];
-      /* $('.my-select').each(function() {
-            //var selectedValue = $(this).find('select').val();
-            var otherAttribute = $(this).find('select option:selected').attr('data-id');
-            console.log(' Other attribute value: ' + otherAttribute);
-            selected_ids.push(otherAttribute);
-            console.log(selected_ids);
-        }); */
         $(".my-select").each(function() {
             var selectedOption = $(this).find(":selected");
             var otherAttribute = selectedOption.attr('data-id');
@@ -701,10 +698,10 @@ $('.submit-btn').click(function() {
       $('tr td.material_ids').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute2 = $(this).find('select option:selected').attr('data-material-id');
-            if (!otherAttribute2 || otherAttribute2=="undefined") {
+            /* if (!otherAttribute2 || otherAttribute2=="undefined") {
                 alert("Select Material");
                 return;
-            }
+            } */
             console.log(' Other attribute value: ' + otherAttribute2);
             material_ids.push(otherAttribute2);
             console.log(material_ids);
@@ -714,10 +711,10 @@ $('.submit-btn').click(function() {
       $('tr td.total_used_materials').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute3 = $(this).find(".amount").val();
-            if (!otherAttribute3 || otherAttribute3=="undefined") {
+            /* if (!otherAttribute3 || otherAttribute3=="undefined") {
                 alert("Select Material");
                 return;
-            }
+            } */
             console.log(' Other attribute value: ' + otherAttribute3);
             total_material_used.push(otherAttribute3);
             console.log(total_material_used);
@@ -725,27 +722,7 @@ $('.submit-btn').click(function() {
         $('#total_material_used').val(total_material_used.join(','));
 
     });
-    // $('#duplicate-table-btn').click(function() {
-    // var originalTable = $('#table_without_tax');
-    // // Create a new table element
-    // var newTable = $('<table>').addClass('table table-bordered');
-    // // Clone the header row
-    // var headerRow = originalTable.find('thead tr').clone();
-    // newTable.append(headerRow);
-
-
-    // // Clone the data rows
-    // var dataRows = originalTable.find('tbody tr');
-    // dataRows.each(function() {
-    // var newRow = $(this).clone();
-    // newTable.append(newRow);
-    // var select_row = originalTable.find('.select-row').clone();
-    // newTable.append(select_row);
-    // });
-
-    // // Append the new table to the container
-    // $('#table-container').append(newTable);
-    // });
+    
     var count = 0;
     $('#duplicate-table-btn').click(function() {
         var step_no = $("#steps").val();
@@ -847,6 +824,12 @@ $('.submit-btn').click(function() {
                 $("#txtOther").attr("disabled", "disabled");
             }
         });
+        $('.qnty').each(function() {
+                $(this).rules("add", 
+                    {
+                        required: true
+                    })
+        });
     });
     $('#remove-div').click(function() {
 				/* $('#table-container div.select-row:last-child').remove();
@@ -858,4 +841,5 @@ $('.submit-btn').click(function() {
     } */
     $('.new-div:last').remove();
 			});
+    
 </script>
