@@ -319,6 +319,22 @@
                                     <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
+														<div class="form-group ">
+                                <div class="col-sm-2 col-sm-offset-6">
+                                    <b>PAID AMOUNT</b>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" name="paid_amount" class="form-control only_num paid_amount" id="paid_amount" style="display: inline; width: 50%" value="" size="3">
+                                </div>
+                            </div>
+														<div class="form-group ">
+																<div class="col-sm-2 col-sm-offset-6">
+																		<b>BALANCE AMOUNT</b>
+																</div>
+																<div class="col-sm-3">
+																		<input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount" style="display: inline; width: 50%" value="" size="3">
+																</div>
+														</div>
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-1">
                                     <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
@@ -383,6 +399,13 @@ $(document).ready(function(){
                     }
                 });
 
+								$('.balance_amount').on('focus', function(){
+										var total_amount = $('#total_amount').val();
+										var paid_amount = $('#paid_amount').val();
+                    var the_amount = (total_amount-paid_amount).toFixed(2);
+										console.log(the_amount);
+                    $(this).val(the_amount);
+                });
                 //show AMOUNT by qnty*rate
                 $('.amount').on('focus', function(){
                     var ro  = $(this).parents('tr');
@@ -515,6 +538,9 @@ $(document).ready(function(){
                        // ro.find('.qnty').val(1);
                     }
                 });
+
+
+
 
                 //show AMOUNT by qnty*rate
                 $('.amount').on('focus', function(){

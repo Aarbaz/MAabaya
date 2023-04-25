@@ -16,14 +16,14 @@
   </div>
 
   <table class="hdr" style="width: 100%">
-    <tr><td colspan="4">&nbsp;</td></tr>  
+    <tr><td colspan="4">&nbsp;</td></tr>
     <tr>
       <td width="20%"> CUSTOMER NAME </td>
       <td width="35%"> <?php echo $customer; ?></td>
       <td width="20%"> INVOICE NO.</td>
       <td width="25%"> <?php echo $invoice_no; ?> </td>
     </tr>
-    <tr>  
+    <tr>
       <td> ADDS. </td>
       <td id="adds"> <?php echo $customer_address; ?> </td>
       <td> INVOICE DATE </td>
@@ -35,7 +35,7 @@
       <td> DATE OF SUPPLY </td>
       <td> <?php if($date_of_supply){ echo date('d F, Y', strtotime($date_of_supply)); }?> </td>
     </tr> -->
-    <!-- <tr>    
+    <!-- <tr>
       <td>&nbsp;</td> <td>&nbsp;</td>
       <td> PLACE OF SUPPLY </td>
       <td id="adds"> <?php echo $place_of_supply; ?> </td>
@@ -45,11 +45,11 @@
       <td> OTHER </td>
       <td> <?php echo $other_notes; ?>  </td>
     </tr>  -->
-    <tr><td colspan="4">&nbsp;</td></tr> 
+    <tr><td colspan="4">&nbsp;</td></tr>
   </table>
 
   <div><br /></div>
-        
+
 <table border="1" cellspacing="0" cellpadding="3" width="100%">
   <tr style="background-color: #e1e1e9">
     <th style="width: 10%">Sr. No</th>
@@ -64,29 +64,29 @@
     $hsn = explode(',', $hsn);
     $qnty = explode(',', $qnty);
     $rate = explode(',', $rate);
-    $amount = explode(',', $amount);                          
-    $items = array('mat'=> $mat,'qnty'=>$qnty,'hsn'=>$hsn,'rate' => $rate, 'amount' => $amount); 
-    $len = count($items['hsn']);                        
-    
+    $amount = explode(',', $amount);
+    $items = array('mat'=> $mat,'qnty'=>$qnty,'hsn'=>$hsn,'rate' => $rate, 'amount' => $amount);
+    $len = count($items['hsn']);
+
     $items2 = array();
     for ($i=0; $i < $len; $i++)
-    { 
+    {
       $newArray = array();
       //$newArray[] = $items['mat'][$i];
       $newArray[] = $items['hsn'][$i];
       $newArray[] = $items['qnty'][$i];
       $newArray[] = $items['rate'][$i];
-      $newArray[] = $items['amount'][$i];    
-      $items2[] = $newArray;             
-    }    
+      $newArray[] = $items['amount'][$i];
+      $items2[] = $newArray;
+    }
 
     $j = 1;
     $all_items = count($items2);
-    
+
     $items2 = array_filter(array_map('array_filter', $items2));
     if($all_items > 0)
     {
-      for($i=0;$i<20;$i++){?>             
+      for($i=0;$i<20;$i++){?>
         <tr>
           <td><?php echo $j; ?></td>
           <td><?php echo isset($items2[$i][0])?$items2[$i][0]:''; ?></td>
@@ -95,19 +95,19 @@
           <td><?php echo isset($items2[$i][3]) ? 'Rs. '.$items2[$i][3] : '' ; ?></td>
           <!-- <td><?php echo isset($items2[$i][4]) ? $items2[$i][4] : '' ; ?></td> -->
           <!-- <td><?php echo $items2[$i][4] ? 'Rs. '.$items2[$i][4] : '' ; ?></td> -->
-        </tr>    
+        </tr>
       <?php
         $j++; }
-    } ?>                                                         
+    } ?>
 </table>
-        
+
 <table width="100%" id="tax_table">
   <tr>
     <td colspan="3">&nbsp;&nbsp;</td>
   </tr>
   <tr>
     <td colspan="3">&nbsp;&nbsp;</td>
-  </tr>                    
+  </tr>
   <!-- <tr>
     <th class="right">TRANSPORT CHARGES</th>
     <td>&nbsp;</td>
@@ -141,30 +141,41 @@
     <th class="right">IGST @ <?php echo $igst_per.'%'; ?></th>
     <td>&nbsp;</td>
     <td> <?php echo 'Rs. '. $igst_5_cent; ?> </td>
-  </tr> 
-  <?php } ?>                                                         
+  </tr>
+  <?php } ?>
   <tr>
     <th class="right">TOTAL AMOUNT</th>
     <td>&nbsp;</td>
     <td> <?php echo 'Rs. '. $total; ?></td>
-  </tr>                                                                                
+  </tr>
   <tr>
     <th  class="right">ROUND OFF TOTAL</th>
     <td>&nbsp;</td>
     <td> <?php echo 'Rs. '. $round_off_total; ?></td>
-  </tr>                     
-</table>         
+  </tr>
+  <tr>
+    <th  class="right">PAID AMOUNT</th>
+    <td>&nbsp;</td>
+    <td> <?php echo 'Rs. '. $paid; ?></td>
+  </tr>
+  <tr>
+    <th  class="right">BALANCE AMOUNT</th>
+    <td>&nbsp;</td>
+    <td> <?php echo 'Rs. '. $balance; ?></td>
+  </tr>
+
+</table>
 <div class="row" style="display:flex;">
-<div class="col-sm-6">             
+<div class="col-sm-6">
   <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;Rupees <?php echo $total_in_words; ?> Only
 </div>
-<!-- <div class="col-sm-6"> 
+<!-- <div class="col-sm-6">
   <p style="margin:0px;">From <b>M.A Abaya Manufacturer </b></p>
       <p style=" margin:0px;">AUTHORISED SIGNATURE</p>
 </div> -->
 </div>
 <div>
-      
+
     </div>
 
 </body>
