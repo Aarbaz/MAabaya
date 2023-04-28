@@ -7,23 +7,23 @@
         <div class="panel-heading">
           <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Balance/logout');?>">Log Out</a></span></h4>
         </div>
-        
-        <div class="panel-body">      
-          <p>            
+
+        <div class="panel-body">
+          <p>
             <form id="download_ledger" class="form-inline" action="<?php echo base_url('/index.php/Balance/download_pdf');?>">
               <div class="form-group">
                 <label for="customerName">Customer: </label>
                 <select name="customerName" id="customerName" class="form-control">
                   <option value="">-- select --</option>
                   <?php foreach ($custList->result() as $row){
-                    echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->bakery_name.'</option>';
+                    echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->name.'</option>';
                   } ?>
-                </select>          
+                </select>
               </div>
 
               <div class="form-group">
                 <label>From:                 </label>
-                <select class="form-control" name="frm_mth" id="frm_mth">        
+                <select class="form-control" name="frm_mth" id="frm_mth">
                   <option value="">--Month--</option>
                   <option value="01">January</option>
                   <option value="02">February</option>
@@ -40,8 +40,8 @@
                 </select>
               </div>
 
-              <div class="form-group">                
-                <select class="form-control" name="frm_yr" id="frm_yr">        
+              <div class="form-group">
+                <select class="form-control" name="frm_yr" id="frm_yr">
                   <option value="">--Year--</option>
                   <?php
                   $y = date('Y');
@@ -50,13 +50,13 @@
                   {
                     echo '<option value="'.$i.'">'.$i.'</option>';
                   }
-                  ?>      
+                  ?>
                 </select>
-              </div>  
+              </div>
 
               <div class="form-group">
                 <label>To:                 </label>
-                <select class="form-control" name="to_mth" id="to_mth">        
+                <select class="form-control" name="to_mth" id="to_mth">
                   <option value="">--Month--</option>
                   <option value="01">January</option>
                   <option value="02">February</option>
@@ -73,8 +73,8 @@
                 </select>
               </div>
 
-              <div class="form-group">                
-                <select class="form-control" name="to_yr" id="to_yr">        
+              <div class="form-group">
+                <select class="form-control" name="to_yr" id="to_yr">
                   <option value="">--Year--</option>
                   <?php
                   $y = date('Y');
@@ -83,7 +83,7 @@
                   {
                     echo '<option value="'.$i.'">'.$i.'</option>';
                   }
-                  ?>      
+                  ?>
                 </select>
               </div>
 
@@ -93,46 +93,47 @@
               <div class="form-group">
                 &nbsp;&nbsp;<a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Balance/ledger');?>">Add New</a>
               </div>
-            </form>            
+            </form>
           </p><br />
           <div><p id="result_box" class="text-center"></p></div>
           <?php
             if( $this->session->flashdata('success') )
             { echo '<div class="alert alert-success show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Success!</strong> '.$this->session->flashdata('success').'</p></div>'; }
-          ?>          
+          ?>
           <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <th>Sr No</th>                               
+                <th>Sr No</th>
                 <th>Invoice</th>
                 <th>Challan</th>
                 <th>Customer</th>
                 <th>Balance</th>
                 <th>Date</th>
-                <th>Action</th>                
+                <th>Action</th>
               </tr>
             </thead>
-                  
+
             <tbody>
             <?php $i = 1; foreach ($ledger_list->result() as $row){  ?>
               <tr>
                 <td><?php echo $i; ?></td>
                 <td><?php echo $row->invoice; ?></td>
-                <td><?php echo $row->challan; ?></td>                
-                <td><?php echo $row->bakery_name; ?></td>
-                <td><?php echo $row->new_amount; ?></td>    
-                <td><?php echo $row->dated; ?></td>                        
+                <td><?php echo $row->challan; ?></td>
+                <td><?php echo $row->name; ?></td>
+                <!-- <td><?php echo $row->new_amount; ?></td> -->
+                <td><?php echo $row->last_amount; ?></td>
+                <td><?php echo $row->dated; ?></td>
                 <td>
                   <button class="btn btn-primary btn-xs" data-title="edit" data-toggle="modal" title="Click to edit" onclick="show_material(<?php echo $row->id;?>)"><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_material(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
-                </td>             
+                </td>
               </tr>
-            <?php $i++; } ?>  
+            <?php $i++; } ?>
             </tbody>
           </table>
         </div>
       </div>
-    </div>        
+    </div>
   </div>
 </div>
 
@@ -200,7 +201,7 @@
           <div class="col-sm-8">
             <input type="text" class="form-control" id="e_lastBal">
           </div>
-        </div> 
+        </div>
         <div class="form-group">
           <label class="control-label col-sm-4">Bill Amount</label>
           <div class="col-sm-8">
@@ -218,7 +219,7 @@
           <div class="col-sm-8">
             <input type="text" class="form-control" id="e_newAmount">
           </div>
-        </div>        
+        </div>
         <div class="form-group">
           <label class="control-label col-sm-4">Payment Mode</label>
           <div class="col-sm-8">
@@ -238,7 +239,7 @@
           </div>
         </div>
       </div>
-        
+
       <div class="modal-footer ">
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
       </div>
@@ -256,22 +257,22 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h4 class="modal-title custom_align" id="Heading">Delete this Material</h4>
       </div>
-      
+
       <div class="modal-body">
         <div class="alert alert-danger">
           <input type="hidden" name="row_id" value="" id="row_id">
           <span class="glyphicon glyphicon-warning-sign"></span> Are you sure you want to delete?
-        </div>     
+        </div>
         <p class="statusMsgDel text-center">  </p>
       </div>
-        
+
       <div class="modal-footer ">
         <button type="button" class="btn btn-success" id="yes" ><span class="glyphicon glyphicon-ok-sign"></span> Yes</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> No</button>
       </div>
     </form>
     </div>
-    <!-- /.modal-content --> 
+    <!-- /.modal-content -->
   </div>
 </div>
 <!--ends delete-->
@@ -281,11 +282,11 @@
 <div class="container-fluid footer">
     <div class="row">
       <div class="col-sm-1">&nbsp;</div>
-      <div class="col-sm-5">Made with <span style="color: #e25555;"><i class="glyphicon glyphicon-heart"></i></span> By Shareef Ansari</div>   
-      <div class="col-sm-1">&nbsp;</div>   
+      <div class="col-sm-5">Made with <span style="color: #e25555;"><i class="glyphicon glyphicon-heart"></i></span> By Shareef Ansari</div>
+      <div class="col-sm-1">&nbsp;</div>
       <div class="col-sm-5">
         <p><i class="glyphicon glyphicon-envelope"></i> ashareefeng@gmail.com &nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-earphone"></i>  90295 79146</p>
-      </div>      
+      </div>
     </div>
 </div>
 <!--END footer section-->
@@ -296,7 +297,7 @@
 var mytable;
 $(document).ready(function(){
   mytable = $('#datatable').dataTable({"pageLength": 25});
-  $("[data-toggle=tooltip]").tooltip();  
+  $("[data-toggle=tooltip]").tooltip();
 
   setTimeout(function() {
     $(".show_hide").alert('close');
@@ -305,24 +306,24 @@ $(document).ready(function(){
 
   $("#download_ledger").submit(function(e){
       e.preventDefault();
-      $.ajax({            
+      $.ajax({
         url: $(this).attr('action'),
         type: "POST",
-        dataType: "json",           
+        dataType: "json",
         data:new FormData(this),
         processData:false,
         contentType:false,
         cache:false,
         async:false,
-        success:function(resp){                  
+        success:function(resp){
           if( resp.status == 'failed')
-          {            
+          {
             $('#result_box').empty();
-            $('#result_box').html('<span class="text-danger">'+resp.result+'</span>');                                                                        
+            $('#result_box').html('<span class="text-danger">'+resp.result+'</span>');
           }
           else if(resp.status == 'passed')
           {
-            $('#result_box').empty();            
+            $('#result_box').empty();
             $("#download_ledger")[0].reset();
               var $a = $("<a>");
               $a.attr("href",resp.result);
@@ -350,7 +351,7 @@ function show_material(material_id)
     success:function(msg){
       console.log(msg);
       //return;
-      if( msg.status =='passed' ) 
+      if( msg.status =='passed' )
       {
         $('#e_matname').val(msg.result.product_name);
         $('#e_hsn').val(msg.result.hsn);
@@ -366,13 +367,13 @@ function show_material(material_id)
         $('#e_newAmount').val(msg.result.new_amount);
         $('#e_mode').val(msg.result.payment_mode);
         $('#e_trans').val(msg.result.transaction_no);
-        $('#e_cheque').val(msg.result.cheque_no);        
+        $('#e_cheque').val(msg.result.cheque_no);
         $('#edit').modal('show');
       }
       else
       {
         $('.statusMsgDel').html('<span style="color:red;">Some problem occurred, please try again.</span>');
-      }             
+      }
     }
   });
 }
@@ -393,10 +394,10 @@ function delete_material(row_id)
         $('.modal-body').css('opacity', '.5');
       },
       success:function(msg){
-        if( msg.status =='passed') 
+        if( msg.status =='passed')
         {
           $('.statusMsgDel').empty();
-          $('.statusMsgDel').html('<span class="text-success">'+msg.result+'</span>');                    
+          $('.statusMsgDel').html('<span class="text-success">'+msg.result+'</span>');
           setTimeout(function(){
             $('#delete').modal('hide');
             location.reload();
@@ -407,7 +408,7 @@ function delete_material(row_id)
           $('.statusMsgDel').html('<span style="color:red;">Some problem occurred, please try again.</span>');
         }
         $('.btn-default').removeAttr("disabled");
-        $('.modal-body').css('opacity', '');               
+        $('.modal-body').css('opacity', '');
       }
     });
   })
