@@ -24,6 +24,7 @@
   						<tr>
                             <th>Sr No</th>
                             <th>Material Name</th>
+                            <th>Date</th>
                             <th>Action</th>
   						</tr>
 					  </thead>
@@ -37,6 +38,7 @@
                 <td><?php  echo  $i;?></td>
 
                 <td><?php echo $row->material_name; ?></td>
+                <td><?php echo date('d M Y, h:i:s a', strtotime($row->create_date) ); ?></td>
                 <td>
                   <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Material/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
 

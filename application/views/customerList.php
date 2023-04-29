@@ -31,6 +31,7 @@
   							<th>Customer Name</th>
   							<!-- <th>Phone No</th> -->
                 <th>Type</th>
+                <th>Date</th>
                 <!-- <th class="hide">Last Amount</th>     -->
                 <th>Action</th>
   						</tr>
@@ -72,6 +73,9 @@
 
 
 
+                  </td>
+                  <td>
+                    <?php echo date('d M Y, h:i:s a', strtotime($row->created_on) ); ?>
                   </td>
 
     							<td>

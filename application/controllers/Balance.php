@@ -77,7 +77,7 @@ class Balance extends CI_Controller {
 			else
 			{
 
-				
+
 
 				$postData = $this->input->post();
 				// if(count($postData['mat_name']) > 0)
@@ -101,34 +101,41 @@ class Balance extends CI_Controller {
 				$paid 			=	 $postData['paid'];
 				$update_new_bal =	 $postData['new_bal'];
 				$invoice =	 $postData['invoice_hidden'];
-				// $mode 			=	 $postData['mode'];
-				// $cheque_no 		=	 $postData['cheque_no'];
-				// $trn_no 		=	 $postData['trn_no'];
-				
-					
+				$mode 			=	 $postData['mode'];
+				$cheque_no 		=	 $postData['cheque_no'];
+				$trn_no 		=	 $postData['trn_no'];
+
+
 				$add_data = array(
+					'total_bill'	=> $last_bal,
+					'paid_bill' => $paid,
+					'balance_bill'  => $update_new_bal,
+					'updated_on' => date('Y-m-d H:i:s')
+				);
+
+				$add_ledgerdata = array(
 					// 'product_name' => strtoupper(trim($mat_name)),
 					// 'hsn' => strtoupper($hsn),
 					// 'batch_no' => strtoupper($batch),
 					// 'quantity' => $qnty,
 					// 'rate' => $rate,
-					// 'invoice' => $invoice,
+					'invoice' => $invoice,
 					// 'challan' => $challan,
-					// 'customer' => $vendorName,
-					'total_bill'	=> $last_bal,
-					// 'bill_amount' => $bill_amount,
-					'paid_bill' => $paid,
-					'balance_bill'  => $update_new_bal,
-					// 'payment_mode'     => $mode,
-					// 'transaction_no' => $trn_no,
-					// 'cheque_no'     => $cheque_no,
-					'updated_on' => date('Y-m-d H:i:s')
+					'customer' => $vendorName,
+					// 'total_bill'	=> $last_bal,
+					'bill_amount' => $last_bal,
+					'paid_amount' => $paid,
+					'last_amount'  => $update_new_bal,
+					'payment_mode'     => $mode,
+					'transaction_no' => $trn_no,
+					'cheque_no'     => $cheque_no,
+					// 'updated_on' => date('Y-m-d H:i:s')
 				);
 
 				$data_update = array('last_amount' => $update_new_bal);
 
 				$insert = $this->Balance_model->update_balance($add_data,$vendorName,$invoice);
-				// $insert = $this->Balance_model->add_customer_ledger($add_data);
+				$insert = $this->Balance_model->add_customer_ledger($add_ledgerdata);
 				// $update = $this->Balance_model->update_customer($data_update, $vendorName);
 				if($insert > 0)
 				{
@@ -273,7 +280,7 @@ class Balance extends CI_Controller {
       $data = $this->Balance_model->get_billinvoice($id);
       echo json_encode($data);
     }
-	
+
 	// Logout from admin page
 	public function logout()
 	{

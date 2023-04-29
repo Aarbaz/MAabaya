@@ -142,7 +142,7 @@ class Purchaser_model extends CI_Model
 
   public function get_all_material()
   {
-      return $this->db->select("id, material_name")->get("material");
+      return $this->db->select("id, material_name,create_date")->get("material");
   }
 
   public function getMaterialDetailbyId($id)

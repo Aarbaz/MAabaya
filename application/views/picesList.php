@@ -30,7 +30,7 @@
 					  <tbody>
               <?php
                 if(isset($data_list)){
-            
+
                     $i = 1;
                     // print_r($data_list->result());
                     foreach ($data_list->result() as $row) {
@@ -42,7 +42,7 @@
                         $this->db->where('id',$master_id1);
                         $query = $this->db->get();
                         $results = $query->result();
-                        
+
                         $array_data = json_decode($row->data_json, true);
 
                         echo "<tr>";
@@ -62,7 +62,7 @@
                           $design_name=$design_number_result[0]->design_num;
                           echo "$design_name  -  $total_piece" ." "."Pcs".'<br>';
                         }
-                  
+
                         echo "</td>"; ?>
                         <td>
                         <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Pices/downloadPdf/').rawurlencode($results[0]->name).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
@@ -70,11 +70,11 @@
                           <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_product(<?php echo $row->sr_no;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                         </td>
                       <?php echo "</tr>";
-                
+
                     }
                   }
                 ?>
-                  
+
             <?php $i++;  } ?>
             </tbody>
           </table>

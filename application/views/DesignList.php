@@ -23,6 +23,7 @@
   						<tr>
                             <th>Sr No</th>
                             <th>Design Number</th>
+                            <th>Date</th>
                             <th>Action</th>
   						</tr>
 					  </thead>
@@ -36,6 +37,8 @@
                 <td><?php  echo  $i;?></td>
 
                 <td><?php echo $row->design_num; ?></td>
+                <td><?php echo date('d M Y, h:i:s a', strtotime($row->create_date) ); ?></td>
+
                 <td>
                  <!-- <button class="btn btn-primary btn-xs editBtn" title="Click to edit" id="<?php echo $row->id;?>" ><i class="glyphicon glyphicon-pencil"></i></button>&nbsp; -->
                  <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Design/edit/').$row->id;?>"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
