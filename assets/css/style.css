@@ -63,3 +63,12 @@ body {
 .padding-15{
 	padding: 15px;
 }
+.select-row{
+	margin-bottom: 10px;
+}
+.divide_border{
+	margin-top: 20px;
+    margin-bottom: 20px;
+    border: 0;
+    border-top: 2px dotted #000;
+}
