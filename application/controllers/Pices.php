@@ -20,6 +20,7 @@ class Pices extends CI_Controller
         $this->load->model('Challan_model');
 		$this->load->library('upload');
 		//$this->load->helper('pdf_helper');
+		$this->load->model('Balance_model');
 		$this->load->helper('url');
 	}
 
@@ -114,6 +115,11 @@ class Pices extends CI_Controller
 			
 			$material_ids_array = explode(",", $all_material_ids);
 		
+			$total_amount = $this->input->post('total_amount');
+			$total_round = $this->input->post('total_round');
+			$total_word = $this->input->post('total_word');
+			$paid_amount = $this->input->post('paid_amount');
+			$balance_amount = $this->input->post('balance_amount');
 			// Loop through the arrays and update the quantity for each material ID
 			for ($i = 0; $i < count($material_ids_array); $i++) {
 				// Check if the material ID exists in the maker_stock table for the customer ID
@@ -199,11 +205,34 @@ class Pices extends CI_Controller
 					'customer_id' => $this->input->post('customerName'),
 					'invoice_no' => $this->input->post('invoice_no'),
 					'labour_charge' => $this->input->post('karigari_'.$i.'[]'),
+					'total'		=> $total_amount,
+					'round_off_total'  => $total_round,
+					'total_in_words' => $total_word,
+					'paid'  => $paid_amount,
+					'balance'  => $balance_amount,
 				);
 				// Add the new design to the result array
 				$result[] = $design;
 			}
-			
+			$data_balance = array(
+				'customer_id' => $this->input->post('customerName'),
+				'bill_no' => $this->input->post('invoice_no'),
+				'total_bill'	=> $total_amount,
+				'paid_bill'  => $paid_amount,
+				'balance_bill'  => $balance_amount,
+				'updated_on' => date('Y-m-d H:i:s')
+			);
+			$data_ledger = array(
+				'customer' => $this->input->post('customerName'),
+				'invoice' => $this->input->post('invoice_no'),
+				'paid_amount'  => $paid_amount,
+				'last_amount'  => $balance_amount,
+				'dated' => date('Y-m-d H:i:s')
+			);
+			$insert = $this->Challan_model->create_balance($data_balance);
+			$insert = $this->Balance_model->add_customer_ledger($data_ledger);
+			/* print_r($result);
+			die(); */
 			// Convert the result array to JSON
 			$json = json_encode($result);
 			$data = $json;
@@ -332,7 +361,7 @@ class Pices extends CI_Controller
 				$pdf_data = $this->load->view('invoice_pieces', $data_pdf, true);
 				$pdf->addPage();
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
-
+				
 				$filename = $this->input->post('invoice_no').'.pdf';
 				$dir = APPPATH.'/pices_invoice/'.$data_pdf['customer'].'/';
 				if(!is_dir($dir))
@@ -341,8 +370,8 @@ class Pices extends CI_Controller
 				}
 				$save_path = $dir.$filename;
 				ob_end_clean();
-				/* $pdf->Output($save_path, 'I');
-				die(); */
+				 $pdf->Output($save_path, 'I');
+				/*die(); */
 				$pdf->Output($save_path, 'F');
 				//file_put_contents($save_path, $pdf);
 				$this->session->set_flashdata('success', 'Data Added successfully....');

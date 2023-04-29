@@ -96,8 +96,13 @@
         <?php $j=1;
         $grandPiece_total = 0;
         $grandAmount_total = 0;
+        //print_r($array_data);
+        $round_off_total = $array_data[0]['round_off_total'];
+        $total_in_words = $array_data[0]['total_in_words'];
+        $paid = $array_data[0]['paid'];
+        $balance = $array_data[0]['balance'];
             foreach ($array_data as $data) {
-             
+              
               $design_number = $data['design_number'][0];
               $this->db->select('id,design_num');
               $this->db->from('designs');
@@ -186,12 +191,42 @@
            <td>&nbsp;</td>
            <td> <?php echo 'Rs. '. $grandAmount_total; ?></td>
   </tr> 
+
       <?php
         //$j++; }
     //} ?>
 </table>
 
+<table width="100%" id="tax_table">
+  <tr>
+    <td colspan="3">&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="3">&nbsp;&nbsp;</td>
+  </tr>
 
+  <tr>
+    <th class="right">TOTAL AMOUNT</th>
+    <td>&nbsp;</td>
+    <td> <?php echo 'Rs. '. $grandAmount_total;; ?></td>
+  </tr>
+  <tr>
+    <th  class="right">ROUND OFF TOTAL</th>
+    <td>&nbsp;</td>
+    <td> <?php echo 'Rs. '. $round_off_total; ?></td>
+  </tr>
+  <tr>
+    <th  class="right">PAID AMOUNT</th>
+    <td>&nbsp;</td>
+    <td> <?php echo 'Rs. '. $paid; ?></td>
+  </tr>
+  <tr>
+    <th  class="right">BALANCE AMOUNT</th>
+    <td>&nbsp;</td>
+    <td> <?php echo 'Rs. '. $balance; ?></td>
+  </tr>
+
+</table>
 <div>
 
     </div>
