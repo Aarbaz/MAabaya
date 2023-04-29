@@ -95,6 +95,31 @@ class Balance_model extends CI_Model {
         return $this->db->where('bill_no', $billno)->order_by('id','ASC')->get('balance');
     }
 
+    function get_billcust($id)
+    {
+      $this->db->select('*');
+      $this->db->from("balance");
+      $this->db->where("customer_id", $id);
+      $query = $this->db->get();
+      return $query->result();
+    }
+
+    function get_billinvoice($id)
+    {
+      $this->db->select('*');
+      $this->db->from("balance");
+      $this->db->where("bill_no", $id);
+      $query = $this->db->get();
+      return $query->result();
+    }
+
+    public function update_balance($data, $cid, $bid)
+    {
+        $this->db->where("customer_id", $cid);
+        $this->db->where("bill_no", $bid);
+        $this->db->update("balance", $data);
+        return $this->db->affected_rows();
+    }
     //end challan queries
 
     /* Insider invoice */

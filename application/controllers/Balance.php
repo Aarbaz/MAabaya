@@ -76,53 +76,60 @@ class Balance extends CI_Controller {
 			}
 			else
 			{
-				$postData = $this->input->post();
-				if(count($postData['mat_name']) > 0)
-				{
-					$mat_name 	 = 	implode(',', $postData['mat_name']);
-					$hsn		 = 	implode(',', $postData['hsn']);
-					$batch		 =	implode(',', $postData['batch']);
-					$qnty 		 =	implode(',', $postData['qnty'])	;
-					$rate 		 =	implode(',', $postData['rate']);
-				}
-				else
-				{
-					$mat_name = $hsn = $batch = $qnty = $rate = NULL;
-				}
 
-				$invoice 		=	 $postData['invoice'] ? $postData['invoice'] : NULL;
-				$challan 		=	 $postData['challan'] ? $postData['challan'] : NULL;
+				
+
+				$postData = $this->input->post();
+				// if(count($postData['mat_name']) > 0)
+				// {
+				// 	$mat_name 	 = 	implode(',', $postData['mat_name']);
+				// 	$hsn		 = 	implode(',', $postData['hsn']);
+				// 	$batch		 =	implode(',', $postData['batch']);
+				// 	$qnty 		 =	implode(',', $postData['qnty'])	;
+				// 	$rate 		 =	implode(',', $postData['rate']);
+				// }
+				// else
+				// {
+				// 	$mat_name = $hsn = $batch = $qnty = $rate = NULL;
+				// }
+
+				// $invoice 		=	 $postData['invoice'] ? $postData['invoice'] : NULL;
+				// $challan 		=	 $postData['challan'] ? $postData['challan'] : NULL;
 				$vendorName		=	 $postData['vendorName'];
 				$last_bal		=	 $postData['last_bal'];
-				$bill_amount	=	 $postData['bill_amount'];
+				// $bill_amount	=	 $postData['bill_amount'];
 				$paid 			=	 $postData['paid'];
 				$update_new_bal =	 $postData['new_bal'];
-				$mode 			=	 $postData['mode'];
-				$cheque_no 		=	 $postData['cheque_no'];
-				$trn_no 		=	 $postData['trn_no'];
-
+				$invoice =	 $postData['invoice_hidden'];
+				// $mode 			=	 $postData['mode'];
+				// $cheque_no 		=	 $postData['cheque_no'];
+				// $trn_no 		=	 $postData['trn_no'];
+				
+					
 				$add_data = array(
-					'product_name' => strtoupper(trim($mat_name)),
-					'hsn' => strtoupper($hsn),
-					'batch_no' => strtoupper($batch),
-					'quantity' => $qnty,
-					'rate' => $rate,
-					'invoice' => $invoice,
-					'challan' => $challan,
-					'customer' => $vendorName,
-					'last_amount'	=> $last_bal,
-					'bill_amount' => $bill_amount,
-					'paid_amount' => $paid,
-					'new_amount'  => $update_new_bal,
-					'payment_mode'     => $mode,
-					'transaction_no' => $trn_no,
-					'cheque_no'     => $cheque_no,
+					// 'product_name' => strtoupper(trim($mat_name)),
+					// 'hsn' => strtoupper($hsn),
+					// 'batch_no' => strtoupper($batch),
+					// 'quantity' => $qnty,
+					// 'rate' => $rate,
+					// 'invoice' => $invoice,
+					// 'challan' => $challan,
+					// 'customer' => $vendorName,
+					'total_bill'	=> $last_bal,
+					// 'bill_amount' => $bill_amount,
+					'paid_bill' => $paid,
+					'balance_bill'  => $update_new_bal,
+					// 'payment_mode'     => $mode,
+					// 'transaction_no' => $trn_no,
+					// 'cheque_no'     => $cheque_no,
+					'updated_on' => date('Y-m-d H:i:s')
 				);
 
 				$data_update = array('last_amount' => $update_new_bal);
 
-				$insert = $this->Balance_model->add_customer_ledger($add_data);
-				$update = $this->Balance_model->update_customer($data_update, $vendorName);
+				$insert = $this->Balance_model->update_balance($add_data,$vendorName,$invoice);
+				// $insert = $this->Balance_model->add_customer_ledger($add_data);
+				// $update = $this->Balance_model->update_customer($data_update, $vendorName);
 				if($insert > 0)
 				{
 					$this->session->set_flashdata('success', 'Balance added successfully.');
@@ -253,6 +260,20 @@ class Balance extends CI_Controller {
 	{
 		$this->load->view('balance_ledger_customer',$data);
 	}
+
+	public function billBycust()
+    {
+      $id = $this->input->post('vendorName');
+      $data = $this->Balance_model->get_billcust($id);
+      echo json_encode($data);
+    }
+	public function amountByBill()
+    {
+      $id = $this->input->post('invoice');
+      $data = $this->Balance_model->get_billinvoice($id);
+      echo json_encode($data);
+    }
+	
 	// Logout from admin page
 	public function logout()
 	{
