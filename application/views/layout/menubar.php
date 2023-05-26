@@ -94,6 +94,9 @@
         <li>
           <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Balance');?>">Balance</a>
         </li>
+        <li>
+          <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/History');?>">History</a>
+        </li>
 			</ul>
     	</div>
     <!--/.nav-collapse -->

@@ -1,12 +1,19 @@
 <?php
 //defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Balance_model extends CI_Model {
+class History_model extends CI_Model {
+
+    public function get_all_history()
+    {
+        // return $this->db->get('history');
+        return $this->db->select('*')->get('history');
+    }
 
     public function get_all_material()
     {
         return $this->db->get('materials');
     }
+
 
     public function get_all_products()
     {
@@ -87,13 +94,7 @@ class Balance_model extends CI_Model {
     //insert bulk rows in Balance_model
     public function insert_balance($insert_data)
     {
-        return $this->db->insert('balance', $insert_data);
-        
-    }
-
-    public function insert_ledgerbalance($ledger_data)
-    {
-        return $this->db->insert(' customer_ledger_balance', $ledger_data);
+        return $this->db->insert_batch('balance', $insert_data);
     }
     //get data by bill_no from balance
     public function get_balance($billno)
@@ -110,19 +111,19 @@ class Balance_model extends CI_Model {
       return $query->result();
     }
 
-    // function get_billinvoice($id)
-    // {
-    //   $this->db->select('*');
-    //   $this->db->from("balance");
-    //   $this->db->where("bill_no", $id);
-    //   $query = $this->db->get();
-    //   return $query->result();
-    // }
+    function get_billinvoice($id)
+    {
+      $this->db->select('*');
+      $this->db->from("balance");
+      $this->db->where("bill_no", $id);
+      $query = $this->db->get();
+      return $query->result();
+    }
 
-    public function update_balance($data, $cid)
+    public function update_balance($data, $cid, $bid)
     {
         $this->db->where("customer_id", $cid);
-        // $this->db->where("bill_no", $bid);
+        $this->db->where("bill_no", $bid);
         $this->db->update("balance", $data);
         return $this->db->affected_rows();
     }
@@ -212,6 +213,7 @@ class Balance_model extends CI_Model {
     {
         return $this->db->insert('customer_ledger_balance', $data);
     }
+
     //customer ledger in date range
     public function customer_ledger_byDate($cust_id, $frm_mnth, $frm_yr,$to_mnth=null,$to_yr=null)
     {
@@ -243,14 +245,6 @@ class Balance_model extends CI_Model {
             ->join('customers', 'customer_ledger_balance.customer = customers.id');
             return $this->db->get();
         }
-    }
-
-
-    //get customer ledger blance data
-    public function get_bal_user($customer_id)
-    {
-        $this->db->where('customer_id', $customer_id)->order_by('id', 'ASC ');
-        return $this->db->get('balance');
     }
 
     /*ends here */

@@ -131,12 +131,47 @@
                                </td>
                                <td>
                                  <div class="col-sm-12"> <?php echo form_error('p_price[]', '<p class="text-danger">', '</p>'); ?></div>
-
                                </td>
                           </tr>
-
                      </tbody>
                   </table>
+               </div>
+               <div class="form-group">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>TOTAL AMOUNT</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="total_amount" id="total_amount" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="" size="3">
+                   </div>
+               </div>
+               <div class="form-group">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>ROUND OFF TOTAL</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
+                   </div>
+               </div>
+               <div class="form-group ">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>PAID AMOUNT</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="paid_amount" class="form-control only_num paid_amount" id="paid_amount" style="display: inline; width: 50%" value="" size="3">
+                   </div>
+               </div>
+               <div class="form-group ">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>BALANCE AMOUNT</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount" style="display: inline; width: 50%" value="" size="3">
+                   </div>
+               </div>
+               <div class="form-group">
+                   <div class="col-sm-10 col-sm-offset-1">
+                       <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
+                   </div>
                </div>
                <div class="form-group">
                   <div class="col-sm-5">
@@ -241,7 +276,7 @@ $(function() {
       material_name: "required",
       stock_q: "required",
       p_price: "required",
-    
+
     },
     // Specify validation error messages
     messages: {
@@ -296,6 +331,57 @@ $(function() {
            }
        });
 
+
+       $('#total_amount').on('focus', function(){
+
+   // alert();
+   total = 0;
+   $('.amount').each(function(){
+       if( $(this).val() !== '' )
+       {
+           var amt = $(this).val();
+           total += parseFloat(amt);
+       }
+   });
+   console.log(total);
+
+   // var crnt_val = parseFloat(total);
+   //
+   // var other_charge = $('#other_charge').val() != '' ? $('#other_charge').val() : 0;
+   // var trans_charge = $('#trans_charge').val() != '' ? $('#trans_charge').val() : 0;
+   // total +=  parseFloat(other_charge) + parseFloat(trans_charge);
+   // if(total != crnt_val)
+   // {
+   //     $(this).val(total.toFixed(2));
+   // }
+
+   // var cgst = $('#cgst_charge').val() != '' ? parseFloat($('#cgst_charge').val()) : 0;
+   // var sgst = $('#sgst_charge').val() != '' ? parseFloat($('#sgst_charge').val()) : 0;
+   // var igst = $('#igst_charge').val() != '' ? parseFloat($('#igst_charge').val()) : 0;
+
+   /* var total_with_tax = parseFloat($('#total_tax_value').val()) + cgst + sgst + igst ; */
+   var total_with_tax = parseFloat(total) + 0 + 0 + 0 ;
+   total_with_tax      = total_with_tax.toFixed(2);
+   $(this).val(total_with_tax);
+   //total round amount
+   $('#total_round').val(Math.round(total_with_tax));
+   //total in words
+   var round_amount = $('#total_round').val();
+   if( round_amount!= null)
+   {
+       var total_words = NumToWord(round_amount);
+       $("#total_word").val(total_words);
+   }
+
+   });
+
+   $('.balance_amount').on('focus', function(){
+       var total_amount = $('#total_amount').val();
+       var paid_amount = $('#paid_amount').val();
+       var the_amount = (total_amount-paid_amount).toFixed(2);
+       console.log(the_amount);
+       $(this).val(the_amount);
+   });
 
      });
 </script>

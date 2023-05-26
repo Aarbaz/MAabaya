@@ -7,7 +7,9 @@
         <div class="panel-heading">
           <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Balance/logout');?>">Log Out</a></span></h4>
         </div>
-
+        <?php
+        // print_r($history->result());
+         ?>
         <div class="panel-body">
           <p>
             <form id="download_ledger" class="form-inline" action="<?php echo base_url('/index.php/Balance/download_pdf');?>">
@@ -104,7 +106,7 @@
             <thead>
               <tr>
                 <th>Sr No</th>
-                <!-- <th>Invoice</th> -->
+                <th>Invoice</th>
                 <!-- <th>Challan</th> -->
                 <th>Customer</th>
                 <th>Balance</th>
@@ -114,30 +116,21 @@
             </thead>
 
             <tbody>
-            <?php 
-             $i = 1;   foreach ($custList->result() as $bal){
-
-              $balance_list = $this->Customer_model->get_customer_byName($bal->name);
-              
-              foreach ($balance_list->result() as $balUser){
-
-              $balance = $this->Balance_model->get_bal_user($balUser->id);
-
-             foreach ($balance->result() as $row){  ?>
+            <?php $i = 1; foreach ($ledger_list->result() as $row){  ?>
               <tr>
                 <td><?php echo $i; ?></td>
-                <!-- <td><?php echo $row->invoice; ?></td> -->
+                <td><?php echo $row->invoice; ?></td>
                 <!-- <td><?php echo $row->challan; ?></td> -->
-                <td><?php echo $bal->name; ?></td>
+                <td><?php echo $row->name; ?></td>
                 <!-- <td><?php echo $row->new_amount; ?></td> -->
-                <td><?php echo $row->balance_bill; ?></td>
-                <td><?php echo $row->updated_on; ?></td>
+                <td><?php echo $row->last_amount; ?></td>
+                <td><?php echo $row->dated; ?></td>
                 <td>
                   <button class="btn btn-primary btn-xs" data-title="edit" data-toggle="modal" title="Click to edit" onclick="show_material(<?php echo $row->id;?>)"><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_material(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td>
               </tr>
-            <?php  } } $i++;}?>
+            <?php $i++; } ?>
             </tbody>
           </table>
         </div>

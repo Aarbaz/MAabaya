@@ -17,6 +17,7 @@ class Purchaser extends CI_Controller
         $this->load->model("Stock_model");
         $this->load->model("Purchaser_model");
         $this->load->model("Customer_model");
+        $this->load->model("Balance_model");
         $this->load->library("tcpdf");
         $this->load->library("upload");
     }
@@ -184,10 +185,6 @@ class Purchaser extends CI_Controller
                       $this->Purchaser_model->add_purchaser_stk($dataDStk);
 
             				}
-
-
-
-
                     $i++;
                 }
 
@@ -197,6 +194,49 @@ class Purchaser extends CI_Controller
           					'json_data' => $json_data,
           			);
           			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
+                      
+                    $customer_id =  strtoupper($postData["owner_name"]);
+                    $balance_amount = strtoupper($postData["balance_amount"]);
+                    $paid_amount =  strtoupper($postData["paid_amount"]);
+                    $total_amount = strtoupper($postData["total_amount"]);
+                      if($balance_amount){
+
+                            $this->db->where('customer_id',$customer_id);
+            				$query = $this->db->get('balance');
+            				$row = $query->row();
+            				if ($query->num_rows()) {
+            					$data3 = array(
+            						'balance_bill' => $row->balance_bill + $balance_amount,
+            						'paid_bill' => $row->paid_bill + $paid_amount,
+            						'total_bill' => $row->total_bill + $total_amount,
+            					);
+                                // $this->db->where('customer_id',$customer_id);
+            					// $this->db->update('balance', $data3);
+                                $bal_update = $this->Balance_model->update_balance($data3,$customer_id);
+
+                            }
+                            else{
+                                $bal_data = [                        
+                                    "customer_id" => $customer_id,
+                                    "bill_type" => 'debited',
+                                    "bill_no" =>strtoupper($postData["purchaser_no"]),
+                                    "total_bill" => $total_amount,
+                                    "paid_bill" => $paid_amount,
+                                    "balance_bill" => $balance_amount,
+                                ];
+                                $bal_insert = $this->Balance_model->insert_balance($bal_data);
+                            }                        
+                      }  
+
+                      $ledge_data = [                        
+                        "customer" => $customer_id,
+                        // "bill_type" => 'debited',
+                        "invoice" =>strtoupper($postData["purchaser_no"]),
+                        "bill_amount" => $total_amount,
+                        "paid_amount" => $paid_amount,
+                        "last_amount" => $balance_amount,
+                    ];
+                    $ledge_insert = $this->Balance_model->add_customer_ledger($ledge_data);
 
 
                 if ($insert > 0) {

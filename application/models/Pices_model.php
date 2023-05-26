@@ -13,7 +13,7 @@ class Pices_model extends CI_Model {
     }
     public function get_products_in_pcs_list()
     {
-        
+
         $this->db->select('design_number');
     	$this->db->from('product_pices');
         $query = $this->db->get();
@@ -26,11 +26,11 @@ class Pices_model extends CI_Model {
         //$this->db->select('master_id,customers.name,invoice_no,sr_no');
         $this->db->select('*');
         $this->db->order_by('sr_no','desc');
-       //$this->db->group_by('master_id'); 
+       //$this->db->group_by('master_id');
 
        //$this->db->join('customers', 'customers.id = product_pices.master_id');
         $this->db->from('product_pices');
-        $this->db->join('material', 'material.id = product_pices.master_id');
+        // $this->db->join('material', 'material.id = product_pices.master_id');
         $this->db->join('customers', 'customers.id = product_pices.master_id');
         return $this->db->get();
     }
@@ -57,7 +57,7 @@ class Pices_model extends CI_Model {
 
     public function get_last_invoice_pices()
     {
-        return $this->db->select('invoice_no')->order_by('sr_no','desc')->limit(1)->get('product_pices')->row();    
+        return $this->db->select('invoice_no')->order_by('sr_no','desc')->limit(1)->get('product_pices')->row();
     }
    /*  public function update_makerStock($customer_id,$material_values, $data)
     {
@@ -68,7 +68,7 @@ class Pices_model extends CI_Model {
             $this->db->update('maker_stock', $data);
         }
         return $this->db->affected_rows();
-        
+
     } */
     /* public function getProduct()
     {

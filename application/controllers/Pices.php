@@ -85,7 +85,7 @@ class Pices extends CI_Controller
 
 		if ($this->form_validation->run() == false)
 		{
-			$response['result'] = $this->form_validation->error_array();        	
+			$response['result'] = $this->form_validation->error_array();
         	$response['status']   = 'failed';
 			//echo "wnp";die();
 			$this->add_new();
@@ -107,14 +107,14 @@ class Pices extends CI_Controller
 
 			/* $total_material = implode(',', $this->input->post('total_material[]'));
 			$total_material = trim($total_material, ','); */
-			
+
 			$total_material_used = implode(',', $this->input->post('total_material_used'));
 			$total_material_used = trim($total_material_used, ',');
-			
+
 			$material_used_array = explode(",", $total_material_used);
-			
+
 			$material_ids_array = explode(",", $all_material_ids);
-		
+
 			$total_amount = $this->input->post('total_amount');
 			$total_round = $this->input->post('total_round');
 			$total_word = $this->input->post('total_word');
@@ -214,7 +214,33 @@ class Pices extends CI_Controller
 				// Add the new design to the result array
 				$result[] = $design;
 			}
-			$data_balance = array(
+			// $data_balance = array(
+			// 	'customer_id' => $this->input->post('customerName'),
+			// 	'bill_no' => $this->input->post('invoice_no'),
+			// 	'total_bill'	=> $total_amount,
+			// 	'paid_bill'  => $paid_amount,
+			// 	'balance_bill'  => $balance_amount,
+			// 	'updated_on' => date('Y-m-d H:i:s')
+			// );
+
+
+			$this->db->where('customer_id',$this->input->post('customerName'));
+			$query = $this->db->get('balance');
+			$row = $query->row();
+			if ($query->num_rows()) {
+				$data_balance = array(
+					'balance_bill' => $row->balance_bill + $balance_amount,
+					'paid_bill' => $row->paid_bill + $paid_amount,
+					'total_bill' => $row->total_bill + $total_amount,
+				);
+				// $this->db->where('customer_id',$customer_id);
+				// $this->db->update('balance', $data3);
+				$bal_update = $this->Balance_model->update_balance($data_balance,$customer_id);
+
+			}
+
+			else{
+				$data_balance = array(
 				'customer_id' => $this->input->post('customerName'),
 				'bill_no' => $this->input->post('invoice_no'),
 				'total_bill'	=> $total_amount,
@@ -222,14 +248,19 @@ class Pices extends CI_Controller
 				'balance_bill'  => $balance_amount,
 				'updated_on' => date('Y-m-d H:i:s')
 			);
+				$bal_insert = $this->Balance_model->insert_balance($data_balance);
+			} 
+
+
 			$data_ledger = array(
 				'customer' => $this->input->post('customerName'),
 				'invoice' => $this->input->post('invoice_no'),
 				'paid_amount'  => $paid_amount,
+				'bill_amount'	=> $total_amount,
 				'last_amount'  => $balance_amount,
 				'dated' => date('Y-m-d H:i:s')
 			);
-			$insert = $this->Challan_model->create_balance($data_balance);
+			// $insert = $this->Challan_model->create_balance($data_balance);
 			$insert = $this->Balance_model->add_customer_ledger($data_ledger);
 			/* print_r($result);
 			die(); */
@@ -252,7 +283,7 @@ class Pices extends CI_Controller
 					'master_id' => $row['customer_id'][0],
 					'invoice_no' => $row['invoice_no']
 				];
-				
+
 				$data2 = array();
 
 				$data2[] = array(
@@ -290,11 +321,11 @@ class Pices extends CI_Controller
 			);
 			$materialId2 = $materialData[0]['materials_id'];
 			$materialId3 = explode(",", $materialId2);
-			
+
 			$m = 0;
-			
+
 		}
-		
+
 			$json_data_array = array(
 					'entry_from' => 'MakingAdd',
 					'json_data' => $json,
@@ -316,10 +347,10 @@ class Pices extends CI_Controller
 			}
 			if($insert == true)
 			{
-				$QuantitySold = $qnty;
-				$ProductID = $material;
-				$stock = 'stock';
-				$latestStock = $stock - $QuantitySold;
+				// $QuantitySold = $qnty;
+				// $ProductID = $material;
+				// $stock = 'stock';
+				// $latestStock = $stock - $QuantitySold;
 
 				$this->db->select('*');
 				$this->db->from('customers');
@@ -361,7 +392,7 @@ class Pices extends CI_Controller
 				$pdf_data = $this->load->view('invoice_pieces', $data_pdf, true);
 				$pdf->addPage();
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
-				
+
 				$filename = $this->input->post('invoice_no').'.pdf';
 				$dir = APPPATH.'/pices_invoice/'.$data_pdf['customer'].'/';
 				if(!is_dir($dir))
@@ -370,7 +401,7 @@ class Pices extends CI_Controller
 				}
 				$save_path = $dir.$filename;
 				ob_end_clean();
-				 $pdf->Output($save_path, 'I');
+				 // $pdf->Output($save_path, 'I');
 				/*die(); */
 				$pdf->Output($save_path, 'F');
 				//file_put_contents($save_path, $pdf);

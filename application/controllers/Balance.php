@@ -134,7 +134,7 @@ class Balance extends CI_Controller {
 
 				$data_update = array('last_amount' => $update_new_bal);
 
-				$insert = $this->Balance_model->update_balance($add_data,$vendorName,$invoice);
+				$insert = $this->Balance_model->update_balance($add_data,$vendorName);
 				$insert = $this->Balance_model->add_customer_ledger($add_ledgerdata);
 				// $update = $this->Balance_model->update_customer($data_update, $vendorName);
 				if($insert > 0)
@@ -179,7 +179,7 @@ class Balance extends CI_Controller {
         {
         	$data['title'] = 'Balance list';
         	$data['username'] = $this->session->userdata('logged_in');
-        	$data['ledger_list'] = $this->Balance_model->get_customer_ledger();
+        	// $data['ledger_list'] = $this->Balance_model->get_customer_ledger();			
         	$data['custList'] = $this->Customer_model->get_customers();
 	        $this->load->view('layout/header', $data);
 	        $this->load->view('layout/menubar');
@@ -274,12 +274,12 @@ class Balance extends CI_Controller {
       $data = $this->Balance_model->get_billcust($id);
       echo json_encode($data);
     }
-	public function amountByBill()
-    {
-      $id = $this->input->post('invoice');
-      $data = $this->Balance_model->get_billinvoice($id);
-      echo json_encode($data);
-    }
+	// public function amountByBill()
+    // {
+    //   $id = $this->input->post('invoice');
+    //   $data = $this->Balance_model->get_billinvoice($id);
+    //   echo json_encode($data);
+    // }
 
 	// Logout from admin page
 	public function logout()

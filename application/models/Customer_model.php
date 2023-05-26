@@ -22,6 +22,17 @@ class Customer_model extends CI_Model {
         //return $query->row();
     }
 
+    public function get_customer_byName($name)
+    {
+    	// $this->db->from('customers');
+        // $this->db->where('name',$name);
+        // return $this->db->get()->row();
+        $this->db->select('id');
+        $this->db->where('name',$name);
+        return $query = $this->db->get('customers');
+
+    }
+
     public function get_powner()
     {
         $role = '0';

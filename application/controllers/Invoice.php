@@ -188,6 +188,7 @@ class Invoice extends CI_Controller {
 				'invoice' => $invoice_no,
 				'quantity'		=> $qnty,
 				'rate'		=> $rate,
+				'bill_amount'	=> $amount,
 				'paid_amount'  => $paid_amount,
 				'last_amount'  => $balance_amount,
 				'dated' => date('Y-m-d H:i:s')

@@ -58,7 +58,7 @@
               </div>
               <div class="col-sm-6"> <?php echo form_error('vendorName', '<p class="text-danger">', '</p>'); ?></div>
             </div>
-            <div class="form-group">
+            <div class="form-group hide">
               <div class="col-sm-2">Invoice No</div>
               <div class="col-sm-4">
                 <!-- <input type="text" style="width: 60%; display: inline;" class="form-control" id="invoice" name="invoice"  value="<?php echo set_value('invoice'); ?>"> -->
@@ -198,49 +198,46 @@
               var oldOpt = '<option value="">-- select bill --</option>';
                   for (let jk = 0; jk < res.length; jk++) {
                   var id = res[jk].id;
-                        var bill_no = res[jk].bill_no;
-                        
-                   newOpt = newOpt +  '<option value="'+id+'">'+bill_no+'</option>';
-                  
+                        var balance_bill = res[jk].balance_bill;                  
                }
-               $(".invoice").html(oldOpt+newOpt);
-              
-            }, function () {
-                alert("Sorry cannot get the details!");
-            });
-        });
-
-        $(document).on('change', ".invoice", function () {
-            // var row = $(this).closest('tr');
-            // var invoice = $('#invoice').text();
-            var select = document.getElementById("invoice");
-            var invoice = select.options[select.selectedIndex].text;
-            console.log(invoice);
-
-            var baseURL= "<?php echo base_url();?>";
-            $.ajax({
-                type: 'post',
-                url: '<?=base_url()?>index.php/Balance/amountByBill',
-                data: {invoice: invoice},
-            }).then(function (data) {
-              console.log(data);
-              var res = $.parseJSON(data);
-              // var newamount = '';
-                  for (let lm = 0; lm < res.length; lm++) {
-                  // var total_bill = res[lm].total_bill;
-                  // var paid_bill = res[lm].paid_bill;
-                  var balance_bill = res[lm].balance_bill;
-                  // newamount = newamount +  '<option value="'+id+'">'+bill_no+'</option>';
-                  
-               }
-               $(".invoice_hidden").val(invoice);
-
                $("#last_bal").val(balance_bill);
               
             }, function () {
                 alert("Sorry cannot get the details!");
             });
         });
+
+        // $(document).on('change', ".invoice", function () {
+        //     // var row = $(this).closest('tr');
+        //     // var invoice = $('#invoice').text();
+        //     var select = document.getElementById("invoice");
+        //     var invoice = select.options[select.selectedIndex].text;
+        //     console.log(invoice);
+
+        //     var baseURL= "<?php echo base_url();?>";
+        //     $.ajax({
+        //         type: 'post',
+        //         url: '<?=base_url()?>index.php/Balance/amountByBill',
+        //         data: {invoice: invoice},
+        //     }).then(function (data) {
+        //       console.log(data);
+        //       var res = $.parseJSON(data);
+        //       // var newamount = '';
+        //           for (let lm = 0; lm < res.length; lm++) {
+        //           // var total_bill = res[lm].total_bill;
+        //           // var paid_bill = res[lm].paid_bill;
+        //           var balance_bill = res[lm].balance_bill;
+        //           // newamount = newamount +  '<option value="'+id+'">'+bill_no+'</option>';
+                  
+        //        }
+        //        $(".invoice_hidden").val(invoice);
+
+        //        $("#last_bal").val(balance_bill);
+              
+        //     }, function () {
+        //         alert("Sorry cannot get the details!");
+        //     });
+        // });
 
     //add new rows
     $(".add_more").click(function(){
