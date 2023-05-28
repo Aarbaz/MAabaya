@@ -185,7 +185,7 @@
          
          
          <tr>
-           <td>&nbsp;</td>
+           <!-- <td>&nbsp;</td> -->
            <th class="right">TOTAL</th>
            <td> <?php echo $grandPiece_total; ?></td>
            <td>&nbsp;</td>

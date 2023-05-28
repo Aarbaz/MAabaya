@@ -235,10 +235,37 @@ class Invoice extends CI_Controller {
 			$qnty_values = explode(",", $qnty);
 			$quantity_values = ($qnty_values);
 			$insert = $this->Challan_model->create_invoice_insider($data);
-			$insert = $this->Challan_model->create_balance($data_balance);
-			$insert = $this->Balance_model->add_customer_ledger($data_ledger);
+			/* $insert = $this->Challan_model->create_balance($data_balance);*/
+			$insert = $this->Balance_model->add_customer_ledger($data_ledger); 
 
+			if($balance_amount){
 
+				$this->db->where('customer_id',$bakers_id);
+				$query = $this->db->get('balance');
+				$row = $query->row();
+				if ($query->num_rows()) {
+					$data3 = array(
+						'balance_bill' => $row->balance_bill + $balance_amount,
+						'paid_bill' => $row->paid_bill + $paid_amount,
+						'total_bill' => $row->total_bill + $total_amount,
+					);
+					// $this->db->where('customer_id',$customer_id);
+					// $this->db->update('balance', $data3);
+					$bal_update = $this->Balance_model->update_balance($data3,$bakers_id);
+
+				}
+				else{
+					$bal_data = [                        
+						"customer_id" => $bakers_id,
+						"bill_type" => 'debited',
+						"bill_no" =>strtoupper($invoice_no),
+						"total_bill" => $total_amount,
+						"paid_bill" => $paid_amount,
+						"balance_bill" => $balance_amount,
+					];
+					$bal_insert = $this->Balance_model->insert_balance($bal_data);
+				}                        
+		  } 
 			if($insert == true)
 			{
 				$data2 = array();
