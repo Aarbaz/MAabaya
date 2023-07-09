@@ -1,3 +1,11 @@
+<style>
+.debited{
+  color: red;
+}
+.credited{
+  color: green;
+}
+</style>
 <div class="container-fluid" id="bg-color"><br /></div>
 
 <div class="container-fluid">
@@ -10,90 +18,10 @@
 
         <div class="panel-body">
           <p>
-            <form id="download_ledger" class="form-inline" action="<?php echo base_url('/index.php/Balance/download_pdf');?>">
-              <div class="form-group">
-                <label for="customerName">Customer: </label>
-                <select name="customerName" id="customerName" class="form-control">
-                  <option value="">-- select --</option>
-                  <?php foreach ($custList->result() as $row){
-                    echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->name.'</option>';
-                  } ?>
-                </select>
-              </div>
 
-              <div class="form-group">
-                <label>From:                 </label>
-                <select class="form-control" name="frm_mth" id="frm_mth">
-                  <option value="">--Month--</option>
-                  <option value="01">January</option>
-                  <option value="02">February</option>
-                  <option value="03">March</option>
-                  <option value="04">April</option>
-                  <option value="05">May</option>
-                  <option value="06">June</option>
-                  <option value="07">July</option>
-                  <option value="08">August</option>
-                  <option value="09">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <select class="form-control" name="frm_yr" id="frm_yr">
-                  <option value="">--Year--</option>
-                  <?php
-                  $y = date('Y');
-                  $dif = $y-5;
-                  for($i = $y; $i >= $dif; $i--)
-                  {
-                    echo '<option value="'.$i.'">'.$i.'</option>';
-                  }
-                  ?>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>To:                 </label>
-                <select class="form-control" name="to_mth" id="to_mth">
-                  <option value="">--Month--</option>
-                  <option value="01">January</option>
-                  <option value="02">February</option>
-                  <option value="03">March</option>
-                  <option value="04">April</option>
-                  <option value="05">May</option>
-                  <option value="06">June</option>
-                  <option value="07">July</option>
-                  <option value="08">August</option>
-                  <option value="09">September</option>
-                  <option value="10">October</option>
-                  <option value="11">November</option>
-                  <option value="12">December</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <select class="form-control" name="to_yr" id="to_yr">
-                  <option value="">--Year--</option>
-                  <?php
-                  $y = date('Y');
-                  $dif = $y-5;
-                  for($i = $y; $i >= $dif; $i--)
-                  {
-                    echo '<option value="'.$i.'">'.$i.'</option>';
-                  }
-                  ?>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <button type="submit" class="btn btn-success">Download Balance</button>
-              </div>
-              <div class="form-group">
-                &nbsp;&nbsp;<a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Balance/ledger');?>">Add New</a>
-              </div>
-            </form>
+            <div class="form-group">
+              &nbsp;&nbsp;<a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Balance/ledger');?>">Add New</a>
+            </div>
           </p><br />
           <div><p id="result_box" class="text-center"></p></div>
           <?php
@@ -109,16 +37,16 @@
                 <th>Customer</th>
                 <th>Balance</th>
                 <th>Date</th>
-                <th>Action</th>
+                <!-- <th>Action</th> -->
               </tr>
             </thead>
 
             <tbody>
-            <?php 
+            <?php
              $i = 1;   foreach ($custList->result() as $bal){
 
               $balance_list = $this->Customer_model->get_customer_byName($bal->name);
-              
+
               foreach ($balance_list->result() as $balUser){
 
               $balance = $this->Balance_model->get_bal_user($balUser->id);
@@ -130,12 +58,12 @@
                 <!-- <td><?php echo $row->challan; ?></td> -->
                 <td><?php echo $bal->name; ?></td>
                 <!-- <td><?php echo $row->new_amount; ?></td> -->
-                <td><?php echo $row->balance_bill; ?></td>
+                <td class="<?php if($row->bill_type == 'debited'){ echo "debited"; } else{ echo "credited";}?>"><?php echo $row->balance_bill; ?></td>
                 <td><?php echo $row->updated_on; ?></td>
-                <td>
+                <!-- <td>
                   <button class="btn btn-primary btn-xs" data-title="edit" data-toggle="modal" title="Click to edit" onclick="show_material(<?php echo $row->id;?>)"><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_material(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
-                </td>
+                </td> -->
               </tr>
             <?php  } } $i++;}?>
             </tbody>

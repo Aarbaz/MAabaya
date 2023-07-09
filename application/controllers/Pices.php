@@ -232,6 +232,7 @@ class Pices extends CI_Controller
 					'balance_bill' => $row->balance_bill + $balance_amount,
 					'paid_bill' => $row->paid_bill + $paid_amount,
 					'total_bill' => $row->total_bill + $total_amount,
+          "bill_type" => 'debited',
 				);
 				// $this->db->where('customer_id',$customer_id);
 				// $this->db->update('balance', $data3);
@@ -246,10 +247,11 @@ class Pices extends CI_Controller
 				'total_bill'	=> $total_amount,
 				'paid_bill'  => $paid_amount,
 				'balance_bill'  => $balance_amount,
+        "bill_type" => 'debited',
 				'updated_on' => date('Y-m-d H:i:s')
 			);
 				$bal_insert = $this->Balance_model->insert_balance($data_balance);
-			} 
+			}
 
 
 			$data_ledger = array(

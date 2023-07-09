@@ -32,7 +32,7 @@
                     <td>
                       <select name="mat_name[]" class="form-control">
                         <option value="">--select--</option>
-                        
+
                       </select>
                     </td>
                     <td><input type="text" name="hsn[]" class="form-control" value=""></td>
@@ -64,13 +64,40 @@
                 <!-- <input type="text" style="width: 60%; display: inline;" class="form-control" id="invoice" name="invoice"  value="<?php echo set_value('invoice'); ?>"> -->
                 <select name="invoice" id="invoice" style="width: 60%; display: inline;" class="form-control invoice">
                   <!-- <option value="">-- select bill --</option> -->
-                  
+
                 </select>
-                <input type="hidden" class="invoice_hidden"name="invoice_hidden">
 
               </div>
               <div class="col-sm-6"> <?php echo form_error('invoice', '<p class="text-danger">', '</p>'); ?></div>
             </div>
+            <?php
+            $balance_no = '';
+
+            if(!empty($balList->invoice))
+            {
+                $db_invoice = $balList->invoice;
+                $num_part = substr($db_invoice, 3);
+                $add_one = intval($num_part)+1;
+
+                if(strlen($add_one) < 3)
+                {
+                    $ch_no = sprintf("%03u", $add_one);
+                    $balance_no = 'BAL'.$ch_no;
+                }
+                else
+                {
+                    $balance_no = 'BAL'.$add_one;
+                }
+            }
+            else
+            {
+                $balance_no = 'BAL001';
+            }
+
+            ?>
+            <input type="hidden" class="invoice_hidden"name="invoice_hidden" value="<?php echo $balance_no; ?>">
+
+
 
             <div class="form-group hide">
               <div class="col-sm-2">Challan No</div>
@@ -80,7 +107,7 @@
               <div class="col-sm-6"> <?php echo form_error('challan', '<p class="text-danger">', '</p>'); ?></div>
             </div>
 
-           
+
 
             <div class="form-group ">
               <div class="col-sm-2">Last Amount</div>
@@ -119,7 +146,7 @@
               <div class="col-sm-4">
                 <div>
                   <label class="radio-inline">
-                    <input type="radio" name="mode" value="Cash" id="mode1" <?php echo  set_radio('mode', 'Cash'); ?>>&nbsp;Cash
+                    <input type="radio" name="mode" value="Cash" checked id="mode1" <?php echo  set_radio('mode', 'Cash'); ?>>&nbsp;Cash
                   </label>
                   <label class="radio-inline">
                     <input type="radio" name="mode" value="Cheque" id="mode2" <?php echo  set_radio('mode', 'Cheque'); ?>>&nbsp;Cheque
@@ -131,14 +158,14 @@
               </div>
               <div class="col-sm-6"> <?php echo form_error('mode', '<p class="text-danger">', '</p>'); ?></div>
             </div>
-            <div class="form-group" id="chk_row">
+            <div class="form-group" id="chk_row"  style="display:none;">
               <div class="col-sm-2">Cheque No</div>
               <div class="col-sm-4">
                 <input type="text" style="width: 60%; display: inline;" class="form-control" id="cheque_no" name="cheque_no" value="<?php echo set_value('cheque_no'); ?>">
               </div>
               <div class="col-sm-6"> <?php echo form_error('cheque_no', '<p class="text-danger">', '</p>'); ?></div>
             </div>
-            <div class="form-group" id="imps_row">
+            <div class="form-group" id="imps_row"  style="display:none;">
               <div class="col-sm-2">Transaction No</div>
               <div class="col-sm-4">
                 <input type="text" style="width: 60%; display: inline;" class="form-control" id="trn_no" name="trn_no" value="<?php echo set_value('trn_no'); ?>">
@@ -198,10 +225,10 @@
               var oldOpt = '<option value="">-- select bill --</option>';
                   for (let jk = 0; jk < res.length; jk++) {
                   var id = res[jk].id;
-                        var balance_bill = res[jk].balance_bill;                  
+                        var balance_bill = res[jk].balance_bill;
                }
                $("#last_bal").val(balance_bill);
-              
+
             }, function () {
                 alert("Sorry cannot get the details!");
             });
@@ -228,12 +255,12 @@
         //           // var paid_bill = res[lm].paid_bill;
         //           var balance_bill = res[lm].balance_bill;
         //           // newamount = newamount +  '<option value="'+id+'">'+bill_no+'</option>';
-                  
+
         //        }
         //        $(".invoice_hidden").val(invoice);
 
         //        $("#last_bal").val(balance_bill);
-              
+
         //     }, function () {
         //         alert("Sorry cannot get the details!");
         //     });

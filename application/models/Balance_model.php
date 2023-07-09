@@ -88,7 +88,7 @@ class Balance_model extends CI_Model {
     public function insert_balance($insert_data)
     {
         return $this->db->insert('balance', $insert_data);
-        
+
     }
 
     public function insert_ledgerbalance($ledger_data)
@@ -251,6 +251,11 @@ class Balance_model extends CI_Model {
     {
         $this->db->where('customer_id', $customer_id)->order_by('id', 'ASC ');
         return $this->db->get('balance');
+    }
+
+    public function get_last_balance()
+    {
+        return $this->db->select('invoice')->order_by('id','desc')->get('customer_ledger_balance')->row();
     }
 
     /*ends here */

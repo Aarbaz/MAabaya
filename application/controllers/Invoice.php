@@ -236,7 +236,7 @@ class Invoice extends CI_Controller {
 			$quantity_values = ($qnty_values);
 			$insert = $this->Challan_model->create_invoice_insider($data);
 			/* $insert = $this->Challan_model->create_balance($data_balance);*/
-			$insert = $this->Balance_model->add_customer_ledger($data_ledger); 
+			$insert = $this->Balance_model->add_customer_ledger($data_ledger);
 
 			if($balance_amount){
 
@@ -248,6 +248,7 @@ class Invoice extends CI_Controller {
 						'balance_bill' => $row->balance_bill + $balance_amount,
 						'paid_bill' => $row->paid_bill + $paid_amount,
 						'total_bill' => $row->total_bill + $total_amount,
+						"bill_type" => 'credited',
 					);
 					// $this->db->where('customer_id',$customer_id);
 					// $this->db->update('balance', $data3);
@@ -255,17 +256,18 @@ class Invoice extends CI_Controller {
 
 				}
 				else{
-					$bal_data = [                        
+					$bal_data = [
 						"customer_id" => $bakers_id,
 						"bill_type" => 'debited',
 						"bill_no" =>strtoupper($invoice_no),
 						"total_bill" => $total_amount,
 						"paid_bill" => $paid_amount,
 						"balance_bill" => $balance_amount,
+						"bill_type" => 'credited',
 					];
 					$bal_insert = $this->Balance_model->insert_balance($bal_data);
-				}                        
-		  } 
+				}
+		  }
 			if($insert == true)
 			{
 				$data2 = array();

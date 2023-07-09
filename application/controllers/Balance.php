@@ -15,6 +15,8 @@ class Balance extends CI_Controller {
         $this->load->library('form_validation');
         $this->load->model('Balance_model');
         $this->load->model('Customer_model');
+				$this->load->library("tcpdf");
+
     }
 
 	public function ledgerBalance()
@@ -68,6 +70,8 @@ class Balance extends CI_Controller {
 				$data['title'] = ucwords('Create Ledger balance');
 	        	$data['username'] = $this->session->userdata('logged_in');
 	        	$data['custList'] = $this->Balance_model->get_all_customer();
+						$data['balList'] = $this->Balance_model->get_last_balance();
+
         		// $data['productList'] = $this->Balance_model->get_all_products();
 		        $this->load->view('layout/header', $data);
 		        $this->load->view('layout/menubar');
@@ -113,13 +117,15 @@ class Balance extends CI_Controller {
 					'updated_on' => date('Y-m-d H:i:s')
 				);
 
+
+
 				$add_ledgerdata = array(
 					// 'product_name' => strtoupper(trim($mat_name)),
 					// 'hsn' => strtoupper($hsn),
 					// 'batch_no' => strtoupper($batch),
 					// 'quantity' => $qnty,
 					// 'rate' => $rate,
-					'invoice' => $invoice,
+					'invoice' => $postData['invoice_hidden'],
 					// 'challan' => $challan,
 					'customer' => $vendorName,
 					// 'total_bill'	=> $last_bal,
@@ -137,6 +143,49 @@ class Balance extends CI_Controller {
 				$insert = $this->Balance_model->update_balance($add_data,$vendorName);
 				$insert = $this->Balance_model->add_customer_ledger($add_ledgerdata);
 				// $update = $this->Balance_model->update_customer($data_update, $vendorName);
+
+				$customer_id= $vendorName;
+	      $this->db->select('*');
+	      $this->db->from('customers');
+	      $this->db->where('id',$customer_id);
+	      $query = $this->db->get();
+	      $purchaser_name = $query->row();
+	      $cust_name = $purchaser_name->name;
+
+				$data_pdf = [
+					'invoice' => $invoice,
+					// 'challan' => $challan,
+					'customer' => $cust_name,
+					// 'total_bill'	=> $last_bal,
+					'bill_amount' => $last_bal,
+					'paid_amount' => $paid,
+					'last_amount'  => $update_new_bal,
+					'payment_mode'     => $mode,
+					'transaction_no' => $trn_no,
+					'cheque_no'     => $cheque_no,
+		];
+
+				// print_r($data_pdf);
+				// die();
+				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
+				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+				//$pdf->SetFont('helvetica', '', 10);
+				$pdf->SetFont("", "", 10);
+				$pdf_data = $this->load->view("balance_bill", $data_pdf, true);
+				$pdf->addPage();
+				$pdf->writeHTML($pdf_data, true, false, true, false, "");
+				$filename = strtoupper($cust_name).".pdf";
+				$dir = APPPATH . "/Balance Amount/" . $cust_name . "/";
+				if (!is_dir($dir)) {
+						mkdir($dir, 0777, true);
+				}
+				$save_path = $dir . $filename;
+				ob_end_clean();
+				// $pdf->Output($save_path, "I");
+				$pdf->Output($save_path, "F");
+
 				if($insert > 0)
 				{
 					$this->session->set_flashdata('success', 'Balance added successfully.');
@@ -148,6 +197,9 @@ class Balance extends CI_Controller {
 		        	$data['title'] = 'Create Ledger balance';
 		        	$data['username'] = $this->session->userdata('logged_in');
 					$data['custList'] = $this->Balance_model->get_all_customer();
+					$data['balList'] = $this->Balance_model->get_last_balance();
+
+
 		        	// $data['productList'] = $this->Balance_model->get_all_products();
 			        $this->load->view('layout/header', $data);
 			        $this->load->view('layout/menubar');
@@ -161,6 +213,8 @@ class Balance extends CI_Controller {
         	$data['title'] = 'Create Ledger balance';
         	$data['username'] = $this->session->userdata('logged_in');
 			$data['custList'] = $this->Balance_model->get_all_customer();
+			$data['balList'] = $this->Balance_model->get_last_balance();
+
         	// $data['productList'] = $this->Balance_model->get_all_products();
 	        $this->load->view('layout/header', $data);
 	        $this->load->view('layout/menubar');
@@ -179,7 +233,7 @@ class Balance extends CI_Controller {
         {
         	$data['title'] = 'Balance list';
         	$data['username'] = $this->session->userdata('logged_in');
-        	// $data['ledger_list'] = $this->Balance_model->get_customer_ledger();			
+        	// $data['ledger_list'] = $this->Balance_model->get_customer_ledger();
         	$data['custList'] = $this->Customer_model->get_customers();
 	        $this->load->view('layout/header', $data);
 	        $this->load->view('layout/menubar');
@@ -225,7 +279,10 @@ class Balance extends CI_Controller {
 			if( count($db_data) > 0)
 			{
 				//$data['db_data'] = $db_data;
-				$filename = $db_data[0]['name'].'-ledger.xls';
+				$filename = $db_data[0]['name'];
+
+
+
 				header("Content-Type: application/vnd.ms-excel");
 				header("Content-Disposition: attachment; filename=\"$filename\"");
 				$isPrintHeader = false;
