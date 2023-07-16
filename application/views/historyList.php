@@ -12,7 +12,7 @@
          ?>
         <div class="panel-body">
           <p>
-            <form id="download_ledger" class="form-inline" action="<?php echo base_url('/index.php/Balance/download_pdf');?>">
+            <form id="download_ledger" class="form-inline" action="<?php echo base_url('/index.php/History/download_pdf');?>">
               <div class="form-group">
                 <label for="customerName">Customer: </label>
                 <select name="customerName" id="customerName" class="form-control">
@@ -109,9 +109,11 @@
                 <th>Invoice</th>
                 <!-- <th>Challan</th> -->
                 <th>Customer</th>
+                <th>Bill Total</th>
+                <th>Last Paid Amount</th>
                 <th>Balance</th>
                 <th>Date</th>
-                <th>Action</th>
+                <!-- <th>Action</th> -->
               </tr>
             </thead>
 
@@ -122,13 +124,14 @@
                 <td><?php echo $row->invoice; ?></td>
                 <!-- <td><?php echo $row->challan; ?></td> -->
                 <td><?php echo $row->name; ?></td>
-                <!-- <td><?php echo $row->new_amount; ?></td> -->
+                <td><?php echo $row->bill_amount; ?></td>
+                <td><?php echo $row->paid_amount; ?></td>
                 <td><?php echo $row->last_amount; ?></td>
                 <td><?php echo $row->dated; ?></td>
-                <td>
+                <!-- <td>
                   <button class="btn btn-primary btn-xs" data-title="edit" data-toggle="modal" title="Click to edit" onclick="show_material(<?php echo $row->id;?>)"><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_material(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
-                </td>
+                </td> -->
               </tr>
             <?php $i++; } ?>
             </tbody>
@@ -318,6 +321,7 @@ $(document).ready(function(){
         cache:false,
         async:false,
         success:function(resp){
+          console.log(resp);
           if( resp.status == 'failed')
           {
             $('#result_box').empty();
