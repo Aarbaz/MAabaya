@@ -12,7 +12,7 @@
          ?>
         <div class="panel-body">
           <p>
-            <form id="download_ledger" class="form-inline" action="<?php echo base_url('/index.php/History/download_pdf');?>">
+            <form id="download_ledger" class="form-inline" method="post" action="<?php echo base_url('/index.php/History/download_pdf');?>">
               <div class="form-group">
                 <label for="customerName">Customer: </label>
                 <select name="customerName" id="customerName" class="form-control">
@@ -128,7 +128,7 @@
                 <td><?php echo $row->paid_amount; ?></td>
                 <td><?php echo $row->last_amount; ?></td>
                 <td><?php echo $row->dated; ?></td>
-                <!-- <td>
+               <!--  <td>
                   <button class="btn btn-primary btn-xs" data-title="edit" data-toggle="modal" title="Click to edit" onclick="show_material(<?php echo $row->id;?>)"><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_material(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
                 </td> -->
@@ -329,14 +329,7 @@ $(document).ready(function(){
           }
           else if(resp.status == 'passed')
           {
-            $('#result_box').empty();
-            $("#download_ledger")[0].reset();
-              var $a = $("<a>");
-              $a.attr("href",resp.result);
-              $("body").append($a);
-              $a.attr("download", resp.filename);
-              $a[0].click();
-              $a.remove();
+
           }
         }
       });
