@@ -633,5 +633,100 @@ class Pices extends CI_Controller
 			$this->load->view('layout/footer');
 		}
 	}
+	public function downloadBalance()
+	{
+
+		$cust_name = $this->input->post('customerName');
+		$frm_mth = $this->input->post('frm_mth');
+		$frm_yr = $this->input->post('frm_yr');
+		$to_mth = $this->input->post('to_mth');
+		$to_yr = $this->input->post('to_yr');
+		$invoice_id = $frm_mth . '_' . $to_mth ;
+		if ($this->form_validation->run() == FALSE) {
+			$response['result'] = 'Please select customer, month and year.';
+			$response['status'] = 'failed';
+			//echo json_encode($response);
+		}
+
+		$this->form_validation->set_rules('customerName', 'Customer Name', 'trim|required');
+		$this->form_validation->set_rules('frm_mth', 'From Month', 'trim|required');
+		$this->form_validation->set_rules('frm_yr', 'From Year', 'trim|required');
+		if(!$this->session->userdata('logged_in'))
+		{
+			redirect('Welcome');
+		}
+		elseif( $cust_name && $invoice_id )
+		{
+			$db_data = $this->Balance_model->customer_ledger_byDate($cust_name, $frm_mth, $frm_yr, $to_mth, $to_yr)->result_array();
+
+				// get user name
+				$this->db->where('id', $cust_name);
+				$query = $this->db->get('customers');
+				$row = $query->row();
+				$username = $row->name;
+				$cust_id = $cust_name;
+			$cust_name = rawurlencode($username);
+			$pdf_file = APPPATH.'balance_sheet/'.rawurldecode($cust_name).'/'.$invoice_id.'.pdf';
+			$file = $invoice_id.'.pdf';
+	
+			if (file_exists($pdf_file))
+			{
+				header("Content-Type: application/pdf");
+				header("Content-Disposition: attachment;filename=\"$file\"" );
+				readfile($pdf_file);
+			}
+			else
+			{
+				$db_data = $this->Balance_model->customer_ledger_byDate($cust_id, $frm_mth, $frm_yr, $to_mth, $to_yr)->result_array();
+				
+				$data_pdf = $db_data; // Replace $dynamic_array with your actual dynamic array
+				$filename = $frm_mth . '_' . $to_mth . '.pdf';
+				$pdf_file = APPPATH . 'balance_sheet/' . rawurldecode($username) . '/' . $filename;
+				$file = $filename;
+
+				$this->load->library('tcpdf/tcpdf.php');
+
+				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
+				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+				//$pdf->SetFont('helvetica', '', 10);
+				$pdf->SetFont('times', '', 10);
+
+				$pdf_data = $this->load->view('balance_pdf', array('data_pdf' => $data_pdf), true);
+				$pdf->addPage();
+
+				$pdf->writeHTML($pdf_data, true, false, true, false, '');
+
+				$inv_id = $frm_mth . '_' . $to_mth;
+				$dir = APPPATH . '/balance_sheet/' . $username . '/';
+
+				if (!is_dir($dir)) {
+					mkdir($dir, 0777, true);
+				}
+				$save_path = $dir . $filename;
+				ob_end_clean();
+				// print_r($username);die();
+				$pdf->Output($save_path, 'F');
+				// file_put_contents($save_path, $pdf);
+
+				$response['result'] = 'PDF generated successfully.';
+				$response['status'] = 'passed';
+			
+				$this->session->set_flashdata('success', 'PDF generated successfully....');
+				sleep(4);
+				$this->downloadBalance();
+		}
+		}
+		else
+		{
+			$data['title'] = ucwords('Page not found');
+        	$data['username'] = $this->session->userdata('logged_in');
+			$this->load->view('layout/header', $data);
+	        $this->load->view('layout/menubar');
+			$this->load->view('errors/html/error_404');
+			$this->load->view('layout/footer');
+		}
+	}
 }
 ?>

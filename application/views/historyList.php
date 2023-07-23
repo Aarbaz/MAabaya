@@ -12,7 +12,7 @@
          ?>
         <div class="panel-body">
           <p>
-            <form id="download_ledger" class="form-inline" method="post" action="<?php echo base_url('/index.php/History/download_pdf');?>">
+            <form id="download_ledger" class="form-inline" method="post" enctype="multipart/form-data" action="<?php echo base_url('/index.php/Pices/downloadBalance');?>" >
               <div class="form-group">
                 <label for="customerName">Customer: </label>
                 <select name="customerName" id="customerName" class="form-control">
@@ -128,6 +128,7 @@
                 <td><?php echo $row->paid_amount; ?></td>
                 <td><?php echo $row->last_amount; ?></td>
                 <td><?php echo $row->dated; ?></td>
+                <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Pices/downloadBalance/').rawurlencode("Zakir").'/01_12'?>"></td>
                <!--  <td>
                   <button class="btn btn-primary btn-xs" data-title="edit" data-toggle="modal" title="Click to edit" onclick="show_material(<?php echo $row->id;?>)"><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
                   <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_material(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
@@ -311,6 +312,7 @@ $(document).ready(function(){
 
   $("#download_ledger").submit(function(e){
       e.preventDefault();
+      var formUrl = "History/openPdf";
       $.ajax({
         url: $(this).attr('action'),
         type: "POST",
