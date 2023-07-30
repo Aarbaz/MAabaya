@@ -153,7 +153,7 @@ class Purchaser extends CI_Controller
             					);
             					// print_r($data2);
                       // $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
-                      $this->db->where('materials_id',$material_id[$i]);
+                                $this->db->where('materials_id',$material_id[$i]);
             					$this->db->update('purchaser_stock', $data3);
             				} else {
             					// If the product does not exist, insert a new row into the database
@@ -190,7 +190,7 @@ class Purchaser extends CI_Controller
 
                 $json_data = json_encode($data);
           			$json_data_array = array(
-          					'entry_from' => '0',
+          					'entry_from' => 1, //Purchaser
           					'json_data' => $json_data,
           			);
           			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
@@ -235,6 +235,7 @@ class Purchaser extends CI_Controller
                         "bill_amount" => $total_amount,
                         "paid_amount" => $paid_amount,
                         "last_amount" => $balance_amount,
+                        'entry_from' => 1,
                     ];
                     $ledge_insert = $this->Balance_model->add_customer_ledger($ledge_data);
 
@@ -269,6 +270,9 @@ class Purchaser extends CI_Controller
                     'qnty' => $qnty,
                     "amount" => $amount,
                     'rate' => $rate,
+                    'bill_amount' => $total_amount,
+                    'paid_amount' => $paid_amount,
+                    'last_amount' => $balance_amount
               ];
 
 									$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);

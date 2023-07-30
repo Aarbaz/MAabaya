@@ -1,74 +1,74 @@
 <div class="container-fluid" id="bg-color"><br /></div>
 
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-12">
-			<div class="panel panel-default">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Invoice/logout');?>">Log Out</a></span>
+                    <h4><?php echo ucwords($username) . ', '; ?><small><?php echo date('d F, Y'); ?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Invoice/logout'); ?>">Log Out</a></span>
                     </h4>
                 </div>
 
-				<div class="panel-body">
-					<p>
-						<span class="btn btn-primary btn-sm" onclick="add_new_design()">Add New</span>
-					</p><br />
-					<div class="challan-div">
-						<form id="pices_add_form" name="pices_add_form" class="form-horizontal pices_add_form" action="<?php echo site_url('Pices/create');?>" method="post">
-							<div class="form-group">
-								<h3 class="text-center">Pices Recived</h3>
-							</div>
-							 <div class="col-sm-5 "><!--leftbox -->
-								<div class="form-group ">
-									<label class="control-label col-sm-3">Master Name</label>
-									<div class="col-sm-9">
-	  									<!-- <select name="customerName" id="customerName" class="form-control">
-	  										<option value="" selected="selected">--select customer--</option>
-                                            <?php foreach ($custList->result() as $row){
-                                                echo '<option value="'.$row->id.'" '.set_select('customerName',$row->id).'>'.$row->material_name.'</option>';
+                <div class="panel-body">
+                    <!-- <p>
+                        <span class="btn btn-primary btn-sm" onclick="add_new_design()">Add New</span>
+                    </p><br /> -->
+                    <div class="challan-div">
+                        <form id="pices_add_form" name="pices_add_form" class="form-horizontal pices_add_form" action="<?php echo site_url('Pices/create'); ?>" method="post">
+                            <div class="form-group">
+                                <h3 class="text-center">Pices Recived</h3>
+                            </div>
+                             <div class="col-sm-5 "><!--leftbox -->
+                                <div class="form-group ">
+                                    <label class="control-label col-sm-3">Master Name</label>
+                                    <div class="col-sm-9">
+                                          <!-- <select name="customerName" id="customerName" class="form-control">
+                                              <option value="" selected="selected">--select customer--</option>
+                                            <?php foreach ($custList->result() as $row) {
+                                                echo '<option value="' . $row->id . '" ' . set_select('customerName', $row->id) . '>' . $row->material_name . '</option>';
                                             } ?>
 
-                                            <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name');?>" id="cust_name">
+                                            <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds'); ?>" id="cust_adds">
+                                        <input type="hidden" name="cust_name" value="<?php echo set_value('cust_name'); ?>" id="cust_name">
                                             <option value="other">Other</option>
-	  									</select>  -->
+                                          </select>  -->
 
                                           <select name="customerName" id="customerName" class="form-control">
                                             <option value="" selected="selected">--select master--</option>
                                             <?php
-                                                // print_r($custList);
-                                                foreach ($custList->result() as $row){
-                                                    echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
-                                                } ?>
+                                            // print_r($custList);
+                                            foreach ($custList->result() as $row) {
+                                                echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . '>' . $row->name . '</option>';
+                                            } ?>
                                             </select>
-							   		</div>
+                                       </div>
                                     <div class="col-sm-2 hide">
-                                    <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new');?>">Add Customer</a>
+                                    <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new'); ?>">Add Customer</a>
                                     </div>
-								</div>
+                                </div>
 
-								<div class="form-group hide">
-									<label class="control-label col-sm-3">Address</label>
-									<div class="col-sm-9" id="addds_holder">
-                                        <input type="text" name="cust_adds_txt" id="cust_adds_txt" class="form-control" value="<?php echo set_value('cust_adds_txt');?>">
-                                        <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds');?>" id="cust_adds">
-                                        <input type="hidden" name="cust_name1" value="<?php echo set_value('cust_name');?>" id="cust_name1">
+                                <div class="form-group hide">
+                                    <label class="control-label col-sm-3">Address</label>
+                                    <div class="col-sm-9" id="addds_holder">
+                                        <input type="text" name="cust_adds_txt" id="cust_adds_txt" class="form-control" value="<?php echo set_value('cust_adds_txt'); ?>">
+                                        <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds'); ?>" id="cust_adds">
+                                        <input type="hidden" name="cust_name1" value="<?php echo set_value('cust_name'); ?>" id="cust_name1">
                                     </div>
-								</div>
-								<div class="form-group hide">
-									<label class="control-label col-sm-3">Buyer's GST</label>
-									<div class="col-sm-9">
-                                        <input type="text" name="cust_gst_txt" id="cust_gst_txt" class="form-control " value="<?php echo set_value('cust_gst_txt');?>" readonly="readonly">
-                                        <input type="hidden" name="cust_gst" value="<?php echo set_value('cust_gst');?>" id="cust_gst">
-							   		</div>
-								</div>
+                                </div>
+                                <div class="form-group hide">
+                                    <label class="control-label col-sm-3">Buyer's GST</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" name="cust_gst_txt" id="cust_gst_txt" class="form-control " value="<?php echo set_value('cust_gst_txt'); ?>" readonly="readonly">
+                                        <input type="hidden" name="cust_gst" value="<?php echo set_value('cust_gst'); ?>" id="cust_gst">
+                                       </div>
+                                </div>
                                 <div class="form-group hide">
                                     <label class="control-label col-sm-3">Select Region</label>
                                     <div class="col-sm-9">
                                         <select id="region" name="region" class="form-control">
                                             <option value="">--select--</option>
-                                            <option value="in" <?php echo set_select('region','in');?>>In Maharashtra</option>
-                                            <option value="out" <?php echo set_select('region','out');?>>Out of Maharashtra</option>
+                                            <option value="in" <?php echo set_select('region', 'in'); ?>>In Maharashtra</option>
+                                            <option value="out" <?php echo set_select('region', 'out'); ?>>Out of Maharashtra</option>
                                         </select>
                                     </div>
                                 </div>
@@ -77,68 +77,62 @@
                                     <div class="col-sm-9">
                                         <select id="amount_with" name="amount_with" class="form-control">
                                             <option value="">--select--</option>
-                                            <option value="with" <?php echo set_select('amount_with','with');?>>Amount With GST</option>
-                                            <option value="without" <?php echo set_select('amount_with','without');?>>Amount Without GST</option>
+                                            <option value="with" <?php echo set_select('amount_with', 'with'); ?>>Amount With GST</option>
+                                            <option value="without" <?php echo set_select('amount_with', 'without'); ?>>Amount Without GST</option>
                                         </select>
                                     </div>
                                 </div>
-							</div>
-							<div class="col-sm-1">&nbsp;</div>
-							<div class="col-sm-6 leftbox inv hide">
-								<div class="form-group">
-									<label class="control-label col-sm-4">INVOICE NO.</label>
-									<div class="col-sm-8">&nbsp;&nbsp;
+                            </div>
+                            <div class="col-sm-1">&nbsp;</div>
+                            <div class="col-sm-6 leftbox inv hide">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">INVOICE NO.</label>
+                                    <div class="col-sm-8">&nbsp;&nbsp;
                                         <?php
 
                                         $invoice_no = '';
 
-                                        if(!empty($last_invoice->invoice_no))
-                                        {
+                                        if (!empty($last_invoice->invoice_no)) {
                                             $db_invoice = $last_invoice->invoice_no;
                                             $num_part = substr($db_invoice, 3);
-                                            $add_one = intval($num_part)+1;
+                                            $add_one = intval($num_part) + 1;
 
-                                            if(strlen($add_one) < 3)
-                                            {
+                                            if (strlen($add_one) < 3) {
                                                 $ch_no = sprintf("%03u", $add_one);
-                                                $invoice_no = 'PIC'.$ch_no;
+                                                $invoice_no = 'PIC' . $ch_no;
+                                            } else {
+                                                $invoice_no = 'PIC' . $add_one;
                                             }
-                                            else
-                                            {
-                                                $invoice_no = 'PIC'.$add_one;
-                                            }
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             $invoice_no = 'PIC001';
                                         }
 
                                         ?>
-                                        <?php echo '<b>'.$invoice_no.'</b>';?>
+                                        <?php echo '<b>' . $invoice_no . '</b>'; ?>
                                         <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
                                     </div>
-								</div>
-								<div class="form-group">
-									<label class="control-label col-sm-4">INVOICE DATE</label>
-									<div class="col-sm-8">&nbsp;&nbsp;&nbsp;<?php echo date('d/m/Y');?></div>
-								</div>
-								<div class="form-group hide">
-									<label class="control-label col-sm-4">DATE OF SUPPLY</label>
-									<div class="col-sm-8">&nbsp;<input type="date" name="sup_date" value="<?php echo set_value('sup_date');?>" class="form-control">
-									</div>
-								</div>
-								<div class="form-group hide">
-									<label class="control-label col-sm-4">PLACE OF SUPPLY</label>
-									<div class="col-sm-8">
-										<input type="text" name="sup_place" value="<?php echo set_value('sup_place');?>" class="form-control">
-									</div>
-								</div>
-								<div class="form-group hide">
-									<label class="control-label col-sm-4">OTHER</label>
-									<div class="col-sm-8"><input type="text" name="sup_other" value="<?php echo set_value('sup_other');?>" class="form-control">
-									</div>
-								</div>
-							</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4">INVOICE DATE</label>
+                                    <div class="col-sm-8">&nbsp;&nbsp;&nbsp;<?php echo date('d/m/Y'); ?></div>
+                                </div>
+                                <div class="form-group hide">
+                                    <label class="control-label col-sm-4">DATE OF SUPPLY</label>
+                                    <div class="col-sm-8">&nbsp;<input type="date" name="sup_date" value="<?php echo set_value('sup_date'); ?>" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group hide">
+                                    <label class="control-label col-sm-4">PLACE OF SUPPLY</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="sup_place" value="<?php echo set_value('sup_place'); ?>" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group hide">
+                                    <label class="control-label col-sm-4">OTHER</label>
+                                    <div class="col-sm-8"><input type="text" name="sup_other" value="<?php echo set_value('sup_other'); ?>" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-sm-12">&nbsp;</div>
                             <div class="form-group"><br />
                               <div class="col-sm-8 col-sm-offset-2">
@@ -149,19 +143,16 @@
                             <div class="form-group"><br />
                                 <div class="col-sm-8 col-sm-offset-2">
                                     <?php
-                                    if($this->session->flashdata('pass'))
-                                    {
-                                      echo '<div class="alert alert-success alert-block successMsg"> ';
-                                      echo $this->session->flashdata('pass');
-                                      echo '</div>';
+                                    if ($this->session->flashdata('pass')) {
+                                        echo '<div class="alert alert-success alert-block successMsg"> ';
+                                        echo $this->session->flashdata('pass');
+                                        echo '</div>';
+                                    } else if ($this->session->flashdata('fail')) {
+                                        echo '<div class = "alert alert-warning successMsg">';
+                                        echo $this->session->flashdata('fail');
+                                        echo '</div>';
                                     }
-                                    else if($this->session->flashdata('fail'))
-                                    {
-                                      echo '<div class = "alert alert-warning successMsg">';
-                                      echo $this->session->flashdata('fail');
-                                      echo '</div>';
-                                    }
-                                  ?>
+                                    ?>
                                 </div>
                             </div>
 
@@ -180,34 +171,41 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $t=0 ?>
+                                        <?php $t = 0 ?>
                                     <div class="row select-row">
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <label class="control-label col-sm-5 text-left" style="    text-align: left;">Select Design</label>
                                             <div class="col-sm-7">
-                                                <select name="hsn_<?php echo $t?>[]" id="hsn"  class="form-control my-select">
+                                                <select name="hsn_<?php echo $t ?>[]" id="hsn"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
-                                                    <?php foreach ($designs->result() as $row){
+                                                    <?php foreach ($designs->result() as $row) {
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
-                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->id .'" '. set_select("hsn[]", $row->id  ).'>'.$row->design_num.'</option>';
+                                                        echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("hsn[]", $row->id) . '>' . $row->design_num . '</option>';
 
                                                     } ?>
                                                 </select>
-                                                <input type="hidden" name='selected_ids_<?php echo $t?>[]' id="selected_ids" value="">
+                                                <input type="hidden" name='selected_ids_<?php echo $t ?>[]' id="selected_ids" value="">
                                             </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <label class="control-label col-sm-4 text-left" style="    text-align: left;">Total Pices</label>
                                         <div class="col-sm-7" id="">
-                                            <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece" class="form-control" value="<?php echo set_value('total_piece');?>">
+                                            <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece" class="form-control" value="<?php echo set_value('total_piece'); ?>">
 
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari</label>
+                                    <div class="col-lg-3">
+                                        <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari (PP)</label>
                                         <div class="col-sm-7" id="">
-                                            <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="karigari form-control" value="<?php echo set_value('karigari');?>">
+                                            <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="karigari form-control" value="<?php echo set_value('karigari'); ?>">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
+                                        <div class="col-sm-6" id="">
+                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control" value="<?php echo set_value('total_karigari'); ?>">
 
                                         </div>
                                     </div>
@@ -221,15 +219,16 @@
                                             <select name="items_<?php echo $t ?>[]" id="items" class="form-control">
                                                     <option value="">--select Product--</option>
                                                     <?php
-                                                    foreach ($materialList->result() as $row){
+                                                    foreach ($materialList->result() as $row) {
 
                                                         //$mat = explode(',', $row->material_name);
                                                         $mat = explode(',', $row->material_name);
-                                                        $cnt= count($mat);
-                                                        for ($i=0; $i < $cnt; $i++) {
-                                                       //print_r( $row);
-                                                    echo '<option label="" data-material-id="'.$row->id.'" value="'.$row->id.'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
-                                                    } }?>
+                                                        $cnt = count($mat);
+                                                        for ($i = 0; $i < $cnt; $i++) {
+                                                            //print_r( $row);
+                                                            echo '<option label="" data-material-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("items[]", $mat[$i]) . '>' . $mat[$i] . '</option>';
+                                                        }
+                                                    } ?>
                                                     <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
                                                     <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
                                                 </select>
@@ -265,7 +264,7 @@
                                     <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
-							<div class="form-group ">
+                            <div class="form-group ">
                                 <div class="col-sm-2 col-sm-offset-6">
                                     <b>PAID AMOUNT</b>
                                 </div>
@@ -273,14 +272,14 @@
                                     <input type="text" name="paid_amount" class="form-control only_num paid_amount" id="paid_amount" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
-														<div class="form-group ">
-																<div class="col-sm-2 col-sm-offset-6">
-																		<b>BALANCE AMOUNT</b>
-																</div>
-																<div class="col-sm-3">
-																		<input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount" style="display: inline; width: 50%" value="" size="3">
-																</div>
-														</div>
+                                                        <div class="form-group ">
+                                                                <div class="col-sm-2 col-sm-offset-6">
+                                                                        <b>BALANCE AMOUNT</b>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                        <input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount" style="display: inline; width: 50%" value="" size="3">
+                                                                </div>
+                                                        </div>
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-1">
                                     <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
@@ -301,52 +300,53 @@
                             </div>
 
 
-						</form>
-					</div>
-				</div>
+                        </form>
+                    </div>
+                </div>
 
 
-				<div class="modal fade" id="add_design" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				      <form id="add_design_form" method="post" action="<?php echo site_url('/Design/add_new');?>">
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				        <h4 class="modal-title custom_align" id="Heading">Add Design</h4>
-				      </div>
+                <div class="modal fade" id="add_design" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <form id="add_design_form" method="post" action="<?php echo site_url('/Design/add_new'); ?>">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title custom_align" id="Heading">Add Design</h4>
+                      </div>
 
-				      <div class="modal-body">
-				            <div class="col-sm-12">
-				            <div class="form-group">
-													<label class="control-label col-sm-3">Design Number</label>
-													<div class="col-sm-9" id="design_holder">
-				                                        <input type="text" name="design_number" id="design_number" class="form-control" value="">
-				                                        <input type="hidden" name="id" value="">
-				                                    </div>
-												</div>
-				            </div>
-				        <p class="statusMsgDel text-center"></p>
-				      </div>
+                      <div class="modal-body">
+                            <div class="col-sm-12">
+                            <div class="form-group">
+                                                    <label class="control-label col-sm-3">Design Number</label>
+                                                    <div class="col-sm-9" id="design_holder">
+                                                        <input type="text" name="design_number" id="design_number" class="form-control" value="">
+                                                        <input type="hidden" name="id" value="">
+                                                    </div>
+                                                </div>
+                            </div>
+                        <p class="statusMsgDel text-center"></p>
+                      </div>
 
-				      <div class="modal-footer " style="margin-top: 50px;">
-				        <div class="col-sm-12">
-				        <button type="submit" class="btn btn-success" id="insert_update" ><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
-				        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Close</button>
-				        </div>
-				      </div>
-				    </form>
-				    </div>
-				    <!-- /.modal-content -->
-				  </div>
-				</div>
-			 	<div class="panel-footer">
+                      <div class="modal-footer " style="margin-top: 50px;">
+                        <div class="col-sm-12">
+                        <button type="submit" class="btn btn-success" id="insert_update" ><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Close</button>
+                        </div>
+                      </div>
+                    </form>
+                    </div>
+                    <!-- /.modal-content -->
+                  </div>
+                </div>
+                 <div class="panel-footer">
                     <p class="text-right">for M.A Abaya Manufacturer</p>
-				</div>
-    		</div>
-    	</div>
-	</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </div><!--close main div-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="<?php echo base_url('assets/js/to_words.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/jquery.validate.min.js'); ?>"></script>
 <script type="text/javascript">
@@ -417,7 +417,15 @@ $(document).on('click', '.editBtn', function(){
 
 $(document).ready(function(){
     
-    //hide invoice data table on load
+    
+    $('.total_karigari').on('focus', function(){
+            var ro  = $(this).closest('.select-row');
+            var total_piece = parseFloat(ro.find('#total_piece').val());
+            var karigari  = parseFloat(ro.find('.karigari').val());
+            var the_amount = (total_piece * karigari).toFixed(2);
+            $(this).val(the_amount);            
+        });
+        
     //$('#table_with_tax, #table_without_tax').hide();
     $('#table_with_tax').hide();
     setTimeout(function(){
@@ -676,11 +684,12 @@ $(document).ready(function(){
 
         }   //end main if
     });
+    
     $('#total_amount').on('focus', function(){
 
         console.log("in total_amount");
         total = 0;
-        $('.karigari').each(function(){
+        $('.total_karigari').each(function(){
             if( $(this).val() !== '' )
             {
                 var amt = $(this).val();
@@ -718,10 +727,10 @@ $(document).ready(function(){
 
     });
     $('.balance_amount').on('focus', function(){
-										var total_amount = $('#total_amount').val();
-										var paid_amount = $('#paid_amount').val();
+                                        var total_amount = $('#total_amount').val();
+                                        var paid_amount = $('#paid_amount').val();
                     var the_amount = (total_amount-paid_amount).toFixed(2);
-										console.log(the_amount);
+                                        console.log(the_amount);
                     $(this).val(the_amount);
                 });
 /* --- */
@@ -729,7 +738,7 @@ $('.submit-btn').click(function() {
     //$('form.pices_add_form').on('submit', function(event) {
     
         //event.preventDefault();
-      var selected_ids = [];
+        var selected_ids = [];
       var material_ids = [];
       var total_material_used = [];
         $(".my-select").each(function() {
@@ -749,7 +758,8 @@ $('.submit-btn').click(function() {
             material_ids.push(otherAttribute2);
             console.log(material_ids);
         });
-        $('#all_material_ids').val(material_ids.join(','));
+        
+        // $('#all_material_ids').val(material_ids.join(','));
 
       $('tr td.total_used_materials').each(function() {
             //var selectedValue = $(this).find('select').val();
@@ -762,8 +772,37 @@ $('.submit-btn').click(function() {
             total_material_used.push(otherAttribute3);
             console.log(total_material_used);
         });
-        $('#total_material_used').val(total_material_used.join(','));
+        // $('#total_material_used').val(total_material_used.join(','));
+        function calculateTotalQuantities(material_ids, quantity) {
+        materialQuantities = {};
 
+        for (let i = 0; i < material_ids.length; i++) {
+            var id = material_ids[i];
+            var qty = parseFloat(quantity[i]);
+
+            if (materialQuantities[id]) {
+            materialQuantities[id] += qty;
+            } else {
+            materialQuantities[id] = qty;
+            }
+        }
+
+        return materialQuantities;
+        }
+
+        var totalQuantities = calculateTotalQuantities(material_ids, total_material_used);
+
+        console.log(totalQuantities);
+
+        material_ids = Object.keys(materialQuantities).map(Number);
+
+        console.log(material_ids); // Output: [1, 22, 33]
+        $('#all_material_ids').val(material_ids.join(','));
+
+        total_material_used = Object.values(materialQuantities);
+                $('#total_material_used').val(total_material_used.join(','));
+
+        console.log(total_material_used); // Output: [40, 25, 30]
     });
     
     var count = 0;
@@ -776,34 +815,41 @@ $('.submit-btn').click(function() {
         var htmlStructure = "";
         <?php $t++
 
-        ?>
+            ?>
         htmlStructure += ` <hr class="divide_border">
-        <div class="new-div">
-         <div class="col-lg-4 select-row" >
+        <div class="new-div select-row">
+         <div class="col-lg-3 " >
                                         <label class="control-label col-sm-5 text-left" style="    text-align: left;">Select Design</label>
                                             <div class="col-sm-7   ">
                                                 <select name="hsn_`+count+`[]" id="hsn"  class="form-control my-select">
                                                     <option value="">--select design no--</option>
-                                                    <?php foreach ($designs->result() as $row){
+                                                    <?php foreach ($designs->result() as $row) {
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
-                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->id.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                        echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("hsn[]", $row->design_num) . '>' . $row->design_num . '</option>';
 
                                                     } ?>
                                                 </select>
                                                 <input type="hidden" name="selected_ids_`+count+`[]" id="selected_ids" value="">
                                             </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <label class="control-label col-sm-4 text-left" style="    text-align: left;">Total Pices</label>
                                         <div class="col-sm-7" id="addds_holder">
-                                            <input type="text" name="total_piece_`+count+`[]" id="total_piece" class="form-control" value="<?php echo set_value('total_piece');?>">
+                                            <input type="text" name="total_piece_`+count+`[]" id="total_piece" class="form-control" value="<?php echo set_value('total_piece'); ?>">
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-3">
                                         <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari</label>
                                         <div class="col-sm-7" id="">
-                                            <input type="text" name='karigari_`+count+`[]' id="karigari" class="karigari form-control" value="<?php echo set_value('karigari');?>">
+                                            <input type="text" name='karigari_`+count+`[]' id="karigari" class="karigari form-control" value="<?php echo set_value('karigari'); ?>">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
+                                        <div class="col-sm-6" id="">
+                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control" value="<?php echo set_value('total_karigari'); ?>">
 
                                         </div>
                                     </div>
@@ -821,14 +867,15 @@ $('.submit-btn').click(function() {
                                             <select name="items_`+count+`[]" id="items" class="form-control">
                                                     <option value="">--select Product--</option>
                                                     <?php
-                                                    foreach ($materialList->result() as $row){
+                                                    foreach ($materialList->result() as $row) {
 
                                                         $mat = explode(',', $row->material_name);
-                                                        $cnt= count($mat);
-                                                        for ($i=0; $i < $cnt; $i++) {
-                                                       
-                                                    echo '<option label="" data-material-id="'.$row->id.'" value="'.$row->id.'" '. set_select("items[]", $mat[$i]).'>'.$mat[$i].'</option>';
-                                                    } }?>
+                                                        $cnt = count($mat);
+                                                        for ($i = 0; $i < $cnt; $i++) {
+
+                                                            echo '<option label="" data-material-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("items[]", $mat[$i]) . '>' . $mat[$i] . '</option>';
+                                                        }
+                                                    } ?>
                                                     <input type="hidden" name="material_ids_`+count+`[]" id="material_ids" value="">
                                                     <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
                                                 </select>
@@ -846,6 +893,14 @@ $('.submit-btn').click(function() {
                             </div>
                             </div> `;
         $('#table-container').append(htmlStructure);
+
+        $('.total_karigari').on('focus', function(){
+            var ro  = $(this).closest('.select-row');
+            var total_piece = parseFloat(ro.find('#total_piece').val());
+            var karigari  = parseFloat(ro.find('.karigari').val());
+            var the_amount = (total_piece * karigari).toFixed(2);
+            $(this).val(the_amount);            
+        });
         $('.amount').on('focus', function(){
                     var ro  = $(this).parents('tr');
                     var qnty = ro.find('.qnty').val();
@@ -897,7 +952,7 @@ $('.submit-btn').click(function() {
         }
     }); */  
     $('#remove-div').click(function() {
-				/* $('#table-container div.select-row:last-child').remove();
+                /* $('#table-container div.select-row:last-child').remove();
                 var len=$('#table-container .new-div').length;
     if(len>1){
     $("#table-container .new-div").last().remove();
@@ -905,6 +960,8 @@ $('.submit-btn').click(function() {
     alert('Not able to Delete');
     } */
     $('.new-div:last').remove();
-			});
+
+   
+            });
     
 </script>
