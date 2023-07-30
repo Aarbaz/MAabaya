@@ -109,32 +109,42 @@
                 <th>Invoice</th>
                 <!-- <th>Challan</th> -->
                 <th>Customer</th>
-                <th>Bill Total</th>
-                <th>Last Paid Amount</th>
-                <th>Balance</th>
+                <th>From</th>
                 <th>Date</th>
-                <!-- <th>Action</th> -->
+                <th>Action</th>
               </tr>
             </thead>
 
             <tbody>
-            <?php $i = 1; foreach ($ledger_list->result() as $row){  ?>
+            <?php $i = 1; 
+ 
+            foreach ($ledger_list->result() as $row){ 
+              $entryFrom = $row->entry_from;
+              if ($entryFrom == 1) {
+                $filePath = 'purchaser';
+              }else if ($entryFrom == 2) {
+                $filePath = 'maker';
+              }else if ($entryFrom == 3) {
+                $filePath = 'pices_invoice';
+              }else{
+                $filePath = '';
+              }
+              ?>
               <tr>
+                
+                <!-- $entryFrom = $hrow->entry_from; -->
+
                 <td><?php echo $i; ?></td>
                 <td><?php echo $row->invoice; ?></td>
                 <!-- <td><?php echo $row->challan; ?></td> -->
                 <td><?php echo $row->name; ?></td>
-                <td><?php echo $row->bill_amount; ?></td>
-                <td><?php echo $row->paid_amount; ?></td>
-                <td><?php echo $row->last_amount; ?></td>
+                <td><?php echo $filePath; ?></td>
                 <td><?php echo $row->dated; ?></td>
-                <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Pices/downloadBalance/').rawurlencode("Zakir").'/01_12'?>"></td>
-               <!--  <td>
-                  <button class="btn btn-primary btn-xs" data-title="edit" data-toggle="modal" title="Click to edit" onclick="show_material(<?php echo $row->id;?>)"><i class="glyphicon glyphicon-pencil"></i></button>&nbsp;
-                  <button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" title="Click to delete" onclick="delete_material(<?php echo $row->id;?>)" ><span class="glyphicon glyphicon-trash"></span></button>
-                </td> -->
+                <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->name).'/'.$row->invoice ?>">
+                <i class="glyphicon glyphicon-download"></i></a>
+              </td>
               </tr>
-            <?php $i++; } ?>
+            <?php $i++; }  ?>
             </tbody>
           </table>
         </div>

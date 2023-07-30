@@ -17,6 +17,7 @@ class Making extends CI_Controller
         $this->load->model("Purchaser_model");
         $this->load->library("tcpdf");
         $this->load->library("upload");
+		$this->load->model('Balance_model');
         //$this->load->helper('pdf_helper');
         $this->load->helper("url");
         $this->load->model("Customer_model");
@@ -72,32 +73,7 @@ class Making extends CI_Controller
             "Quantity",
             "trim|required"
         );
-        // $this->form_validation->set_rules('p_price', 'Product Amount', 'trim|required|numeric');
-        // $this->form_validation->set_rules('stock_q', 'Product Amount', 'trim|required|numeric');
-        // $this->form_validation->set_rules('p_design_number', 'Design Number', 'trim|required');
-        // $this->form_validation->set_rules('purchaserID', 'Purchaser ID', 'trim|required');
-        // $this->form_validation->set_rules('pcs', 'Pcs', 'trim');
-        // $this->form_validation->set_rules('meter', 'Meter', 'trim');
-        // $this->form_validation->set_rules('product_exp', 'Expiry Date', 'trim|required');
-        // $this->form_validation->set_rules('price_total', 'Product Quantity', 'trim|required|numeric');
-        // $validation = [
-        //     [
-        //         "field" => "material_name[]",
-        //         "label" => "Material",
-        //         "rules" => "required",
-        //         "errors" => ["required" => " Please select %s. "],
-        //     ],
-        // ];
-        //
-        // $validation2 = [
-        //     [
-        //         "field" => "stock_q[]",
-        //         "label" => "Stock",
-        //         "rules" => "required",
-        //         "errors" => ["required" => " Please select %s. "],
-        //     ],
-        // ];
-
+    
         if ($this->input->post("add_making") != null) {
             if ($this->form_validation->run() == false) {
                 $data["title"] = ucwords("Add new Making Page");
@@ -145,8 +121,15 @@ class Making extends CI_Controller
                 $stocks = $this->input->post("stock_q[]");
                 $oldstock = $this->input->post("stock_in[]");
 
-
-
+                $makeInvoiceId = strtoupper($postData["maker_no"]);
+                $data_ledger = array(
+                    'customer' => $master_name,
+                    'invoice' => $makeInvoiceId,
+                    'entry_from' => 2,
+                    'dated' => date('Y-m-d H:i:s')
+                );
+                // $insert = $this->Challan_model->create_balance($data_balance);
+                $insert = $this->Balance_model->add_customer_ledger($data_ledger);
 
                 $m = 0;
                 foreach ($stocks as $row) {
@@ -182,12 +165,7 @@ class Making extends CI_Controller
                     $querys = $this->db->get('maker_stock');
                     $rows = $querys->row();
 
-                    /* print_r($rows);
-                    die(); */
                     if ($querys->num_rows()) {
-                      // If the product exists, update the quantity value in the database
-                      // print_r($rows->quantity);
-                      // die();
                       $data3 = array(
                         'quantity' => $rows->quantity + $stocks[$m],
                         // 'price' => $price[$i]
@@ -196,11 +174,9 @@ class Making extends CI_Controller
                       $this->db->where('making_owner_id', $master_name);
                       $this->db->where('materials_id',$material_ids[$m]);
                       $this->db->update('maker_stock', $data3);
-                      /* print_r($material_ids);
-                      die(); */
+
                     } else {
-                      // If the product does not exist, insert a new row into the database
-                      // $this->db->insert('purchaser_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
+
                       $this->Making_model->add_making_qty($dataMak);
 
                     }
@@ -212,7 +188,7 @@ class Making extends CI_Controller
 
                 $json_data = json_encode($data);
           			$json_data_array = array(
-          					'entry_from' => '1',
+          					'entry_from' => 2, //Making
           					'json_data' => $json_data,
           			);
           			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
@@ -269,7 +245,7 @@ class Making extends CI_Controller
                   $pdf->Output($save_path, "F");
                     $this->session->set_flashdata(
                         "success",
-                        "Material added successfully."
+                        "Making added successfully."
                     );
                     redirect("Making");
                 } else {

@@ -206,7 +206,11 @@
             }).then(function (res) {
               console.log(res);
               var res = $.parseJSON(res);
-                row.find(".stock_in").val(res.quantity);
+                if (res || res != null) {
+                  row.find(".stock_in").val(res.quantity);
+                }else{
+                  row.find(".stock_in").val(" ");
+                }
             }, function () {
                 alert("Sorry cannot get the product details!");
             });

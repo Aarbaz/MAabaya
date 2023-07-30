@@ -32,9 +32,9 @@
             <thead>
               <tr>
                 <th>Sr No</th>
-                <!-- <th>Invoice</th> -->
-                <!-- <th>Challan</th> -->
                 <th>Customer</th>
+                <th>Bill Total</th>
+                <th>Last Paid Amount</th>
                 <th>Balance</th>
                 <th>Date</th>
                 <!-- <th>Action</th> -->
@@ -51,13 +51,14 @@
 
               $balance = $this->Balance_model->get_bal_user($balUser->id);
 
-             foreach ($balance->result() as $row){  ?>
+             foreach ($balance->result() as $row){  
+              
+              ?>
               <tr>
-                <td><?php echo $i; ?></td>
-                <!-- <td><?php echo $row->invoice; ?></td> -->
-                <!-- <td><?php echo $row->challan; ?></td> -->
+                <td><?php echo $i ?></td>
                 <td><?php echo $bal->name; ?></td>
-                <!-- <td><?php echo $row->new_amount; ?></td> -->
+                <td><?php echo $row->total_bill; ?></td>
+                <td><?php echo $row->paid_bill; ?></td>
                 <td class="<?php if($row->bill_type == 'debited'){ echo "debited"; } else{ echo "credited";}?>"><?php echo $row->balance_bill; ?></td>
                 <td><?php echo $row->updated_on; ?></td>
                 <!-- <td>
