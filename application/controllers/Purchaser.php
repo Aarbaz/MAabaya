@@ -113,6 +113,8 @@ class Purchaser extends CI_Controller
                 $amount = implode(",", $this->input->post("price_total[]"));
                 $amount = trim($amount, ",");
 
+                $total_word = $this->input->post('total_word');
+
                 $data = [
                     "purchaser_owner_id" => strtoupper($postData["owner_name"]),
                     "material_id" => $material_name,
@@ -272,7 +274,8 @@ class Purchaser extends CI_Controller
                     'rate' => $rate,
                     'bill_amount' => $total_amount,
                     'paid_amount' => $paid_amount,
-                    'last_amount' => $balance_amount
+                    'last_amount' => $balance_amount,
+                    'total_word' => $total_word
               ];
 
 									$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);

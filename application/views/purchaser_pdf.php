@@ -75,6 +75,8 @@
     $qnty = explode(',', $qnty);
     $rate = explode(',', $rate);
     $amount = explode(',', $amount);
+    $total_amount = $last_amount;
+
     // $items = array('mat'=> $mat,'qnty'=>$qnty,'hsn'=>$hsn,'rate' => $rate, 'amount' => $amount);
     $items = array('mat'=> $mat,'qnty'=>$qnty,'rate' => $rate, 'amount' => $amount);
     $len = count($items['mat']);
@@ -92,7 +94,7 @@
     }
     $Final_total_amt = $items['amount'];
     $Final_total_amt = array_sum($Final_total_amt);
-
+    
     $Final_total_qty = $items['qnty'];
     $Final_total_qty = array_sum($Final_total_qty);
 
@@ -167,11 +169,21 @@
     <td>&nbsp;</td>
     <td > <?php echo  $Final_total_qty . ' Meters. '?></td>
   </tr>
+  <tr>
+    <th ><b>Total Bill</b></th>
+    <td>&nbsp;</td>
+    <td > <?php echo  $Final_total_amt . ' Meters. '?></td>
+  </tr>
   <br>
   <tr>
-    <th class="right"><b>Total Amount</b></th>
+    <th class="right"><b>Paid Amount</b></th>
     <td>&nbsp;</td>
-    <td> <?php echo $Final_total_amt .' Rs.' ?></td>
+    <td> <?php echo $paid_amount .' Rs.' ?></td>
+  </tr>
+  <tr>
+    <th class="right"><b>Balance Amount</b></th>
+    <td>&nbsp;</td>
+    <td> <?php echo $last_amount .' Rs.' ?></td>
   </tr>
 
 
@@ -184,84 +196,7 @@
 <div class="row" style="display:flex;">
 <div class="col-sm-6">
 <b>Amount In Words:</b>&nbsp;&nbsp;&nbsp;&nbsp;  <?php
-// function convert_number_to_words($number) {
-//     $words = array(
-//         0 => 'Zero',
-//         1 => 'One',
-//         2 => 'Two',
-//         3 => 'Three',
-//         4 => 'Four',
-//         5 => 'Five',
-//         6 => 'Six',
-//         7 => 'Seven',
-//         8 => 'Eight',
-//         9 => 'Nine',
-//         10 => 'Ten',
-//         11 => 'Eleven',
-//         12 => 'Twelve',
-//         13 => 'Thirteen',
-//         14 => 'Fourteen',
-//         15 => 'Fifteen',
-//         16 => 'Sixteen',
-//         17 => 'Seventeen',
-//         18 => 'Eighteen',
-//         19 => 'Nineteen',
-//         20 => 'Twenty',
-//         30 => 'Thirty',
-//         40 => 'Forty',
-//         50 => 'Fifty',
-//         60 => 'Sixty',
-//         70 => 'Seventy',
-//         80 => 'Eighty',
-//         90 => 'Ninety'
-//     );
-//
-//     if (!is_numeric($number)) {
-//         return false;
-//     }
-//
-//     if ($number < 0) {
-//         return 'Minus ' . convert_number_to_words(abs($number));
-//     }
-//
-//     $digits = sprintf("%04d", $number); // add leading zeros
-//
-//     $thousands = $words[$digits[0]];
-//     $hundreds = $words[$digits[1]];
-//     $tens = $words[$digits[2]];
-//     $ones = $words[$digits[3]];
-//
-//     $result = '';
-//
-//     if ($digits[0] > 0) {
-//         $result .= "$thousands Thousand ";
-//     }
-//
-//     if ($digits[1] > 0) {
-//         $result .= "$hundreds Hundred ";
-//     }
-//
-//     if ($digits[2] > 0) {
-//         if ($digits[2] == 1) {
-//             $result .= $words[$digits[2] . $digits[3]];
-//             $ones = '';
-//         } else {
-//             $result .= $tens . ' ';
-//         }
-//     }
-//
-//     if ($digits[3] > 0 && $digits[2] != 1) {
-//         $result .= $ones . ' ';
-//     }
-//
-//     $result .=  "Zero Rupees Only";
-//
-//     return ucfirst(trim($result));
-// }
-//
-// $number = $Final_total_amt;
-// $words = convert_number_to_words($number);
-// echo $words;
+
 
 function numberToWords($number) {
   $words = array(
@@ -275,12 +210,12 @@ function numberToWords($number) {
   );
 
   $units = array(
-    '', 'THOUSAND ', 'LAKH ', 'CRORE '
+    'HUNDRED', 'THOUSAND ', 'LAKH ', 'CRORE '
   );
 
   // Convert to integer and remove commas
   $number = (int) str_replace(',', '', $number);
-
+  
   // Return zero if the number is zero
   if ($number == 0) {
     return $words[0] . ' RUPEES ONLY';
@@ -288,7 +223,7 @@ function numberToWords($number) {
 
   // Break the number into chunks of two digits
   $chunks = array_reverse(str_split(str_pad($number, ceil(strlen($number) / 2) * 2, '0', STR_PAD_LEFT), 2));
-
+  
   // Convert each chunk to words
   $result = '';
   foreach ($chunks as $i => $chunk) {
@@ -319,7 +254,7 @@ function numberToWords($number) {
 }
 $amount = $Final_total_amt;
 $words = numberToWords($amount);
-echo $words;
+echo $total_word;
 ?>
 </div>
  <!-- <div class="col-sm-6">

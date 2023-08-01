@@ -326,7 +326,7 @@ $(function() {
 
            if(qnty && rate)
            {
-               var the_amount = (qnty*rate);
+               var the_amount = parseFloat(qnty*rate).toFixed(2);;
                ro.find('.amount').val(the_amount);
            }
        });
