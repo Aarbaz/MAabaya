@@ -176,7 +176,7 @@
                                     <div class="col-lg-3">
                                         <label class="control-label col-sm-5 text-left" style="    text-align: left;">Select Design</label>
                                             <div class="col-sm-7">
-                                                <select name="hsn_<?php echo $t ?>[]" id="hsn"  class="form-control my-select">
+                                                <select name="hsn_<?php echo $t ?>[]" id="hsn"  class="form-control my-select design required">
                                                     <option value="">--select design no--</option>
                                                     <?php foreach ($designs->result() as $row) {
                                                         $selected = set_select("hsn[]", $row->design_num);
@@ -191,21 +191,21 @@
                                     <div class="col-lg-3">
                                         <label class="control-label col-sm-4 text-left" style="    text-align: left;">Total Pices</label>
                                         <div class="col-sm-7" id="">
-                                            <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece" class="form-control" value="<?php echo set_value('total_piece'); ?>">
+                                            <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece" class="form-control ttl_pice required" value="<?php echo set_value('total_piece'); ?>">
 
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
                                         <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari (PP)</label>
                                         <div class="col-sm-7" id="">
-                                            <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="karigari form-control" value="<?php echo set_value('karigari'); ?>">
+                                            <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="karigari form-control required" value="<?php echo set_value('karigari'); ?>">
 
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
                                         <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
                                         <div class="col-sm-6" id="">
-                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control" value="<?php echo set_value('total_karigari'); ?>">
+                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required" value="<?php echo set_value('total_karigari'); ?>">
 
                                         </div>
                                     </div>
@@ -216,7 +216,7 @@
 
                                             </td> -->
                                             <td class="material_ids"><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
-                                            <select name="items_<?php echo $t ?>[]" id="items" class="form-control">
+                                            <select name="items_<?php echo $t ?>[]" id="items" class="required items form-control">
                                                     <option value="">--select Product--</option>
                                                     <?php
                                                     foreach ($materialList->result() as $row) {
@@ -237,7 +237,7 @@
                                             <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
                                                 
                                             <td class="total_used_materials">
-                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control required" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <input type="hidden" name="total_material_used[]" id="total_material_used" value="">
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
@@ -490,7 +490,29 @@ $(document).ready(function(){
             region: "required",
             amount_with: "required",
             total_word: "required",
+            paid_amount: "required",
+            total_round: "required",
+            total_amount: "required",
+            'rate[]': {
+                required: true,
+                // Add more rules for quantity if needed
+            },
+            'hsn[]': {
+                required: true,
+                // Add more rules for quantity if needed
+            },
+            'items[]': {
+                required: true,
+                // Add more rules for quantity if needed
+            },
+        },
+        errorPlacement: function (error, element) {
+        error.appendTo(element.parent()); // For example, show error messages next to the input fields
         }
+    });
+
+    $(document).on('blur', '.items', function () {
+        $(this).valid(); // Trigger validation for the hsn field when it loses focus
     });
 
     //show IGSC OR CGST and SGST hilton
@@ -736,7 +758,7 @@ $(document).ready(function(){
 /* --- */
 $('.submit-btn').click(function() {
     //$('form.pices_add_form').on('submit', function(event) {
-    
+        $('#pices_add_form').validate();
         //event.preventDefault();
         var selected_ids = [];
       var material_ids = [];
@@ -818,10 +840,11 @@ $('.submit-btn').click(function() {
             ?>
         htmlStructure += ` <hr class="divide_border">
         <div class="new-div select-row">
+        <div class="error-msg"></div>
          <div class="col-lg-3 " >
                                         <label class="control-label col-sm-5 text-left" style="    text-align: left;">Select Design</label>
                                             <div class="col-sm-7   ">
-                                                <select name="hsn_`+count+`[]" id="hsn"  class="form-control my-select">
+                                                <select name="hsn_`+count+`[]" id="hsn"  class="form-control my-select design required">
                                                     <option value="">--select design no--</option>
                                                     <?php foreach ($designs->result() as $row) {
                                                         $selected = set_select("hsn[]", $row->design_num);
@@ -842,14 +865,14 @@ $('.submit-btn').click(function() {
                                     <div class="col-lg-3">
                                         <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari</label>
                                         <div class="col-sm-7" id="">
-                                            <input type="text" name='karigari_`+count+`[]' id="karigari" class="karigari form-control" value="<?php echo set_value('karigari'); ?>">
+                                            <input type="text" name='karigari_`+count+`[]' id="karigari" class="karigari form-control required" value="<?php echo set_value('karigari'); ?>">
 
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
                                         <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
                                         <div class="col-sm-6" id="">
-                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control" value="<?php echo set_value('total_karigari'); ?>">
+                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required" value="<?php echo set_value('total_karigari'); ?>">
 
                                         </div>
                                     </div>
@@ -864,7 +887,7 @@ $('.submit-btn').click(function() {
                                     <tr class="row_one">
                         
                                             <td class="material_ids">
-                                            <select name="items_`+count+`[]" id="items" class="form-control">
+                                            <select name="items_`+count+`[]" id="items" class=" items form-control required">
                                                     <option value="">--select Product--</option>
                                                     <?php
                                                     foreach ($materialList->result() as $row) {
@@ -880,11 +903,11 @@ $('.submit-btn').click(function() {
                                                     <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
                                                 </select>
                                         </td>
-                                        <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
-                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
+                                        <td><input type="text" name="qnty[]" class="qnty form-control required" size="3" maxlength="7"></td>                                            
+                                            <td><input type="text" name="rate[]" class="rate form-control required" size="3" maxlength="7"></td>
                                                 
                                             <td class="total_used_materials">
-                                                <input type="text" name="total_material_`+count+`[]" class="amount form-control" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
+                                                <input type="text" name="total_material_`+count+`[]" class="amount form-control required" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
                                             </td>
@@ -893,7 +916,7 @@ $('.submit-btn').click(function() {
                             </div>
                             </div> `;
         $('#table-container').append(htmlStructure);
-
+        $('#pices_add_form').validate();
         $('.total_karigari').on('focus', function(){
             var ro  = $(this).closest('.select-row');
             var total_piece = parseFloat(ro.find('#total_piece').val());
@@ -908,6 +931,7 @@ $('.submit-btn').click(function() {
                     var the_amount = (qnty*rate).toFixed(2);
                     $(this).val(the_amount);
                 });
+                
     });
 })
 
@@ -927,6 +951,17 @@ $('.submit-btn').click(function() {
                     {
                         required: true
                     })
+        });
+        $('.items').each(function() {
+                $(this).rules("add", 
+                    {
+                        required: true
+                    })
+        });
+        $('select.items').each(function () {
+            $(this).rules('add', {
+                required: true
+            });
         });
     });
     /* $('.total').on('focus', function(){ 
@@ -952,16 +987,7 @@ $('.submit-btn').click(function() {
         }
     }); */  
     $('#remove-div').click(function() {
-                /* $('#table-container div.select-row:last-child').remove();
-                var len=$('#table-container .new-div').length;
-    if(len>1){
-    $("#table-container .new-div").last().remove();
-    }else{
-    alert('Not able to Delete');
-    } */
-    $('.new-div:last').remove();
-
-   
-            });
+        $('.new-div:last').remove();
+    });
     
 </script>

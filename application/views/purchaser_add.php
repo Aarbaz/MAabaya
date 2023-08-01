@@ -273,9 +273,26 @@ $(function() {
       // of an input field. Validation rules are defined
       // on the right side
       owner_name: "required",
-      material_name: "required",
-      stock_q: "required",
-      p_price: "required",
+      total_amount: "required",
+      total_round: "required",
+      paid_amount: "required",
+      balance_amount: "required",
+      'material_name[]': {
+                required: true,
+                // Add more rules for quantity if needed
+            },
+      'stock_q[]': {
+                required: true,
+                // Add more rules for quantity if needed
+            },
+      'p_price[]': {
+                required: true,
+                // Add more rules for quantity if needed
+            },
+      'price_total[]': {
+                required: true,
+                // Add more rules for quantity if needed
+            },
 
     },
     // Specify validation error messages
@@ -308,7 +325,9 @@ $(function() {
    // add new row
    $(document).on('click', '.add_more', function(){
        $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+       $("form[name='purchase_add']").validate().resetForm();
    });
+   
    //Remove table row
    $(document).on('click', '.remove', function(){
      var $tr = $(this).closest('tr');

@@ -67,26 +67,59 @@ class Pices extends CI_Controller
 	{
 		$data['last_invoice'] = $this->Pices_model->get_last_invoice_pices();
 		$this->form_validation->set_rules('customerName', 'customer Name', 'required');
-		$this->form_validation->set_rules('hsn_0[]', 'Select Design', 'trim|required');
+		// $this->form_validation->set_rules('hsn_0[]', 'Select Design', 'trim|required');
 		$this->form_validation->set_rules('qnty[]', 'Quantity', 'required');
 		$this->form_validation->set_rules('rate[]', 'Rate', 'required');
+		$steps = $this->input->post('steps');
+		
+		for ($i = 0; $i <= $steps; $i++) {
+			$field_design = "hsn_" . $i . "[]";
+			$field_total_piece = "total_piece_" . $i . "[]";
+			$field_karigari = "karigari_" . $i . "[]";
+			$field_total_karigari = "total_karigari_" . $i . "[]";
+			$field_items = "items_" . $i . "[]";
+			$field_total_material = "total_material_" . $i . "[]";
 
-		$validation = array(
-			array(
-				'field' => 'qnty[]',
-				'label' => 'Product',
-				'rules' => 'required',
-				"errors" => array('required' => " Please select %s. ")
-			),
-		);
+			$this->form_validation->set_rules(
+				$field_design,
+				"Select Design ",
+				"trim|required"
+			);
+			$this->form_validation->set_rules(
+				$field_total_piece,
+				"Enter Total Pice ",
+				"trim|required"
+			);
+			$this->form_validation->set_rules(
+				$field_karigari,
+				"Enter karigari ",
+				"trim|required"
+			);
+			$this->form_validation->set_rules(
+				$field_total_karigari,
+				"Total Karigari ",
+				"trim|required"
+			);
+
+			$this->form_validation->set_rules(
+				$field_items,
+				"Material Name ",
+				"trim|required"
+			);
+			$this->form_validation->set_rules(
+				$field_total_material,
+				"Average ",
+				"trim|required"
+			);
+		}
+		
 		// $this->form_validation->set_rules($validation);
-
 		if ($this->form_validation->run() == false) {
 			$response['result'] = $this->form_validation->error_array();
 			$response['status'] = 'failed';
 			$this->add_new();
 		} else {
-
+			
 			$customer_id = $this->input->post('customerName');
 			$all_material_ids = implode(',', $this->input->post('all_material_ids'));
 			$all_material_ids = trim($all_material_ids, ',');
