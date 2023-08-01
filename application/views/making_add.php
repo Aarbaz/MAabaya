@@ -245,3 +245,28 @@
         });
       });
 </script>
+<script src="<?php echo base_url('assets/js/jquery.validate.min.js'); ?>"></script>
+<script>
+   $(function() {
+
+      $("form#add_product_form").validate({
+         rules: {
+
+            master_name: "required",
+            'stock_q[]': {
+                     required: true,
+                     // Add more rules for quantity if needed
+                  },
+            'material_name[]': {
+                     required: true,
+                     // Add more rules for quantity if needed
+                  },
+         },
+         // Specify validation error messages
+         messages: {
+            master_name: "Please Select Master",
+            stock_q: "Please enter a quantity"
+         },
+      });
+   });
+</script>

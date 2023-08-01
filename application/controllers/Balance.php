@@ -70,14 +70,14 @@ class Balance extends CI_Controller {
 				$data['title'] = ucwords('Create Ledger balance');
 	        	$data['username'] = $this->session->userdata('logged_in');
 	        	$data['custList'] = $this->Balance_model->get_all_customer();
-						$data['balList'] = $this->Balance_model->get_last_balance();
+				$data['balList'] = $this->Balance_model->get_last_balance();
 
         		// $data['productList'] = $this->Balance_model->get_all_products();
 		        $this->load->view('layout/header', $data);
 		        $this->load->view('layout/menubar');
 				$this->load->view('balance_ledger', $data);
 				$this->load->view('layout/footer');
-			}
+			}	
 			else
 			{
 

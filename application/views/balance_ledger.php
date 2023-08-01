@@ -206,7 +206,7 @@
 <!--END footer section-->
 
 </div><!--close main div-->
-
+<script src="<?php echo base_url('assets/js/jquery.validate.min.js'); ?>"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     // echo '<option value="'.$row->id.'" '.set_select('invoice',$row->id).'>'.$row->name.'</option>';
@@ -342,5 +342,12 @@
       $('#new_bal').val(new_balance);;
     });
 
+    $('#add_material_form').validate({
+        rules: {
+          vendorName: "required",
+          paid: "required",
+          mode: "required",
+        }
+    });
   });
 </script>

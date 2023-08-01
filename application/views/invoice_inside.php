@@ -191,14 +191,14 @@
                                                 </select>
                                                 <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
                                             </td>
-                                            <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>
+                                            <!-- <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>
                                             <td><input type="text" name="amount_with_tax[]" class="amount_with_tax only_num form-control" size="3" maxlength="7"></td>
-                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
+                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td> 
                                             <td>
                                                 <input type="text" name="amount[]" class="amount form-control" style="width: 40%; display: inline;" value="" size="3" readonly="readonly">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>&nbsp;
                                                 <button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
-                                            </td>
+                                            </td>-->
                                         </tr>
                                     </tbody>
                                 </table>
@@ -444,8 +444,22 @@ $(document).ready(function(){
     $('#insider_invoice_form').validate({
         rules: {
             customerName: "required",
-            region: "required",
-            amount_with: "required",
+            'hsn[]': {
+                     required: true,
+                  },
+            'qnty[]': {
+                     required: true,
+                  },
+            'rate[]': {
+                     required: true,
+                  },
+            'amount[]': {
+                     required: true,
+                  },
+            total_amount: "required",
+            total_round: "required",
+            paid_amount: "required",
+            balance_amount: "required",
             total_word: "required",
         }
     });

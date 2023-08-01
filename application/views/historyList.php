@@ -92,9 +92,9 @@
               <div class="form-group">
                 <button type="submit" class="btn btn-success">Download Balance</button>
               </div>
-              <div class="form-group">
+             <!--  <div class="form-group">
                 &nbsp;&nbsp;<a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Balance/ledger');?>">Add New</a>
-              </div>
+              </div> -->
             </form>
           </p><br />
           <div><p id="result_box" class="text-center"></p></div>
