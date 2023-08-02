@@ -193,7 +193,6 @@ class Pices extends CI_Controller
 					'p_design_number' => $insert_data['design_number'],
 					'stock_qty' => $insert_data['total_piece']
 				);
-
 				$materialData[] = array(
 					'materials_id' => $insert_data['material_id'],
 					'quantity' => $insert_data['material_used']
@@ -204,12 +203,12 @@ class Pices extends CI_Controller
 				$m = 0;
 				$k++;
 			}
-			
 			$json_data = array(
 				'data_json' => $json,
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
 			);
+			
 			$insert = $this->db->insert('product_pices', $json_data);
 
 
@@ -244,7 +243,7 @@ class Pices extends CI_Controller
 					$this->db->where('materials_id', $material_ids_array[$i]);
 					//$this->db->where('making_owner_id', $customer_id);
 					$q_result = $this->db->get('maker_stock')->result();
-
+	
 					if (empty($q_result) || count($q_result) == 0) {
 						// Insert a new row with the material ID and quantity 0
 						$m_data = array(
@@ -253,19 +252,21 @@ class Pices extends CI_Controller
 							'quantity' => $material_used_array[$i]
 						);
 						$this->db->insert('maker_stock', $m_data);
-					}
-					// Get the previous quantity for the material ID
+					}else {
+						// Get the previous quantity for the material ID
 					$material_ids = $material_ids_array[$i];
 					$this->db->where_in('materials_id', $material_ids);
 					//$this->db->where('making_owner_id', $customer_id);
 					$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
 					// Update the quantity for the material ID with the previous quantity + new quantity
 					$data = array('quantity' => $prev_quantity - $material_used_array[$i]);
-
+	
 					$this->db->where('materials_id', $material_ids_array[$i]);
 					//$this->db->where('making_owner_id', $customer_id);
 					$this->db->update('maker_stock', $data);
-				}
+					}
+					
+				}    
 				/********************Material Stock Update end**********************/
 
 				/********************Customer Balance Update**********************/
