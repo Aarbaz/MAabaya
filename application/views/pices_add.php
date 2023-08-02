@@ -205,7 +205,7 @@
                                     <div class="col-lg-3">
                                         <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
                                         <div class="col-sm-6" id="">
-                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required" value="<?php echo set_value('total_karigari'); ?>">
+                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required" value="<?php echo set_value('total_karigari'); ?>" readonly>
 
                                         </div>
                                     </div>
@@ -872,7 +872,7 @@ $('.submit-btn').click(function() {
                                     <div class="col-lg-3">
                                         <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
                                         <div class="col-sm-6" id="">
-                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required" value="<?php echo set_value('total_karigari'); ?>">
+                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required" value="<?php echo set_value('total_karigari'); ?>" readonly>
 
                                         </div>
                                     </div>

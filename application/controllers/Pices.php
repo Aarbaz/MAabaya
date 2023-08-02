@@ -167,6 +167,7 @@ class Pices extends CI_Controller
 				// Add the new design to the result array
 				$result[] = $design;
 			}
+			
 
 			// Convert the result array to JSON
 			$json = json_encode($result);
@@ -175,8 +176,8 @@ class Pices extends CI_Controller
 
 			$array = json_decode($data, true);
 
-			foreach ($array as $row) {
-				$k++;
+			foreach ($result as $row) {
+				
 				$insert_data = [
 					'design_number' => $row['design_number'][0],
 					'material_id' => implode(',', $row['materials_ids']),
@@ -186,7 +187,7 @@ class Pices extends CI_Controller
 					'invoice_no' => $row['invoice_no']
 				];
 
-				$data2 = array();
+				// $data2 = array();
 
 				$data2[] = array(
 					'p_design_number' => $insert_data['design_number'],
@@ -201,15 +202,14 @@ class Pices extends CI_Controller
 				$materialId3 = explode(",", $materialId2);
 
 				$m = 0;
-
+				$k++;
 			}
-
+			
 			$json_data = array(
 				'data_json' => $json,
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
 			);
-
 			$insert = $this->db->insert('product_pices', $json_data);
 
 

@@ -97,7 +97,7 @@ class Invoice extends CI_Controller {
 		); */
 
 		// $this->form_validation->set_rules($validation);
-		$this->form_validation->set_rules('hsn[]', 'Design', 'required');
+		// $this->form_validation->set_rules('hsn[]', 'Design', 'required');
 		$this->form_validation->set_rules('qnty[]', 'Quantity', 'required');
 		$this->form_validation->set_rules('rate[]', 'Rate', 'required');
 		$this->form_validation->set_rules('amount[]', 'Amount', 'required');

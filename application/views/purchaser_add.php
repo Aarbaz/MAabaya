@@ -27,7 +27,7 @@
             </div>
             <div class="panel-body">
                <p data-placement="top" data-toggle="tooltip">
-                  <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Purchaser/');?>">Go back to Material list</a>
+                  <a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Purchaser/');?>">Go back to Purchaser list</a>
                </p>
                <hr />
                <?php
