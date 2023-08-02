@@ -160,7 +160,7 @@ class Making extends CI_Controller
                     $dataMak["quantity"] = $stocks[$m];
 
 
-                    $this->db->where('making_owner_id', $master_name);
+                    // $this->db->where('making_owner_id', $master_name);
                     $this->db->where('materials_id',$material_ids[$m]);
                     $querys = $this->db->get('maker_stock');
                     $rows = $querys->row();
@@ -171,7 +171,7 @@ class Making extends CI_Controller
                         // 'price' => $price[$i]
                       );
 
-                      $this->db->where('making_owner_id', $master_name);
+                    //   $this->db->where('making_owner_id', $master_name);
                       $this->db->where('materials_id',$material_ids[$m]);
                       $this->db->update('maker_stock', $data3);
 
