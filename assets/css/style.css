@@ -72,3 +72,15 @@ body {
     border: 0;
     border-top: 2px dotted #000;
 }
+
+#pices-tabs{
+	display: flex;
+	justify-content: center;
+}
+#pices-tabs .nav-item .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+	background-color: #333;
+	color: #fff;
+}
+.card .tab-content{
+	border: 1px solid #ddd;
+}

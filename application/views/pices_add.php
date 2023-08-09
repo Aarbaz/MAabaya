@@ -13,7 +13,22 @@
                     <!-- <p>
                         <span class="btn btn-primary btn-sm" onclick="add_new_design()">Add New</span>
                     </p><br /> -->
-                    <div class="challan-div">
+                    
+
+                    <div class="card">
+                    <ul id="pices-tabs" class="nav nav-tabs" role="tablist" >
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#new" role="tab" data-toggle="tab">New</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#gr" role="tab" data-toggle="tab">GR</a>
+                        </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="new">
+                        <div class="challan-div">
                         <form id="pices_add_form" name="pices_add_form" class="form-horizontal pices_add_form" action="<?php echo site_url('Pices/create'); ?>" method="post">
                             <div class="form-group">
                                 <h3 class="text-center">Pices Recived</h3>
@@ -291,7 +306,7 @@
 
                             <div class="form-group">
                               <div class="col-sm-6 col-sm-offset-3">
-                                <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
+                                <button type="submit" name="add_challan" class="btn btn-primary submit-btn2">SAVE & PRINT</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>
                                 <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>
@@ -301,6 +316,118 @@
 
 
                         </form>
+                    </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="gr">
+                        <form id="pices_return_form" name="pices_return_form" class="form-horizontal pices_return_form" action="<?php echo site_url('Pices/returnPices'); ?>" method="post">
+                            <div class="form-group">
+                                <h3 class="text-center">Return Pices</h3>
+                            </div>
+                            <?php
+
+                                        $invoice_no = '';
+
+                                        if (!empty($last_invoice->invoice_no)) {
+                                            $db_invoice = $last_invoice->invoice_no;
+                                            $num_part = substr($db_invoice, 3);
+                                            $add_one = intval($num_part) + 1;
+
+                                            if (strlen($add_one) < 3) {
+                                                $ch_no = sprintf("%03u", $add_one);
+                                                $invoice_no = 'PIC' . $ch_no;
+                                            } else {
+                                                $invoice_no = 'PIC' . $add_one;
+                                            }
+                                        } else {
+                                            $invoice_no = 'PIC001';
+                                        }
+
+                                        ?>
+                                        <?php echo '<b>' . $invoice_no . '</b>'; ?>
+                                        <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
+                             <div class="col-sm-5 "><!--leftbox -->
+                                <div class="form-group ">
+                                    <label class="control-label col-sm-3">Master Name</label>
+                                    <div class="col-sm-9">
+                                          <select name="customerName" id="customerName" class="form-control">
+                                            <option value="" selected="selected">--select master--</option>
+                                            <?php
+                                            foreach ($custList->result() as $row) {
+                                                echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . '>' . $row->name . '</option>';
+                                            } ?>
+                                            </select>
+                                       </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">&nbsp;</div>
+                            <div class="form-group"><br />
+                              <div class="col-sm-8 col-sm-offset-2">
+                                <?php echo validation_errors('<p class="text text-danger">', '</p>'); ?>
+                              </div>
+                            </div>
+
+                            <div class="form-group"><br />
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <?php
+                                    if ($this->session->flashdata('pass')) {
+                                        echo '<div class="alert alert-success alert-block successMsg"> ';
+                                        echo $this->session->flashdata('pass');
+                                        echo '</div>';
+                                    } else if ($this->session->flashdata('fail')) {
+                                        echo '<div class = "alert alert-warning successMsg">';
+                                        echo $this->session->flashdata('fail');
+                                        echo '</div>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+
+                            <!--table withouot tax-->
+                            <div class="form-group" id="">
+                                <div class="container" id="table-container">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Design No</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $t = 0 ?>
+                                        <tr class="row_one">
+                                            <td class="material_ids">
+                                                <select name="design_no[]" id="return_pice"  class="form-control my-select design required">
+                                                        <option value="">--select design no--</option>
+                                                        <?php foreach ($designs->result() as $row) {
+                                                            $selected = set_select("design_no[]", $row->design_num);
+                                                            $data_id = $row->id;
+                                                            echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("design_no[]", $row->id) . '>' . $row->design_num . '</option>';
+
+                                                        } ?>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" name="return_qnty[]" class="return_qnty form-control" size="3" maxlength="7"></td>   
+                                            <td><button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
+                                                &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button></td>                                         
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+                            <hr>
+                          
+                            <div class="form-group">
+                              <div class="col-sm-12 col-sm-offset-5 ">
+                                <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="reset" name="reload" class="btn btn-primary">Reset</button>
+                              </div>
+                            </div>
+
+
+                        </form>
+                        </div>
+                        </div>
                     </div>
                 </div>
 
@@ -417,7 +544,9 @@ $(document).on('click', '.editBtn', function(){
 
 $(document).ready(function(){
     
-    
+    // Trigger a click on the first "nav-link" with class "active"
+    $(".nav-link.active").trigger("click");
+
     $('.total_karigari').on('focus', function(){
             var ro  = $(this).closest('.select-row');
             var total_piece = parseFloat(ro.find('#total_piece').val());

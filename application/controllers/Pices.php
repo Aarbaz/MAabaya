@@ -491,7 +491,6 @@ class Pices extends CI_Controller
 						$data2 = array(
 							'stock_qty' => $row->stock_qty + $quantity
 						);
-						print_r($data2);
 						$this->db->where('p_design_number', $product_id);
 						$this->db->update('stock', $data2);
 					} else {
@@ -648,13 +647,16 @@ class Pices extends CI_Controller
 				$save_path = $dir . $filename;
 				ob_end_clean();
 				$pdf->Output($save_path, 'F');
+				header("Content-Type: application/pdf");
+				header("Content-Disposition: attachment;filename=\"$filename\"");
+				readfile($save_path);
 
 				$response['result'] = 'PDF generated successfully.';
 				$response['status'] = 'passed';
 
 				$this->session->set_flashdata('success', 'PDF generated successfully....');
 				sleep(4);
-				$this->downloadBalance();
+				// $this->downloadPdf($cust_name, $invoice_id);
 			}
 		} else {
 			$data['title'] = ucwords('Page not found');
@@ -665,5 +667,83 @@ class Pices extends CI_Controller
 			$this->load->view('layout/footer');
 		}
 	}
-}
+
+	public function returnPices()
+	{
+		$data['last_invoice'] = $this->Pices_model->get_last_invoice_pices();
+		$this->form_validation->set_rules('customerName', 'customer Name', 'required');
+		$this->form_validation->set_rules('design_no[]', 'Quantity', 'required');
+		$this->form_validation->set_rules('return_qnty[]', 'Rate', 'required');
+		if ($this->form_validation->run() == false){
+			$response['result'] = $this->form_validation->error_array();
+			$response['status'] = 'failed';
+			$this->add_new();
+		}else{
+			$customerName = $this->input->post('customerName');
+			$invoice_no = $this->input->post('invoice_no');
+			$design_nos = implode(',', $this->input->post('design_no[]'));
+			$design_nos = trim($design_nos, ',');
+
+			$return_qnty = implode(',', $this->input->post('return_qnty[]'));
+			$return_qnty = trim($return_qnty, ',');
+
+			$data = $this->input->post();
+
+					foreach ($data['design_no'] as $index => $design_no) {
+						$return_qnty = $data['return_qnty'][$index];
+						
+						// Check if design_no exists in the table
+						$existing_record = $this->db->get_where('stock', array('p_design_number' => $design_no))->row();
+						if ($existing_record) {
+							$qnty_data = array(
+								'stock_qty' => $existing_record->stock_qty + $return_qnty
+							);
+							// Design number exists, update return quantity
+							$this->db->where('p_design_number', $design_no);
+							$result = $this->db->update('stock', $qnty_data);
+							
+						} else {
+							// Design number doesn't exist, insert new record
+							$result = $this->db->insert('stock', array('p_design_number' => $design_no, 'stock_qty' => $return_qnty));
+						}
+
+					}
+					if ($result) {
+						$data_pdf = [
+							'customer' => $customerName,
+							'design_no' => $design_nos,
+							// 'hsn' => $hsn,
+							'qnty' => $return_qnty,
+							'invoice_no' => $invoice_no,
+						];
+						$this->load->library('tcpdf/tcpdf.php');
+		
+						$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+						$pdf->setPrintHeader(false);
+						$pdf->setPrintFooter(false);
+						$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+						//$pdf->SetFont('helvetica', '', 10);
+						$pdf->SetFont('times', '', 10);
+						$pdf_data = $this->load->view('invoice_pieces_return', $data_pdf, true);
+						$pdf->addPage();
+						$pdf->writeHTML($pdf_data, true, false, true, false, '');
+		
+						$filename = $invoice_no . '.pdf';
+						$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer'] . '/';
+						if (!is_dir($dir)) {
+							mkdir($dir, 0777, true);
+						}
+						$save_path = $dir . $filename;
+						ob_end_clean();
+						$pdf->Output($save_path, 'F');
+						$this->session->set_flashdata('success', 'Data Added successfully....');
+						redirect('Pices/');
+					} else {
+						$this->session->set_flashdata('error', 'Something Went Wrong!');
+						redirect('Pices/');
+					}
+					
+				}
+		}
+	}
 ?>
