@@ -709,10 +709,18 @@ class Pices extends CI_Controller
 
 					}
 					if ($result) {
+				$this->db->where('id', $customerName);
+				$query = $this->db->get('customers');
+				$row = $query->row();
+
+				$this->db->where('id', $design_nos);
+				$query = $this->db->get('designs');
+				$row2 = $query->row();
+
+				
 						$data_pdf = [
-							'customer' => $customerName,
-							'design_no' => $design_nos,
-							// 'hsn' => $hsn,
+							'customer' => $row->name,
+							'design_no' => $row2->design_num,
 							'qnty' => $return_qnty,
 							'invoice_no' => $invoice_no,
 						];
