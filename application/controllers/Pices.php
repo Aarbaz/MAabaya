@@ -71,7 +71,7 @@ class Pices extends CI_Controller
 		$this->form_validation->set_rules('qnty[]', 'Quantity', 'required');
 		$this->form_validation->set_rules('rate[]', 'Rate', 'required');
 		$steps = $this->input->post('steps');
-		
+
 		for ($i = 0; $i <= $steps; $i++) {
 			$field_design = "hsn_" . $i . "[]";
 			$field_total_piece = "total_piece_" . $i . "[]";
@@ -112,14 +112,14 @@ class Pices extends CI_Controller
 				"trim|required"
 			);
 		}
-		
+
 		// $this->form_validation->set_rules($validation);
 		if ($this->form_validation->run() == false) {
 			$response['result'] = $this->form_validation->error_array();
 			$response['status'] = 'failed';
 			$this->add_new();
 		} else {
-			
+
 			$customer_id = $this->input->post('customerName');
 			$all_material_ids = implode(',', $this->input->post('all_material_ids'));
 			$all_material_ids = trim($all_material_ids, ',');
@@ -167,7 +167,7 @@ class Pices extends CI_Controller
 				// Add the new design to the result array
 				$result[] = $design;
 			}
-			
+
 
 			// Convert the result array to JSON
 			$json = json_encode($result);
@@ -177,7 +177,7 @@ class Pices extends CI_Controller
 			$array = json_decode($data, true);
 
 			foreach ($result as $row) {
-				
+
 				$insert_data = [
 					'design_number' => $row['design_number'][0],
 					'material_id' => implode(',', $row['materials_ids']),
@@ -208,7 +208,7 @@ class Pices extends CI_Controller
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
 			);
-			
+
 			$insert = $this->db->insert('product_pices', $json_data);
 
 
@@ -243,7 +243,7 @@ class Pices extends CI_Controller
 					$this->db->where('materials_id', $material_ids_array[$i]);
 					//$this->db->where('making_owner_id', $customer_id);
 					$q_result = $this->db->get('maker_stock')->result();
-	
+
 					if (empty($q_result) || count($q_result) == 0) {
 						// Insert a new row with the material ID and quantity 0
 						$m_data = array(
@@ -252,21 +252,21 @@ class Pices extends CI_Controller
 							'quantity' => $material_used_array[$i]
 						);
 						$this->db->insert('maker_stock', $m_data);
-					}else {
+					} else {
 						// Get the previous quantity for the material ID
-					$material_ids = $material_ids_array[$i];
-					$this->db->where_in('materials_id', $material_ids);
-					//$this->db->where('making_owner_id', $customer_id);
-					$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
-					// Update the quantity for the material ID with the previous quantity + new quantity
-					$data = array('quantity' => $prev_quantity - $material_used_array[$i]);
-	
-					$this->db->where('materials_id', $material_ids_array[$i]);
-					//$this->db->where('making_owner_id', $customer_id);
-					$this->db->update('maker_stock', $data);
+						$material_ids = $material_ids_array[$i];
+						$this->db->where_in('materials_id', $material_ids);
+						//$this->db->where('making_owner_id', $customer_id);
+						$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
+						// Update the quantity for the material ID with the previous quantity + new quantity
+						$data = array('quantity' => $prev_quantity - $material_used_array[$i]);
+
+						$this->db->where('materials_id', $material_ids_array[$i]);
+						//$this->db->where('making_owner_id', $customer_id);
+						$this->db->update('maker_stock', $data);
 					}
-					
-				}    
+
+				}
 				/********************Material Stock Update end**********************/
 
 				/********************Customer Balance Update**********************/
@@ -315,7 +315,7 @@ class Pices extends CI_Controller
 					//Pices
 					'json_data' => $json,
 				);
-	
+
 				$insert_json_data = $this->Pices_model->create_history($json_data_array);
 				/********************AAdd In History Table end**************/
 
@@ -674,84 +674,96 @@ class Pices extends CI_Controller
 		$this->form_validation->set_rules('customerName', 'customer Name', 'required');
 		$this->form_validation->set_rules('design_no[]', 'Quantity', 'required');
 		$this->form_validation->set_rules('return_qnty[]', 'Rate', 'required');
-		if ($this->form_validation->run() == false){
+		if ($this->form_validation->run() == false) {
 			$response['result'] = $this->form_validation->error_array();
 			$response['status'] = 'failed';
 			$this->add_new();
-		}else{
+		} else {
 			$customerName = $this->input->post('customerName');
 			$invoice_no = $this->input->post('invoice_no');
 			$design_nos = implode(',', $this->input->post('design_no[]'));
 			$design_nos = trim($design_nos, ',');
 
-			$return_qnty = implode(',', $this->input->post('return_qnty[]'));
-			$return_qnty = trim($return_qnty, ',');
+			$return_qntys = implode(',', $this->input->post('return_qnty[]'));
+			$return_qntys = trim($return_qntys, ',');
 
 			$data = $this->input->post();
 
-					foreach ($data['design_no'] as $index => $design_no) {
-						$return_qnty = $data['return_qnty'][$index];
-						
-						// Check if design_no exists in the table
-						$existing_record = $this->db->get_where('stock', array('p_design_number' => $design_no))->row();
-						if ($existing_record) {
-							$qnty_data = array(
-								'stock_qty' => $existing_record->stock_qty + $return_qnty
-							);
-							// Design number exists, update return quantity
-							$this->db->where('p_design_number', $design_no);
-							$result = $this->db->update('stock', $qnty_data);
-							
-						} else {
-							// Design number doesn't exist, insert new record
-							$result = $this->db->insert('stock', array('p_design_number' => $design_no, 'stock_qty' => $return_qnty));
-						}
+			foreach ($data['design_no'] as $index => $design_no) {
+				$return_qnty = $data['return_qnty'][$index];
 
-					}
-					if ($result) {
+				// Check if design_no exists in the table
+				$existing_record = $this->db->get_where('stock', array('p_design_number' => $design_no))->row();
+				if ($existing_record) {
+					$qnty_data = array(
+						'stock_qty' => $existing_record->stock_qty + $return_qnty
+					);
+					// Design number exists, update return quantity
+					$this->db->where('p_design_number', $design_no);
+					$result = $this->db->update('stock', $qnty_data);
+
+				} else {
+					// Design number doesn't exist, insert new record
+					$result = $this->db->insert('stock', array('p_design_number' => $design_no, 'stock_qty' => $return_qnty));
+				}
+
+			}
+			if ($result) {
 				$this->db->where('id', $customerName);
 				$query = $this->db->get('customers');
 				$row = $query->row();
+				$username = $row->name;
+				$product_ids = explode(',', $design_nos); // Replace this with your array of product IDs
+				$product_names = array();
+				foreach ($product_ids as $product_id) {
+					$this->db->select('design_num');
+					$this->db->from('designs');
+					$this->db->where('id', $product_id);
 
-				$this->db->where('id', $design_nos);
-				$query = $this->db->get('designs');
-				$row2 = $query->row();
+					$query = $this->db->get();
+					$product = $query->row(); // Get a single row as an object
 
-				
-						$data_pdf = [
-							'customer' => $row->name,
-							'design_no' => $row2->design_num,
-							'qnty' => $return_qnty,
-							'invoice_no' => $invoice_no,
-						];
-						$this->load->library('tcpdf/tcpdf.php');
-		
-						$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-						$pdf->setPrintHeader(false);
-						$pdf->setPrintFooter(false);
-						$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
-						//$pdf->SetFont('helvetica', '', 10);
-						$pdf->SetFont('times', '', 10);
-						$pdf_data = $this->load->view('invoice_pieces_return', $data_pdf, true);
-						$pdf->addPage();
-						$pdf->writeHTML($pdf_data, true, false, true, false, '');
-		
-						$filename = $invoice_no . '.pdf';
-						$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer'] . '/';
-						if (!is_dir($dir)) {
-							mkdir($dir, 0777, true);
-						}
-						$save_path = $dir . $filename;
-						ob_end_clean();
-						$pdf->Output($save_path, 'F');
-						$this->session->set_flashdata('success', 'Data Added successfully....');
-						redirect('Pices/');
-					} else {
-						$this->session->set_flashdata('error', 'Something Went Wrong!');
-						redirect('Pices/');
+					if ($product) {
+						$product_names[] = $product->design_num;
 					}
-					
 				}
+
+				$products = implode(',', $product_names);
+
+				$data_pdf = [
+					'customer' => $username,
+					'design_no' => $products,
+					'qnty' => $return_qntys,
+					'invoice_no' => $invoice_no,
+				];
+				$this->load->library('tcpdf/tcpdf.php');
+
+				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
+				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+				//$pdf->SetFont('helvetica', '', 10);
+				$pdf->SetFont('times', '', 10);
+				$pdf_data = $this->load->view('invoice_pieces_return', $data_pdf, true);
+				$pdf->addPage();
+				$pdf->writeHTML($pdf_data, true, false, true, false, '');
+
+				$filename = $invoice_no . '.pdf';
+				$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer'] . '/';
+				if (!is_dir($dir)) {
+					mkdir($dir, 0777, true);
+				}
+				$save_path = $dir . $filename;
+				ob_end_clean();
+				$pdf->Output($save_path, 'F');
+				$this->session->set_flashdata('success', 'Data Added successfully....');
+				redirect('Pices/');
+			} else {
+				$this->session->set_flashdata('error', 'Something Went Wrong!');
+				redirect('Pices/');
+			}
+
 		}
 	}
+}
 ?>

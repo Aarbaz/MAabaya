@@ -67,6 +67,7 @@
         $j++; }
     } ?>
 </table>
+<?php die();?>
 <div class="row" style="display:flex;">
 </div>
 
