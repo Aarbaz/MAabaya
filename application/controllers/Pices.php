@@ -688,7 +688,34 @@ class Pices extends CI_Controller
 			$return_qntys = trim($return_qntys, ',');
 
 			$data = $this->input->post();
+			$input_array = array(
+				'design_number' => $this->input->post('design_no[]'),
+				'customer_id' => $customerName,
+				'invoice_no' => $invoice_no,
+				'total_piece' => $this->input->post('return_qnty[]'),
+			);
 
+			$output_array = array();
+
+			for ($i = 0; $i < count($input_array['design_number']); $i++) {
+				$item = array(
+					"design_number" => [$input_array['design_number'][$i]],
+					"customer_id" => $input_array['customer_id'],
+					"invoice_no" => $input_array['invoice_no'],
+					"total_piece" => [$input_array['total_piece'][$i]]
+				);
+			
+				$output_array[] = $item;
+			}
+			$design_json = json_encode($output_array);
+			$json_data = array(
+				'data_json' => $design_json,
+				'master_id' => $customerName,
+				'invoice_no' => $invoice_no,
+			);
+
+			$insert = $this->db->insert('product_pices', $json_data);
+	
 			foreach ($data['design_no'] as $index => $design_no) {
 				$return_qnty = $data['return_qnty'][$index];
 
