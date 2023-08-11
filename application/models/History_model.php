@@ -204,7 +204,7 @@ class History_model extends CI_Model {
          ->join('customers', 'customer_ledger_balance.customer = customers.id')->get()->row();
         }
 
-        return $this->db->select('customer_ledger_balance.*,customers.name')
+        return $this->db->select('customer_ledger_balance.*,customers.name, customers.id as customer_id')
          ->from('customer_ledger_balance')->order_by('customer_ledger_balance.id ASC')
          ->join('customers', 'customer_ledger_balance.customer = customers.id')->get();
     }
