@@ -140,7 +140,7 @@
                 <td><?php echo $row->name; ?></td>
                 <td><?php echo $filePath; ?></td>
                 <td><?php echo $row->dated; ?></td>
-                <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->name).'/'.$row->invoice ?>">
+                <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->customer_id).'/'.$row->invoice ?>">
                 <i class="glyphicon glyphicon-download"></i></a>
               </td>
               </tr>

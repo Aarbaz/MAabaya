@@ -340,6 +340,7 @@ class Pices extends CI_Controller
 				// Remove the trailing comma and space
 				$material_names = rtrim($material_names, ', ');
 				$data_pdf = [
+					'customer_id' => $customer_id,
 					'customer' => $maker_name->name,
 					'product_name' => $material_names,
 					// 'hsn' => $hsn,
@@ -361,7 +362,7 @@ class Pices extends CI_Controller
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
 
 				$filename = $this->input->post('invoice_no') . '.pdf';
-				$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer'] . '/';
+				$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer_id'] . '/';
 				if (!is_dir($dir)) {
 					mkdir($dir, 0777, true);
 				}
@@ -758,6 +759,7 @@ class Pices extends CI_Controller
 				$products = implode(',', $product_names);
 
 				$data_pdf = [
+					'customer_id' => $customerName,
 					'customer' => $username,
 					'design_no' => $products,
 					'qnty' => $return_qntys,
@@ -776,7 +778,7 @@ class Pices extends CI_Controller
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
 
 				$filename = $invoice_no . '.pdf';
-				$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer'] . '/';
+				$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer_id'] . '/';
 				if (!is_dir($dir)) {
 					mkdir($dir, 0777, true);
 				}

@@ -219,6 +219,7 @@ class Making extends CI_Controller
                   $material_names = rtrim($material_names, ', ');
 
                   $data_pdf = [
+                    'master_id' => $master_name->id,
                     'master_name' => $master_name->name,
                     'maker_no' => strtoupper($postData["maker_no"]),
                     'material_names' => $material_names,
@@ -235,7 +236,7 @@ class Making extends CI_Controller
                   $pdf->addPage();
                   $pdf->writeHTML($pdf_data, true, false, true, false, "");
                   $filename = strtoupper($postData["maker_no"]).".pdf";
-                  $dir = APPPATH . "/maker/" . $data_pdf["master_name"] . "/";
+                  $dir = APPPATH . "/maker/" . $data_pdf["master_id"] . "/";
                   if (!is_dir($dir)) {
                       mkdir($dir, 0777, true);
                   }
@@ -437,7 +438,7 @@ class Making extends CI_Controller
 
   		elseif( $cust_name && $maker_no )
   		{
-  			$pdf_file = APPPATH.'maker/'.rawurldecode($cust_name).'/'.$maker_no.'.pdf';
+  			$pdf_file = APPPATH.'maker/'.rawurldecode($customer_id).'/'.$maker_no.'.pdf';
   			$file = $maker_no.'.pdf';
 
   			if (file_exists($pdf_file))

@@ -266,6 +266,7 @@ class Purchaser extends CI_Controller
                   $material_names = rtrim($material_names, ', ');
 
                   $data_pdf = [
+                    'purchaser_id' => $purchaser_name->id,
                     'purchaser_name' => $purchaser_name->name,
                     'purchaser_no' => strtoupper($postData["purchaser_no"]),
                     'material_names' => $material_names,
@@ -288,7 +289,7 @@ class Purchaser extends CI_Controller
 									$pdf->addPage();
 									$pdf->writeHTML($pdf_data, true, false, true, false, "");
 									$filename = strtoupper($postData["purchaser_no"]).".pdf";
-									$dir = APPPATH . "/purchaser/" . $data_pdf["purchaser_name"] . "/";
+									$dir = APPPATH . "/purchaser/" . $data_pdf["purchaser_id"] . "/";
 									if (!is_dir($dir)) {
 											mkdir($dir, 0777, true);
 									}
@@ -580,7 +581,7 @@ class Purchaser extends CI_Controller
 
   		elseif( $cust_name && $purchaser_no )
   		{
-  			$pdf_file = APPPATH.'purchaser/'.rawurldecode($cust_name).'/'.$purchaser_no.'.pdf';
+  			$pdf_file = APPPATH.'purchaser/'.rawurldecode($customer_id).'/'.$purchaser_no.'.pdf';
   			$file = $purchaser_no.'.pdf';
 
   			if (file_exists($pdf_file))
