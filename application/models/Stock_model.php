@@ -61,6 +61,13 @@ public function delete_by_id($id)
 		echo $data['stocks'] = $row->stock_qty;
 }
 	}
-
+	function get_allstock($id)
+	{
+		$this->db->select("*");
+		$this->db->from("stock");
+		$this->db->where('p_design_number', $id);
+		$query = $this->db->get();
+		return $query->row();
+	}
 
 }

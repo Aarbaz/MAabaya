@@ -215,20 +215,23 @@
                                             <th>AMOUNT</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="rows-list-quantity">
                                         <tr class="row_one">
                                         <td class="">
-                                            <select name="hsn[]" id="hsn"  class="form-control my-select">
+                                            <select name="hsn[]" id="hsn"  class="form-control my-select check_design_stock">
                                                     <option value="">--select design no--</option>
                                                     <?php foreach ($designs->result() as $row){
                                                         $selected = set_select("hsn[]", $row->design_num);
                                                         $data_id = $row->id;
-                                                    echo '<option label="" data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
+                                                    echo '<option data-id="'.$row->id.'" value="'.$row->design_num.'" '. set_select("hsn[]", $row->design_num).'>'.$row->design_num.'</option>';
 
                                                     } ?>
                                                 </select>
                                                 <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
                                             </td>
+                                             <td>
+                              <input type="text" class="form-control stock_quantity" id="stock_quantity" name="stock_quantity[]" placeholder="Stock/Quantity"  value="" readonly>
+                           </td>
                                             <td class="hide">
                                                 <select name="items[]" id="items" class="form-control">
                                                     <option value="">--select product--</option>
@@ -718,4 +721,27 @@ if( round_amount!= null)
         $('#selected_ids').val(selected_ids.join(','));
 
     });
+
+
+    var list = $("#rows-list-quantity");
+        $(list).on('change', ".check_design_stock", function () {
+            var row = $(this).closest('tr');
+            var design_id = $(this).find(':selected').data('id');
+            var baseURL= "<?php echo base_url();?>";
+            $.ajax({
+                type: 'post',
+                url: '<?=base_url()?>index.php/Invoice/StockById',
+                data: {design_id: design_id},
+            }).then(function (res) {
+              var res = $.parseJSON(res);
+                if (res || res != null) {
+                  row.find(".stock_quantity").val(res.stock_qty);
+                }else{
+                  row.find(".stock_quantity").val(" ");
+                }
+            }, function () {
+                alert("Sorry cannot get the stock details!");
+            });
+        });
+
 </script>

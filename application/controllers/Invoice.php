@@ -419,6 +419,11 @@ class Invoice extends CI_Controller {
 			echo json_encode($response);
 		//}
 	}
-
+	public function StockById()
+	{
+		$id = $this->input->post('design_id');
+		$data = $this->Stock_model->get_allstock($id);
+		echo json_encode($data);
+	}
 
 }

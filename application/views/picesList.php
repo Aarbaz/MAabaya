@@ -72,10 +72,9 @@
                       <?php echo "</tr>";
 
                     }
+                  $i++;
                   }
-                ?>
-
-            <?php $i++;  } ?>
+                 } ?>
             </tbody>
           </table>
         </div>
