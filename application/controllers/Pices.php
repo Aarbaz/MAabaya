@@ -574,15 +574,16 @@ class Pices extends CI_Controller
 		$to_mth = $this->input->post('to_mth');
 		$to_yr = $this->input->post('to_yr');
 		$invoice_id = $frm_mth . '_' . $to_mth;
+		
+
+		$this->form_validation->set_rules('customerName', 'Customer Name', 'trim|required');
+		$this->form_validation->set_rules('frm_mth', 'From Month', 'trim|required');
+		$this->form_validation->set_rules('frm_yr', 'From Year', 'trim|required');
 		if ($this->form_validation->run() == FALSE) {
 			$response['result'] = 'Please select customer, month and year.';
 			$response['status'] = 'failed';
 			//echo json_encode($response);
 		}
-
-		$this->form_validation->set_rules('customerName', 'Customer Name', 'trim|required');
-		$this->form_validation->set_rules('frm_mth', 'From Month', 'trim|required');
-		$this->form_validation->set_rules('frm_yr', 'From Year', 'trim|required');
 		if (!$this->session->userdata('logged_in')) {
 			redirect('Welcome');
 		} elseif ($cust_name && $invoice_id) {
@@ -600,9 +601,14 @@ class Pices extends CI_Controller
 			$file = $invoice_id . '.pdf';
 
 			if (file_exists($pdf_file)) {
-				header("Content-Type: application/pdf");
-				header("Content-Disposition: attachment;filename=\"$file\"");
+
+				header('Content-type: application/pdf');
+				header('Content-Disposition: attachment; filename="' . $file . '"');
+				header('Content-Transfer-Encoding: binary');
+				header('Content-Length: ' . filesize($pdf_file));
+				header('Accept-Ranges: bytes');
 				readfile($pdf_file);
+
 			} else {
 				$db_data = $this->Balance_model->customer_ledger_byDate($cust_id, $frm_mth, $frm_yr, $to_mth, $to_yr)->result_array();
 
@@ -654,10 +660,12 @@ class Pices extends CI_Controller
 
 				$response['result'] = 'PDF generated successfully.';
 				$response['status'] = 'passed';
+				// $response['path'] = json_encode($save_path);
 
 				$this->session->set_flashdata('success', 'PDF generated successfully....');
 				sleep(4);
 				// $this->downloadPdf($cust_name, $invoice_id);
+				// echo json_encode($response);
 			}
 		} else {
 			$data['title'] = ucwords('Page not found');

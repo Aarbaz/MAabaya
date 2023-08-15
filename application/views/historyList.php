@@ -12,7 +12,7 @@
          ?>
         <div class="panel-body">
           <p>
-            <form id="download_ledger" class="form-inline" method="post" enctype="multipart/form-data" action="<?php echo base_url('/index.php/Pices/downloadBalance');?>" >
+            <form id="download_ledger" class="form-inline"  enctype="multipart/form-data" method="POST" action="<?php echo base_url('/index.php/Pices/downloadBalance');?>">
               <div class="form-group">
                 <label for="customerName">Customer: </label>
                 <select name="customerName" id="customerName" class="form-control">
@@ -96,6 +96,10 @@
                 &nbsp;&nbsp;<a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Balance/ledger');?>">Add New</a>
               </div> -->
             </form>
+            <div id="pdfViewer">
+
+            <a href="<?php echo base_url('/index.php/History/getPdf/')?>">Open PDF</a>
+            </div>
           </p><br />
           <div><p id="result_box" class="text-center"></p></div>
           <?php
@@ -320,11 +324,11 @@ $(document).ready(function(){
   }, 4000);
 
 
-  $("#download_ledger").submit(function(e){
+  $("#download_ledger2").submit(function(e){
       e.preventDefault();
-      var formUrl = "History/openPdf";
+      var formUrl = "";
       $.ajax({
-        url: $(this).attr('action'),
+        url: formUrl,
         type: "POST",
         dataType: "json",
         data:new FormData(this),
@@ -333,7 +337,6 @@ $(document).ready(function(){
         cache:false,
         async:false,
         success:function(resp){
-          console.log(resp);
           if( resp.status == 'failed')
           {
             $('#result_box').empty();
@@ -341,13 +344,12 @@ $(document).ready(function(){
           }
           else if(resp.status == 'passed')
           {
-
+            console.log(resp);
           }
         }
       });
   });
-
-
+  
 });
 
 // show details of each material
