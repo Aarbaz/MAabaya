@@ -14,6 +14,8 @@
                <?php
                   if( $this->session->flashdata('success') )
                   { echo '<div class="alert alert-success show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Success!</strong> '.$this->session->flashdata('success').'</p></div>'; }
+                  if( $this->session->flashdata('error') )
+                  { echo '<div class="alert alert-danger show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Error!</strong> '.$this->session->flashdata('error').'</p></div>'; }
                   ?>
                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                   <thead>

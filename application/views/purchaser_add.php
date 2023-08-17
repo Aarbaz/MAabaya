@@ -84,6 +84,11 @@
                            } ?>
                      </select>
                   </div>
+                  <div class="col-sm-2 col-md-offset-4">
+                     <label>Bill Date</label>
+                     <input type="date" id="bill_date" name="bill_date"/>
+                     
+                  </div>
                   <div class="col-sm-12"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
                </div>
                <div class="form-group" id="table_without_tax">

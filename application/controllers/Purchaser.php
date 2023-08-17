@@ -114,7 +114,12 @@ class Purchaser extends CI_Controller
                 $amount = trim($amount, ",");
 
                 $total_word = $this->input->post('total_word');
-
+                if($postData["bill_date"]){
+                    $date= $postData["bill_date"];
+                }
+                else{
+                    $date = date("Y-m-d");
+                }
                 $data = [
                     "purchaser_owner_id" => strtoupper($postData["owner_name"]),
                     "material_id" => $material_name,
@@ -122,6 +127,7 @@ class Purchaser extends CI_Controller
                     "stock" => $qnty,
                     "total_amount" => $amount,
                     "purchaser_no" =>strtoupper($postData["purchaser_no"]),
+                    "create_date" => $date,
                 ];
 
                 $insert = $this->Purchaser_model->add_purchaser($data);
@@ -592,7 +598,7 @@ class Purchaser extends CI_Controller
   			}
   			else
   			{
-  				$this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
+  				$this->session->set_flashdata("error", "Sorry! file not found...");
   				redirect('Purchaser');
   			}
   		}
