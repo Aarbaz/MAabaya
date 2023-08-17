@@ -208,11 +208,12 @@
                                 <table class="table table-bordere<th>PRODUCT</th>d">
                                     <thead>
                                         <tr>
-                                            <th>Design No</th>
+                                            <th>DESIGN NO</th>
                                             <!--  -->
-                                            <th>QNTY </th>
-                                            <th>RATE</th>
+                                            <th> STOCK</th>
+                                            <th>QNTY</th>
                                             <th>AMOUNT</th>
+                                            <th>TOTAL</th>
                                         </tr>
                                     </thead>
                                     <tbody id="rows-list-quantity">

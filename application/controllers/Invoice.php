@@ -148,6 +148,13 @@ class Invoice extends CI_Controller {
 			$sup_date = $this->input->post('sup_date');
 			//$sup_place = $this->input->post('sup_place');
 			$sup_other = $this->input->post('sup_other');
+			
+			$qnty_array = $this->input->post('qnty[]');
+			$qnty_sum = 0;
+			
+			foreach ($qnty_array as $value) {
+				$qnty_sum += $value;
+			}
 
 			$data = array(
 				'customer_id' => $bakers_id,
@@ -228,7 +235,8 @@ class Invoice extends CI_Controller {
 				//'place_of_supply'  => $sup_place,
 				'other_notes'  => $sup_other,
 				'paid'  => $paid_amount,
-				'balance'  => $balance_amount
+				'balance'  => $balance_amount,
+				'qnty_sum'  => $qnty_sum
 			);
 
 			$selected_ids_values = explode(",", $selected_ids);

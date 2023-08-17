@@ -144,6 +144,11 @@
   </tr>
   <?php } ?>
   <tr>
+    <th class="right">TOTAL Pices</th>
+    <td>&nbsp;</td>
+    <td> <?php echo 'Rs. '. $qnty_sum; ?></td>
+  </tr>
+  <tr>
     <th class="right">TOTAL AMOUNT</th>
     <td>&nbsp;</td>
     <td> <?php echo 'Rs. '. $total; ?></td>
