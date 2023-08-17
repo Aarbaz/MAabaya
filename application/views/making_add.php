@@ -89,7 +89,17 @@
                            } ?>
                      </select>
                   </div>
-                  <div class="col-sm-12"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
+                  <div class="col-sm-4">
+                     
+                  </div>
+                           <div class="col-sm-2">
+                     <label>Bill Date</label>
+                     <input type="date" id="bill_date" name="bill_date"/>
+                     
+                  </div>
+                  <div class="col-sm-12"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?>
+                  </div>
+
                </div>
                <div class="form-group" id="table_without_tax">
                   <table class="table table-bordered">
@@ -196,6 +206,7 @@
       $(document).ready(function(){
         var list = $("#rows-list");
         $(list).on('change', ".check_stock", function () {
+         alert();
             var row = $(this).closest('tr');
             var material_id = $(this).val();
             var baseURL= "<?php echo base_url();?>";
