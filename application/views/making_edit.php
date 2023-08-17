@@ -97,9 +97,14 @@
                                       </td>
                                      <td>
                                       <?php
-                                        $get_pstock = $this->Purchaser_model->get_pstock($mat[$i]);                                        
-                                      ?>
-                                        <input type="text" class="form-control stock_in" id="stock_in" name="stock_in[]" placeholder="Stock/Quantity"  value="<?php echo $get_pstock->quantity?>" readonly>
+                                        $get_pstock = $this->Purchaser_model->get_pstock($mat[$i]);   
+                                        if (!$get_pstock || !isset($get_pstock->quantity)) {
+                                         $pstock_quantity = " ";
+                                        } else {
+                                            $pstock_quantity = $get_pstock->quantity;
+                                        }
+                                     ?>
+                                        <input type="text" class="form-control stock_in" id="stock_in" name="stock_in[]" placeholder="Stock/Quantity"  value="<?php echo $pstock_quantity?>" readonly>
                                     </td>
                                       <td>
                                          <input type="hidden" class="form-control" id="stock_qhidden" name="stock_qhidden[]"  value="<?php echo $stk[$i]; ?>">
@@ -205,9 +210,8 @@ if (isChecked2) {
   $(document).ready(function(){
 
      var list = $("#rows-list");
-        $(list).on('change', ".check_stock", function () {
-         
-          alert();
+        // $(list).on('change', ".check_stock", function () {
+          $('.check_stock').on('change', function(){
             var row = $(this).closest('tr');
             var material_id = $(this).val();
             row.find(".stock_in").val(" ");
@@ -222,7 +226,7 @@ if (isChecked2) {
                 if (res || res != null) {
                   row.find(".stock_in").val(res.quantity);
                 }else{
-                  row.find(".stock_in").val(" ");
+                  row.find(".stock_in").val(0);
                 }
             }, function () {
                 alert("Sorry cannot get the product details!");
