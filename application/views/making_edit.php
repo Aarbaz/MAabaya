@@ -16,15 +16,15 @@
             $url = 'Making/edit/'.$prod->id;
             echo form_open($url, 'class="form-horizontal" id="add_product_form"');
           ?>
-          <div class="form-group">
+          <!-- <div class="form-group">
              <div class="col-sm-5">
                 <label>Purchaser Name</label>
-                <!-- <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>"> -->
+                <input type="text" class="form-control" name="master_name" placeholder="Master Name" value="<?php echo set_value('master_name'); ?>">
                 <select name="master_id" id="master_id" class="form-control">
                    <option value="" selected="selected">--select master--</option>
                      <?php
                          foreach ($PurchaserList->result() as $row){
-                             // echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
+                             echo '<option value="'.$row->id.'" '.set_select('ownerName',$row->name).'>'.$row->name.'</option>';
                              ?>
                              <option value="<?php echo $row->id ?>" <?php echo ($prod->purchaser_owner_id == $row->id) ? 'selected' : '' ?>><?php echo $row->name ?></option>
                              <?php
@@ -33,7 +33,7 @@
                 </select>
              </div>
              <div class="col-sm-6"> <?php echo form_error('master_name', '<p class="text-danger">', '</p>'); ?></div>
-          </div>
+          </div> -->
           <div class="form-group">
             <div class="col-sm-5">
 
@@ -48,6 +48,14 @@
               } ?>
           </select>
         </div>
+        <div class="col-sm-4">
+                     
+                  </div>
+                           <div class="col-sm-2">
+                     <label>Bill Date</label>
+                     <input type="date" id="bill_date" name="bill_date" value="<?php echo $prod->create_date?>"/>
+                     
+                  </div>
         <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
       </div>
       <input type="hidden" name="prod_id" value="<?php echo $prod->id; ?>">
@@ -56,6 +64,7 @@
                               <thead>
                                   <tr>
                                       <th>Material Name</th>
+                                      <th>Available Stock</th>
                                       <th>Quantity</th>
                                   </tr>
                               </thead>
@@ -66,17 +75,18 @@
 
                                 for ($i=0; $i < $cnt; $i++) {
                                   ?>
-                              <tbody>
+                              <tbody id="rows-list">
                                   <tr class="row_one">
 
                                       <td class="">
-
-                                        <select name="material_name[]" id="material_name" class="form-control">
+                                    <input type="hidden" name="maker_no" value="<?php echo $prod->maker_no?>">
+                                        <select name="material_name[]" id="material_name" class="form-control check_stock"  >
                                           <option value="" selected="selected">--select material--</option>
                                             <?php
 
                                             foreach ($matList->result() as $row){
                                               ?>
+
                                               <option value="<?php echo $row->id ?>" <?php echo ($mat[$i] == $row->id) ? 'selected' : '' ?>><?php echo $row->material_name ?></option>
                                               <?php
 
@@ -85,13 +95,20 @@
 
                                         <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
                                       </td>
+                                     <td>
+                                      <?php
+                                        $get_pstock = $this->Purchaser_model->get_pstock($mat[$i]);                                        
+                                      ?>
+                                        <input type="text" class="form-control stock_in" id="stock_in" name="stock_in[]" placeholder="Stock/Quantity"  value="<?php echo $get_pstock->quantity?>" readonly>
+                                    </td>
                                       <td>
-                                        <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Quantity" value="<?php echo $stk[$i];?>">
+                                         <input type="hidden" class="form-control" id="stock_qhidden" name="stock_qhidden[]"  value="<?php echo $stk[$i]; ?>">
+                                          <input type="text" class="form-control" id="stock_q" name="stock_q[]" placeholder="Quantity" value="<?php echo $stk[$i];?>">
                                         <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
                                       </td>
                                       <td>
                                           <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
-                                          &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
+                                          &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm" fdprocessedid="vik1a"><b>X</b></button>
                                       </td>
                                   </tr>
                               </tbody>
@@ -131,9 +148,13 @@ $(document).on('click', '.add_more', function(){
     $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
 });
 //Remove table row
-$(document).on('click', '.remove', function(){
+$(document).on('click', '#remove', function(){
+  // debugger;
   var $tr = $(this).closest('tr');
   if ($tr.index() != '0') {
+    $tr.remove();
+  }
+  else{
     $tr.remove();
   }
 });
@@ -155,8 +176,61 @@ if (isChecked2) {
 }
 }
 
+//  function checkQuantity(event) {
+//           console.log(event);
+//             var row = $(event).closest('tr');
+//              var material_id = $(event).val();
+//             // var material_id = $('#material_name').val();
+//             // $(".stock_in").val(" ");
+//               row.find(".stock_in").val(" ");
 
+//             var baseURL= "<?php echo base_url();?>";
+//             $.ajax({
+//                 type: 'post',
+//                 url: '<?=base_url()?>index.php/Making/quantityById',
+//                 data: {material_id: material_id},
+//             }).then(function (res) {
+//               console.log(res);
+//               var res = $.parseJSON(res);
+//                 if (res || res != null) {
+//                   row.find(".stock_in").val(res.quantity);
+//                   // $(".stock_in").val(res.quantity);
+//                 }else{
+//                   $(".stock_in").val(" ");
+//                 }
+//             }, function () {
+//                 alert("Sorry cannot get the product details!");
+//             });
+//           }
   $(document).ready(function(){
+
+     var list = $("#rows-list");
+        $(list).on('change', ".check_stock", function () {
+         
+          alert();
+            var row = $(this).closest('tr');
+            var material_id = $(this).val();
+            row.find(".stock_in").val(" ");
+            var baseURL= "<?php echo base_url();?>";
+            $.ajax({
+                type: 'post',
+                url: '<?=base_url()?>index.php/Making/quantityById',
+                data: {material_id: material_id},
+            }).then(function (res) {
+              console.log(res);
+              var res = $.parseJSON(res);
+                if (res || res != null) {
+                  row.find(".stock_in").val(res.quantity);
+                }else{
+                  row.find(".stock_in").val(" ");
+                }
+            }, function () {
+                alert("Sorry cannot get the product details!");
+            });
+        });
+          
+        
+
 
     $('#stock_q, #p_price').on('change', function(){
       var qnty = $('#stock_q').val();

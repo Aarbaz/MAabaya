@@ -22,7 +22,7 @@ class Making_model extends CI_Model
 
     public function get_material_byID($id)
     {
-        $this->db->select("id,purchaser_owner_id, making_owner_id,material_id,stock");
+        $this->db->select("id,purchaser_owner_id, making_owner_id,material_id,stock,maker_no,create_date");
         $this->db->from("making");
         $this->db->where("id", $id);
         $query = $this->db->get();
@@ -35,7 +35,17 @@ class Making_model extends CI_Model
         $this->db->update("making", $data);
         return $this->db->affected_rows();
     }
+    public function get_data_by_id($prod_id)
+    {
+        // Assuming you have a database table named 'making' with appropriate columns
+        $query = $this->db->get_where('making', array('id' => $prod_id));
 
+        if ($query->num_rows() > 0) {
+            return $query->row_array(); // Return the result as an associative array
+        } else {
+            return null; // No data found
+        }
+    }
     public function delete_by_id($id)
     {
         $this->db->where("id", $id);
