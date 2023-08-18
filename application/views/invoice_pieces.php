@@ -187,6 +187,7 @@
          <tr>
            <!-- <td>&nbsp;</td> -->
            <th class="right">TOTAL</th>
+           <td>&nbsp;</td>
            <td> <?php echo $grandPiece_total; ?></td>
            <td>&nbsp;</td>
            <td> <?php echo 'Rs. '. $grandAmount_total; ?></td>

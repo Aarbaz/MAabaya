@@ -225,7 +225,7 @@ class Pices extends CI_Controller
 					if ($query->num_rows()) {
 						// If the product exists, update the quantity value in the database
 						$data3 = array(
-							'stock_qty' => $row->stock_qty + $quantity
+							'stock_qty' => (float)$row->stock_qty + (float)$quantity
 						);
 						//print_r($data3);
 						$this->db->where('p_design_number', $product_id);
@@ -259,7 +259,7 @@ class Pices extends CI_Controller
 						//$this->db->where('making_owner_id', $customer_id);
 						$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
 						// Update the quantity for the material ID with the previous quantity + new quantity
-						$data = array('quantity' => $prev_quantity - $material_used_array[$i]);
+						$data = array('quantity' => (float)$prev_quantity - (float)$material_used_array[$i]);
 
 						$this->db->where('materials_id', $material_ids_array[$i]);
 						//$this->db->where('making_owner_id', $customer_id);
@@ -664,8 +664,6 @@ class Pices extends CI_Controller
 
 				$this->session->set_flashdata('success', 'PDF generated successfully....');
 				sleep(4);
-				// $this->downloadPdf($cust_name, $invoice_id);
-				// echo json_encode($response);
 			}
 		} else {
 			$data['title'] = ucwords('Page not found');

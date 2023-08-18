@@ -98,7 +98,6 @@
             </form>
             <div id="pdfViewer">
 
-            <a href="<?php echo base_url('/index.php/History/getPdf/')?>">Open PDF</a>
             </div>
           </p><br />
           <div><p id="result_box" class="text-center"></p></div>
