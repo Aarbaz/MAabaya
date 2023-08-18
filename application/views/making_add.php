@@ -206,7 +206,6 @@
       $(document).ready(function(){
         var list = $("#rows-list");
         $(list).on('change', ".check_stock", function () {
-         alert();
             var row = $(this).closest('tr');
             var material_id = $(this).val();
             var baseURL= "<?php echo base_url();?>";

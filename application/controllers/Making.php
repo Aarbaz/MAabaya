@@ -4,10 +4,10 @@ defined("BASEPATH") or exit("No direct script access allowed");
 class Making extends CI_Controller
 {
     /*
-	 1. idex() is called to dislay list of materials
-	 2. add_new() creates a new entry into DB
-	 3. edit() to update product
-	 */
+     1. idex() is called to dislay list of materials
+     2. add_new() creates a new entry into DB
+     3. edit() to update product
+     */
 
     public function __construct()
     {
@@ -17,7 +17,7 @@ class Making extends CI_Controller
         $this->load->model("Purchaser_model");
         $this->load->library("tcpdf");
         $this->load->library("upload");
-		$this->load->model('Balance_model');
+        $this->load->model('Balance_model');
         //$this->load->helper('pdf_helper');
         $this->load->helper("url");
         $this->load->model("Customer_model");
@@ -73,7 +73,7 @@ class Making extends CI_Controller
             "Quantity",
             "trim|required"
         );
-    
+
         if ($this->input->post("add_making") != null) {
             if ($this->form_validation->run() == false) {
                 $data["title"] = ucwords("Add new Making Page");
@@ -103,10 +103,9 @@ class Making extends CI_Controller
 
                 // $master_id = $this->input->post("master_id");
                 $master_name = $this->input->post("master_name");
-                if($postData["bill_date"]){
-                    $date= $postData["bill_date"];
-                }
-                else{
+                if ($postData["bill_date"]) {
+                    $date = $postData["bill_date"];
+                } else {
                     $date = date("Y-m-d");
                 }
                 $data = [
@@ -139,12 +138,46 @@ class Making extends CI_Controller
 
                 $m = 0;
                 foreach ($stocks as $row) {
-                    $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
-                    $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
+
+                    if ($oldstock[$m]) {
+                        $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
+                        $this->Purchaser_model->update_pstock_qty($dataStk, $material_ids[$m]);
+
+                        // $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
+                        // $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
+                    } else {
+                        $dataMtk["materials_id"] = $material_ids[$m];
+                        $dataMtk["quantity"] = 0 - $stocks[$m];
+
+                        $this->Purchaser_model->add_purchaser_qty($dataMtk);
+
+                    }
+
+
+                        $dataMak["maker_id"] = $product_id;
+                        $dataMak["making_owner_id"] = $master_name;
+                        $dataMak["materials_id"] = $material_ids[$m];
+                        $dataMak["quantity"] = $stocks[$m];
+
+                        $this->db->where('materials_id', $material_ids[$m]);
+                        $querys = $this->db->get('maker_stock');
+                        $rows = $querys->row();
+                        if ($querys->num_rows()) {
+                            $data3 = array(
+                                'quantity' => $rows->quantity + $stocks[$m],
+                            );
+                            $this->db->where('materials_id', $material_ids[$m]);
+                            $this->db->update('maker_stock', $data3);
+                        } else {
+                            $this->Making_model->add_making_qty($dataMak);
+                        }
+
+                    // $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
+                    // $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
 
                     // $this->db->where('product_id',$material_ids[$m]);
-            				// $query1 = $this->db->get('stock');
-            				// $rows = $query1->row();
+                    // $query1 = $this->db->get('stock');
+                    // $rows = $query1->row();
                     //
                     // if ($query1->num_rows()) {
                     //   // If the product exists, update the quantity value in the database
@@ -156,101 +189,71 @@ class Making extends CI_Controller
                     //   $this->db->update('stock', $data_return);
                     // }
 
-                    $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
-                    $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
-
-                    $dataMak["maker_id"] = $product_id;
-                    // $dataMak["purchaser_owner_id"] = $master_id;
-                    $dataMak["making_owner_id"] = $master_name;
-                    $dataMak["materials_id"] = $material_ids[$m];
-                    $dataMak["quantity"] = $stocks[$m];
-
-
-                    // $this->db->where('making_owner_id', $master_name);
-                    $this->db->where('materials_id',$material_ids[$m]);
-                    $querys = $this->db->get('maker_stock');
-                    $rows = $querys->row();
-
-                    if ($querys->num_rows()) {
-                      $data3 = array(
-                        'quantity' => $rows->quantity + $stocks[$m],
-                        // 'price' => $price[$i]
-                      );
-
-                    //   $this->db->where('making_owner_id', $master_name);
-                      $this->db->where('materials_id',$material_ids[$m]);
-                      $this->db->update('maker_stock', $data3);
-
-                    } else {
-
-                      $this->Making_model->add_making_qty($dataMak);
-
-                    }
-
 
                     $m++;
                 }
 
 
                 $json_data = json_encode($data);
-          			$json_data_array = array(
-          					'entry_from' => 2, //Making
-          					'json_data' => $json_data,
-          			);
-          			$insert_json_data = $this->Purchaser_model->create_history($json_data_array);
+                $json_data_array = array(
+                    'entry_from' => 2,
+                    //Making
+                    'json_data' => $json_data,
+                );
+                $insert_json_data = $this->Purchaser_model->create_history($json_data_array);
 
                 if ($insert > 0) {
 
 
-                  $customer_id= $master_name;
-                  $this->db->select('*');
-                  $this->db->from('customers');
-                  $this->db->where('id',$customer_id);
-                  $query = $this->db->get();
-                  $master_name = $query->row();
+                    $customer_id = $master_name;
+                    $this->db->select('*');
+                    $this->db->from('customers');
+                    $this->db->where('id', $customer_id);
+                    $query = $this->db->get();
+                    $master_name = $query->row();
 
-                  $material_ids = implode(",",$this->input->post("material_name[]"));
-                  $material_values = trim($material_ids, ",");
-                  $material_ids_values = explode(",", $material_ids);
-                  $material_values = $material_ids_values;
-                  $this->db->select('*');
-                  $this->db->from('material');
-                  $this->db->where_in('id', $material_values);
-                  $query = $this->db->get();
-                  $results = $query->result();
-                  $material_names = '';
-                  foreach ($results as $result) {
-                  $material_names .= $result->material_name . ', ';
-                  }
-                  $material_names = rtrim($material_names, ', ');
+                    $material_ids = implode(",", $this->input->post("material_name[]"));
+                    $material_values = trim($material_ids, ",");
+                    $material_ids_values = explode(",", $material_ids);
+                    $material_values = $material_ids_values;
+                    $this->db->select('*');
+                    $this->db->from('material');
+                    $this->db->where_in('id', $material_values);
+                    $query = $this->db->get();
+                    $results = $query->result();
+                    $material_names = '';
+                    foreach ($results as $result) {
+                        $material_names .= $result->material_name . ', ';
+                    }
+                    $material_names = rtrim($material_names, ', ');
 
-                  $data_pdf = [
-                    'master_id' => $master_name->id,
-                    'master_name' => $master_name->name,
-                    'maker_no' => strtoupper($postData["maker_no"]),
-                    'material_names' => $material_names,
-                    'qnty' => $stock_q,
-                    'create_date' => $date,
-              ];
+                    $data_pdf = [
+                        'master_id' => $master_name->id,
+                        'master_name' => $master_name->name,
+                        'maker_no' => strtoupper($postData["maker_no"]),
+                        'material_names' => $material_names,
+                        'qnty' => $stock_q,
+                        'create_date' => $date,
+                    ];
 
-                  $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-                  $pdf->setPrintHeader(false);
-                  $pdf->setPrintFooter(false);
-                  $pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
-                  //$pdf->SetFont('helvetica', '', 10);
-                  $pdf->SetFont("", "", 10);
-                  $pdf_data = $this->load->view("making_pdf", $data_pdf, true);
-                  $pdf->addPage();
-                  $pdf->writeHTML($pdf_data, true, false, true, false, "");
-                  $filename = strtoupper($postData["maker_no"]).".pdf";
-                  $dir = APPPATH . "/maker/" . $data_pdf["master_id"] . "/";
-                  if (!is_dir($dir)) {
-                      mkdir($dir, 0777, true);
-                  }
-                  $save_path = $dir . $filename;
-                  ob_end_clean();
-                  // $pdf->Output($save_path, "I");
-                  $pdf->Output($save_path, "F");
+                    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $pdf->setPrintHeader(false);
+                    $pdf->setPrintFooter(false);
+                    $pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+                    //$pdf->SetFont('helvetica', '', 10);
+                    $pdf->SetFont("", "", 10);
+                    $pdf_data = $this->load->view("making_pdf", $data_pdf, true);
+                    $pdf->addPage();
+                    $pdf->writeHTML($pdf_data, true, false, true, false, "");
+                    $filename = strtoupper($postData["maker_no"]) . ".pdf";
+                    $dir = APPPATH . "/maker/" . $data_pdf["master_id"] . "/";
+                    if (!is_dir($dir)) {
+                        mkdir($dir, 0777, true);
+                    }
+                    $save_path = $dir . $filename;
+                    ob_end_clean();
+                    // $pdf->Output($save_path, "I");
+                    $pdf->Output($save_path, "F");
                     $this->session->set_flashdata(
                         "success",
                         "Making added successfully."
@@ -290,7 +293,7 @@ class Making extends CI_Controller
     //form to UPDATE PRODUCT
     public function edit($prod_id)
     {
-        
+
         $cust_data = $this->Making_model->get_material_byID($prod_id);
         if (!$this->session->userdata("logged_in")) {
             redirect("Welcome");
@@ -354,55 +357,54 @@ class Making extends CI_Controller
                 $existing_stock_q = explode(",", $existingData["stock"]);
 
                 for ($i = 0; $i < count($existing_material_names); $i++) {
-                $existing_material_id = $existing_material_names[$i];
-                $existing_stock = $existing_stock_q[$i];
+                    $existing_material_id = $existing_material_names[$i];
+                    $existing_stock = $existing_stock_q[$i];
 
-    // Check if the existing material ID is not present in the new data
-    if (!in_array($existing_material_id, $material_names_new)) {
-        $old_materials[] = [
-                    "material_id" => $existing_material_id,
-                    "stock_q" => $existing_stock
-                ];
-            }
-        }
+                    // Check if the existing material ID is not present in the new data
+                    if (!in_array($existing_material_id, $material_names_new)) {
+                        $old_materials[] = [
+                            "material_id" => $existing_material_id,
+                            "stock_q" => $existing_stock
+                        ];
+                    }
+                }
 
-                    // Now you can use the $old_materials array to identify old materials not included in the new data
-                    foreach ($old_materials as $old_material) {
+                // Now you can use the $old_materials array to identify old materials not included in the new data
+                foreach ($old_materials as $old_material) {
 
-                            $this->db->where('materials_id',$old_material["material_id"] );
-            				$query = $this->db->get('purchaser_stock');
-            				$row = $query->row();
-            				if ($query->num_rows()) {
-                                 $data3 = array(
-                                    'quantity' => $row->quantity + $old_material["stock_q"],
-                                );
-                                $this->db->where('materials_id',$old_material["material_id"] );
-            					$this->db->update('purchaser_stock', $data3);
-                                    }
+                    $this->db->where('materials_id', $old_material["material_id"]);
+                    $query = $this->db->get('purchaser_stock');
+                    $row = $query->row();
+                    if ($query->num_rows()) {
+                        $data3 = array(
+                            'quantity' => $row->quantity + $old_material["stock_q"],
+                        );
+                        $this->db->where('materials_id', $old_material["material_id"]);
+                        $this->db->update('purchaser_stock', $data3);
+                    }
 
-                                    $this->db->where('materials_id',$old_material["material_id"] );
-                            $querys = $this->db->get('maker_stock');
-                            $rows = $querys->row();
-                            if ($querys->num_rows()) {
-                                 $data33 = array(
-                                'quantity' => $rows->quantity - $old_material["stock_q"],
-                            );
-                        
+                    $this->db->where('materials_id', $old_material["material_id"]);
+                    $querys = $this->db->get('maker_stock');
+                    $rows = $querys->row();
+                    if ($querys->num_rows()) {
+                        $data33 = array(
+                            'quantity' => $rows->quantity - $old_material["stock_q"],
+                        );
 
-                            $this->db->where('materials_id',$old_material["material_id"] );
-                            $this->db->update('maker_stock', $data33);
-                            }
 
-                                }
-    
-                $material_id = implode(",",$this->input->post("material_name[]"));
+                        $this->db->where('materials_id', $old_material["material_id"]);
+                        $this->db->update('maker_stock', $data33);
+                    }
+
+                }
+
+                $material_id = implode(",", $this->input->post("material_name[]"));
                 $material_id = trim($material_id, ",");
                 $stock_q = implode(",", $this->input->post("stock_q[]"));
                 $stock_q = trim($stock_q, ",");
-                if($postData["bill_date"]){
-                    $date= $postData["bill_date"];
-                }
-                else{
+                if ($postData["bill_date"]) {
+                    $date = $postData["bill_date"];
+                } else {
                     $date = date("Y-m-d");
                 }
 
@@ -410,7 +412,7 @@ class Making extends CI_Controller
                     "making_owner_id" => strtoupper($postData["master_name"]),
                     "material_id" => $material_id,
                     "stock" => $stock_q,
-                    'create_date' => $date,                    
+                    'create_date' => $date,
                 ];
                 $prod_id = $postData["prod_id"];
 
@@ -419,112 +421,108 @@ class Making extends CI_Controller
                 $stockNew = $this->input->post("stock_qhidden[]");
                 $stockqNew = $this->input->post("stock_q[]");
                 $material_idNew = $this->input->post("material_name[]");
-                 $i = 0;
-                    foreach ($stockNew as $row) {
-                     $MakStk["maker_id"] = '0';
+                $i = 0;
+                foreach ($stockNew as $row) {
+                    $MakStk["maker_id"] = '0';
                     $MakStk["making_owner_id"] = '0';
                     $MakStk["materials_id"] = $material_idNew[$i];
                     $MakStk["quantity"] = $stockqNew[$i];
 
-                    $this->db->where('materials_id',$material_idNew[$i]);
-            				$query = $this->db->get('purchaser_stock');
-            				$row = $query->row();
-            				if ($query->num_rows()) {
+                    $this->db->where('materials_id', $material_idNew[$i]);
+                    $query = $this->db->get('purchaser_stock');
+                    $row = $query->row();
+                    if ($query->num_rows()) {
 
-                                if($stockNew[$i]){
-                                    $diff = $stockqNew[$i] - $stockNew[$i];
-                                }
-                                else{
-                                    $diff = $stockqNew[$i] - '0';
-                                }
-            				if ($diff > 0) {
+                        if ($stockNew[$i]) {
+                            $diff = $stockqNew[$i] - $stockNew[$i];
+                        } else {
+                            $diff = $stockqNew[$i] - '0';
+                        }
+                        if ($diff > 0) {
                             // echo "The difference is positive: " . $diff;	
                             // If the product exists, update the quantity value in the database
-            					$data3 = array(
-            						'quantity' => $row->quantity - $diff,
-            					);
-                            }
-                            elseif ($diff < 0) {
+                            $data3 = array(
+                                'quantity' => $row->quantity - $diff,
+                            );
+                        } elseif ($diff < 0) {
                             // echo "The difference is negative: " . abs($diff);
-                                $data3 = array(
-                                    'quantity' => $row->quantity + abs($diff),
-                                );
-                            } else {
+                            $data3 = array(
+                                'quantity' => $row->quantity + abs($diff),
+                            );
+                        } else {
                             // echo "The difference is negative: " . abs($diff);
-                                $data3 = array(
-                                    'quantity' => $row->quantity -abs($diff),
-                                );
-                            }
+                            $data3 = array(
+                                'quantity' => $row->quantity - abs($diff),
+                            );
+                        }
 
-                                $this->db->where('materials_id',$material_idNew[$i]);
-            					$this->db->update('purchaser_stock', $data3);
-            				}
+                        $this->db->where('materials_id', $material_idNew[$i]);
+                        $this->db->update('purchaser_stock', $data3);
+                    }
 
-                            $this->db->where('materials_id',$material_idNew[$i]);
-                            $querys = $this->db->get('maker_stock');
-                            $rows = $querys->row();
-                            if ($querys->num_rows()) {
-                            if($stockNew[$i]){
-                                    $diff = $stockqNew[$i] - $stockNew[$i];
-                                }
-                                else{
-                                    $diff = $stockqNew[$i] - '0';
-                                }
+                    $this->db->where('materials_id', $material_idNew[$i]);
+                    $querys = $this->db->get('maker_stock');
+                    $rows = $querys->row();
+                    if ($querys->num_rows()) {
+                        if ($stockNew[$i]) {
+                            $diff = $stockqNew[$i] - $stockNew[$i];
+                        } else {
+                            $diff = $stockqNew[$i] - '0';
+                        }
 
-                            if ($diff > 0) {	
+                        if ($diff > 0) {
                             // If the product exists, update the quantity value in the database
-                                $data3 = array(
-                                    'quantity' => $rows->quantity + $diff,
-                                );
-                            }
-                            elseif ($diff < 0) {
-                                $data3 = array(
-                                    'quantity' => $rows->quantity - abs($diff),
-                                );
-                            } else {
+                            $data3 = array(
+                                'quantity' => $rows->quantity + $diff,
+                            );
+                        } elseif ($diff < 0) {
+                            $data3 = array(
+                                'quantity' => $rows->quantity - abs($diff),
+                            );
+                        } else {
                             // echo "The difference is negative: " . abs($diff);
                             $data3 = array(
                                 'quantity' => $row->quantity + abs($diff),
                             );
                         }
 
-                            $this->db->where('materials_id',$material_idNew[$i]);
-                            $this->db->update('maker_stock', $data3);
-                            } else {
-                            $this->Making_model->add_making_qty($MakStk);
-                            }               
-                        $i++;
+                        $this->db->where('materials_id', $material_idNew[$i]);
+                        $this->db->update('maker_stock', $data3);
+                    } else {
+                        $this->Making_model->add_making_qty($MakStk);
+                    }
+                    $i++;
                 }
 
-                 $customer_id= $postData["master_name"];
-                  $this->db->select('*');
-                  $this->db->from('customers');
-                  $this->db->where('id',$customer_id);
-                  $query = $this->db->get();
-                  $master_name = $query->row();
-                  
-                  
-                  $this->db->select('*');
-                  $this->db->from('material');
-                  $this->db->where_in('id', $material_idNew);
-                  $query = $this->db->get();
-                  $results = $query->result();
-                  $material_names = '';
-                  foreach ($results as $result) {
-                  $material_names .= $result->material_name . ', ';
-                  }
-                  $material_names = rtrim($material_names, ', ');
+                $customer_id = $postData["master_name"];
+                $this->db->select('*');
+                $this->db->from('customers');
+                $this->db->where('id', $customer_id);
+                $query = $this->db->get();
+                $master_name = $query->row();
 
-                  $data_pdf = [
+
+                $this->db->select('*');
+                $this->db->from('material');
+                $this->db->where_in('id', $material_idNew);
+                $query = $this->db->get();
+                $results = $query->result();
+                $material_names = '';
+                foreach ($results as $result) {
+                    $material_names .= $result->material_name . ', ';
+                }
+                $material_names = rtrim($material_names, ', ');
+
+                $data_pdf = [
                     'master_id' => $master_name->id,
                     'master_name' => $master_name->name,
                     'maker_no' => strtoupper($this->input->post("maker_no[]")),
                     'material_names' => $material_names,
                     'qnty' => $stock_q,
                     'create_date' => $date,
-              ];
+                ];
 
-               
+
 
                 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
                 $pdf->setPrintHeader(false);
@@ -545,16 +543,16 @@ class Making extends CI_Controller
                 // $pdf->Output($save_path, "I");
                 $pdf->Output($save_path, "F");
 
-                 
+
 
                 // $stock_qhidden = implode(",", $this->input->post("stock_qhidden[]"));
                 // $stock_qhidden = trim($stock_qhidden, ",");
-                
+
                 // $data_purchaser = [
                 //     "quantity" => $diff,
                 // ];
                 // $update = $this->Purchaser_model->update_pstock_qty($data_purchaser, $material_id);
-                    $update = '0';
+                $update = '0';
                 if ($update != -1) {
                     $this->session->set_flashdata("success", "Material details updated successfully.");
                     redirect("Making");
@@ -609,53 +607,44 @@ class Making extends CI_Controller
 
     public function quantityById()
     {
-      $id = $this->input->post('material_id');
-      $data = $this->Purchaser_model->get_pstock($id);
-      echo json_encode($data);
+        $id = $this->input->post('material_id');
+        $data = $this->Purchaser_model->get_pstock($id);
+        echo json_encode($data);
     }
 
     //Download pdf Maker
-  	public function download_pdf($master_id, $maker_no )
-  	{
-      $customer_id= $master_id;
-      $this->db->select('*');
-      $this->db->from('customers');
-      $this->db->where('id',$customer_id);
-      $query = $this->db->get();
-      $master_name = $query->row();
-      $cust_name = $master_name->name;
-  		if(!$this->session->userdata('logged_in'))
-  		{
-  			redirect('Welcome');
-  		}
+    public function download_pdf($master_id, $maker_no)
+    {
+        $customer_id = $master_id;
+        $this->db->select('*');
+        $this->db->from('customers');
+        $this->db->where('id', $customer_id);
+        $query = $this->db->get();
+        $master_name = $query->row();
+        $cust_name = $master_name->name;
+        if (!$this->session->userdata('logged_in')) {
+            redirect('Welcome');
+        } elseif ($cust_name && $maker_no) {
+            $pdf_file = APPPATH . 'maker/' . rawurldecode($customer_id) . '/' . $maker_no . '.pdf';
+            $file = $maker_no . '.pdf';
 
-  		elseif( $cust_name && $maker_no )
-  		{
-  			$pdf_file = APPPATH.'maker/'.rawurldecode($customer_id).'/'.$maker_no.'.pdf';
-  			$file = $maker_no.'.pdf';
-
-  			if (file_exists($pdf_file))
-  			{
-  				header("Content-Type: application/pdf");
-  				header("Content-Disposition: attachment;filename=\"$file\"" );
-  				readfile($pdf_file);
-  			}
-  			else
-  			{
-  				$this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
-  				redirect('Making');
-  			}
-  		}
-  		else
-  		{
-  			$data['title'] = ucwords('Page not found');
-          	$data['username'] = $this->session->userdata('logged_in');
-  			$this->load->view('layout/header', $data);
-  	        $this->load->view('layout/menubar');
-  			$this->load->view('errors/html/error_404');
-  			$this->load->view('layout/footer');
-  		}
-  	}
+            if (file_exists($pdf_file)) {
+                header("Content-Type: application/pdf");
+                header("Content-Disposition: attachment;filename=\"$file\"");
+                readfile($pdf_file);
+            } else {
+                $this->session->set_flashdata('no_pdf', 'Sorry! file not found...');
+                redirect('Making');
+            }
+        } else {
+            $data['title'] = ucwords('Page not found');
+            $data['username'] = $this->session->userdata('logged_in');
+            $this->load->view('layout/header', $data);
+            $this->load->view('layout/menubar');
+            $this->load->view('errors/html/error_404');
+            $this->load->view('layout/footer');
+        }
+    }
 
 
 }
