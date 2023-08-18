@@ -128,5 +128,31 @@ class History extends CI_Controller
 	}
 
 
+	public function downloadSinglePdf($filePath, $cust_name, $invoice_id)
+	{
+
+		if (!$this->session->userdata('logged_in')) {
+			redirect('Welcome');
+		} elseif ($cust_name && $invoice_id) {
+			$pdf_file = APPPATH . $filePath.'/' . rawurldecode($cust_name) . '/' . $invoice_id . '.pdf';
+			$file = $invoice_id . '.pdf';
+
+			if (file_exists($pdf_file)) {
+				header("Content-Type: application/pdf");
+				header("Content-Disposition: attachment;filename=\"$file\"");
+				readfile($pdf_file);
+			} else {
+				$this->session->set_flashdata('error', 'Sorry! file not found...');
+				redirect('History');
+			}
+		} else {
+			$data['title'] = ucwords('Page not found');
+			$data['username'] = $this->session->userdata('logged_in');
+			$this->load->view('layout/header', $data);
+			$this->load->view('layout/menubar');
+			$this->load->view('errors/html/error_404');
+			$this->load->view('layout/footer');
+		}
+	}
 
 }
