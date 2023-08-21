@@ -35,7 +35,8 @@
         <!-- <?php echo $customer_address; ?> -->
       </td>
       <td> Purchaser Date </td>
-      <td> <b><?php echo date('d F, Y'); ?></b> </td>
+      <td> <b><?php  $formattedDate = date('j F, Y', strtotime($date));
+          echo $formattedDate; ?></b> </td>
     </tr>
    <!--  <tr>
       <td> BUYER'S GST </td>

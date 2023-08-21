@@ -699,7 +699,8 @@ class Purchaser extends CI_Controller
                         'bill_amount' => $total_amount,
                         'paid_amount' => $paid_amount,
                         'last_amount' => $balance_amount,
-                        'total_word' => $total_word
+                        'total_word' => $total_word,
+                        'date' => $date
                     ];
 
                     $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
