@@ -95,6 +95,17 @@ class Balance_model extends CI_Model {
     {
         return $this->db->insert(' customer_ledger_balance', $ledger_data);
     }
+
+     public function update_ledgerbalance($ledger_data,$customer_id,$purchaser_no)
+    {
+        // return $this->db->insert(' customer_ledger_balance', $ledger_data);
+
+        $this->db->where("customer", $customer_id);
+        $this->db->where("invoice", $purchaser_no);
+        $this->db->update("customer_ledger_balance", $ledger_data);
+        return $this->db->affected_rows();
+    }
+
     //get data by bill_no from balance
     public function get_balance($billno)
     {
@@ -123,6 +134,13 @@ class Balance_model extends CI_Model {
     {
         $this->db->where("customer_id", $cid);
         // $this->db->where("bill_no", $bid);
+        $this->db->update("balance", $data);
+        return $this->db->affected_rows();
+    }
+    public function update_balanceBybill($data, $cid,$bid)
+    {
+        $this->db->where("customer_id", $cid);
+        $this->db->where("bill_no", $bid);
         $this->db->update("balance", $data);
         return $this->db->affected_rows();
     }
@@ -258,6 +276,16 @@ class Balance_model extends CI_Model {
         return $this->db->select('invoice')->order_by('id','desc')->get('customer_ledger_balance')->row();
     }
 
+    //get customer ledger blance data by bill
+    public function get_bal_user_bill($bill_id)
+    {
+        $this->db->select("*");
+        $this->db->from("customer_ledger_balance");
+        $this->db->where('invoice', $bill_id);
+        $query = $this->db->get();
+        return $query->row();
+
+    }
     /*ends here */
 
 }

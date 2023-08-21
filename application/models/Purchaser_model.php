@@ -22,7 +22,7 @@ class Purchaser_model extends CI_Model
         return $this->db->affected_rows();
     }
 
-    public function update_pstock_qty($data,$mid)
+    public function update_pstock_qty($data, $mid)
     {
         // $this->db->where("purchaser_owner_id", $id);
         $this->db->where("materials_id", $mid);
@@ -30,7 +30,7 @@ class Purchaser_model extends CI_Model
         return $this->db->affected_rows();
     }
 
-    public function update_Dstock($data,$mid)
+    public function update_Dstock($data, $mid)
     {
         // $this->db->where("purchaser_owner_id", $id);
         $this->db->where("product_id", $mid);
@@ -52,7 +52,7 @@ class Purchaser_model extends CI_Model
 
     public function get_purchaser_byID($id)
     {
-        $this->db->select("id,total_amount,material_id,stock,price,purchaser_owner_id");
+        $this->db->select("id,total_amount,material_id,stock,price,purchaser_owner_id,purchaser_no,create_date");
         $this->db->from("purchaser");
         $this->db->where("id", $id);
         $query = $this->db->get();
@@ -97,79 +97,79 @@ class Purchaser_model extends CI_Model
     }
 
     function get_pstock($id)
-  {
-    $this->db->select("id, quantity");
-    $this->db->from("purchaser_stock");
-    $this->db->where("materials_id", $id);
-    $query = $this->db->get();
-    return $query->row();
-  }
+    {
+        $this->db->select("id, quantity");
+        $this->db->from("purchaser_stock");
+        $this->db->where("materials_id", $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
 
 
-  //get latest Purchaser no. insider
-  public function get_last_purchaser_insider()
-  {
-      return $this->db->select('purchaser_no')->order_by('id','desc')->limit(1)->get('purchaser')->row();
-  }
+    //get latest Purchaser no. insider
+    public function get_last_purchaser_insider()
+    {
+        return $this->db->select('purchaser_no')->order_by('id', 'desc')->limit(1)->get('purchaser')->row();
+    }
 
-  public function get_purchaser_stock()
-	{
-		$this->db->select('*');
+    public function get_purchaser_stock()
+    {
+        $this->db->select('*');
         $this->db->from('purchaser_stock');
-        $this->db->join('purchaser', 'purchaser.id = purchaser_stock.purchaser_id','left');
+        $this->db->join('purchaser', 'purchaser.id = purchaser_stock.purchaser_id', 'left');
         return $this->db->get();
 
-	}
+    }
 
 
-  public function create_history($json_data_array)
-  {
-      return $this->db->insert('history', $json_data_array);
-  }
+    public function create_history($json_data_array)
+    {
+        return $this->db->insert('history', $json_data_array);
+    }
 
 
-  public function create_material($data)
-  {
-      return $this->db->insert("material", $data);
-  }
+    public function create_material($data)
+    {
+        return $this->db->insert("material", $data);
+    }
 
-  public function update_material($id, $data)
-  {
-      $this->db->where("id", $id);
-      $this->db->update("material", $data);
-      return $this->db->affected_rows();
-  }
+    public function update_material($id, $data)
+    {
+        $this->db->where("id", $id);
+        $this->db->update("material", $data);
+        return $this->db->affected_rows();
+    }
 
-  public function get_all_material()
-  {
-      return $this->db->select("id, material_name,create_date")->get("material");
-  }
+    public function get_all_material()
+    {
+        return $this->db->select("id, material_name,create_date")->get("material");
+    }
 
-  public function getMaterialDetailbyId($id)
-  {
-      $this->db->where("id", $id);
-      $query = $this->db->get("material");
-      return $query->result();
-  }
+    public function getMaterialDetailbyId($id)
+    {
+        $this->db->where("id", $id);
+        $query = $this->db->get("material");
+        return $query->result();
+    }
 
-  public function get_material_byID_old($id)
-  {
-      $this->db->select('id,material_name');
-    $this->db->from('material');
-      $this->db->where('id',$id);
-      $query = $this->db->get();
-      $data= $query->row();
-      $data = json_encode($data);
-      print_r($data);
-  }
+    public function get_material_byID_old($id)
+    {
+        $this->db->select('id,material_name');
+        $this->db->from('material');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        $data = $query->row();
+        $data = json_encode($data);
+        print_r($data);
+    }
 
-  public function get_material_byID($id)
-  {
-    $this->db->from('material');
-      $this->db->where('id',$id);
-      return $this->db->get()->row();
-      //return $query->row();
-  }
+    public function get_material_byID($id)
+    {
+        $this->db->from('material');
+        $this->db->where('id', $id);
+        return $this->db->get()->row();
+        //return $query->row();
+    }
     public function delete_by_mid($id)
     {
         $this->db->where('id', $id);
@@ -177,11 +177,23 @@ class Purchaser_model extends CI_Model
         return $this->db->affected_rows();
     }
 
-    public function update_record($id,$data)
+    public function update_record($id, $data)
     {
         $this->db->where('id', $id);
-    $this->db->update('material', $data);
-    return $this->db->affected_rows();
+        $this->db->update('material', $data);
+        return $this->db->affected_rows();
+    }
+
+    public function get_pur_by_id($prod_id)
+    {
+        // Assuming you have a database table named 'making' with appropriate columns
+        $query = $this->db->get_where('purchaser', array('id' => $prod_id));
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array(); // Return the result as an associative array
+        } else {
+            return null; // No data found
+        }
     }
 
 }

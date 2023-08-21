@@ -15,6 +15,8 @@
                   echo form_open($url, 'class="form-horizontal" id="add_puruct_form"');
                   ?>
                <input type="hidden" name="pur_id" value="<?php echo $pur->id; ?>">
+                         <input type="hidden" name="purchaser_no" value="<?php echo $pur->purchaser_no ?>">
+
                <div class="form-group">
                   <div class="col-sm-5">
                      <label>Owner Name</label>
@@ -26,6 +28,14 @@
                         <?php
                            } ?>
                      </select>
+                  </div>
+                  <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-2">
+              <label>Bill Date</label>
+              <input type="date" id="bill_date" name="bill_date" value="<?php echo $pur->create_date ?>" />
+                  
                   </div>
                   <div class="col-sm-6"> <?php echo form_error('owner_name', '<p class="text-danger">', '</p>'); ?></div>
                </div>
@@ -44,6 +54,7 @@
                         $stk = explode(',', $pur->stock);
                         $prd = explode(',', $pur->price);
                         $amt = explode(',', $pur->total_amount);
+                        
                         $cnt= count($mat);
 
                         for ($i=0; $i < $cnt; $i++) {
@@ -62,13 +73,16 @@
                               <div class="col-sm-6"> <?php echo form_error('material_name', '<p class="text-danger">', '</p>'); ?></div>
                            </td>
                            <td>
-                              <input type="text" class="form-control qnty" id="stock_q" name="stock_q[]" placeholder="Quantity" value="<?php echo $stk[$i];?>">
+                              <input type="hidden" class="form-control" id="stock_qhidden" name="stock_qhidden[]" value="<?php echo $stk[$i]; ?>">
+                                 <input type="text" class="form-control qnty" id="stock_q" name="stock_q[]" placeholder="Quantity" value="<?php echo $stk[$i];?>">
                               <div class="col-sm-6"> <?php echo form_error('stock_q', '<p class="text-danger">', '</p>'); ?></div>
                            </td>
                            <td>
+                              <input type="hidden" class="form-control" id="p_price_hidden" name="p_price_hidden[]"  value="<?php echo $prd[$i];?>">
                               <input type="text" class="form-control rate" id="p_price" name="p_price[]" placeholder="Price" value="<?php echo $prd[$i];?>">
                            </td>
                            <td>
+                              <input type="hidden" class="form-control " id="price_total_hidden" name="price_total_hidden[]"  value="<?php echo $amt[$i];?>" readonly="readonly">
                               <input type="text" class="form-control amount" id="price_total" name="price_total[]" placeholder="Total Amount" value="<?php echo $amt[$i];?>" readonly="readonly">
                            </td>
                            <td>
@@ -81,6 +95,50 @@
                         }
                         ?>
                   </table>
+               </div>
+                       <?php
+                       $purchaser_no = $pur->purchaser_no;
+                     //   print_r($purchaser_no);
+                       $get_ledger_invoice = $this->Balance_model->get_bal_user_bill($purchaser_no);
+                     //   print_r($get_ledger_invoice);
+
+                       ?>
+                  <div class="form-group">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>TOTAL AMOUNT</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="total_amount" id="total_amount" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->bill_amount; ?>" size="3">
+                   </div>
+               </div>
+               <div class="form-group">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>ROUND OFF TOTAL</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->bill_amount; ?>" size="3">
+                   </div>
+               </div>
+               <div class="form-group ">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>PAID AMOUNT</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="paid_amount" class="form-control only_num paid_amount" id="paid_amount" style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->paid_amount; ?>" size="3">
+                   </div>
+               </div>
+               <div class="form-group ">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>BALANCE AMOUNT</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount" style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->last_amount; ?>" size="3">
+                   </div>
+               </div>
+               <div class="form-group">
+                   <div class="col-sm-10 col-sm-offset-1">
+                       <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
+                   </div>
                </div>
                <div class="form-group">
                   <div class="col-sm-5">
@@ -100,6 +158,8 @@
    </div>
 </div>
 </div><!--close main div-->
+<script src="<?php echo base_url('assets/js/to_words.js'); ?>"></script>
+
 <script type="text/javascript">
    // add new row
    $(document).on('click', '.add_more', function(){
@@ -111,9 +171,13 @@
      if ($tr.index() != '0') {
        $tr.remove();
      }
+     else{
+       $tr.remove();
+     }
    });
 
    $('.qnty, .rate').on('change', function(){
+      // debugger;
        var ro  = $(this).closest('tr');
        var qnty = ro.find('.qnty').val();
        var rate = ro.find('.rate').val();
@@ -125,13 +189,91 @@
        }
    });
 
-
+   
      $(document).ready(function(){
-       $('#stock_q, #p_price').on('change', function(){
-         var qnty = $('#stock_q').val();
-         var rate = $('#p_price').val();
-         var the_amount = (qnty*rate).toFixed(2);
-         $('#price_total').val(the_amount);
-       });
+      //  $('#stock_q, #p_price').on('change', function(){
+      //    var qnty = $('#stock_q').val();
+      //    var rate = $('#p_price').val();
+      //    var the_amount = (qnty*rate).toFixed(2);
+      //    $('#price_total').val(the_amount);
+      //  });
+
+
+   $('#total_amount').on('focus', function(){
+   // debugger;
+//   amountWord();
+    total = 0;
+            amt= 0;
+
+   $('.amount').each(function(){
+         console.log($(this).val());
+
+       if( $(this).val() !== '' )
+       {
+            amt = $(this).val();
+           total += parseFloat(amt);
+       }
+   });
+   // console.log(total);
+
+  
+   var total_with_tax = parseFloat(total) + 0 + 0 + 0 ;
+   total_with_tax      = total_with_tax.toFixed(2);
+   // $(this).val(total_with_tax);
+   // console.log(total_with_tax);
+
+    $('#paid_amount').val('');
+   $('#balance_amount').val('');
+   //total round amount
+   $('#total_amount').val(total_with_tax);
+   $('#total_round').val(Math.round(total));
+   //total in words
+   var round_amount = total;
+   // console.log(round_amount);
+
+   if( round_amount!= null)
+   {
+       var total_words = NumToWord(round_amount);
+       $("#total_word").val(total_words);
+   }
+   });
+   amountWord();
+      function amountWord(){
+           total = 0;
+           var amt;
+   $('.amount').each(function(){
+       if( $(this).val() !== '' )
+       {
+           amt = $(this).val();
+   console.log(amt);
+
+           total += parseFloat(amt);
+       }
+   });
+   var total_with_tax = parseFloat(total) + 0 + 0 + 0 ;
+   total_with_tax      = total_with_tax.toFixed(2);
+      $('#total_amount').val(total_with_tax);
+
+   //total round amount
+   $('#total_round').val(Math.round(total));
+   //total in words
+   var round_amount = total;
+   console.log(round_amount);
+      if( round_amount!= null)
+      {
+         var total_words = NumToWord(round_amount);
+         $("#total_word").val(total_words);
+      }
+      }
+
+
+      $('.balance_amount').on('focus', function(){
+       var total_amount = $('#total_amount').val();
+       var paid_amount = $('#paid_amount').val();
+       var the_amount = (total_amount-paid_amount).toFixed(2);
+       console.log(the_amount);
+       $(this).val(the_amount);
+   });
+
      });
 </script>

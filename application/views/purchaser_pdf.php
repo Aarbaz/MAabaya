@@ -172,7 +172,7 @@
   <tr>
     <th ><b>Total Bill</b></th>
     <td>&nbsp;</td>
-    <td > <?php echo  $Final_total_amt . ' Meters. '?></td>
+    <td > <?php echo  $Final_total_amt . ' Rs. '?></td>
   </tr>
   <br>
   <tr>

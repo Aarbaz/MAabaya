@@ -39,7 +39,7 @@ class Welcome extends CI_Controller {
 			if( count($chk) > 0)
 			{				
 				$this->session->set_userdata('logged_in', $username);
-				redirect('Dashboard'); //redirect to dashboard controller
+				redirect('Purchaser'); //redirect to dashboard controller
 			}
 			else
 			{				

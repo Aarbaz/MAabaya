@@ -134,43 +134,46 @@ class Making extends CI_Controller
                     'dated' => date('Y-m-d H:i:s')
                 );
                 // $insert = $this->Challan_model->create_balance($data_balance);
-                $insert = $this->Balance_model->add_customer_ledger($data_ledger);
+                // $insert = $this->Balance_model->add_customer_ledger($data_ledger);
 
                 $m = 0;
                 foreach ($stocks as $row) {
 
-                    if ($oldstock[$m]) {
-                        $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
+                    if ($oldstock[$m] != ' ') {
+                        $dataStk["quantity"] = (float) $oldstock[$m] - (float) $stocks[$m];
+
                         $this->Purchaser_model->update_pstock_qty($dataStk, $material_ids[$m]);
 
                         // $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
                         // $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
                     } else {
+                        $null_value = "0";
                         $dataMtk["materials_id"] = $material_ids[$m];
-                        $dataMtk["quantity"] = 0 - $stocks[$m];
-
+                        $dataMtk["quantity"] = (float) $null_value - (float) $stocks[$m];
+                        $dataMtk["price"] = '';
+                        $dataMtk["purchaser_id"] = '';
+                        $dataMtk["purchaser_owner_id"] = '';
                         $this->Purchaser_model->add_purchaser_qty($dataMtk);
 
                     }
 
+                    $dataMak["maker_id"] = $product_id;
+                    $dataMak["making_owner_id"] = $master_name;
+                    $dataMak["materials_id"] = $material_ids[$m];
+                    $dataMak["quantity"] = $stocks[$m];
 
-                        $dataMak["maker_id"] = $product_id;
-                        $dataMak["making_owner_id"] = $master_name;
-                        $dataMak["materials_id"] = $material_ids[$m];
-                        $dataMak["quantity"] = $stocks[$m];
-
+                    $this->db->where('materials_id', $material_ids[$m]);
+                    $querys = $this->db->get('maker_stock');
+                    $rows = $querys->row();
+                    if ($querys->num_rows()) {
+                        $data3 = array(
+                            'quantity' => $rows->quantity + $stocks[$m],
+                        );
                         $this->db->where('materials_id', $material_ids[$m]);
-                        $querys = $this->db->get('maker_stock');
-                        $rows = $querys->row();
-                        if ($querys->num_rows()) {
-                            $data3 = array(
-                                'quantity' => $rows->quantity + $stocks[$m],
-                            );
-                            $this->db->where('materials_id', $material_ids[$m]);
-                            $this->db->update('maker_stock', $data3);
-                        } else {
-                            $this->Making_model->add_making_qty($dataMak);
-                        }
+                        $this->db->update('maker_stock', $data3);
+                    } else {
+                        $this->Making_model->add_making_qty($dataMak);
+                    }
 
                     // $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
                     // $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
@@ -377,7 +380,7 @@ class Making extends CI_Controller
                     $row = $query->row();
                     if ($query->num_rows()) {
                         $data3 = array(
-                            'quantity' => $row->quantity + $old_material["stock_q"],
+                            'quantity' => (float) $row->quantity + (float) $old_material["stock_q"],
                         );
                         $this->db->where('materials_id', $old_material["material_id"]);
                         $this->db->update('purchaser_stock', $data3);
@@ -388,7 +391,7 @@ class Making extends CI_Controller
                     $rows = $querys->row();
                     if ($querys->num_rows()) {
                         $data33 = array(
-                            'quantity' => $rows->quantity - $old_material["stock_q"],
+                            'quantity' => (float) $rows->quantity - (float) $old_material["stock_q"],
                         );
 
 
@@ -431,28 +434,31 @@ class Making extends CI_Controller
                     $this->db->where('materials_id', $material_idNew[$i]);
                     $query = $this->db->get('purchaser_stock');
                     $row = $query->row();
+
+                    $value_null = '0';
+                    if ($stockNew[$i]) {
+                        $diff = (float) $stockqNew[$i] - (float) $stockNew[$i];
+                    } else {
+                        $diff = (float) $stockqNew[$i] - (float) $value_null;
+                    }
+
                     if ($query->num_rows()) {
 
-                        if ($stockNew[$i]) {
-                            $diff = $stockqNew[$i] - $stockNew[$i];
-                        } else {
-                            $diff = $stockqNew[$i] - '0';
-                        }
                         if ($diff > 0) {
                             // echo "The difference is positive: " . $diff;	
                             // If the product exists, update the quantity value in the database
                             $data3 = array(
-                                'quantity' => $row->quantity - $diff,
+                                'quantity' => (float) $row->quantity - (float) $diff,
                             );
                         } elseif ($diff < 0) {
                             // echo "The difference is negative: " . abs($diff);
                             $data3 = array(
-                                'quantity' => $row->quantity + abs($diff),
+                                'quantity' => (float) $row->quantity + (float) abs($diff),
                             );
                         } else {
                             // echo "The difference is negative: " . abs($diff);
                             $data3 = array(
-                                'quantity' => $row->quantity - abs($diff),
+                                'quantity' => (float)$row->quantity - (float)abs($diff),
                             );
                         }
 
@@ -460,29 +466,49 @@ class Making extends CI_Controller
                         $this->db->update('purchaser_stock', $data3);
                     }
 
+                    // if ($oldstock[$m] != ' ') {
+                    //     $dataStk["quantity"] = (float)$oldstock[$m] - (float)$stocks[$m];
+
+                    //     $this->Purchaser_model->update_pstock_qty($dataStk, $material_ids[$m]);
+
+                    //     // $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
+                    //     // $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
+                    // } 
+                    else {
+                        // $null_value= "0";
+                        $dataMtk["materials_id"] = $material_idNew[$i];
+                        $dataMtk["quantity"] = (float) $value_null - (float) $stockqNew[$i];
+                        $dataMtk["price"] = '';
+                        $dataMtk["purchaser_id"] = '';
+                        $dataMtk["purchaser_owner_id"] = '';
+                        $this->Purchaser_model->add_purchaser_qty($dataMtk);
+
+                    }
+
+
                     $this->db->where('materials_id', $material_idNew[$i]);
                     $querys = $this->db->get('maker_stock');
                     $rows = $querys->row();
                     if ($querys->num_rows()) {
                         if ($stockNew[$i]) {
-                            $diff = $stockqNew[$i] - $stockNew[$i];
+                            $diff = (float)$stockqNew[$i] - (float)$stockNew[$i];
                         } else {
-                            $diff = $stockqNew[$i] - '0';
+                            $diff = (float)$stockqNew[$i] - '0';
                         }
 
                         if ($diff > 0) {
                             // If the product exists, update the quantity value in the database
                             $data3 = array(
-                                'quantity' => $rows->quantity + $diff,
+                                'quantity' => (float)$rows->quantity + (float)$diff,
                             );
                         } elseif ($diff < 0) {
                             $data3 = array(
-                                'quantity' => $rows->quantity - abs($diff),
+                                'quantity' => (float)$rows->quantity - (float)abs($diff),
                             );
                         } else {
                             // echo "The difference is negative: " . abs($diff);
                             $data3 = array(
-                                'quantity' => $row->quantity + abs($diff),
+                                'quantity' => (float)$row->quantity + (float)abs($diff),
                             );
                         }
 
@@ -516,7 +542,7 @@ class Making extends CI_Controller
                 $data_pdf = [
                     'master_id' => $master_name->id,
                     'master_name' => $master_name->name,
-                    'maker_no' => strtoupper($this->input->post("maker_no[]")),
+                    'maker_no' => strtoupper($this->input->post("maker_no")),
                     'material_names' => $material_names,
                     'qnty' => $stock_q,
                     'create_date' => $date,
