@@ -422,7 +422,7 @@ class Purchaser extends CI_Controller
                     $row = $query->row();
                     if ($query->num_rows()) {
                         $data3 = array(
-                            'quantity' => (float) $row->quantity - (float) $old_material["stock_q"],
+                            'quantity' => (float)$row->quantity - (float)$old_material["stock_q"],
                         );
                         $this->db->where('materials_id', $old_material["material_id"]);
                         $this->db->update('purchaser_stock', $data3);
