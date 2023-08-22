@@ -395,8 +395,8 @@ class Purchaser extends CI_Controller
 
                 // Retrieve the existing record from the database
                 $existingData = $this->Purchaser_model->get_pur_by_id($pur_id); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
-                
-                
+
+
                 $existing_material_names = explode(",", $existingData["material_id"]);
                 $existing_stock_q = explode(",", $existingData["stock"]);
 
@@ -411,8 +411,7 @@ class Purchaser extends CI_Controller
                             "material_id" => $existing_material_id,
                             "stock_q" => $existing_stock
                         ];
-                    }
-                    else{
+                    } else {
                     }
                 }
                 // Now you can use the $old_materials array to identify old materials not included in the new data
@@ -423,13 +422,13 @@ class Purchaser extends CI_Controller
                     $row = $query->row();
                     if ($query->num_rows()) {
                         $data3 = array(
-                            'quantity' => (float) $row->quantity + (float) $old_material["stock_q"],
+                            'quantity' => (float) $row->quantity - (float) $old_material["stock_q"],
                         );
                         $this->db->where('materials_id', $old_material["material_id"]);
                         $this->db->update('purchaser_stock', $data3);
                     }
 
-                 
+
 
                 }
 
@@ -448,7 +447,7 @@ class Purchaser extends CI_Controller
                 $amount = implode(",", $this->input->post("price_total[]"));
                 $amount = trim($amount, ",");
 
-                 if ($postData["bill_date"]) {
+                if ($postData["bill_date"]) {
                     $date = $postData["bill_date"];
                 } else {
                     $date = date("Y-m-d");
@@ -475,7 +474,7 @@ class Purchaser extends CI_Controller
 
 
                 $j = 0;
-                 foreach ($stockNew as $row) {
+                foreach ($stockNew as $row) {
                     $MakStk["maker_id"] = '0';
                     $MakStk["making_owner_id"] = '0';
                     $MakStk["materials_id"] = $material_idNew[$j];
@@ -504,7 +503,7 @@ class Purchaser extends CI_Controller
                                 'quantity' => (float) $row->quantity + (float) $diff,
                             );
                         } elseif ($diff < 0) {
-                    // print_r(abs($diff));
+                            // print_r(abs($diff));
 
                             // echo "The difference is negative: " . abs($diff);
                             $data3 = array(
@@ -512,10 +511,10 @@ class Purchaser extends CI_Controller
                             );
                         } else {
                             $data3 = array(
-                                'quantity' => (float)$row->quantity + (float)abs($diff),
+                                'quantity' => (float) $row->quantity + (float) abs($diff),
                             );
                         }
-                       
+
                         // die();
                         $this->db->where('materials_id', $material_idNew[$j]);
                         $this->db->update('purchaser_stock', $data3);
@@ -539,8 +538,8 @@ class Purchaser extends CI_Controller
                         $this->Purchaser_model->add_purchaser_qty($dataMtk);
 
                     }
-                //              print_r($material_idNew[$j]);
-                // print_r($data3);
+                    //              print_r($material_idNew[$j]);
+                    // print_r($data3);
 
                     // $this->db->where('materials_id', $material_idNew[$j]);
                     // $querys = $this->db->get('maker_stock');
@@ -592,7 +591,7 @@ class Purchaser extends CI_Controller
                     $query = $this->db->get('balance');
                     $row = $query->row();
                     if ($query->num_rows()) {
-                        
+
                         // $data3 = array(
                         //     'balance_bill' => $row->balance_bill + $balance_amount,
                         //     'paid_bill' => $row->paid_bill + $paid_amount,
@@ -605,7 +604,7 @@ class Purchaser extends CI_Controller
                         );
                         // $this->db->where('customer_id',$customer_id);
                         // $this->db->update('balance', $data3);
-                        $bal_update = $this->Balance_model->update_balanceBybill($data3, $customer_id,$purchaser_no);
+                        $bal_update = $this->Balance_model->update_balanceBybill($data3, $customer_id, $purchaser_no);
 
                     } else {
                         $bal_data = [
@@ -629,7 +628,7 @@ class Purchaser extends CI_Controller
                     "last_amount" => $balance_amount,
                     'entry_from' => 1,
                 ];
-                $ledge_insert = $this->Balance_model->update_ledgerbalance($ledge_data,$customer_id,$purchaser_no);
+                $ledge_insert = $this->Balance_model->update_ledgerbalance($ledge_data, $customer_id, $purchaser_no);
 
                 // $j = 0;
                 // foreach ($stock as $row) {
@@ -665,67 +664,67 @@ class Purchaser extends CI_Controller
                 //     $this->Purchaser_model->update_pstock_qty($dataStk, $material_id[$j]);
                 //     $j++;
                 // }
-                    
+
                 $customer_id = strtoupper($postData["owner_name"]);
-                    $this->db->select('*');
-                    $this->db->from('customers');
-                    $this->db->where('id', $customer_id);
-                    $query = $this->db->get();
-                    $purchaser_name = $query->row();
+                $this->db->select('*');
+                $this->db->from('customers');
+                $this->db->where('id', $customer_id);
+                $query = $this->db->get();
+                $purchaser_name = $query->row();
 
-                    $material_ids = implode(",", $this->input->post("material_name[]"));
-                    $material_values = trim($material_name, ",");
-                    $material_ids_values = explode(",", $material_ids);
-                    $material_values = $material_ids_values;
-                    $this->db->select('*');
-                    $this->db->from('material');
-                    $this->db->where_in('id', $material_values);
-                    $query = $this->db->get();
-                    $results = $query->result();
-                    $material_names = '';
-                    foreach ($results as $result) {
-                        $material_names .= $result->material_name . ', ';
-                    }
-                    $material_names = rtrim($material_names, ', ');
-                    $total_word = $this->input->post('total_word');
-                    $data_pdf = [
-                        'purchaser_id' => $purchaser_name->id,
-                        'purchaser_name' => $purchaser_name->name,
-                        'purchaser_no' => strtoupper($postData["purchaser_no"]),
-                        'material_names' => $material_names,
-                        'qnty' => $qnty,
-                        "amount" => $amount,
-                        'rate' => $rate,
-                        'bill_amount' => $total_amount,
-                        'paid_amount' => $paid_amount,
-                        'last_amount' => $balance_amount,
-                        'total_word' => $total_word,
-                        'date' => $date
-                    ];
+                $material_ids = implode(",", $this->input->post("material_name[]"));
+                $material_values = trim($material_name, ",");
+                $material_ids_values = explode(",", $material_ids);
+                $material_values = $material_ids_values;
+                $this->db->select('*');
+                $this->db->from('material');
+                $this->db->where_in('id', $material_values);
+                $query = $this->db->get();
+                $results = $query->result();
+                $material_names = '';
+                foreach ($results as $result) {
+                    $material_names .= $result->material_name . ', ';
+                }
+                $material_names = rtrim($material_names, ', ');
+                $total_word = $this->input->post('total_word');
+                $data_pdf = [
+                    'purchaser_id' => $purchaser_name->id,
+                    'purchaser_name' => $purchaser_name->name,
+                    'purchaser_no' => strtoupper($postData["purchaser_no"]),
+                    'material_names' => $material_names,
+                    'qnty' => $qnty,
+                    "amount" => $amount,
+                    'rate' => $rate,
+                    'bill_amount' => $total_amount,
+                    'paid_amount' => $paid_amount,
+                    'last_amount' => $balance_amount,
+                    'total_word' => $total_word,
+                    'date' => $date
+                ];
 
-                    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-                    $pdf->setPrintHeader(false);
-                    $pdf->setPrintFooter(false);
-                    $pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
-                    //$pdf->SetFont('helvetica', '', 10);
-                    $pdf->SetFont("", "", 10);
-                    $pdf_data = $this->load->view("purchaser_pdf", $data_pdf, true);
-                    $pdf->addPage();
-                    $pdf->writeHTML($pdf_data, true, false, true, false, "");
-                    $filename = strtoupper($postData["purchaser_no"]) . ".pdf";
-                    $dir = APPPATH . "/purchaser/" . $data_pdf["purchaser_id"] . "/";
-                    if (!is_dir($dir)) {
-                        mkdir($dir, 0777, true);
-                    }
-                    $save_path = $dir . $filename;
-                    ob_end_clean();
-                    // $pdf->Output($save_path, "I");
-                    $pdf->Output($save_path, "F");
-                    $this->session->set_flashdata(
-                        "success",
-                        " Purchaser invoice updated successfully...."
-                    );
-                    redirect("Purchaser/");
+                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                $pdf->setPrintHeader(false);
+                $pdf->setPrintFooter(false);
+                $pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+                //$pdf->SetFont('helvetica', '', 10);
+                $pdf->SetFont("", "", 10);
+                $pdf_data = $this->load->view("purchaser_pdf", $data_pdf, true);
+                $pdf->addPage();
+                $pdf->writeHTML($pdf_data, true, false, true, false, "");
+                $filename = strtoupper($postData["purchaser_no"]) . ".pdf";
+                $dir = APPPATH . "/purchaser/" . $data_pdf["purchaser_id"] . "/";
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+                $save_path = $dir . $filename;
+                ob_end_clean();
+                // $pdf->Output($save_path, "I");
+                $pdf->Output($save_path, "F");
+                $this->session->set_flashdata(
+                    "success",
+                    " Purchaser invoice updated successfully...."
+                );
+                redirect("Purchaser/");
                 if ($update != -1) {
                     $this->session->set_flashdata(
                         "success",
