@@ -16,6 +16,7 @@ class Pices extends CI_Controller
 		$this->load->model('Making_model');
 		$this->load->model('Customer_model');
 		$this->load->model('Purchaser_model');
+		$this->load->model('History_model');
 		$this->load->library('tcpdf');
 		$this->load->model('Challan_model');
 		$this->load->library('upload');
@@ -133,7 +134,7 @@ class Pices extends CI_Controller
 			$total_material_used = implode(',', $this->input->post('total_material_used'));
 			$total_material_used = trim($total_material_used, ',');
 
-			$material_used_array = explode(",", $total_material_used);
+			// $material_used_array = explode(",", $total_material_used);
 
 			$material_ids_array = explode(",", $all_material_ids);
 
@@ -181,7 +182,7 @@ class Pices extends CI_Controller
 				$insert_data = [
 					'design_number' => $row['design_number'][0],
 					'material_id' => implode(',', $row['materials_ids']),
-					'material_used' => $total_material_used,
+					'material_used' => $row['total_material'][0],
 					'total_piece' => $row['total_piece'][0],
 					'master_id' => $row['customer_id'][0],
 					'invoice_no' => $row['invoice_no']
@@ -198,7 +199,9 @@ class Pices extends CI_Controller
 					'quantity' => $insert_data['material_used']
 				);
 				$materialId2 = $materialData[0]['materials_id'];
-				$materialId3 = explode(",", $materialId2);
+				$materialused = $materialData[0]['quantity'];
+				$all_material_ids_array = explode(",", $materialId2);
+				$material_used_array = explode(",", $materialused);
 
 				$m = 0;
 				$k++;
@@ -208,11 +211,51 @@ class Pices extends CI_Controller
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
 			);
-
+			print_r($result);die();
+			/********************Material Stock Update end**********************/
 			$insert = $this->db->insert('product_pices', $json_data);
 
 
 			if ($insert == true) {
+
+				/***************** Material Stock Update  *********************/
+					for ($i = 0; $i < count($all_material_ids_array); $i++) {
+
+							$material_id = $all_material_ids_array[$i];
+                            $in_out_qnty = $material_used_array[$i];
+                            $entry_from = 3;
+                            
+                            $current_stock = $this->Stock_model->get_material_stock($material_id);
+                            $stock = $current_stock ? $current_stock : $in_out_qnty;
+                            $this->History_model->insertStockEntry($material_id, $in_out_qnty, $entry_from, $stock);
+
+						// Check if the material ID exists in the maker_stock table for the customer ID
+						$this->db->where('materials_id', $all_material_ids_array[$i]);
+						//$this->db->where('making_owner_id', $customer_id);
+						$q_result = $this->db->get('maker_stock')->result();
+						if (empty($q_result) || count($q_result) == 0) {
+							// Insert a new row with the material ID and quantity 0
+							$m_data = array(
+								'materials_id' => $all_material_ids_array[$i],
+								//'making_owner_id' => $customer_id,
+								'quantity' => $material_used_array[$i]
+							);
+							$this->db->insert('maker_stock', $m_data);
+						} else {
+							// Get the previous quantity for the material ID
+							$material_ids = $all_material_ids_array[$i];
+							$this->db->where_in('materials_id', $material_ids);
+							//$this->db->where('making_owner_id', $customer_id);
+							$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
+							// Update the quantity for the material ID with the previous quantity + new quantity
+							$data = array('quantity' => (float)$prev_quantity - (float)$material_used_array[$i]);
+
+							$this->db->where('materials_id', $all_material_ids_array[$i]);
+							//$this->db->where('making_owner_id', $customer_id);
+							$this->db->update('maker_stock', $data);
+						}
+
+					}
 
 				/***************** Pices Stock Update  *********************/
 				foreach ($data2 as $row) {
@@ -236,38 +279,7 @@ class Pices extends CI_Controller
 					}
 				}
 				/***************** Pices Stock Update end ******************/
-				/***************** Material Stock Update  *********************/
-
-				for ($i = 0; $i < count($material_ids_array); $i++) {
-					// Check if the material ID exists in the maker_stock table for the customer ID
-					$this->db->where('materials_id', $material_ids_array[$i]);
-					//$this->db->where('making_owner_id', $customer_id);
-					$q_result = $this->db->get('maker_stock')->result();
-
-					if (empty($q_result) || count($q_result) == 0) {
-						// Insert a new row with the material ID and quantity 0
-						$m_data = array(
-							'materials_id' => $material_ids_array[$i],
-							//'making_owner_id' => $customer_id,
-							'quantity' => $material_used_array[$i]
-						);
-						$this->db->insert('maker_stock', $m_data);
-					} else {
-						// Get the previous quantity for the material ID
-						$material_ids = $material_ids_array[$i];
-						$this->db->where_in('materials_id', $material_ids);
-						//$this->db->where('making_owner_id', $customer_id);
-						$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
-						// Update the quantity for the material ID with the previous quantity + new quantity
-						$data = array('quantity' => (float)$prev_quantity - (float)$material_used_array[$i]);
-
-						$this->db->where('materials_id', $material_ids_array[$i]);
-						//$this->db->where('making_owner_id', $customer_id);
-						$this->db->update('maker_stock', $data);
-					}
-
-				}
-				/********************Material Stock Update end**********************/
+				
 
 				/********************Customer Balance Update**********************/
 				$this->db->where('customer_id', $this->input->post('customerName'));
