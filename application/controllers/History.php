@@ -30,6 +30,7 @@ class History extends CI_Controller
 			$data['ledger_list'] = $this->History_model->get_customer_ledger();
 			$data['history'] = $this->History_model->get_all_history();
 			$data['custList'] = $this->Customer_model->get_customers();
+			$data['materialList'] = $this->Purchaser_model->get_all_material();
 			$this->load->view('layout/header', $data);
 			$this->load->view('layout/menubar');
 			$this->load->view('historyList', $data);
@@ -155,4 +156,84 @@ class History extends CI_Controller
 		}
 	}
 
+	public function get_history_by_material_id() {
+
+		$material_id = $this->input->post('material_id');
+		$from_date = $this->input->post('from_date');
+		$to_date = $this->input->post('to_date');
+
+		$this->form_validation->set_rules('material_id', 'Material Name', 'trim|required');
+		$this->form_validation->set_rules('from_date', 'From Date', 'trim');
+		$this->form_validation->set_rules('to_date', 'To Date', 'trim');
+
+		if ($this->form_validation->run() == false)
+		{
+			$data['title'] = ucwords('Download History');
+			$data['username'] = $this->session->userdata('logged_in');
+			$data['ledger_list'] = $this->History_model->get_customer_ledger();
+			$data['history'] = $this->History_model->get_all_history();
+			$data['custList'] = $this->Customer_model->get_customers();
+			$data['materialList'] = $this->Purchaser_model->get_all_material();
+		}
+		else {
+			$db_data = $this->History_model->getHistoryByMaterialId($material_id, $from_date, $to_date);
+			$this->db->where('id', $material_id);
+			$query = $this->db->get('material');
+			$row = $query->row();
+			$material_name = $row->material_name;
+			// Replace spaces with underscores and convert to lowercase
+			$date_range = $from_date. ' To ' . $to_date;
+			$encoded_material_name = str_replace(' ', '_', strtolower($material_name));
+			$invoice_id = $encoded_material_name. '_' . $from_date . $to_date;
+			$pdf_file = APPPATH . 'material_history/' . $encoded_material_name . '/' . $invoice_id . '.pdf';
+			$file = $invoice_id . '.pdf';
+
+			if (file_exists($pdf_file)) {
+
+				header('Content-type: application/pdf');
+				header('Content-Disposition: attachment; filename="' . $file . '"');
+				header('Content-Transfer-Encoding: binary');
+				header('Content-Length: ' . filesize($pdf_file));
+				header('Accept-Ranges: bytes');
+				readfile($pdf_file);
+
+			} else {
+				$data_pdf = $db_data; // Replace $dynamic_array with your actual dynamic array
+				$filename = $encoded_material_name. '_' . $from_date . $to_date . '.pdf';
+				$pdf_file = APPPATH . 'material_history/' . $encoded_material_name . '/' . $filename;
+				$file = $filename;
+				$this->load->library('tcpdf/tcpdf.php');
+
+				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
+				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+
+				$pdf->SetFont('times', '', 10);
+
+				$pdf_data = $this->load->view('material_history_pdf', array('data_pdf' => $data_pdf, 'date_range' => $date_range), true);
+				$pdf->addPage();
+
+				$pdf->writeHTML($pdf_data, true, false, true, false, '');
+
+				$dir = APPPATH . '/material_history/' . $encoded_material_name . '/';
+
+				if (!is_dir($dir)) {
+					mkdir($dir, 0777, true);
+				}
+				$save_path = $dir . $filename;
+				ob_end_clean();
+				$pdf->Output($save_path, 'F');
+				header("Content-Type: application/pdf");
+				header("Content-Disposition: attachment;filename=\"$filename\"");
+				readfile($save_path);
+
+				$response['result'] = 'PDF generated successfully.';
+				$response['status'] = 'passed';
+
+				$this->session->set_flashdata('success', 'PDF generated successfully....');
+				sleep(4);
+			}
+		}	
+	}
 }

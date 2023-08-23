@@ -17,6 +17,7 @@ class Purchaser extends CI_Controller
         $this->load->model("Stock_model");
         $this->load->model("Purchaser_model");
         $this->load->model("Customer_model");
+        $this->load->model("History_model");
         $this->load->model("Balance_model");
         $this->load->library("tcpdf");
         $this->load->library("upload");
@@ -128,11 +129,8 @@ class Purchaser extends CI_Controller
                     "purchaser_no" => strtoupper($postData["purchaser_no"]),
                     "create_date" => $date,
                 ];
-
+                /******************** Insert in Purchaser table ***************************/
                 $insert = $this->Purchaser_model->add_purchaser($data);
-
-
-
 
                 $purchaser_ids = $this->db->insert_id();
 
@@ -195,14 +193,6 @@ class Purchaser extends CI_Controller
                     $i++;
                 }
 
-                $json_data = json_encode($data);
-                $json_data_array = array(
-                    'entry_from' => 1,
-                    //Purchaser
-                    'json_data' => $json_data,
-                );
-                $insert_json_data = $this->Purchaser_model->create_history($json_data_array);
-
                 $customer_id = strtoupper($postData["owner_name"]);
                 $balance_amount = strtoupper($postData["balance_amount"]);
                 $paid_amount = strtoupper($postData["paid_amount"]);
@@ -248,6 +238,29 @@ class Purchaser extends CI_Controller
 
 
                 if ($insert > 0) {
+                    $json_data = json_encode($data);
+                /****************** Store in HISTORY table ******************************/
+                    $material_ids = $this->input->post("material_name[]");
+                    $stock_quantities = $this->input->post("stock_q[]");
+
+                    if (!empty($material_ids) && !empty($stock_quantities)) {
+                        // Loop through the data and store each pair in the stock table
+                        for ($i = 0; $i < count($material_ids); $i++) {
+                            $entry_from = 1;
+                            $material_id = $material_ids[$i];
+                            $user_id = $postData["owner_name"];
+                            $in_out_qnty = $stock_quantities[$i];
+                            $invoice_id = $postData["purchaser_no"];
+                            $json_data = $json_data;
+                            
+                            $updated_stock = $this->Stock_model->get_material_stock($material_id);
+                            $stock = $updated_stock ? $updated_stock : $in_out_qnty;
+
+                            $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
+                        }
+                    }
+                    /************************* Store in HISTORY table ***********************/
+
                     $customer_id = strtoupper($postData["owner_name"]);
                     $this->db->select('*');
                     $this->db->from('customers');

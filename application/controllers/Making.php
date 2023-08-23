@@ -15,6 +15,8 @@ class Making extends CI_Controller
         $this->load->library("form_validation");
         $this->load->model("Making_model");
         $this->load->model("Purchaser_model");
+        $this->load->model("History_model");
+        $this->load->model("Stock_model");
         $this->load->library("tcpdf");
         $this->load->library("upload");
         $this->load->model('Balance_model');
@@ -121,7 +123,7 @@ class Making extends CI_Controller
 
                 $product_id = $this->db->insert_id();
 
-
+                
                 $material_ids = $this->input->post("material_name[]");
                 $stocks = $this->input->post("stock_q[]");
                 $oldstock = $this->input->post("stock_in[]");
@@ -175,22 +177,22 @@ class Making extends CI_Controller
                         $this->Making_model->add_making_qty($dataMak);
                     }
 
-                    // $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
-                    // $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
+                    $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
+                    $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
 
-                    // $this->db->where('product_id',$material_ids[$m]);
-                    // $query1 = $this->db->get('stock');
-                    // $rows = $query1->row();
-                    //
-                    // if ($query1->num_rows()) {
-                    //   // If the product exists, update the quantity value in the database
-                    //   $data_return = array(
-                    //     'stock_qty' => $rows->stock_qty[$m] - $stocks[$m],
-                    //     // 'price' => $price[$i]
-                    //   );
-                    //   $this->db->where('product_id',$material_ids[$m]);
-                    //   $this->db->update('stock', $data_return);
-                    // }
+                    $this->db->where('product_id',$material_ids[$m]);
+                    $query1 = $this->db->get('stock');
+                    $rows = $query1->row();
+                    
+                    if ($query1->num_rows()) {
+                      // If the product exists, update the quantity value in the database
+                      $data_return = array(
+                        'stock_qty' => $rows->stock_qty[$m] - $stocks[$m],
+                        // 'price' => $price[$i]
+                      );
+                      $this->db->where('product_id',$material_ids[$m]);
+                      $this->db->update('stock', $data_return);
+                    }
 
 
                     $m++;
@@ -198,15 +200,29 @@ class Making extends CI_Controller
 
 
                 $json_data = json_encode($data);
-                $json_data_array = array(
-                    'entry_from' => 2,
-                    //Making
-                    'json_data' => $json_data,
-                );
-                $insert_json_data = $this->Purchaser_model->create_history($json_data_array);
-
+                
                 if ($insert > 0) {
 
+                    /****************** Store in STOCK table ******************************/
+                $material_ids = $this->input->post("material_name[]");
+                $stock_quantities = $this->input->post("stock_q[]");
+
+                if (!empty($material_ids) && !empty($stock_quantities)) {
+                    // Loop through the data and store each pair in the stock table
+                    for ($i = 0; $i < count($material_ids); $i++) {
+                        $entry_from = 2;
+                        $user_id = $master_name;
+                        $invoice_id = $postData["maker_no"];
+                        $material_id = $material_ids[$i];
+                        $in_out_qnty = $stock_quantities[$i];
+                        
+                        $updated_stock = $this->Stock_model->get_material_stock($material_id);
+                        $stock = $updated_stock ? $updated_stock : ($in_out_qnty);
+
+                        $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
+                    }
+                }
+                /************************* Store in STOCK table ***********************/
 
                     $customer_id = $master_name;
                     $this->db->select('*');

@@ -69,5 +69,18 @@ public function delete_by_id($id)
 		$query = $this->db->get();
 		return $query->row();
 	}
+	function get_material_stock($id)
+	{
+		$this->db->select("*");
+		$this->db->from("purchaser_stock");
+		$this->db->where('materials_id', $id);
+		$query = $this->db->get();
+		$result = $query->row();
+		if ($result) {                   // Check if a row was fetched (data found)
+			return $result->quantity;   // Return the stock_qty column value
+		} else {
+			return 0;                    // Return 0 if no data was found
+		}
+	}
 
 }

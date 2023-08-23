@@ -249,4 +249,39 @@ class History_model extends CI_Model {
 
     /*ends here */
 
+	public function insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data) {
+        $data = array(
+            'entry_from' => $entry_from,
+            'user_id' => $user_id,
+            'invoice_no' => $invoice_id,
+            'material_id' => $material_id,
+            'in_out_qnty' => $in_out_qnty,
+            'stock_quantity' => $stock,
+            'json_data' => $json_data
+        );
+
+        // Assuming 'stock' is the name of your stock table
+        $this->db->insert('history', $data);
+    }
+
+    public function getHistoryByMaterialId($material_id, $from_date, $to_date) {
+        $from_datetime = $from_date. ' '.'00:00:00';
+        $to_datetime = $to_date. ' '.'23:59:59';
+
+        $this->db->select('h.*, s.quantity');
+        $this->db->from('history h');
+        $this->db->join('purchaser_stock s', 'h.material_id = s.materials_id');
+        $this->db->where('h.material_id', $material_id);
+        $this->db->where('h.created_at >=', $from_datetime);
+        $this->db->where('h.created_at <=', $to_datetime);
+        $query = $this->db->get();
+        $results = $query->result();
+        if (!empty($results)) {
+            return $results;
+        } else {
+            return array(); // Return an empty array if no data is found
+        }
+
+
+    }
 }
