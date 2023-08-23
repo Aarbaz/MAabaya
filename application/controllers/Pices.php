@@ -70,7 +70,7 @@ class Pices extends CI_Controller
 		$this->form_validation->set_rules('customerName', 'customer Name', 'required');
 		// $this->form_validation->set_rules('hsn_0[]', 'Select Design', 'trim|required');
 		$this->form_validation->set_rules('qnty[]', 'Quantity', 'required');
-		$this->form_validation->set_rules('rate[]', 'Rate', 'required');
+		// $this->form_validation->set_rules('rate[]', 'Rate', 'required');
 		$steps = $this->input->post('steps');
 
 		for ($i = 0; $i <= $steps; $i++) {
@@ -128,8 +128,8 @@ class Pices extends CI_Controller
 			$qnty = implode(',', $this->input->post('qnty[]'));
 			$qnty = trim($qnty, ',');
 
-			$rate = implode(',', $this->input->post('rate[]'));
-			$rate = trim($rate, ',');
+			/* $rate = implode(',', $this->input->post('rate[]'));
+			$rate = trim($rate, ','); */
 
 			$total_material_used = implode(',', $this->input->post('total_material_used'));
 			$total_material_used = trim($total_material_used, ',');
@@ -156,6 +156,7 @@ class Pices extends CI_Controller
 					'total_material' => $this->input->post('total_material_' . $i . '[]'),
 					'total_material_used' => $this->input->post('total_material_used[]'),
 					'total_piece' => $this->input->post('total_piece_' . $i . '[]'),
+					'average' => $this->input->post('rate_' . $i . '[]'),
 					'customer_id' => $this->input->post('customerName'),
 					'invoice_no' => $this->input->post('invoice_no'),
 					'labour_charge' => $this->input->post('karigari_' . $i . '[]'),
@@ -211,7 +212,6 @@ class Pices extends CI_Controller
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
 			);
-			print_r($result);die();
 			/********************Material Stock Update end**********************/
 			$insert = $this->db->insert('product_pices', $json_data);
 
@@ -221,14 +221,14 @@ class Pices extends CI_Controller
 				/***************** Material Stock Update  *********************/
 					for ($i = 0; $i < count($all_material_ids_array); $i++) {
 
-							$material_id = $all_material_ids_array[$i];
+							/* $material_id = $all_material_ids_array[$i];
                             $in_out_qnty = $material_used_array[$i];
                             $entry_from = 3;
                             
                             $current_stock = $this->Stock_model->get_material_stock($material_id);
                             $stock = $current_stock ? $current_stock : $in_out_qnty;
                             $this->History_model->insertStockEntry($material_id, $in_out_qnty, $entry_from, $stock);
-
+ */
 						// Check if the material ID exists in the maker_stock table for the customer ID
 						$this->db->where('materials_id', $all_material_ids_array[$i]);
 						//$this->db->where('making_owner_id', $customer_id);
