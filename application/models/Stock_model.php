@@ -72,8 +72,8 @@ public function delete_by_id($id)
 	function get_material_stock($id)
 	{
 		$this->db->select("*");
-		$this->db->from("purchaser_stock");
-		$this->db->where('materials_id', $id);
+		$this->db->from("stock");
+		$this->db->where('product_id', $id);
 		$query = $this->db->get();
 		$result = $query->row();
 		if ($result) {                   // Check if a row was fetched (data found)

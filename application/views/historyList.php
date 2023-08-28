@@ -3,11 +3,14 @@
 <div class="container-fluid">
 <div class="card">
   <ul id="pices-tabs" class="nav nav-tabs" role="tablist" >
-    <li class="nav-item">
+    <li class="nav-item active">
         <a class="nav-link active" href="#balance" role="tab" data-toggle="tab">Balance</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#material" role="tab" data-toggle="tab">Material</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#pices" role="tab" data-toggle="tab">Pices</a>
     </li>
   </ul>
 
@@ -19,13 +22,14 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Balance/logout');?>">Log Out</a></span></h4>
+                <h3 class="text-center">Balance History</h3>
               </div>
               <?php
               // print_r($history->result());
                ?>
               <div class="panel-body">
                 <p>
-                  <form id="download_ledger" class="form-inline"  enctype="multipart/form-data" method="POST" action="<?php echo base_url('/index.php/Pices/downloadBalance');?>">
+                  <form id="download_ledger" class="form-inline history_form"  enctype="multipart/form-data" method="POST" action="<?php echo base_url('/index.php/Pices/downloadBalance');?>">
                     <div class="form-group">
                       <label for="customerName">Customer: </label>
                       <select name="customerName" id="customerName" class="form-control">
@@ -117,6 +121,8 @@
                 <?php
                   if( $this->session->flashdata('success') )
                   { echo '<div class="alert alert-success show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Success!</strong> '.$this->session->flashdata('success').'</p></div>'; }
+                  if( $this->session->flashdata('error') )
+                  { echo '<div class="alert alert-danger show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Please Select values!</strong> '.$this->session->flashdata('error').'</p></div>'; }
                 ?>
                 <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                   <thead>
@@ -174,13 +180,14 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Balance/logout');?>">Log Out</a></span></h4>
+                <h3 class="text-center">Material History</h3>
               </div>
               <?php
               // print_r($history->result());
                ?>
               <div class="panel-body">
                 <p>
-                  <form id="download_ledger" class="form-inline"  enctype="multipart/form-data" method="POST" action="<?php echo base_url('/index.php/History/get_history_by_material_id');?>">
+                  <form id="material_gistory_form" class="form-inline history_form"  enctype="multipart/form-data" method="POST" action="<?php echo base_url('/index.php/History/get_history_by_material_id');?>">
                   
                     <div class="form-group">
                     <select name="material_id" id="material_id" class="required items form-control">
@@ -222,7 +229,110 @@
                   if( $this->session->flashdata('success') )
                   { echo '<div class="alert alert-success show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Success!</strong> '.$this->session->flashdata('success').'</p></div>'; }
                 ?>
-                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <table id="materialHistoryTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th>Sr No</th>
+                      <th>Invoice</th>
+                      <!-- <th>Challan</th> -->
+                      <th>Customer</th>
+                      <th>From</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+      
+                  <tbody>
+                  <?php $i = 1; 
+       
+                  foreach ($ledger_list->result() as $row){ 
+                    $entryFrom = $row->entry_from;
+                    if ($entryFrom == 1) {
+                      $filePath = 'purchaser';
+                    }else if ($entryFrom == 2) {
+                      $filePath = 'maker';
+                    }else if ($entryFrom == 3) {
+                      $filePath = 'pices_invoice';
+                    }else{
+                      $filePath = '';
+                    }
+                    ?>
+                    <tr>
+                      
+                      <!-- $entryFrom = $hrow->entry_from; -->
+      
+                      <td><?php echo $i; ?></td>
+                      <td><?php echo $row->invoice; ?></td>
+                      <!-- <td><?php echo $row->challan; ?></td> -->
+                      <td><?php echo $row->name; ?></td>
+                      <td><?php echo $filePath; ?></td>
+                      <td><?php echo $row->dated; ?></td>
+                      <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->customer_id).'/'.$row->invoice ?>">
+                      <i class="glyphicon glyphicon-download"></i></a>
+                    </td>
+                    </tr>
+                  <?php $i++; }  ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="pices">
+      <div class="row">
+          <div class="col-sm-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Balance/logout');?>">Log Out</a></span></h4>
+                <h3 class="text-center">Pices History</h3>
+              </div>
+              <?php
+              // print_r($history->result());
+               ?>
+              <div class="panel-body">
+                <p>
+                  <form id="design_number_form" class="form-inline history_form"  enctype="multipart/form-data" method="POST" action="<?php echo base_url('/index.php/History/get_history_by_design_num');?>">
+                  
+                    <div class="form-group">
+                    <select name="design_num" id="design_num" class="required items form-control">
+                          <option value="">--select Pice--</option>
+                          <?php
+                          foreach ($designs->result() as $row) {
+                              $mat = explode(',', $row->design_num);
+                              $cnt = count($mat);
+                              for ($i = 0; $i < $cnt; $i++) {
+                                  echo '<option label="" data-material-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("design_num", $mat[$i]) . '>' . $mat[$i] . '</option>';
+                              }
+                          } ?>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                      <label>From Date:                 </label>
+                      <input type="date" id="from_date" name="from_date" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                      <label>To Date:                 </label>
+                      <input type="date" id="to_date" name="to_date" class="form-control"/>
+                    </div>
+      
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-success">Download History</button>
+                    </div>
+                   <!--  <div class="form-group">
+                      &nbsp;&nbsp;<a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Balance/ledger');?>">Add New</a>
+                    </div> -->
+                  </form>
+                  <div id="pdfViewer">
+      
+                  </div>
+                </p><br />
+                <div><p id="result_box" class="text-center"></p></div>
+                <?php
+                  if( $this->session->flashdata('success') )
+                  { echo '<div class="alert alert-success show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Success!</strong> '.$this->session->flashdata('success').'</p></div>'; }
+                ?>
+                <table id="picesHistoryTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                   <thead>
                     <tr>
                       <th>Sr No</th>
@@ -282,8 +392,12 @@
 
 <script type="text/javascript">
 var mytable;
+var materialHistoryTable;
+var picesHistoryTable;
 $(document).ready(function(){
   mytable = $('#datatable').dataTable({"pageLength": 25});
+  materialHistoryTable = $('#materialHistoryTable').dataTable({"pageLength": 25});
+  picesHistoryTable = $('#picesHistoryTable').dataTable({"pageLength": 25});
   $("[data-toggle=tooltip]").tooltip();
 
   setTimeout(function() {

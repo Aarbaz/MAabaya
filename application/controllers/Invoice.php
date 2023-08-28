@@ -11,6 +11,7 @@ class Invoice extends CI_Controller {
         $this->load->model('Challan_model');
         $this->load->model('Pices_model');
 		$this->load->model('Stock_model');
+		$this->load->model('History_model');
 		$this->load->model('Design_model');
 		$this->load->model('Product_model');
 		$this->load->model('Material_model');
@@ -290,14 +291,22 @@ class Invoice extends CI_Controller {
 				// Update Stock
 				// $stock = $this->Stock_model->add_record($data2);
 				$this->db->trans_start(); // Start a transaction to ensure data consistency
+				$json_data = json_encode($data);
+				$entry_from = 4;
+				$user_id = $bakers_id;
+				$invoice_id = strtoupper($invoice_no);
 				foreach ($data2 as $row) {
+
 					$product_id = $row['p_design_number'];
 					$quantity = $row['stock_qty'];
-
+					$in_out_qty = -1 * $quantity;
 					$this->db->where('p_design_number', $product_id);
 					$query = $this->db->get('stock');
 					$row = $query->row();
+					
+
 					if ($query->num_rows()) {
+						// $pice_id = $row->id;
 						// If the product exists, update the quantity value in the database
 						$data2 = array(
 							'stock_qty' => $row->stock_qty - $quantity
@@ -306,10 +315,11 @@ class Invoice extends CI_Controller {
 						$this->db->update('stock', $data2);
 					} else {
 						// If the product does not exist, insert a new row into the database
-						/* $this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity)); */
+						$this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
 
 						$this->session->set_flashdata('error', $product_id.' is not in stock....');
 					}
+					$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $product_id, $in_out_qty, $row->stock_qty, $json_data);
 				}
 				$this->db->trans_complete(); // End the transaction
 

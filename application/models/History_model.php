@@ -282,6 +282,24 @@ class History_model extends CI_Model {
             return array(); // Return an empty array if no data is found
         }
 
+    }
+    public function getHistoryByDesignId($design_id, $from_date, $to_date) {
+        $from_datetime = $from_date. ' '.'00:00:00';
+        $to_datetime = $to_date. ' '.'23:59:59';
+
+        $this->db->select('h.*');
+        $this->db->from('history h');
+        $this->db->where('h.material_id', $design_id);
+        $this->db->where('h.entry_from', 4);
+        $this->db->where('h.created_at >=', $from_datetime);
+        $this->db->where('h.created_at <=', $to_datetime);
+        $query = $this->db->get();
+        $results = $query->result();
+        if (!empty($results)) {
+            return $results;
+        } else {
+            return array(); // Return an empty array if no data is found
+        }
 
     }
 }
