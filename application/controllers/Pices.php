@@ -756,7 +756,10 @@ class Pices extends CI_Controller
 			);
 
 			$insert = $this->db->insert('product_pices', $json_data);
-	
+			$entry_from = 5;
+			$user_id = $this->input->post('customerName');
+			$invoice_id = $this->input->post('invoice_no');
+			$data_json = $design_json;
 			foreach ($data['design_no'] as $index => $design_no) {
 				$return_qnty = $data['return_qnty'][$index];
 
@@ -774,7 +777,13 @@ class Pices extends CI_Controller
 					// Design number doesn't exist, insert new record
 					$result = $this->db->insert('stock', array('p_design_number' => $design_no, 'stock_qty' => $return_qnty));
 				}
-
+				$in_out_qnty = $return_qnty;
+				$current_stock = $this->db->where('p_design_number', $design_no);
+				$query = $this->db->get('stock');
+				$row = $query->row();
+				$current_stock_value = $row->stock_qty;
+				$stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
+				$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $design_no, $in_out_qnty, $stock, $data_json);
 			}
 			if ($result) {
 				$this->db->where('id', $customerName);
