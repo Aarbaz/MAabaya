@@ -17,17 +17,38 @@
 
                     <div class="card">
                     <ul id="pices-tabs" class="nav nav-tabs" role="tablist" >
+
+                     <?php
+                     $jsonData = $cust->data_json;
+                     $type = $cust->type;
+                     $dataArray = json_decode($jsonData, true); // Decoding as an associative array
+                            if ($type == 'new') {
+                                $active = 'active';
+                            } else {
+                                    $active = '';
+                                }
+                           if ($type == 'gr') {
+                                $active_gr = 'active';
+                            } else {
+                                    $active_gr = '';
+                                }   
+                      
+                            ?>
+
                         <li class="nav-item">
-                            <a class="nav-link active" href="#new" role="tab" data-toggle="tab">New</a>
+                            <a class="nav-link <?php echo $active; ?>" href="#new" role="tab" data-toggle="tab">New</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#gr" role="tab" data-toggle="tab">GR</a>
+                            <a class="nav-link <?php echo $active_gr; ?>" href="#gr" role="tab" data-toggle="tab">GR</a>
                         </li>
                         </ul>
 
                         <!-- Tab panes -->
                         <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane fade in active" id="new">
+                            <?php
+                            if ($type == 'new') {
+                            ?>
+                        <div role="tabpanel" class="tab-pane fade in" id="new">
                         <div class="challan-div">
                         <form id="pices_add_form" name="pices_add_form" class="form-horizontal pices_add_form" action="<?php echo site_url('Pices/create'); ?>" method="post">
                             <div class="form-group">
@@ -49,11 +70,11 @@
                                           </select>  -->
 
                                           <select name="customerName" id="customerName" class="form-control">
-                                            <option value="" selected="selected">--select master--</option>
+                                            <option value="" >--select master--</option>
                                             <?php
                                             // print_r($custList);
                                             foreach ($custList->result() as $row) {
-                                                echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . '>' . $row->name . '</option>';
+                                                echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . ' selected>' . $row->name . '</option>';
                                             } ?>
                                             </select>
                                        </div>
@@ -175,100 +196,180 @@
                             <div class="form-group" id="table_without_tax">
                                 <div class="container" id="table-container">
                                 <input type="hidden" name="steps" value="0" id="steps">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <!-- <th>Design No</th> -->
-                                            <th>Material Name</th>
-                                            <th>Pices</th>
-                                            <th>Average</th>   
-                                            <th>Total Material Used</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $t = 0 ?>
-                                    <div class="row select-row">
-                                    <div class="col-lg-3">
-                                        <label class="control-label col-sm-5 text-left" style="    text-align: left;">Select Design</label>
-                                            <div class="col-sm-7">
-                                                <select name="hsn_<?php echo $t ?>[]" id="hsn"  class="form-control my-select design required">
-                                                    <option value="">--select design no--</option>
-                                                    <?php foreach ($designs->result() as $row) {
-                                                        $selected = set_select("hsn[]", $row->design_num);
-                                                        $data_id = $row->id;
-                                                        echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("hsn[]", $row->id) . '>' . $row->design_num . '</option>';
+                                <?php $t = 0;
+                               
+                                // print_r(count($dataArray));
+                                if ($type = 'new') {
+                                if (!empty($dataArray)) {
+                                    foreach ($dataArray as $entry) {
+                                        $designNumber = $entry['design_number'][0];
+                                        $materialsIds = $entry['materials_ids'];
+                                        $total_piece = $entry['total_piece'];
+                                        $totalMaterial = $entry['total_material'];
+                                        $customerId = $entry['customer_id'];
+                                        $average = $entry['average'];
+                                        $labour_charge = $entry['labour_charge'];
+                                        // print_r($labour_charge);
+                                        $invoice_no = $entry['invoice_no'];
+                                        $total_labour = '5';
+                                        // ... and so on for other properties
+                                
+                                        // echo "Design Number: $designNumber<br>";
+                                        // echo "Materials IDs: " . implode(", ", $materialsIds) . "<br>";
+                                        // echo "Total_piece: " . implode(", ", $total_piece) . "<br>";
+                                        // echo "Total Material: " . implode(", ", $totalMaterial) . "<br>";
+                                        // echo "Total Material: $totalMaterial<br>";
+                                        // echo "Customer ID: $customerId<br>";
+                                        // ... and so on for other properties
+                                        // echo "Average: " . implode(", ", $average) . "<br>";
+                                        // echo "labour_charge: " . implode(", ", $labour_charge) . "<br>";
+                                        // echo "labour_charge: $invoice_no<br>";
+                                
+                                        // echo "<hr>"; // Separator between entries
+                                        $total_piece = implode(", ", $total_piece);
+                                        $labour_charge = implode(", ", $labour_charge);
+                                        // $totalMaterial = implode(", ", $totalMaterial) ;
+                                        // $totalMaterial = implode(", ", $totalMaterial) ;
+                                        ?>
+                                                                                                        <div class="row select-row">
+                                                                                                                            <div class="col-lg-3">
+                                                                                                                                <label class="control-label col-sm-5 text-left" style="    text-align: left;">Select Design</label>
+                                                                                                                                    <div class="col-sm-7">
+                                                                                                                                        <select name="hsn_<?php echo $t ?>[]" id="hsn" class="form-control my-select design required">
+                                                                                                                                                        <option value="">--select design no--</option>
+                                                                                                                                                        <?php foreach ($designs->result() as $row) {
+                                                                                                                                                            print_r($designNumber);
+                                                                                                                                                            $selected = set_select("hsn[]", $row->design_num);
+                                                                                                                                                            $data_id = $row->id;
+                                                                                                                                                            if ($designNumber == $row->id) {
+                                                                                                                                                                $selected = 'selected';
+                                                                                                                                                            }
+                                                                                                                                                            echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . $selected . '>' . $row->design_num . '</option>';
+                                                                                                                                                            // echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("hsn[]", $row->id) . '>' . $row->design_num . '</option>';
+                                                                                                                                                
+                                                                                                                                                        } ?>
+                                                                                                                                                    </select>
+                                                                                                                                                    <input type="hidden" name='selected_ids_<?php echo $t ?>[]' id="selected_ids" value="">
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+                                                                                                                                            <div class="col-lg-3">
+                                                                                                                                                <label class="control-label col-sm-4 text-left" style="text-align: left;">Total Pices</label>
+                                                                                                                                                <div class="col-sm-7" id="">
+                                                                                                                                                    <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece"
+                                                                                                                                                        class="form-control ttl_pice required" value="<?php echo $total_piece; ?>">
+                                        
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+                                                                                                                                            <div class="col-lg-3">
+                                                                                                                                                <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari (PP)</label>
+                                                                                                                                                <div class="col-sm-7" id="">
+                                                                                                                                                    <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="karigari form-control required"
+                                                                                                                                                        value="<?php echo $labour_charge; ?>">
+                                        
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+                                                                                                                                            <div class="col-lg-3">
+                                                                                                                                                <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
+                                                                                                                                                <div class="col-sm-6" id="">
+                                                                                                                                                    <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required"
+                                                                                                                                                        value="<?php echo $total_labour; ?>" readonly>
+                                        
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+                                        
+                                                                                                                            </div>
+                                                 
+                               
+                                                                                                                        <table class="table table-bordered">
+                                                                                                                                <thead>
+                                                                                                                                <tr>
+                                                                                                                                    <!-- <th>Design No</th> -->
+                                                                                                                                    <th>Material Name</th>
+                                                                                                                                    <th>Pices</th>
+                                                                                                                                    <th>Average</th>   
+                                                                                                                                    <th>Total Material Used</th>
+                                                                                                                                </tr>
+                                                                                                                            </thead>
+                                            
+                                                                                                                            <tbody>
+                                    
+                                                                                                                    <?php
+                                                                                                                    // print_r($materialsIds);
+                                                                                                                    $cnt = count($materialsIds);
+                                                                                                                    for ($z = 0; $z < $cnt; $z++) {
+                                                                                                                        ?>
+                                                    <tr class="row_one">
+                                                    <td class="material_ids">
+                                                        <select name="items_<?php echo $t ?>[]" id="" class="required items form-control">
+                                                                            <option value="">--select Product--</option>
+                                                                            <?php
+                                                                            $mats = explode(', ', $materialsIds[$z]);
+                                                                            $matNew = $mats[0];
+                                                                            $this->db->select('*');
+                                                                            $this->db->from('material');
+                                                                            $this->db->where('id', $matNew[0][0]);
 
-                                                    } ?>
-                                                </select>
-                                                <input type="hidden" name='selected_ids_<?php echo $t ?>[]' id="selected_ids" value="">
-                                            </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <label class="control-label col-sm-4 text-left" style="    text-align: left;">Total Pices</label>
-                                        <div class="col-sm-7" id="">
-                                            <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece" class="form-control ttl_pice required" value="<?php echo set_value('total_piece'); ?>">
+                                                                            $query = $this->db->get();
+                                                                            $results = $query->row();
+                                                                            $material_names = '';
+                                                                            $mat = '';
+                                                                            $material_names = $results->material_name;
+                                                                            foreach ($materialList->result() as $rows) {
+                                                                                $matr = explode(',', $rows->material_name);
+                                                                                foreach ($matr as $value) {
+                                                                                    if (strpos(trim($material_names), trim($value)) !== false) {
+                                                                                        $select = 'selected';
+                                                                                    } else {
+                                                                                        $select = '';
 
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari (PP)</label>
-                                        <div class="col-sm-7" id="">
-                                            <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="karigari form-control required" value="<?php echo set_value('karigari'); ?>">
+                                                                                    }
+                                                                                }
+                                                                                echo '<option label="" data-material-id="' . $rows->id . '" ' . $select . ' value="' . $rows->id . '" >' . $matr[0] . '</option>';
 
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
-                                        <div class="col-sm-6" id="">
-                                            <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required" value="<?php echo set_value('total_karigari'); ?>" readonly>
+                                                                            }
+                                                                            ?>                                                           
+                                                                            <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
+                                                                            <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input type="text" name="qnty[]" class=" form-control" size="3" maxlength="7" value="<?php echo $total_piece; ?>"></td>
+                                                                    <td><input type="text" name="rate[]" class=" form-control" size="3" maxlength="7" value="<?php echo $average[$z]; ?>"></td>
+    
+                                                                                <td class="total_used_materials">
+                                                                                    <input type="text" name="total_material_<?php echo $t ?>[]" class=" form-control required"
+                                                                            style=" width: 40%; display: inline;" value="<?php echo $totalMaterial[$z]; ?> " size="3">&nbsp;
+                                                                        <input type="hidden" name="total_material_used[]" id="total_material_used" value="">
+                                                                        <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
+                                                                        &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
+                                                                    </td>
+                                                                </tr>
+                                                                                                                                            <?php
+                                                                                                                        // echo '<option label="" data-material-id="' . $row->id . '"  value="' . $row->id . '" ' . set_select("items[]", $mat[$i]) . '>' . $materialsIds[$i] . '</option>';
+                                                                                                                    }
+                                                                                                                    ?>
+                                                                </tbody>
+                                                                    </table>
+                                                                            <?php
+                                    }
+                                } else {
+                                    echo "No data found.";
+                                }
 
-                                        </div>
-                                    </div>
-                                   
-                                    </div>
-                                        <tr class="row_one">
-                                            <!-- <td>
-
-                                            </td> -->
-                                            <td class="material_ids"><!-- <input type="text" name="hsn[]" class="hsn form-control" size="3" maxlength="7" value=""> -->
-                                            <select name="items_<?php echo $t ?>[]" id="items" class="required items form-control">
-                                                    <option value="">--select Product--</option>
-                                                    <?php
-                                                    foreach ($materialList->result() as $row) {
-
-                                                        //$mat = explode(',', $row->material_name);
-                                                        $mat = explode(',', $row->material_name);
-                                                        $cnt = count($mat);
-                                                        for ($i = 0; $i < $cnt; $i++) {
-                                                            //print_r( $row);
-                                                            echo '<option label="" data-material-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("items[]", $mat[$i]) . '>' . $mat[$i] . '</option>';
-                                                        }
-                                                    } ?>
-                                                    <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
-                                                    <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
-                                                </select>
-                                        </td>
-                                        <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
-                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
-                                                
-                                            <td class="total_used_materials">
-                                                <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control required" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
-                                                <input type="hidden" name="total_material_used[]" id="total_material_used" value="">
-                                                <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
-                                                &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                </div>
-                            </div>
+                            }
+                                ?>
+                                                                        </div>
+                                                                    </div>
                             <hr>
+                            <?php
+                            $invoice_no = $invoice_no;
+                            $get_ledger_invoice = $this->Balance_model->get_bal_user_bill($invoice_no);
+                            ?>
                             <div class="form-group">
-                                <div class="col-sm-2 col-sm-offset-6">
-                                    <b>TOTAL AMOUNT</b>
-                                </div>
-                                <div class="col-sm-3">
-                                    <input type="text" name="total_amount" id="total_amount" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="" size="3">
+                   <div class="col-sm-2 col-sm-offset-6">
+                       <b>TOTAL AMOUNT</b>
+                   </div>
+                   <div class="col-sm-3">
+                       <input type="text" name="total_amount" id="" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->bill_amount; ?>" size="3">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -276,7 +377,8 @@
                                     <b>ROUND OFF TOTAL</b>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="" size="3">
+                                    <input type="text" name="total_round" id="" readonly="readonly" class="form-control"
+                                        style="display: inline; width: 50%" value="<?php echo round($get_ledger_invoice->bill_amount); ?>" size="3">
                                 </div>
                             </div>
                             <div class="form-group ">
@@ -284,20 +386,23 @@
                                     <b>PAID AMOUNT</b>
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" name="paid_amount" class="form-control only_num paid_amount" id="paid_amount" style="display: inline; width: 50%" value="" size="3">
+                                    <input type="text" name="paid_amount" class="form-control only_num paid_amount" id="paid_amount"
+                                        style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->paid_amount; ?>" size="3">
                                 </div>
                             </div>
-                                                        <div class="form-group ">
-                                                                <div class="col-sm-2 col-sm-offset-6">
-                                                                        <b>BALANCE AMOUNT</b>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                        <input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount" style="display: inline; width: 50%" value="" size="3">
-                                                                </div>
-                                                        </div>
+                            <div class="form-group ">
+                                <div class="col-sm-2 col-sm-offset-6">
+                                    <b>BALANCE AMOUNT</b>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount"
+                                        style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->last_amount; ?>" size="3">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="col-sm-10 col-sm-offset-1">
-                                    <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word" class="form-control" style="display: inline; width: 50%" value="" size="3">
+                                    <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word"
+                                        class="form-control" style="display: inline; width: 50%" value="" size="3">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -318,42 +423,48 @@
                         </form>
                     </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane fade" id="gr">
-                        <form id="pices_return_form" name="pices_return_form" class="form-horizontal pices_return_form" action="<?php echo site_url('Pices/returnPices'); ?>" method="post">
+                        <?php
+                        }
+
+                           
+                            else {
+                             
+                        ?>
+                        <div role="tabpanel" class="tab-pane fade " id="gr">
+
+                        <!-- <?php
+                            $type = $cust->type;
+                            if ($type == 'new') {
+                                $cnt_form = 'returnPices';
+                            } 
+                            
+                           else  if ($type == 'gr') {
+                                $cnt_form = 'returnEditPices';
+                            } 
+                            ?> -->
+                        <form id="pices_return_form" name="pices_return_form" class="form-horizontal pices_return_form" action="<?php echo site_url('Pices/returnEditPices'); ?>" method="post">
                             <div class="form-group">
                                 <h3 class="text-center">Return Pices</h3>
                             </div>
-                            <?php
-
-                            $invoice_no = '';
-
-                            if (!empty($last_invoice->invoice_no)) {
-                                $db_invoice = $last_invoice->invoice_no;
-                                $num_part = substr($db_invoice, 3);
-                                $add_one = intval($num_part) + 1;
-
-                                if (strlen($add_one) < 3) {
-                                    $ch_no = sprintf("%03u", $add_one);
-                                    $invoice_no = 'PIC' . $ch_no;
-                                } else {
-                                    $invoice_no = 'PIC' . $add_one;
-                                }
-                            } else {
-                                $invoice_no = 'PIC001';
-                            }
-
-                            ?>
-                                        <?php echo '<b>' . $invoice_no . '</b>'; ?>
-                                        <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
+                            
                              <div class="col-sm-5 "><!--leftbox -->
                                 <div class="form-group ">
                                     <label class="control-label col-sm-3">Master Name</label>
+                                    <?php
+                                        $master_id = $cust->master_id;
+                                        $get_cust= $this->Customer_model->get_customers();
+                                        ?>
                                     <div class="col-sm-9">
                                           <select name="customerName" id="customerName" class="form-control">
                                             <option value="" selected="selected">--select master--</option>
                                             <?php
-                                            foreach ($custList->result() as $row) {
-                                                echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . '>' . $row->name . '</option>';
+                                            foreach ($get_cust->result() as $row) {
+                                                if($master_id == $row->id){
+                                                    $selected = 'selected';
+                                                }else{
+                                                    $selected = '';
+                                                }
+                                                echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . ' '.$selected.'>' . $row->name . '</option>';
                                             } ?>
                                             </select>
                                        </div>
@@ -393,23 +504,45 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php $t = 0 ?>
-                                        <tr class="row_one">
-                                            <td class="material_ids">
-                                                <select name="design_no[]" id="return_pice"  class="form-control my-select design required">
-                                                        <option value="">--select design no--</option>
+                                        <?php $t = 0 ;
+                                    if ($type = 'gr') {
+
+                                    if (!empty($dataArray)) {
+                                            foreach ($dataArray as $entry) {
+                                                $designNumber = $entry['design_number'];
+                                                $total_piece = $entry['total_piece'];
+                                                $designNumber = implode(", ", $designNumber);
+                                                $Total_piece = implode(", ", $total_piece);
+                                        ?>  
+                                        <input type="hidden" name="sr_no" value="<?php echo $cust->sr_no;?>" >
+                                        <input type="hidden" name="invoice_no" value="<?php echo $cust->invoice_no; ?>">
+
+                                                        <tr class="row_one">
+                                                            <td class="material_ids">
+                                                                <select name="design_no[]" id="return_pice"  class="form-control my-select design required">
+                                                                        <option value="">--select design no--</option>
                                                         <?php foreach ($designs->result() as $row) {
                                                             $selected = set_select("design_no[]", $row->design_num);
                                                             $data_id = $row->id;
-                                                            echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("design_no[]", $row->id) . '>' . $row->design_num . '</option>';
-
+                                                            if($designNumber == $row->id){
+                                                                $selected = 'selected';
+                                                            }       
+                                                            echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . $selected . '>' . $row->design_num . '</option>';
                                                         } ?>
                                                 </select>
                                             </td>
-                                            <td><input type="text" name="return_qnty[]" class="return_qnty form-control" size="3" maxlength="7"></td>   
+                                            <td>
+                                                <input type="text" name="return_qnty[]" class="return_qnty form-control" size="3" maxlength="7" value="<?php echo $Total_piece; ?>">
+                                                    <input type="hidden" name="return_qnty_hidden[]" class="return_qnty_hidden form-control" size="3" maxlength="7" value="<?php echo $Total_piece; ?>">
+                                            </td>   
                                             <td><button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
                                                 &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button></td>                                         
                                         </tr>
+                                        <?php
+                                                    }
+                                                }
+                                }
+                                ?>
                                     </tbody>
                                 </table>
                                 </div>
@@ -427,6 +560,10 @@
 
                         </form>
                         </div>
+                          <?php
+                        }
+                             
+                        ?>
                         </div>
                     </div>
                 </div>
@@ -836,47 +973,75 @@ $(document).ready(function(){
         }   //end main if
     });
     
-    $('#total_amount').on('focus', function(){
+    // $('#total_amount').on('focus', function(){
 
-        console.log("in total_amount");
-        total = 0;
-        $('.total_karigari').each(function(){
-            if( $(this).val() !== '' )
-            {
-                var amt = $(this).val();
-                total += parseFloat(amt);
-            }
-            console.log(total);
-        });
-        var crnt_val = parseFloat(total);
+    //     console.log("in total_amount");
+    //     total = 0;
+    //     $('.total_karigari').each(function(){
+    //         if( $(this).val() !== '' )
+    //         {
+    //             var amt = $(this).val();
+    //             total += parseFloat(amt);
+    //         }
+    //         console.log(total);
+    //     });
+    //     var crnt_val = parseFloat(total);
 
-        var other_charge = 0;
-        var trans_charge = 0;
-        total +=  parseFloat(other_charge) + parseFloat(trans_charge);
-        if(total != crnt_val)
-        {
-            $(this).val(total.toFixed(2));
-        }
+    //     var other_charge = 0;
+    //     var trans_charge = 0;
+    //     total +=  parseFloat(other_charge) + parseFloat(trans_charge);
+    //     if(total != crnt_val)
+    //     {
+    //         $(this).val(total.toFixed(2));
+    //     }
 
-        var cgst = $('#cgst_charge').val() != '' ? parseFloat($('#cgst_charge').val()) : 0;
-        var sgst = $('#sgst_charge').val() != '' ? parseFloat($('#sgst_charge').val()) : 0;
-        var igst = $('#igst_charge').val() != '' ? parseFloat($('#igst_charge').val()) : 0;
+    //     var cgst = $('#cgst_charge').val() != '' ? parseFloat($('#cgst_charge').val()) : 0;
+    //     var sgst = $('#sgst_charge').val() != '' ? parseFloat($('#sgst_charge').val()) : 0;
+    //     var igst = $('#igst_charge').val() != '' ? parseFloat($('#igst_charge').val()) : 0;
 
-        /* var total_with_tax = parseFloat($('#total_tax_value').val()) + cgst + sgst + igst ; */
-        var total_with_tax = parseFloat(total) + 0 + 0 + 0 ;
-        total_with_tax      = total_with_tax.toFixed(2);
-        $(this).val(total_with_tax);
-        //total round amount
-        $('#total_round').val(Math.round(total_with_tax));
-        //total in words
-        var round_amount = $('#total_round').val();
-        if( round_amount!= null)
-        {
-            var total_words = NumToWord(round_amount);
-            $("#total_word").val(total_words);
-        }
+    //     /* var total_with_tax = parseFloat($('#total_tax_value').val()) + cgst + sgst + igst ; */
+    //     var total_with_tax = parseFloat(total) + 0 + 0 + 0 ;
+    //     total_with_tax      = total_with_tax.toFixed(2);
+    //     $(this).val(total_with_tax);
+    //     //total round amount
+    //     $('#total_round').val(Math.round(total_with_tax));
+    //     //total in words
+    //     var round_amount = $('#total_round').val();
+    //     if( round_amount!= null)
+    //     {
+    //         var total_words = NumToWord(round_amount);
+    //         $("#total_word").val(total_words);
+    //     }
 
-    });
+    // });
+    amountWord();
+      function amountWord(){
+           total = 0;
+           var amt;
+   $('.total_karigari').each(function(){
+       if( $(this).val() !== '' )
+       {
+           amt = $(this).val();
+   console.log(amt);
+
+           total += parseFloat(amt);
+       }
+   });
+   var total_with_tax = parseFloat(total) + 0 + 0 + 0 ;
+   total_with_tax      = total_with_tax.toFixed(2);
+      $('#total_amount').val(total_with_tax);
+
+   //total round amount
+   $('#total_round').val(Math.round(total));
+   //total in words
+   var round_amount = total;
+   console.log(round_amount);
+      if( round_amount!= null)
+      {
+         var total_words = NumToWord(round_amount);
+         $("#total_word").val(total_words);
+      }
+      }
     $('.balance_amount').on('focus', function(){
                                         var total_amount = $('#total_amount').val();
                                         var paid_amount = $('#paid_amount').val();

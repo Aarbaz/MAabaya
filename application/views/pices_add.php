@@ -249,8 +249,7 @@
                                                 </select>
                                         </td>
                                         <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7"></td>                                            
-                                            <td><input type="text" name="rate[]" class="rate form-control" size="3" maxlength="7"></td>
-                                                
+                                                 <td><input type="text" name="rate_<?php echo $t ?>[]" class="rate form-control" size="3" maxlength="7"></td>
                                             <td class="total_used_materials">
                                                 <input type="text" name="total_material_<?php echo $t ?>[]" class="amount form-control required" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <input type="hidden" name="total_material_used[]" id="total_material_used" value="">
@@ -352,7 +351,8 @@
                                           <select name="customerName" id="customerName" class="form-control">
                                             <option value="" selected="selected">--select master--</option>
                                             <?php
-                                            foreach ($custList->result() as $row) {
+                                            $get_cust = $this->Customer_model->get_customers();
+                                            foreach ($get_cust->result() as $row) {
                                                 echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . '>' . $row->name . '</option>';
                                             } ?>
                                             </select>
@@ -1033,8 +1033,7 @@ $('.submit-btn').click(function() {
                                                 </select>
                                         </td>
                                         <td><input type="text" name="qnty[]" class="qnty form-control required" size="3" maxlength="7"></td>                                            
-                                            <td><input type="text" name="rate[]" class="rate form-control required" size="3" maxlength="7"></td>
-                                                
+                                                    <td><input type="text" name="rate_`+count+`[]" class="rate form-control required" size="3" maxlength="7"></td>
                                             <td class="total_used_materials">
                                                 <input type="text" name="total_material_`+count+`[]" class="amount form-control required" style=" width: 40%; display: inline;" value="" size="3">&nbsp;
                                                 <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>

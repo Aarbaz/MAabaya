@@ -101,4 +101,15 @@ class Pices_model extends CI_Model {
         $this->db->delete('product_pices');
         return $this->db->affected_rows();
     }
+    public function get_pices_by_id($pices_id)
+    {
+        // Assuming you have a database table named 'making' with appropriate columns
+        $query = $this->db->get_where('stock', array('p_design_number' => $pices_id));
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array(); // Return the result as an associative array
+        } else {
+            return null; // No data found
+        }
+    }
 }
