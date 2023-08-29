@@ -175,7 +175,7 @@
                             <div class="form-group" id="table_without_tax">
                                 <div class="container" id="table-container">
                                 <input type="hidden" name="steps" value="0" id="steps">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered pice_invoice_table">
                                     <thead>
                                         <tr>
                                             <!-- <th>Design No</th> -->
@@ -306,7 +306,7 @@
 
                             <div class="form-group">
                               <div class="col-sm-6 col-sm-offset-3">
-                                <button type="submit" name="add_challan" class="btn btn-primary submit-btn2">SAVE & PRINT</button>
+                                <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="reset" name="reload" class="btn btn-primary">Reset</button>
                                 <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>
@@ -477,7 +477,7 @@
 <script src="<?php echo base_url('assets/js/to_words.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/jquery.validate.min.js'); ?>"></script>
 <script type="text/javascript">
-
+var count = 0;
 
 function delete_design(id)
 {
@@ -898,7 +898,7 @@ $('.submit-btn').click(function() {
             selected_ids.push(otherAttribute);
             });
         $('#selected_ids').val(selected_ids.join(','));
-      $('tr td.material_ids').each(function() {
+      $('.pice_invoice_table tr td.material_ids').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute2 = $(this).find('select option:selected').attr('data-material-id');
             /* if (!otherAttribute2 || otherAttribute2=="undefined") {
@@ -912,7 +912,7 @@ $('.submit-btn').click(function() {
         
         // $('#all_material_ids').val(material_ids.join(','));
 
-      $('tr td.total_used_materials').each(function() {
+      $('.pice_invoice_table tr td.total_used_materials').each(function() {
             //var selectedValue = $(this).find('select').val();
             var otherAttribute3 = $(this).find(".amount").val();
             /* if (!otherAttribute3 || otherAttribute3=="undefined") {
@@ -956,7 +956,7 @@ $('.submit-btn').click(function() {
         console.log(total_material_used); // Output: [40, 25, 30]
     });
     
-    var count = 0;
+    
     $('#duplicate-table-btn').click(function() {
         var step_no = $("#steps").val();
         
@@ -1117,6 +1117,11 @@ $('.submit-btn').click(function() {
     }); */  
     $('#remove-div').click(function() {
         $('.new-div:last').remove();
+        var step_no = parseInt($("#steps").val());
+        if (step_no > 0) {
+            count--;
+        }
+        $("#steps").val(count);
     });
     
 </script>

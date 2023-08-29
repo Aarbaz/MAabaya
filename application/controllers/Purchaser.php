@@ -290,6 +290,7 @@ class Purchaser extends CI_Controller
                         'material_names' => $material_names,
                         'qnty' => $qnty,
                         "amount" => $amount,
+                        "date" => $date,
                         'rate' => $rate,
                         'bill_amount' => $total_amount,
                         'paid_amount' => $paid_amount,

@@ -167,8 +167,17 @@ class Pices extends CI_Controller
 				);
 				// Add the new design to the result array
 				$result[] = $design;
+				$idSubArray = $this->input->post('items_' . $i . '[]');
+				$valueSubArray = $this->input->post('total_material_' . $i . '[]');
+    
+				// Loop through the sub-array and add its elements to $mat_id
+				foreach ($idSubArray as $value) {
+					$mat_id[] = $value;
+				}
+				foreach ($valueSubArray as $value2) {
+					$mat_values[] = $value2;
+				}
 			}
-
 
 			// Convert the result array to JSON
 			$json = json_encode($result);
@@ -211,53 +220,48 @@ class Pices extends CI_Controller
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
 			);
-			print_r($result);die();
-			/********************Material Stock Update end**********************/
-			$insert = $this->db->insert('product_pices', $json_data);
+			/***************** Material Stock Update  *********************/
+			for ($i = 0; $i < count($mat_id); $i++) {
+						
+			// Check if the material ID exists in the maker_stock table for the customer ID
+			$this->db->where('materials_id', $mat_id[$i]);
+			//$this->db->where('making_owner_id', $customer_id);
+			$q_result = $this->db->get('maker_stock')->result();
+			// print_r($q_result);die();
+			if (empty($q_result) || count($q_result) == 0) {
+				// Insert a new row with the material ID and quantity 0
+				$m_data = array(
+					'materials_id' => $mat_id[$i],
+					//'making_owner_id' => $customer_id,
+					'quantity' => $mat_values[$i]
+				);
+				$this->db->insert('maker_stock', $m_data);
+			} else {
+				// Get the previous quantity for the material ID
+				$material_ids = $mat_id[$i];
+				$this->db->where_in('materials_id', $material_ids);
+				//$this->db->where('making_owner_id', $customer_id);
+				$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
+				// Update the quantity for the material ID with the previous quantity + new quantity
+				$data = array('quantity' => (float)$prev_quantity - (float)$mat_values[$i]);
 
+				$this->db->where('materials_id', $mat_id[$i]);
+				//$this->db->where('making_owner_id', $customer_id);
+				$this->db->update('maker_stock', $data);
+			}
 
-			if ($insert == true) {
-
-				/***************** Material Stock Update  *********************/
-					for ($i = 0; $i < count($all_material_ids_array); $i++) {
-
-							$material_id = $all_material_ids_array[$i];
-                            $in_out_qnty = $material_used_array[$i];
-                            $entry_from = 3;
-                            
-                            $current_stock = $this->Stock_model->get_material_stock($material_id);
-                            $stock = $current_stock ? $current_stock : $in_out_qnty;
-                            $this->History_model->insertStockEntry($material_id, $in_out_qnty, $entry_from, $stock);
-
-						// Check if the material ID exists in the maker_stock table for the customer ID
-						$this->db->where('materials_id', $all_material_ids_array[$i]);
-						//$this->db->where('making_owner_id', $customer_id);
-						$q_result = $this->db->get('maker_stock')->result();
-						if (empty($q_result) || count($q_result) == 0) {
-							// Insert a new row with the material ID and quantity 0
-							$m_data = array(
-								'materials_id' => $all_material_ids_array[$i],
-								//'making_owner_id' => $customer_id,
-								'quantity' => $material_used_array[$i]
-							);
-							$this->db->insert('maker_stock', $m_data);
-						} else {
-							// Get the previous quantity for the material ID
-							$material_ids = $all_material_ids_array[$i];
-							$this->db->where_in('materials_id', $material_ids);
-							//$this->db->where('making_owner_id', $customer_id);
-							$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
-							// Update the quantity for the material ID with the previous quantity + new quantity
-							$data = array('quantity' => (float)$prev_quantity - (float)$material_used_array[$i]);
-
-							$this->db->where('materials_id', $all_material_ids_array[$i]);
-							//$this->db->where('making_owner_id', $customer_id);
-							$this->db->update('maker_stock', $data);
-						}
-
-					}
-
-				/***************** Pices Stock Update  *********************/
+		}
+		/********************Material Stock Update end**********************/
+		$insert = $this->db->insert('product_pices', $json_data);
+		
+		
+		if ($insert == true) {
+			
+			/***************** Pices Stock Update  *********************/
+				$entry_from = 3;
+				$user_id = $this->input->post('customerName');
+				$invoice_id = $this->input->post('invoice_no');
+				$data_json = $json;
 				foreach ($data2 as $row) {
 					$product_id = $row['p_design_number'];
 					$quantity = $row['stock_qty'];
@@ -277,7 +281,15 @@ class Pices extends CI_Controller
 						// If the product does not exist, insert a new row into the database
 						$this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
 					}
+					$in_out_qnty = $quantity;
+					$current_stock = $this->db->where('p_design_number', $product_id);
+					$query = $this->db->get('stock');
+					$row = $query->row();
+					$current_stock_value = $row->stock_qty;
+					$stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
+					$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $product_id, $in_out_qnty, $stock, $data_json);
 				}
+			
 				/***************** Pices Stock Update end ******************/
 				
 
@@ -322,13 +334,13 @@ class Pices extends CI_Controller
 				/********************Customer Ledger Balance (History) end**************/
 
 				/********************Add In History Table     ****************/
-				$json_data_array = array(
+				/* $json_data_array = array(
 					'entry_from' => 3,
 					//Pices
 					'json_data' => $json,
 				);
 
-				$insert_json_data = $this->Pices_model->create_history($json_data_array);
+				$insert_json_data = $this->Pices_model->create_history($json_data_array); */
 				/********************AAdd In History Table end**************/
 
 				$this->db->select('*');
