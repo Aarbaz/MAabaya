@@ -306,28 +306,36 @@ class Invoice extends CI_Controller {
 
 					$product_id = $row['p_design_number'];
 					$quantity = $row['stock_qty'];
-					$in_out_qty = -1 * $quantity;
+					$in_out_qty = $quantity;
 					$this->db->where('p_design_number', $product_id);
 					$query = $this->db->get('stock');
-					$result = $query->row();
+					$previous_qty = $query->row();
 					
-					$finalValue=0;
-					if ($query->num_rows() && $result->stock_qty) {
-						$finalValue = $result->stock_qty;
+					// $finalValue=0;
+					if ($query->num_rows() && $previous_qty->stock_qty) {
 						// $pice_id = $row->id;
 						// If the product exists, update the quantity value in the database
 						$data2 = array(
-							'stock_qty' => $result->stock_qty - $quantity
+							'stock_qty' => $previous_qty->stock_qty - $quantity
 						);
 						$this->db->where('p_design_number', $product_id);
 						$this->db->update('stock', $data2);
+
+						$product_id = $row['p_design_number'];
+						$quantity = $row['stock_qty'];
+						$in_out_qty = -1 * $quantity;
+						$this->db->where('p_design_number', $product_id);
+						$query = $this->db->get('stock');
+						$previous_qty = $query->row();
+						$current_qty = $previous_qty->stock_qty;
+
+					$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $product_id, $in_out_qty, $current_qty, $json_data);
 					} else {
 						// If the product does not exist, insert a new row into the database
 						$this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => -1 * $quantity));
-
-						$this->session->set_flashdata('error', $product_id.' is not in stock....');
+						$current_qty = -1 * $in_out_qty;
+						$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $product_id, $current_qty, $current_qty, $json_data);
 					}
-					$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $product_id, $in_out_qty, $finalValue, $json_data);
 				}
 				$this->db->trans_complete(); // End the transaction
 
