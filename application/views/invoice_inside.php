@@ -113,7 +113,8 @@
 								</div>
 								<div class="form-group">
 									<label class="control-label col-sm-4">INVOICE DATE</label>
-									<div class="col-sm-8">&nbsp;&nbsp;&nbsp;<?php echo date('d/m/Y');?></div>
+									<!-- <div class="col-sm-8">&nbsp;&nbsp;&nbsp;<?php echo date('d/m/Y');?></div> -->
+									<div class="col-sm-4"><input type="date" id="bill_date" name="bill_date"/></div>
 								</div>
 								<div class="form-group hide">
 									<label class="control-label col-sm-4">DATE OF SUPPLY</label>

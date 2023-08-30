@@ -80,7 +80,8 @@ class Making_model extends CI_Model
     {
           $this->db->select('*');
           $this->db->from('maker_stock');
-          $this->db->join('making', 'making.id = maker_stock.maker_id');
+        //   $this->db->join('making', 'making.id = maker_stock.maker_id');
+        //   $this->db->join('making');
           return $this->db->get();
     }
 

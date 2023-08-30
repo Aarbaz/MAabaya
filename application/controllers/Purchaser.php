@@ -420,7 +420,6 @@ class Purchaser extends CI_Controller
 
                     // Check if the existing material ID is not present in the new data
                     if (!in_array($existing_material_id, $material_names_new)) {
-                        echo 'sas';
                         $old_materials[] = [
                             "material_id" => $existing_material_id,
                             "stock_q" => $existing_stock

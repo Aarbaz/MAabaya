@@ -470,6 +470,14 @@
                                        </div>
                                 </div>
                             </div>
+                            <div class="col-sm-4  col-sm-offset-3">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-5">INVOICE DATE</label>
+                                    <div class="col-sm-7">
+                                        <input type="date" id="bill_date" name="bill_date" value="<?php echo $cust->created_at;?>"/>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-sm-12">&nbsp;</div>
                             <div class="form-group"><br />
                               <div class="col-sm-8 col-sm-offset-2">

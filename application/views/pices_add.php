@@ -99,10 +99,11 @@
                                 </div>
                             </div>
                             <div class="col-sm-1">&nbsp;</div>
-                            <div class="col-sm-6 leftbox inv hide">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">INVOICE NO.</label>
-                                    <div class="col-sm-8">&nbsp;&nbsp;
+                            <div class="col-sm-6 inv d-flex">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                    <label class="control-label">INVOICE NO.</label>
+                                   
                                         <?php
 
                                         $invoice_no = '';
@@ -125,12 +126,14 @@
                                         ?>
                                         <?php echo '<b>' . $invoice_no . '</b>'; ?>
                                         <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
+                                    
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label col-sm-4">INVOICE DATE</label>
-                                    <div class="col-sm-8">&nbsp;&nbsp;&nbsp;<?php echo date('d/m/Y'); ?></div>
-                                </div>
+                                
+                                <div class="col-sm-6">
+                                    <label class="control-label">INVOICE DATE</label>
+                                    <input type="date" id="bill_date" name="bill_date"/>
+                                    </div>
                                 <div class="form-group hide">
                                     <label class="control-label col-sm-4">DATE OF SUPPLY</label>
                                     <div class="col-sm-8">&nbsp;<input type="date" name="sup_date" value="<?php echo set_value('sup_date'); ?>" class="form-control">
@@ -315,36 +318,15 @@
 
 
                         </form>
+                                </div>
                     </div>
-                        </div>
                         <div role="tabpanel" class="tab-pane fade" id="gr">
                         <form id="pices_return_form" name="pices_return_form" class="form-horizontal pices_return_form" action="<?php echo site_url('Pices/returnPices'); ?>" method="post">
                             <div class="form-group">
                                 <h3 class="text-center">Return Pices</h3>
                             </div>
-                            <?php
-
-                                        $invoice_no = '';
-
-                                        if (!empty($last_invoice->invoice_no)) {
-                                            $db_invoice = $last_invoice->invoice_no;
-                                            $num_part = substr($db_invoice, 3);
-                                            $add_one = intval($num_part) + 1;
-
-                                            if (strlen($add_one) < 3) {
-                                                $ch_no = sprintf("%03u", $add_one);
-                                                $invoice_no = 'PIC' . $ch_no;
-                                            } else {
-                                                $invoice_no = 'PIC' . $add_one;
-                                            }
-                                        } else {
-                                            $invoice_no = 'PIC001';
-                                        }
-
-                                        ?>
-                                        <?php echo '<b>' . $invoice_no . '</b>'; ?>
-                                        <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
-                             <div class="col-sm-5 "><!--leftbox -->
+                            
+                             <div class="col-sm-3 "><!--leftbox -->
                                 <div class="form-group ">
                                     <label class="control-label col-sm-3">Master Name</label>
                                     <div class="col-sm-9">
@@ -358,7 +340,38 @@
                                             </select>
                                        </div>
                                 </div>
-                            </div>
+                                </div>
+                                <div class="col-sm-4 text-center">
+                                    <label class="control-label">INVOICE NO.</label>
+                                <?php
+
+                                    $invoice_no = '';
+
+                                    if (!empty($last_invoice->invoice_no)) {
+                                        $db_invoice = $last_invoice->invoice_no;
+                                        $num_part = substr($db_invoice, 3);
+                                        $add_one = intval($num_part) + 1;
+
+                                        if (strlen($add_one) < 3) {
+                                            $ch_no = sprintf("%03u", $add_one);
+                                            $invoice_no = 'PIC' . $ch_no;
+                                        } else {
+                                            $invoice_no = 'PIC' . $add_one;
+                                        }
+                                    } else {
+                                        $invoice_no = 'PIC001';
+                                    }
+
+                                    ?>
+                                    <?php echo '<b>' . $invoice_no . '</b>'; ?>
+                                    <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="control-label">INVOICE DATE</label>
+                                    <input type="date" id="bill_date" name="bill_date"/>
+                                    </div>
+                                
+                            
                             <div class="col-sm-12">&nbsp;</div>
                             <div class="form-group"><br />
                               <div class="col-sm-8 col-sm-offset-2">
@@ -430,7 +443,7 @@
                         </div>
                     </div>
                 </div>
-
+</div>
 
                 <div class="modal fade" id="add_design" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
                   <div class="modal-dialog">

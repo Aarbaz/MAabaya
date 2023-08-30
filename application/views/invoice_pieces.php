@@ -30,7 +30,7 @@
       <!-- <td> ADDS. </td>
       <td id="adds"> <?php echo $customer_address; ?> </td> -->
       <td> INVOICE DATE </td>
-      <td> <?php echo date('d F, Y'); ?> </td>
+      <td> <?php echo $date ?> </td>
     </tr>
    <!--  <tr>
       <td> BUYER'S GST </td>

@@ -157,6 +157,12 @@ class Invoice extends CI_Controller {
 				$qnty_sum += $value;
 			}
 
+			   if ($this->input->post('bill_date')) {
+                    $date = $this->input->post('bill_date');
+                } else {
+                    $date = date("Y-m-d");
+                }
+
 			$data = array(
 				'customer_id' => $bakers_id,
 				'invoice_no' => $invoice_no,
@@ -180,7 +186,7 @@ class Invoice extends CI_Controller {
 				'other_notes'  => $sup_other,
 				'paid'  => $paid_amount,
 				'balance'  => $balance_amount,
-				'invoice_date' => date('Y-m-d H:i:s')
+				'invoice_date' => $date
 			);
 
 			$data_balance = array(
@@ -237,7 +243,8 @@ class Invoice extends CI_Controller {
 				'other_notes'  => $sup_other,
 				'paid'  => $paid_amount,
 				'balance'  => $balance_amount,
-				'qnty_sum'  => $qnty_sum
+				'qnty_sum'  => $qnty_sum,
+				'date'  => $date
 			);
 
 			$selected_ids_values = explode(",", $selected_ids);

@@ -10,7 +10,11 @@ class Stock_model extends CI_Model {
 	}
 
 
-
+ public function add_records($data)
+	{
+		$this->db->insert('stock', $data);
+		return $this->db->insert_id();
+	}
 public function update_record($data, $id)
 {
    $this->db->where('id', $id);

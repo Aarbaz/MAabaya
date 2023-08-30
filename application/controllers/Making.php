@@ -169,7 +169,7 @@ class Making extends CI_Controller
                     $rows = $querys->row();
                     if ($querys->num_rows()) {
                         $data3 = array(
-                            'quantity' => $rows->quantity + $stocks[$m],
+                            'quantity' => (float)$rows->quantity + (float)$stocks[$m],
                         );
                         $this->db->where('materials_id', $material_ids[$m]);
                         $this->db->update('maker_stock', $data3);
@@ -177,7 +177,7 @@ class Making extends CI_Controller
                         $this->Making_model->add_making_qty($dataMak);
                     }
 
-                    $dataStk["quantity"] = $oldstock[$m] - $stocks[$m];
+                    $dataStk["quantity"] = (float)$oldstock[$m] - (float)$stocks[$m];
                     $this->Purchaser_model->update_pstock_qty($dataStk,$material_ids[$m]);
 
                     $this->db->where('product_id',$material_ids[$m]);
@@ -187,7 +187,7 @@ class Making extends CI_Controller
                     if ($query1->num_rows()) {
                       // If the product exists, update the quantity value in the database
                       $data_return = array(
-                        'stock_qty' => $rows->stock_qty[$m] - $stocks[$m],
+                        'stock_qty' => (float)$rows->stock_qty[$m] - (float)$stocks[$m],
                         // 'price' => $price[$i]
                       );
                       $this->db->where('product_id',$material_ids[$m]);

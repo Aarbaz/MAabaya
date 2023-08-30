@@ -170,7 +170,7 @@ class Pices extends CI_Controller
 				$result[] = $design;
 				$idSubArray = $this->input->post('items_' . $i . '[]');
 				$valueSubArray = $this->input->post('total_material_' . $i . '[]');
-    
+
 				// Loop through the sub-array and add its elements to $mat_id
 				foreach ($idSubArray as $value) {
 					$mat_id[] = $value;
@@ -216,50 +216,56 @@ class Pices extends CI_Controller
 				$m = 0;
 				$k++;
 			}
+			if ($this->input->post('bill_date')) {
+				$date = $this->input->post('bill_date');
+			} else {
+				$date = date("Y-m-d");
+			}
 			$json_data = array(
 				'data_json' => $json,
 				'master_id' => $this->input->post('customerName'),
 				'invoice_no' => $this->input->post('invoice_no'),
 				'type' => 'new',
+				'created_at' => $date,
 			);
 			/***************** Material Stock Update  *********************/
 			for ($i = 0; $i < count($mat_id); $i++) {
-						
-			// Check if the material ID exists in the maker_stock table for the customer ID
-			$this->db->where('materials_id', $mat_id[$i]);
-			//$this->db->where('making_owner_id', $customer_id);
-			$q_result = $this->db->get('maker_stock')->result();
-			// print_r($q_result);die();
-			if (empty($q_result) || count($q_result) == 0) {
-				// Insert a new row with the material ID and quantity 0
-				$m_data = array(
-					'materials_id' => $mat_id[$i],
-					//'making_owner_id' => $customer_id,
-					'quantity' => $mat_values[$i]
-				);
-				$this->db->insert('maker_stock', $m_data);
-			} else {
-				// Get the previous quantity for the material ID
-				$material_ids = $mat_id[$i];
-				$this->db->where_in('materials_id', $material_ids);
-				//$this->db->where('making_owner_id', $customer_id);
-				$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
-				// Update the quantity for the material ID with the previous quantity + new quantity
-				$data = array('quantity' => (float)$prev_quantity - (float)$mat_values[$i]);
 
+				// Check if the material ID exists in the maker_stock table for the customer ID
 				$this->db->where('materials_id', $mat_id[$i]);
 				//$this->db->where('making_owner_id', $customer_id);
-				$this->db->update('maker_stock', $data);
-			}
+				$q_result = $this->db->get('maker_stock')->result();
+				// print_r($q_result);die();
+				if (empty($q_result) || count($q_result) == 0) {
+					// Insert a new row with the material ID and quantity 0
+					$m_data = array(
+						'materials_id' => $mat_id[$i],
+						//'making_owner_id' => $customer_id,
+						'quantity' => $mat_values[$i]
+					);
+					$this->db->insert('maker_stock', $m_data);
+				} else {
+					// Get the previous quantity for the material ID
+					$material_ids = $mat_id[$i];
+					$this->db->where_in('materials_id', $material_ids);
+					//$this->db->where('making_owner_id', $customer_id);
+					$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
+					// Update the quantity for the material ID with the previous quantity + new quantity
+					$data = array('quantity' => (float) $prev_quantity - (float) $mat_values[$i]);
 
-		}
-		/********************Material Stock Update end**********************/
-		$insert = $this->db->insert('product_pices', $json_data);
-		
-		
-		if ($insert == true) {
-			
-			/***************** Pices Stock Update  *********************/
+					$this->db->where('materials_id', $mat_id[$i]);
+					//$this->db->where('making_owner_id', $customer_id);
+					$this->db->update('maker_stock', $data);
+				}
+
+			}
+			/********************Material Stock Update end**********************/
+			$insert = $this->db->insert('product_pices', $json_data);
+
+
+			if ($insert == true) {
+
+				/***************** Pices Stock Update  *********************/
 				$entry_from = 3;
 				$user_id = $this->input->post('customerName');
 				$invoice_id = $this->input->post('invoice_no');
@@ -274,7 +280,7 @@ class Pices extends CI_Controller
 					if ($query->num_rows()) {
 						// If the product exists, update the quantity value in the database
 						$data3 = array(
-							'stock_qty' => (float)$row->stock_qty + (float)$quantity
+							'stock_qty' => (float) $row->stock_qty + (float) $quantity
 						);
 						//print_r($data3);
 						$this->db->where('p_design_number', $product_id);
@@ -291,9 +297,9 @@ class Pices extends CI_Controller
 					$stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
 					$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $product_id, $in_out_qnty, $stock, $data_json);
 				}
-			
+
 				/***************** Pices Stock Update end ******************/
-				
+
 
 				/********************Customer Balance Update**********************/
 				$this->db->where('customer_id', $this->input->post('customerName'));
@@ -337,12 +343,12 @@ class Pices extends CI_Controller
 
 				/********************Add In History Table     ****************/
 				/* $json_data_array = array(
-					'entry_from' => 3,
-					//Pices
-					'json_data' => $json,
-				);
+								'entry_from' => 3,
+								//Pices
+								'json_data' => $json,
+							);
 
-				$insert_json_data = $this->Pices_model->create_history($json_data_array); */
+							$insert_json_data = $this->Pices_model->create_history($json_data_array); */
 				/********************AAdd In History Table end**************/
 
 				$this->db->select('*');
@@ -374,6 +380,7 @@ class Pices extends CI_Controller
 					'invoice_no' => $this->input->post('invoice_no'),
 					'customer_address' => $maker_name->address,
 					'json_data' => $json_data,
+					'date' => $date,
 				];
 				$this->load->library('tcpdf/tcpdf.php');
 
@@ -406,7 +413,7 @@ class Pices extends CI_Controller
 
 	public function editPices($pices_id)
 	{
-	$cust_data = $this->Pices_model->get_pices_byID($pices_id);
+		$cust_data = $this->Pices_model->get_pices_byID($pices_id);
 
 
 		if (!$this->session->userdata('logged_in')) {
@@ -428,7 +435,7 @@ class Pices extends CI_Controller
 
 		// } 
 		// elseif ($this->input->post('edit_purchaser') != NULL) {
-		else  {
+		else {
 			$postData = $this->input->post();
 
 			$this->form_validation->set_rules('customerName', 'customer Name', 'required');
@@ -607,7 +614,7 @@ class Pices extends CI_Controller
 		$to_mth = $this->input->post('to_mth');
 		$to_yr = $this->input->post('to_yr');
 		$invoice_id = $frm_mth . '_' . $to_mth;
-		
+
 
 		$this->form_validation->set_rules('customerName', 'Customer Name', 'trim|required');
 		$this->form_validation->set_rules('frm_mth', 'From Month', 'trim|required');
@@ -744,8 +751,13 @@ class Pices extends CI_Controller
 					"invoice_no" => $input_array['invoice_no'],
 					"total_piece" => [$input_array['total_piece'][$i]]
 				);
-			
+
 				$output_array[] = $item;
+			}
+			if ($this->input->post('bill_date')) {
+				$date = $this->input->post('bill_date');
+			} else {
+				$date = date("Y-m-d");
 			}
 			$design_json = json_encode($output_array);
 			$json_data = array(
@@ -753,13 +765,16 @@ class Pices extends CI_Controller
 				'master_id' => $customerName,
 				'invoice_no' => $invoice_no,
 				'type' => 'gr',
+				'created_at' => $date,
 			);
 
-			$insert = $this->db->insert('product_pices', $json_data);
 			$entry_from = 5;
 			$user_id = $this->input->post('customerName');
 			$invoice_id = $this->input->post('invoice_no');
 			$data_json = $design_json;
+
+			$insert = $this->db->insert('product_pices', $json_data);
+	
 			foreach ($data['design_no'] as $index => $design_no) {
 				$return_qnty = $data['return_qnty'][$index];
 
@@ -813,6 +828,7 @@ class Pices extends CI_Controller
 					'design_no' => $products,
 					'qnty' => $return_qntys,
 					'invoice_no' => $invoice_no,
+					'date' => $date,
 				];
 				$this->load->library('tcpdf/tcpdf.php');
 
@@ -887,134 +903,110 @@ class Pices extends CI_Controller
 
 				$output_array[] = $item;
 			}
+
+
+			if ($this->input->post('bill_date')) {
+				$date = $this->input->post('bill_date');
+			} else {
+				$date = date("Y-m-d");
+			}
 			$design_json = json_encode($output_array);
 			$json_data = array(
 				'data_json' => $design_json,
 				'master_id' => $customerName,
 				'invoice_no' => $invoice_no,
 				'type' => 'gr',
+				'created_at' => $date,
 			);
 
-			
 			// $insert = $this->db->update_records('product_pices', $json_data, $sr_no);
-			$db_data = $this->Pices_model->update_records($json_data, $sr_no);
-			
-			
+			// $db_data = $this->Pices_model->update_records($json_data, $sr_no);
 
 			// Retrieve the existing record from the database
-                $existingData = $this->Pices_model->get_pices_by_id($design_nos); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
+			$existingData = $this->Pices_model->get_pices_by_id($sr_no); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
 
-			// print_r($design_nos);
-			// die();
-               
-			if($existingData){
-				$existing_material_names = explode(",", $existingData["p_design_number"]);
-				$existing_stock_q = explode(",", $existingData["stock_qty"]);
-                for ($i = 0; $i < count($existing_material_names); $i++) {
-                    $existing_material_id = $existing_material_names[$i];
-                    $existing_stock = $existing_stock_q[$i];
+			if ($existingData) {
 
-                    // Check if the existing material ID is not present in the new data
-                    if (!in_array($existing_material_id, $existing_material_names)) {
-                        $old_materials[] = [
-                            "p_design_number" => $existing_material_id,
-                            "stock_qty" => $existing_stock
-                        ];
+				// Decode the JSON from the data_json field
+				$jsonData = json_decode($existingData['data_json'], true);
+				$designNumbers = [];
+				$stk_qty = [];
 
-						// Now you can use the $old_materials array to identify old materials not included in the new data
-						foreach ($old_materials as $old_material) {
-
-							$this->db->where('p_design_number', $old_material["p_design_number"]);
-							$query = $this->db->get('stock');
-							$row = $query->row();
-							if ($query->num_rows()) {
-								$data3 = array(
-									'quantity' => (float) $row->quantity - (float) $old_material["stock_q"],
-								);
-								$this->db->where('p_design_number', $old_material["p_design_number"]);
-								$this->db->update('stock', $data3);
-							}
-
-
-
-						}
-					} else {
-						$old_materials[] = [];
-                    }
-                }
-				
-                
-			}
-			else{
-				echo 'str';
-				// $existing_material_names = explode(",", $existingData["p_design_number"]);
-				// $existing_stock_q = explode(",", $existingData["stock_qty"]);
-				if ($existingData) {
-					for ($i = 0; $i < count($existingData["p_design_number"]); $i++) {
-						$existing_material_id = $existingData["p_design_number"][$i];
-						$existing_stock = $$existingData["stock_qty"][$i];
-
-						// Check if the existing material ID is not present in the new data
-						if (!in_array($existing_material_id, $design_nos)) {
-							$old_materials[] = [
-								"p_design_number" => $existing_material_id,
-								"stock_qty" => $existing_stock
-							];
-						} else {
-						}
-					}
-					// Now you can use the $old_materials array to identify old materials not included in the new data
-					foreach ($old_materials as $old_material) {
-
-						$this->db->where('p_design_number', $old_material["p_design_number"]);
-						$query = $this->db->get('stock');
-						$row = $query->row();
-						if ($query->num_rows()) {
-							$data3 = array(
-								'quantity' => (float) $row->quantity - (float) $old_material["stock_qty"],
-							);
-							$this->db->where('p_design_number', $old_material["p_design_number"]);
-							$this->db->update('stock', $data3);
-						}
-
-
-
+				// Loop through each item in the decoded JSON data
+				foreach ($jsonData as $item) {
+					if (isset($item['design_number']) && is_array($item['design_number']) && count($item['design_number']) > 0) {
+						$designNumbers[] = $item['design_number'][0];
+						$stk_qty[] = $item['total_piece'][0];
 					}
 				}
-			}
 
-			
+				$oldDesign = implode(',', $this->input->post('design_no[]'));
+
+				$valuesArray = array_map('trim', explode(',', $oldDesign));
+
+				// Combine design numbers with their corresponding stock quantities
+				$designStockMap = array_combine($designNumbers, $stk_qty);
+
+				// Convert the array string into an actual array
+				$one = $designNumbers;
+				// Find the values in $oneString that are not in $valuesArray
+				$valuesNotInArray = array_diff($one, $valuesArray);
+				
+				foreach ($valuesNotInArray as $value) {
+					if (isset($designStockMap[$value])) {
+						$stockToSubtract = $designStockMap[$value];
+						// echo "Design number $value does not exist in the valuesToCheck list. Stock subtracted from the table: $stockToSubtract.\n";
+
+						$this->db->where('p_design_number', $value);
+						$queryrow_gr = $this->db->get('stock');
+						$row_gr = $queryrow_gr->row();
+
+						if ($queryrow_gr->num_rows()) {
+
+							$data3_gr = array(
+								'stock_qty' => (float) $row_gr->stock_qty - (float) $stockToSubtract,
+							);
+
+						// print_r($data3_gr);
+						// print_r($stockToSubtract);
+
+							$this->db->where('p_design_number', $value);
+							$this->db->update('stock', $data3_gr);
+							// print_r($this->db->last_query());
+							// die();
+						} else {
+							// print_r('fhdfg');
+							// echo "Design number $value does not have a corresponding stock quantity. No stock subtraction performed.\n";
+						}
+					}
+				}
+
+			}
+			$db_data = $this->Pices_model->update_records($json_data, $sr_no);
+
+			// die();
 			foreach ($data['design_no'] as $index => $design_no) {
 				$return_qnty = $data['return_qnty'][$index];
 				$return_qnty_hidden = $data['return_qnty_hidden'][$index];
-				// $diff = $return_qnty_hidden - $return_qnty;
-
-				
-						
-
-
 				// Check if design_no exists in the table
 				$existing_record = $this->db->get_where('stock', array('p_design_number' => $design_no))->row();
 				if ($existing_record) {
 
 					$value_null = '0';
-				if ($return_qnty_hidden) {
-					$diff = (float) $return_qnty - (float) $return_qnty_hidden;
+					if ($return_qnty_hidden) {
+						$diff = (float) $return_qnty - (float) $return_qnty_hidden;
 
-				} else {
+					} else {
 
-					$diff = (float) $return_qnty - (float) $value_null;
-				}
-
+						$diff = (float) $return_qnty - (float) $value_null;
+					}
 
 					if ($diff > 0) {
-						// echo "The difference is positive: " . $diff;	
 						// If the product exists, update the quantity value in the database
 						$data3 = array(
 							'stock_qty' => (float) $existing_record->stock_qty + (float) $diff,
 						);
 					} elseif ($diff < 0) {
-						// print_r(abs($diff));
 
 						// echo "The difference is negative: " . abs($diff);
 						$data3 = array(
@@ -1027,23 +1019,18 @@ class Pices extends CI_Controller
 					}
 					$this->db->where('p_design_number', $design_no);
 					$this->db->update('stock', $data3);
-					// $qnty_data = array(
-					// 	'stock_qty' => $existing_record->stock_qty + $return_qnty
-					// );
-					// // Design number exists, update return quantity
-					// $this->db->where('p_design_number', $design_no);
-					// $result = $this->db->update('stock', $qnty_data);
 
-				} 
-				// else {
-				// 	// Design number doesn't exist, insert new record
-				// 	$result = $this->db->insert('stock', array('p_design_number' => $design_no, 'stock_qty' => $return_qnty));
-				// }
 
+				} else {
+
+					// Design number doesn't exist, insert new record
+					$result = $this->db->insert('stock', array('p_design_number' => $design_no, 'stock_qty' => (float) $return_qnty));
+
+				}
 			}
-			die();
+			// die();
 
-			if ($result) {
+			if ($db_data) {
 				$this->db->where('id', $customerName);
 				$query = $this->db->get('customers');
 				$row = $query->row();
@@ -1071,6 +1058,7 @@ class Pices extends CI_Controller
 					'design_no' => $products,
 					'qnty' => $return_qntys,
 					'invoice_no' => $invoice_no,
+					'date' => $date,
 				];
 				$this->load->library('tcpdf/tcpdf.php');
 
