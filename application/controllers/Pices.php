@@ -160,6 +160,7 @@ class Pices extends CI_Controller
 					'customer_id' => $this->input->post('customerName'),
 					'invoice_no' => $this->input->post('invoice_no'),
 					'labour_charge' => $this->input->post('karigari_' . $i . '[]'),
+					'total_karigari' => $this->input->post('total_karigari_' . $i . '[]'),
 					'total' => $total_amount,
 					'round_off_total' => $total_round,
 					'total_in_words' => $total_word,
@@ -179,7 +180,6 @@ class Pices extends CI_Controller
 					$mat_values[] = $value2;
 				}
 			}
-
 			// Convert the result array to JSON
 			$json = json_encode($result);
 			$data = $json;
