@@ -22,7 +22,7 @@
     <tr><td colspan="4">&nbsp;</td></tr>
     <tr style="border-bottom:1px solid #eee;">
       <td width="20%"> Material Name </td>
-      <!-- <td width="35%"> <?php echo $encoded_material_name; ?></td> -->
+      <td width="35%"> <?php echo $material_name; ?></td>
     </tr>
     <tr style="border-bottom: 2px solid #000;">
       <td> INVOICE DATE </td>
