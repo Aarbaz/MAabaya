@@ -65,7 +65,7 @@
             $this->db->where('id',$user_id);
             $query = $this->db->get();
             $result = $query->row();
-            $person_id = $result->name;
+            $person_name = $result->name;
 
             //get material name
             $material_id = $row->material_id;
@@ -82,6 +82,13 @@
                 # code...
                 $invoiceNo = $dataArray['purchaser_no'] ? $dataArray['purchaser_no'] : '-';
                 $person_id = $dataArray['purchaser_owner_id'] ? $dataArray['purchaser_owner_id'] : '-';
+                $this->db->select('*');
+                $this->db->from('customers');
+                $this->db->where('id',$person_id);
+                $query = $this->db->get();
+                $result = $query->row();
+                $person_name = $result->name;
+                $to = "Shop";
               }
             }elseif($row->entry_from == 2) {
               $type = "Maker";
@@ -90,6 +97,13 @@
                 # code...
                 $invoiceNo = $dataArray['maker_no'] ? $dataArray['maker_no'] : '-';
                 $person_id = $dataArray['making_owner_id'] ? $dataArray['making_owner_id'] : '-';
+                $this->db->select('*');
+                $this->db->from('customers');
+                $this->db->where('id',$person_id);
+                $query = $this->db->get();
+                $result = $query->row();
+                $to = $result->name;
+                $person_name = "Shop";
               }
             }elseif ($row->entry_from == 3 ) {
               $type = "Pices";
@@ -100,13 +114,13 @@
             <td><?php echo $type; ?></td>
             <td><?php echo $invoiceNo; ?></td>
             <td><?php echo $row->created_at; ?></td>
-            <td><?php echo $person_id; ?></td>
+            <td><?php echo $person_name; ?></td>
             <td><?php echo $to; ?></td>
             <td><?php echo $material_name; ?></td>
-            <td><?php echo $sign.$row->in_out_qnty; ?></td>
+            <td><?php echo $row->in_out_qnty; ?></td>
             <td><?php echo $row->stock_quantity; ?></td>
         </tr>
-        <?php $i++; endforeach; ?>
+        <?php $i++; endforeach; die();?>
     </tbody>
 </table>
 <div>

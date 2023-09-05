@@ -30,6 +30,8 @@ class History extends CI_Controller
 			$data['username'] = $this->session->userdata('logged_in');
 			$data['ledger_list'] = $this->History_model->get_customer_ledger();
 			$data['history'] = $this->History_model->get_all_history();
+			$data['MaterialHistory'] = $this->History_model->get_all_material_history();
+			$data['picesHistoryList'] = $this->History_model->get_all_pices_history();
 			$data['custList'] = $this->Customer_model->get_customers();
 			$data['materialList'] = $this->Purchaser_model->get_all_material();
 			$data['designs'] = $this->Design_model->get_all_design();
@@ -292,6 +294,84 @@ class History extends CI_Controller
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
 
 				$dir = APPPATH . '/design_history/' . $encoded_design_num . '/';
+
+				if (!is_dir($dir)) {
+					mkdir($dir, 0777, true);
+				}
+				$save_path = $dir . $filename;
+				ob_end_clean();
+				$pdf->Output($save_path, 'F');
+				header("Content-Type: application/pdf");
+				header("Content-Disposition: attachment;filename=\"$filename\"");
+				readfile($save_path);
+
+				$response['result'] = 'PDF generated successfully.';
+				$response['status'] = 'passed';
+
+				$this->session->set_flashdata('success', 'PDF generated successfully....');
+				sleep(4);
+				$this->index();
+			}
+		}	
+		// echo json_encode($response);
+	}
+	public function get_history_by_user_id() {
+
+		$user_id = $this->input->post('user_id');
+		$from_date = $this->input->post('from_date');
+		$to_date = $this->input->post('to_date');
+
+		$this->form_validation->set_rules('user_id', 'Material Name', 'trim|required');
+		$this->form_validation->set_rules('from_date', 'From Date', 'trim|required');
+		$this->form_validation->set_rules('to_date', 'To Date', 'trim|required');
+
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->session->set_flashdata('error', ' ');
+			$this->index();
+		}
+		else {
+			$db_data = $this->History_model->getHistoryByUserId($user_id, $from_date, $to_date);
+			$this->db->where('id', $user_id);
+			$query = $this->db->get('customers');
+			$row = $query->row();
+			$user_name = $row->name;
+			// Replace spaces with underscores and convert to lowercase
+			$date_range = $from_date. ' To ' . $to_date;
+			$encoded_user_name = str_replace(' ', '_', strtolower($user_name));
+			$invoice_id = $encoded_user_name. '_' . $from_date . $to_date;
+			$pdf_file = APPPATH . 'design_history/' . $encoded_user_name . '/' . $invoice_id . '.pdf';
+			$file = $invoice_id . '.pdf';
+
+			if (file_exists($pdf_file)) {
+
+				header('Content-type: application/pdf');
+				header('Content-Disposition: attachment; filename="' . $file . '"');
+				header('Content-Transfer-Encoding: binary');
+				header('Content-Length: ' . filesize($pdf_file));
+				header('Accept-Ranges: bytes');
+				readfile($pdf_file);
+
+			} else {
+				$data_pdf = $db_data; // Replace $dynamic_array with your actual dynamic array
+				$filename = $encoded_user_name. '_' . $from_date . $to_date . '.pdf';
+				$pdf_file = APPPATH . 'design_history/' . $encoded_user_name . '/' . $filename;
+				$file = $filename;
+				$this->load->library('tcpdf/tcpdf.php');
+
+				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+				$pdf->setPrintHeader(false);
+				$pdf->setPrintFooter(false);
+				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+
+				$pdf->SetFont('times', '', 10);
+
+				$pdf_data = $this->load->view('design_history_pdf', array('data_pdf' => $data_pdf, 'date_range' => $date_range), true);
+				$pdf->addPage();
+
+				$pdf->writeHTML($pdf_data, true, false, true, false, '');
+
+				$dir = APPPATH . '/design_history/' . $encoded_user_name . '/';
 
 				if (!is_dir($dir)) {
 					mkdir($dir, 0777, true);

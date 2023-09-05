@@ -187,7 +187,7 @@ class Making extends CI_Controller
                     if ($query1->num_rows()) {
                       // If the product exists, update the quantity value in the database
                       $data_return = array(
-                        'stock_qty' => (float)$rows->stock_qty[$m] - (float)$stocks[$m],
+                        'stock_qty' => (float)$rows->stock_qty - (float)$stocks[$m],
                         // 'price' => $price[$i]
                       );
                       $this->db->where('product_id',$material_ids[$m]);
@@ -197,7 +197,6 @@ class Making extends CI_Controller
 
                     $m++;
                 }
-
 
                 $json_data = json_encode($data);
                 
@@ -214,10 +213,10 @@ class Making extends CI_Controller
                         $user_id = $master_name;
                         $invoice_id = $postData["maker_no"];
                         $material_id = $material_ids[$i];
-                        $in_out_qnty = $stock_quantities[$i];
+                        $in_out_qnty = -1 * $stock_quantities[$i];
                         
                         $updated_stock = $this->Stock_model->get_material_stock($material_id);
-                        $stock = $updated_stock ? $updated_stock : ($in_out_qnty);
+                        $stock = $updated_stock ? $updated_stock : (-1 * $in_out_qnty);
 
                         $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
                     }

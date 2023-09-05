@@ -12,6 +12,9 @@
     <li class="nav-item">
         <a class="nav-link" href="#pices" role="tab" data-toggle="tab">Pices</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#users" role="tab" data-toggle="tab">User</a>
+    </li>
   </ul>
 
     <!-- Tab panes -->
@@ -236,6 +239,9 @@
                       <th>Invoice</th>
                       <!-- <th>Challan</th> -->
                       <th>Customer</th>
+                      <th>Material Name</th>
+                      <th>In/Out Qty</th>
+                      <th>Balance</th>
                       <th>From</th>
                       <th>Date</th>
                       <th>Action</th>
@@ -244,8 +250,22 @@
       
                   <tbody>
                   <?php $i = 1; 
-       
-                  foreach ($ledger_list->result() as $row){ 
+                  foreach ($MaterialHistory as $row){ 
+                    $user_id=$row->user_id;
+                    $this->db->select('*');
+                    $this->db->from('customers');
+                    $this->db->where('id',$user_id);
+                    $query = $this->db->get();
+                    $results = $query->row();
+                    $username = $results->name;
+
+                    $this->db->select('*');
+                    $this->db->from('material');
+                    $this->db->where('id', $row->material_id);
+                    $query = $this->db->get();
+                    $results = $query->row();
+                    $materialName = $results->material_name;
+
                     $entryFrom = $row->entry_from;
                     if ($entryFrom == 1) {
                       $filePath = 'purchaser';
@@ -262,12 +282,14 @@
                       <!-- $entryFrom = $hrow->entry_from; -->
       
                       <td><?php echo $i; ?></td>
-                      <td><?php echo $row->invoice; ?></td>
-                      <!-- <td><?php echo $row->challan; ?></td> -->
-                      <td><?php echo $row->name; ?></td>
+                      <td><?php echo $row->invoice_no; ?></td>
+                      <td><?php echo $username; ?></td>
+                      <td><?php echo $materialName; ?></td>
+                      <td><?php echo $row->in_out_qnty; ?></td>
+                      <td><?php echo $row->stock_quantity; ?></td>
                       <td><?php echo $filePath; ?></td>
-                      <td><?php echo $row->dated; ?></td>
-                      <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->customer_id).'/'.$row->invoice ?>">
+                      <td><?php echo $row->created_at; ?></td>
+                      <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->user_id).'/'.$row->invoice_no ?>">
                       <i class="glyphicon glyphicon-download"></i></a>
                     </td>
                     </tr>
@@ -336,8 +358,8 @@
                   <thead>
                     <tr>
                       <th>Sr No</th>
-                      <th>Invoice</th>
-                      <!-- <th>Challan</th> -->
+                      <th>Invoice Number</th>
+                      <th>Design Number</th>
                       <th>Customer</th>
                       <th>From</th>
                       <th>Date</th>
@@ -347,8 +369,25 @@
       
                   <tbody>
                   <?php $i = 1; 
-       
-                  foreach ($ledger_list->result() as $row){ 
+                  if (!empty($picesHistoryList)) {
+                  foreach ($picesHistoryList as $row){ 
+                    $usr_id = $row->user_id;
+                    $material_id = $row->material_id;
+
+                    $this->db->select('*');
+                    $this->db->from('customers');
+                    $this->db->where('id',$usr_id);
+                    $query = $this->db->get();
+                    $results = $query->row();
+                    $usrname = $results->name;
+
+                    $this->db->select('*');
+                    $this->db->from('designs');
+                    $this->db->where('id',$material_id);
+                    $query = $this->db->get();
+                    $results = $query->row();
+                    $designName = $results->design_num;
+
                     $entryFrom = $row->entry_from;
                     if ($entryFrom == 1) {
                       $filePath = 'purchaser';
@@ -365,12 +404,124 @@
                       <!-- $entryFrom = $hrow->entry_from; -->
       
                       <td><?php echo $i; ?></td>
-                      <td><?php echo $row->invoice; ?></td>
-                      <!-- <td><?php echo $row->challan; ?></td> -->
-                      <td><?php echo $row->name; ?></td>
+                      <td><?php echo $row->invoice_no; ?></td>
+                      <td><?php echo $designName; ?></td>
+                      <td><?php echo $usrname; ?></td>
                       <td><?php echo $filePath; ?></td>
-                      <td><?php echo $row->dated; ?></td>
-                      <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->customer_id).'/'.$row->invoice ?>">
+                      <td><?php echo $row->created_at; ?></td>
+                      <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->user_id).'/'.$row->invoice_no ?>">
+                      <i class="glyphicon glyphicon-download"></i></a>
+                    </td>
+                    </tr>
+                  <?php $i++; }  ?>
+                <?php  }?>
+                  
+                  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" class="tab-pane fade" id="users">
+      <div class="row">
+          <div class="col-sm-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4><?php echo ucwords($username).', ';?><small><?php echo  date('d F, Y');?></small><span class="text-sm pull-right"><a href="<?php echo site_url('Balance/logout');?>">Log Out</a></span></h4>
+                <h3 class="text-center">User History</h3>
+              </div>
+              <?php
+               ?>
+              <div class="panel-body">
+                <p>
+                  <form id="user_history_form" class="form-inline history_form"  enctype="multipart/form-data" method="POST" action="<?php echo base_url('/index.php/History/get_history_by_user_id');?>">
+                  
+                    <div class="form-group">
+                    <select name="user_id" id="user_id" class="required items form-control">
+                          <option value="">--select User--</option>
+                          <?php
+                          foreach ($custList->result() as $row) {
+                              $mat = explode(',', $row->id);
+                              $cnt = count($mat);
+                              for ($i = 0; $i < $cnt; $i++) {
+                                  echo '<option label="" data-material-id="' . $row->id . '" value="' . $row->id . '" ' . set_select("design_num", $mat[$i]) . '>' . $row->name.'</option>';
+                              }
+                          } ?>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                      <label>From Date:                 </label>
+                      <input type="date" id="from_date" name="from_date" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                      <label>To Date:                 </label>
+                      <input type="date" id="to_date" name="to_date" class="form-control"/>
+                    </div>`
+      
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-success">Download History</button>
+                    </div>
+                   <!--  <div class="form-group">
+                      &nbsp;&nbsp;<a class="btn btn-primary btn-sm" href="<?php echo base_url('/index.php/Balance/ledger');?>">Add New</a>
+                    </div> -->
+                  </form>
+                  <div id="pdfViewer">
+      
+                  </div>
+                </p><br />
+                <div><p id="result_box" class="text-center"></p></div>
+                <?php
+                  if( $this->session->flashdata('success') )
+                  { echo '<div class="alert alert-success show_hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><p class="text-center"><strong>Success!</strong> '.$this->session->flashdata('success').'</p></div>'; }
+                ?>
+                <table id="userHistoryTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th>Sr No</th>
+                      <th>Invoice</th>
+                      <th>Customer</th>
+                      <th>From</th>
+                      <th>Date</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+      
+                  <tbody>
+                  <?php $i = 1; 
+       
+                  foreach ($history->result() as $row){ 
+                    $usr_id = $row->user_id;
+                    $this->db->select('*');
+                    $this->db->from('customers');
+                    $this->db->where('id',$usr_id);
+                    $query = $this->db->get();
+                    $results = $query->row();
+                    $usrName = $results->name;
+
+                    $entryFrom = $row->entry_from;
+                    if ($entryFrom == 1) {
+                      $filePath = 'purchaser';
+                    }else if ($entryFrom == 2) {
+                      $filePath = 'maker';
+                    }else if ($entryFrom == 3) {
+                      $filePath = 'pices_invoice';
+                    }else{
+                      $filePath = '';
+                    }
+                    ?>
+                    <tr>
+                      
+                      <!-- $entryFrom = $hrow->entry_from; -->
+      
+                      <td><?php echo $i; ?></td>
+                      <td><?php echo $row->invoice_no; ?></td>
+                      <!-- <td><?php echo $row->challan; ?></td> -->
+                      <td><?php echo $usrName; ?></td>
+                      <td><?php echo $filePath; ?></td>
+                      <td><?php echo $row->created_at; ?></td>
+                      <td> <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/History/downloadSinglePdf/').$filePath.'/'.rawurlencode($row->user_id).'/'.$row->invoice_no ?>">
                       <i class="glyphicon glyphicon-download"></i></a>
                     </td>
                     </tr>
@@ -394,10 +545,12 @@
 var mytable;
 var materialHistoryTable;
 var picesHistoryTable;
+var userHistoryTable;
 $(document).ready(function(){
   mytable = $('#datatable').dataTable({"pageLength": 25});
   materialHistoryTable = $('#materialHistoryTable').dataTable({"pageLength": 25});
   picesHistoryTable = $('#picesHistoryTable').dataTable({"pageLength": 25});
+  userHistoryTable = $('#userHistoryTable').dataTable({"pageLength": 25});
   $("[data-toggle=tooltip]").tooltip();
 
   setTimeout(function() {

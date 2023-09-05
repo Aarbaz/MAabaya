@@ -202,11 +202,13 @@ class History_model extends CI_Model {
             return $this->db->select('customer_ledger_balance.*,customers.name,customer_ledger_balance.last_amount')
          ->from('customer_ledger_balance')->where('customer_ledger_balance.id', $id)->order_by('customer_ledger_balance.id ASC')
          ->join('customers', 'customer_ledger_balance.customer = customers.id')->get()->row();
+        }else {
+            
+            return $this->db->select('customer_ledger_balance.*,customers.name, customers.id as customer_id')
+             ->from('customer_ledger_balance')->order_by('customer_ledger_balance.id ASC')
+             ->join('customers', 'customer_ledger_balance.customer = customers.id')->get();
         }
 
-        return $this->db->select('customer_ledger_balance.*,customers.name, customers.id as customer_id')
-         ->from('customer_ledger_balance')->order_by('customer_ledger_balance.id ASC')
-         ->join('customers', 'customer_ledger_balance.customer = customers.id')->get();
     }
     //add new entry
     public function add_customer_ledger($data)
@@ -272,6 +274,7 @@ class History_model extends CI_Model {
         $this->db->from('history h');
         $this->db->join('purchaser_stock s', 'h.material_id = s.materials_id');
         $this->db->where('h.material_id', $material_id);
+        $this->db->where_in('h.entry_from', array(1, 2));
         $this->db->where('h.created_at >=', $from_datetime);
         $this->db->where('h.created_at <=', $to_datetime);
         $query = $this->db->get();
@@ -301,5 +304,46 @@ class History_model extends CI_Model {
             return array(); // Return an empty array if no data is found
         }
 
+    }
+    function get_all_pices_history()  {
+        $this->db->select('*');
+        $this->db->from('history h');
+        $this->db->where('h.entry_from', 3);
+        $query = $this->db->get();
+        $results = $query->result();
+        if (!empty($results)) {
+            return $results;
+        } else {
+            return array(); // Return an empty array if no data is found
+        }
+    }
+    function get_all_material_history()  {
+        $this->db->select('*');
+        $this->db->from('history h');
+        $this->db->where_in('h.entry_from', array(1, 2));
+        $query = $this->db->get();
+        $results = $query->result();
+        if (!empty($results)) {
+            return $results;
+        } else {
+            return array(); // Return an empty array if no data is found
+        }
+    }
+    function getHistoryByUserId($user_id, $from_date, $to_date)  {
+        $from_datetime = $from_date. ' '.'00:00:00';
+        $to_datetime = $to_date. ' '.'23:59:59';
+
+        $this->db->select('*');
+        $this->db->from('history h');
+        $this->db->where('h.user_id', $user_id);
+        $this->db->where('h.created_at >=', $from_datetime);
+        $this->db->where('h.created_at <=', $to_datetime);
+        $query = $this->db->get();
+        $results = $query->result();
+        if (!empty($results)) {
+            return $results;
+        } else {
+            return array(); // Return an empty array if no data is found
+        }
     }
 }
