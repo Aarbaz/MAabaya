@@ -120,7 +120,7 @@
             <td><?php echo $row->in_out_qnty; ?></td>
             <td><?php echo $row->stock_quantity; ?></td>
         </tr>
-        <?php $i++; endforeach; die();?>
+        <?php $i++; endforeach;?>
     </tbody>
 </table>
 <div>
