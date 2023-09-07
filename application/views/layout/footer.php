@@ -12,5 +12,6 @@
 <script src="<?php echo base_url('assets/js/bootstrap.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/jquery.dataTables.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/js/dataTables.bootstrap.js'); ?>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 </body>
 </html>

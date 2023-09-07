@@ -308,7 +308,7 @@ class History_model extends CI_Model {
     function get_all_pices_history()  {
         $this->db->select('*');
         $this->db->from('history h');
-        $this->db->where('h.entry_from', 3);
+        $this->db->where_in('h.entry_from', array(3, 4, 5));
         $query = $this->db->get();
         $results = $query->result();
         if (!empty($results)) {

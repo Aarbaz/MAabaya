@@ -11,4 +11,5 @@
 <link href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/style.css'); ?>" rel="stylesheet">
 <link href="<?php echo base_url('assets/css/dataTables.bootstrap.css'); ?>" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" />
 <script src="<?php echo base_url('assets/js/jquery-3.3.1.min.js'); ?>"></script>
