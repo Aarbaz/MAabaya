@@ -360,6 +360,7 @@
                       <th>Sr No</th>
                       <th>Invoice Number</th>
                       <th>Design Number</th>
+                      <th>In/Out Qty</th>
                       <th>Customer</th>
                       <th>From</th>
                       <th>Date</th>
@@ -406,6 +407,7 @@
                       <td><?php echo $i; ?></td>
                       <td><?php echo $row->invoice_no; ?></td>
                       <td><?php echo $designName; ?></td>
+                      <td><?php echo $row->in_out_qnty; ?></td>
                       <td><?php echo $usrname; ?></td>
                       <td><?php echo $filePath; ?></td>
                       <td><?php echo $row->created_at; ?></td>

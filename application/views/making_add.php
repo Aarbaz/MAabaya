@@ -17,6 +17,9 @@
       border: 1px solid #ccc;
       border-radius: 4px;
    }
+   .select2 {
+      width: 100% !important;
+   }
 </style>
 <div class="container-fluid" id="bg-color"><br /></div>
 <div class="container-fluid">
@@ -215,6 +218,8 @@
    </div>
 </div>
 <script type="text/javascript">
+   var cloneCounter = 1;
+   var $lastAppendedRow = null;
    function add_new_master() {
       $('#add_master').modal('show');
    }
@@ -243,9 +248,49 @@
       });
 
       // add new row
-      $(document).on('click', '.add_more', function () {
+     /*  $(document).on('click', '.add_more', function () {
          $(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+      }); */
+      $(document).on('click', '.add_more', function () {
+      var $closestRow = $(this).closest('tr');
+      var $clonedRow = $closestRow.clone(true);
+
+      // Find and update the ID of each input element within the cloned row
+      $clonedRow.find(':input:not(".hsn")').each(function () {
+         var oldId = $(this).attr('id');
+         var newId = oldId + '_clone_' + cloneCounter; // Append a unique identifier
+         $(this).attr('id', newId).val('');
       });
+
+      // Initialize Select2 for the cloned select elements
+      $clonedRow.find('select').each(function () {
+         $(this).select2(); // Initialize Select2 for the cloned select element
+      });
+
+      // Update IDs for elements with class .hsn
+      $clonedRow.find(':input.hsn').each(function () {
+         var oldId = $(this).attr('id');
+         var newId = 'materialRow_' + cloneCounter; // Append a unique identifier
+         $(this).attr('id', newId).val('');
+      });
+
+      // Hide the .add_more element within the cloned row
+      $clonedRow.find('.add_more').css('display', 'none');
+
+      cloneCounter++; // Increment the counter for the next clone
+
+      if ($lastAppendedRow !== null) {
+         // Insert the cloned row after the last appended row
+         $clonedRow.insertAfter($lastAppendedRow);
+      } else {
+         // If this is the first row, insert it after the original row
+         $clonedRow.insertAfter($closestRow);
+      }
+
+      // Update the last appended row
+      // $lastAppendedRow = $clonedRow;
+
+   });
       //Remove table row
       $(document).on('click', '.remove', function () {
          var $tr = $(this).closest('tr');

@@ -402,7 +402,7 @@
       }
 
       // Update the last appended row
-      $lastAppendedRow = $clonedRow;
+      // $lastAppendedRow = $clonedRow;
 
       $("form[name='purchase_add']").validate().resetForm();
    });
@@ -414,6 +414,7 @@
       var $tr = $(this).closest('tr');
       if ($tr.index() != '0') {
          $tr.remove();
+         cloneCounter--;
       }
    });
 
