@@ -343,12 +343,12 @@ class Pices extends CI_Controller
 
 				/********************Add In History Table     ****************/
 				/* $json_data_array = array(
-								'entry_from' => 3,
-								//Pices
-								'json_data' => $json,
-							);
+											'entry_from' => 3,
+											//Pices
+											'json_data' => $json,
+										);
 
-							$insert_json_data = $this->Pices_model->create_history($json_data_array); */
+										$insert_json_data = $this->Pices_model->create_history($json_data_array); */
 				/********************AAdd In History Table end**************/
 
 				$this->db->select('*');
@@ -415,34 +415,16 @@ class Pices extends CI_Controller
 	{
 		$cust_data = $this->Pices_model->get_pices_byID($pices_id);
 
-
 		if (!$this->session->userdata('logged_in')) {
 			redirect('Welcome');
-		}
-		//  elseif ($this->input->post('edit_purchaser') == NULL) {
-		// 	$pice_data = $this->Pices_model->get_pices_byID($pices_id);
-		// 	$data['title'] = 'Edit Purchaser Details';
-		// 	$data['username'] = $this->session->userdata('logged_in');
-		// 	$data["custList"] = $this->Customer_model->get_mowner();
-		// 	$data['materialList'] = $this->Purchaser_model->get_all_material();
-		// 	$data['designs'] = $this->Design_model->get_all_design();
-		// 	$data["pices"] = $pice_data;
-
-		// 	$this->load->view('layout/header', $data);
-		// 	$this->load->view('layout/menubar');
-		// 	$this->load->view('pices_edit');
-		// 	$this->load->view('layout/footer');
-
-		// } 
-		// elseif ($this->input->post('edit_purchaser') != NULL) {
-		else {
+		} else {
 			$postData = $this->input->post();
 
 			$this->form_validation->set_rules('customerName', 'customer Name', 'required');
 			//$this->form_validation->set_rules('amount[]', 'Total Material', 'required');
 
 			if ($this->form_validation->run() == false) {
-				$data['title'] = 'Edit Purchaser Details';
+				$data['title'] = 'Edit Pices Details';
 				$data['username'] = $this->session->userdata('logged_in');
 				$data['cust'] = $cust_data;
 				$data["custList"] = $this->Customer_model->get_mowner();
@@ -453,114 +435,440 @@ class Pices extends CI_Controller
 				$this->load->view('pices_edit');
 				$this->load->view('layout/footer');
 			} else {
-				$material = implode(',', $this->input->post('items[]'));
-				$material = trim($material, ',');
 
-				$selected_ids = implode(',', $this->input->post('selected_ids'));
-				$selected_ids = trim($selected_ids, ',');
+				$steps = $this->input->post('steps');
 
-				$material_ids = implode(',', $this->input->post('material_ids'));
-				$material_ids = trim($material_ids, ',');
+				for ($i = 0; $i <= $steps; $i++) {
+					$field_design = "hsn_" . $i . "[]";
+					$field_total_piece = "total_piece_" . $i . "[]";
+					$field_karigari = "karigari_" . $i . "[]";
+					$field_total_karigari = "total_karigari_" . $i . "[]";
+					$field_items = "items_" . $i . "[]";
+					$field_total_material = "total_material_" . $i . "[]";
 
-				$hsn = implode(',', $this->input->post('hsn[]'));
-				$hsn = trim($hsn, ',');
-				$qnty = implode(',', $this->input->post('qnty[]'));
-				$qnty = trim($qnty, ',');
+					$this->form_validation->set_rules(
+						$field_design,
+						"Select Design ",
+						"trim|required"
+					);
+					$this->form_validation->set_rules(
+						$field_total_piece,
+						"Enter Total Pice ",
+						"trim|required"
+					);
+					$this->form_validation->set_rules(
+						$field_karigari,
+						"Enter karigari ",
+						"trim|required"
+					);
+					$this->form_validation->set_rules(
+						$field_total_karigari,
+						"Total Karigari ",
+						"trim|required"
+					);
 
-				$rate = implode(',', $this->input->post('rate[]'));
-				$rate = trim($rate, ',');
-
-				$amount = implode(',', $this->input->post('amount[]'));
-				$amount = trim($amount, ',');
-
-				$customer_id = $this->input->post('customerName');
-				$invoice_no = $this->input->post('invoice_no');
-				$transport_charges = $this->input->post('trans_charge');
-				$other_charge = $this->input->post('other_charge');
-				$total_taxable_amount = $this->input->post('total_tax_value');
-				$igst_5_cent = $this->input->post('igst_charge');
-				$cgst_charge = $this->input->post('cgst_charge');
-				$sgst_charge = $this->input->post('sgst_charge');
-
-				$cgst_per = $this->input->post('cgst_per');
-				$sgst_per = $this->input->post('sgst_per');
-				$igst_per = $this->input->post('igst_per');
-
-				$total_amount = $this->input->post('total_amount');
-				$total_round = $this->input->post('total_round');
-				$total_word = $this->input->post('total_word');
-				$sup_date = $this->input->post('sup_date');
-				//$sup_place = $this->input->post('sup_place');
-				$sup_other = $this->input->post('sup_other');
-
-				$data = array(
-					'master_id' => $customer_id,
-					'mat_name' => $material,
-					'material_id' => $material_ids,
-					'design_number' => $hsn,
-					'pices' => $qnty,
-					'average' => $rate,
-					'material_used' => $amount,
-
-				);
-
-				$update = $this->Pices_model->update_records($data, $pices_id);
-				// Get the product and quantity values from your input
-				$selected_ids_values = explode(",", $selected_ids);
-				$product_values = $selected_ids_values; // Dynamic product values
-				$qnty_values = explode(",", $qnty);
-				$quantity_values = ($qnty_values); // Dynamic quantity values
-
-				// Prepare the data to be inserted
-				$data2 = array();
-				for ($i = 0; $i < count($product_values); $i++) {
-					$data2[] = array(
-						'p_design_number' => $product_values[$i],
-						'stock_qty' => $quantity_values[$i]
+					$this->form_validation->set_rules(
+						$field_items,
+						"Material Name ",
+						"trim|required"
+					);
+					$this->form_validation->set_rules(
+						$field_total_material,
+						"Average ",
+						"trim|required"
 					);
 				}
-				$this->db->trans_start(); // Start a transaction to ensure data consistency
-				foreach ($data2 as $row) {
-					$product_id = $row['p_design_number'];
-					$quantity = $row['stock_qty'];
+				$customer_id = $this->input->post('customerName');
+				$sr_no = $this->input->post('sr_no');
+				$invoice_no = $this->input->post('invoice_no');
 
-					$this->db->where('p_design_number', $product_id);
-					$query = $this->db->get('stock');
-					$row = $query->row();
-					if ($query->num_rows()) {
-						// If the product exists, update the quantity value in the database
-						$data2 = array(
-							'stock_qty' => $row->stock_qty + $quantity
-						);
-						$this->db->where('p_design_number', $product_id);
-						$this->db->update('stock', $data2);
-					} else {
-						// If the product does not exist, insert a new row into the database
-						$this->db->update('stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
+				$total_amount = $this->input->post('total_amount');
+				$paid_amount = $this->input->post('paid_amount');
+				$balance_amount = $this->input->post('balance_amount');
+
+				$get_ledger_invoice = $this->Balance_model->get_billcust($customer_id);
+
+				$ledger_bill = $get_ledger_invoice[0]->total_bill;
+				$paidBill = $get_ledger_invoice[0]->paid_bill;
+				$ledger_last = $get_ledger_invoice[0]->balance_bill;
+
+				$ledger_bill = $total_amount - $ledger_bill;
+				$paidBill = $paid_amount - $paidBill;
+				$ledger_last = $balance_amount - $ledger_last;
+
+
+				$total_round = $this->input->post('total_round');
+				$total_word = $this->input->post('total_word');
+				$steps = $this->input->post('steps');
+				// Loop through each design number
+				for ($i = 0; $i < $steps; $i++) {
+					// Create a new array for this design
+					$design = array(
+						'design_number' => $this->input->post('hsn_' . $i . '[]'),
+						'materials_ids' => $this->input->post('items_' . $i . '[]'),
+						'total_material' => $this->input->post('total_material_' . $i . '[]'),
+						'total_piece' => $this->input->post('total_piece_' . $i . '[]'),
+						'average' => $this->input->post('rate_' . $i . '[]'),
+						'customer_id' => $this->input->post('customerName'),
+						'invoice_no' => $this->input->post('invoice_no'),
+						'labour_charge' => $this->input->post('karigari_' . $i . '[]'),
+						'total_karigari' => $this->input->post('total_karigari_' . $i . '[]'),
+						'total' => $total_amount,
+						'round_off_total' => $total_round,
+						'total_in_words' => $total_word,
+						'paid' => $paid_amount,
+						'balance' => $balance_amount,
+					);
+					// Add the new design to the result array
+					$result[] = $design;
+					$idSubArray = $this->input->post('items_' . $i . '[]');
+					// Loop through the sub-array and add its elements to $mat_id
+					foreach ($idSubArray as $value) {
+						$mat_id[] = $value;
+					}
+						
+				}
+				// Retrieve the existing record from the database
+				$existingData = $this->Pices_model->get_pices_by_id($sr_no); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
+
+				if ($existingData) {
+					// Decode the JSON from the data_json field
+					$jsonData = json_decode($existingData['data_json'], true);
+					$materials_ids = array();
+					$total_materials = array();
+						$f = 0;
+					foreach ($jsonData as $item) {
+						// print_r($item['materials_ids']);
+						if (isset($item['materials_ids']) && isset($item['total_material'])) {
+							$material_ids = $item['materials_ids'];
+							$total_material = $item['total_material'];
+
+							$materials_ids = array_merge($materials_ids, $material_ids);
+							$total_materials = array_merge($total_materials, $total_material);
+						}
+						$f++;
+					}
+					
+					$diffMaterials = []; // Initialize an array to store the different materials and their total_material values
+
+					foreach ($jsonData as $item) {
+						if (isset($item['materials_ids']) && isset($item['total_material'])) {
+							$material_ids = $item['materials_ids'];
+							$total_material = $item['total_material'];
+
+							foreach ($material_ids as $index => $material_id) {
+								if (in_array($material_id, $mat_id)) {
+									// Material is in $mat_id, so it's not different
+									continue;
+								}
+								// Material is different, add it to the $diffMaterials array with both key and value
+								$diffMaterials[$material_id] = $total_material[$index];
+							}
+						}
+					}
+					foreach ($diffMaterials as $material_id => $total_material) {
+						// echo "Material ID: $material_id, Total Material: $total_material<br>";
+						$this->db->where('materials_id', $material_id);
+						$queryrow_gr = $this->db->get('maker_stock');
+						$row_gr = $queryrow_gr->row();
+
+						if ($queryrow_gr->num_rows()) {
+
+							$data3_gr = array(
+								'quantity' => (float) $row_gr->quantity + (float) $total_material,
+							);
+							$this->db->where('materials_id', $material_id);
+							$this->db->update('maker_stock', $data3_gr);
+						}
+						else{
+							$this->db->where('materials_id', $material_id);
+							$s_result = $this->db->get('maker_stock')->result();
+							if (empty($s_result) || count($s_result) == 0) {
+								// Insert a new row with the material ID and quantity 0
+								$s_data = array(
+									'materials_id' => $material_id,
+									'quantity' => $total_material
+								);
+								$this->db->insert('maker_stock', $s_data);
+							}
+						}
 					}
 				}
-				$this->db->trans_complete(); // End the transaction
+				
+				$balance_value = '0';
+				$resultArray = array();
 
-				if ($this->db->trans_status() === false) {
-					// Handle transaction failure
-					$this->session->set_flashdata('success', 'Stock Updated successfully....');
+				// Assuming you have a for loop
+				for ($i = 0; $i < $steps; $i++) {
+					// Inside the loop, get the data for each iteration
+					$valueSubArray = $this->input->post('total_material_' . $i . '[]');
+					$valueSubArrayHidden = $this->input->post('total_material_hidden_' . $i . '[]');
+
+					// Check if both arrays have values before performing the subtraction
+					// if (isset($valueSubArray) && isset($valueSubArrayHidden)) {
+					if (isset($valueSubArrayHidden)) {
+						// Make sure both arrays have the same number of elements
+						if (count($valueSubArray) == count($valueSubArrayHidden)) {
+							// Perform the subtraction and accumulate the results in $resultArray
+							for ($index = 0; $index < count($valueSubArrayHidden); $index++) {
+								if($valueSubArrayHidden[$index]){
+									$resultArray[] = $valueSubArray[$index] - $valueSubArrayHidden[$index];
+								}
+								else{
+									$resultArray[] = $valueSubArray[$index] - $balance_value;
+								}
+
+							}
+						} else {
+							for ($index = 0; $index < count($valueSubArrayHidden); $index++) {
+								$resultArray[] = $valueSubArray[$index] - $balance_value;
+							}
+						}
+					} else if (isset($valueSubArray)) {
+						// Perform the subtraction and accumulate the results in $resultArray
+						for ($index = 0; $index < count($valueSubArray); $index++) {
+							$resultArray[] = $valueSubArray[$index] - $balance_value;
+						}
+
+					}
 				}
-				if ($update != -1) {
-					$this->session->set_flashdata('success', 'Pices details updated successfully.');
-					redirect('Pices');
+				
+				$resultArray_j = array();
+
+				// Assuming you have a for loop
+				for ($j = 0; $j < $steps; $j++) {
+					// Inside the loop, get the data for each iteration
+					$valueSubArray_j = $this->input->post('total_piece_' . $j . '[]');
+					$valueSubArrayHidden_j = $this->input->post('total_piece_hidden_' . $j . '[]');
+
+					// Check if both arrays have values before performing the subtraction
+					if (isset($valueSubArray_j)) {
+						if (isset($valueSubArrayHidden_j)) {
+							// Make sure both arrays have the same number of elements
+							if (count($valueSubArray_j) == count($valueSubArrayHidden_j)) {
+								// Perform the subtraction and accumulate the results in $resultArray_j
+								for ($index_j = 0; $index_j < count($valueSubArrayHidden_j); $index_j++) {
+
+									if($valueSubArrayHidden_j){
+										$resultArray_j[] = $valueSubArray_j[$index_j] - $valueSubArrayHidden_j[$index_j];
+									}
+									else{
+										$resultArray_j[] = $valueSubArray_j[$index_j] - $balance_value;		
+									}
+								}
+							} else {
+								for ($index_j = 0; $index_j < count($valueSubArrayHidden_j); $index_j++) {
+									$resultArray_j[] = $valueSubArray_j[$index_j] - $balance_value;
+								}
+
+							}
+						} else if (isset($valueSubArray_j)) {
+							for ($index_j = 0; $index_j < count($valueSubArray_j); $index_j++) {
+								$resultArray_j[] = $valueSubArray_j[$index_j] - $balance_value;
+							}
+						}
+					}
+				}
+				$json = json_encode($result);
+				$data = $json;
+				$k = 0;
+				// $array = json_decode($data, true);
+				foreach ($result as $row) {
+					$insert_data = [
+						'design_number' => $row['design_number'][0],
+						'material_id' => implode(',', $row['materials_ids']),
+						'material_used' => implode(',', $row['total_material']),
+						'total_piece' => $row['total_piece'][0],
+						'master_id' => $row['customer_id'][0],
+						'invoice_no' => $row['invoice_no']
+					];
+
+					// $data2 = array();
+
+					$data2[] = array(
+						'p_design_number' => $insert_data['design_number'],
+						'stock_qty' => $insert_data['total_piece']
+					);
+					$materialData[] = array(
+						'materials_id' => $insert_data['material_id'],
+						'quantity' => $insert_data['material_used']
+					);
+					$materialId2 = $materialData[0]['materials_id'];
+					// $materialused = $materialData[0]['quantity'];
+					$k++;
+				}
+				if ($this->input->post('bill_date')) {
+					$date = $this->input->post('bill_date');
 				} else {
-					$this->session->set_flashdata('failed', 'Some problem occurred, please try again.');
-					$data['title'] = ucwords('Edit Pices Details');
-					$data['username'] = $this->session->userdata('logged_in');
-					$data['cust'] = $cust_data;
-					$this->load->view('layout/header', $data);
-					$this->load->view('layout/menubar');
-					$this->load->view('Pices');
-					$this->load->view('layout/footer');
+					$date = date("Y-m-d");
+				}
+				$json_data = array(
+					'data_json' => $data,
+					'master_id' => $this->input->post('customerName'),
+					'invoice_no' => $this->input->post('invoice_no'),
+					'type' => 'new',
+					'created_at' => $date,
+				);
+
+				/***************** Material Stock Update  *********************/
+				for ($i = 0; $i < count($mat_id); $i++) {
+					// Check if the material ID exists in the maker_stock table for the customer ID
+					$this->db->where('materials_id', $mat_id[$i]);
+					$q_result = $this->db->get('maker_stock')->result();
+					if (empty($q_result) || count($q_result) == 0) {
+						// Insert a new row with the material ID and quantity 0
+						$m_data = array(
+							'materials_id' => $mat_id[$i],
+							'quantity' => $resultArray[$i]
+						);
+						$this->db->insert('maker_stock', $m_data);
+					} else {
+						// Get the previous quantity for the material ID
+						$material_ids = $mat_id[$i];
+						$this->db->where_in('materials_id', $material_ids);
+						$prev_quantity = $this->db->get('maker_stock')->row()->quantity;
+						// Update the quantity for the material ID with the previous quantity - diff quantity
+						$data = array('quantity' => (float) $prev_quantity - (float) $resultArray[$i]);
+						$this->db->where('materials_id', $mat_id[$i]);
+						$this->db->update('maker_stock', $data);
+					}
+
+				}
+				/********************Material Stock Update end**********************/
+
+				$this->db->where('sr_no', $sr_no);
+				$this->db->where('master_id', $customer_id);
+				$insert = $this->db->update('product_pices', $json_data);
+				if ($insert == true) {
+					/***************** Pices Stock Update  *********************/
+					$r = 0;
+					foreach ($data2 as $row) {
+						$product_id = $row['p_design_number'];
+						// $quantity = $row['stock_qty'];
+
+						$this->db->where('p_design_number', $product_id);
+						$query = $this->db->get('stock');
+						$row = $query->row();
+						if ($query->num_rows()) {
+							// If the product exists, update the quantity value in the database
+							$data3 = array(
+								'stock_qty' => (float) $row->stock_qty + (float) $resultArray_j[$r]
+							);
+							$this->db->where('p_design_number', $product_id);
+							$this->db->update('stock', $data3);
+						} else {
+							// If the product does not exist, insert a new row into the database
+							$this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $resultArray_j[$r]));
+						}
+						$in_out_qnty = $resultArray_j[$r];
+						$current_stock = $this->db->where('p_design_number', $product_id);
+						$query = $this->db->get('stock');
+						$row = $query->row();
+						$current_stock_value = $row->stock_qty;
+						$stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
+						// $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $product_id, $in_out_qnty, $stock, $data_json);
+						$r++;
+					}
+
+					/***************** Pices Stock Update end ******************/
+
+
+					/********************Customer Balance Update**********************/
+					$this->db->where('customer_id', $this->input->post('customerName'));
+					$this->db->where('bill_no', $invoice_no);
+					$query = $this->db->get('balance');
+					$row = $query->row();
+					if ($query->num_rows()) {
+						$data_balance = array(
+							'balance_bill' => (float) $row->balance_bill + (float) $ledger_last,
+							'paid_bill' => (float) $row->paid_bill + (float) $paidBill,
+							'total_bill' => (float) $row->total_bill + (float) $ledger_bill,
+							"bill_type" => 'debited',
+						);
+						$bal_update = $this->Balance_model->update_balanceBybill($data_balance, $customer_id, $invoice_no);
+					}
+					/********************Customer Balance Update end**********************/
+
+					/********************Customer Ledger Balance (History) ***************/
+					$data_ledger = array(
+						'customer' => $this->input->post('customerName'),
+						'invoice' => $invoice_no,
+						'paid_amount' => $paid_amount,
+						'bill_amount' => $total_amount,
+						'last_amount' => $balance_amount,
+						'entry_from' => 3,
+						'dated' => date('Y-m-d H:i:s')
+					);
+					$insert = $this->Balance_model->update_ledgerbalance($data_ledger, $customer_id, $invoice_no);
+					/********************Customer Ledger Balance (History) end**************/
+
+					/********************Add In History Table     ****************/
+					/* $json_data_array = array(
+															   'entry_from' => 3,
+															   //Pices
+															   'json_data' => $json,
+														   );
+
+														   $insert_json_data = $this->Pices_model->create_history($json_data_array); */
+					/********************AAdd In History Table end**************/
+
+					$this->db->select('*');
+					$this->db->from('customers');
+					$this->db->where('id', $customer_id);
+					$query = $this->db->get();
+					$maker_name = $query->row();
+
+					$this->db->select('*');
+					$this->db->from('material');
+					$this->db->where_in('id', $materialId2);
+					$query = $this->db->get();
+					$results = $query->result();
+					$material_names = '';
+					foreach ($results as $result) {
+						$material_names .= $result->material_name . ', ';
+					}
+					// Remove the trailing comma and space
+					$material_names = rtrim($material_names, ', ');
+					$data_pdf = [
+						'customer_id' => $customer_id,
+						'customer' => $maker_name->name,
+						'product_name' => $material_names,
+						'qnty' => $qnty,
+						'invoice_no' => $this->input->post('invoice_no'),
+						'customer_address' => $maker_name->address,
+						'json_data' => $json_data,
+						'date' => $date,
+					];
+					$this->load->library('tcpdf/tcpdf.php');
+
+					$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+					$pdf->setPrintHeader(false);
+					$pdf->setPrintFooter(false);
+					$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+					//$pdf->SetFont('helvetica', '', 10);
+					$pdf->SetFont('times', '', 10);
+					$pdf_data = $this->load->view('invoice_pieces', $data_pdf, true);
+					$pdf->addPage();
+					$pdf->writeHTML($pdf_data, true, false, true, false, '');
+
+					$filename = $this->input->post('invoice_no') . '.pdf';
+					$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer_id'] . '/';
+					if (!is_dir($dir)) {
+						mkdir($dir, 0777, true);
+					}
+					$save_path = $dir . $filename;
+					ob_end_clean();
+					$pdf->Output($save_path, 'F');
+					$this->session->set_flashdata('success', 'Data Added successfully....');
+					redirect('Pices/');
+				} else {
+					$this->session->set_flashdata('fail', "Sorry! there was some error.");
+					redirect(base_url('/index.php/Pices/add_new'));
 				}
 			}
 		}
 	}
+
 
 	public function deletePices()
 	{
@@ -774,7 +1082,7 @@ class Pices extends CI_Controller
 			$data_json = $design_json;
 
 			$insert = $this->db->insert('product_pices', $json_data);
-	
+
 			foreach ($data['design_no'] as $index => $design_no) {
 				$return_qnty = $data['return_qnty'][$index];
 
@@ -860,7 +1168,7 @@ class Pices extends CI_Controller
 		}
 	}
 
-	public function returnEditPices()
+	public function returnEditPices($sr_no)
 	{
 		$data['last_invoice'] = $this->Pices_model->get_last_invoice_pices();
 		$this->form_validation->set_rules('customerName', 'customer Name', 'required');
@@ -873,7 +1181,7 @@ class Pices extends CI_Controller
 		} else {
 			$customerName = $this->input->post('customerName');
 			$invoice_no = $this->input->post('invoice_no');
-			$sr_no = $this->input->post('sr_no');
+			// $sr_no = $this->input->post('sr_no');
 			$design_nos = implode(',', $this->input->post('design_no[]'));
 			$design_nos = trim($design_nos, ',');
 
@@ -918,7 +1226,8 @@ class Pices extends CI_Controller
 				'type' => 'gr',
 				'created_at' => $date,
 			);
-
+			// print_r($sr_no);
+			// die();
 			// $insert = $this->db->update_records('product_pices', $json_data, $sr_no);
 			// $db_data = $this->Pices_model->update_records($json_data, $sr_no);
 
@@ -951,7 +1260,7 @@ class Pices extends CI_Controller
 				$one = $designNumbers;
 				// Find the values in $oneString that are not in $valuesArray
 				$valuesNotInArray = array_diff($one, $valuesArray);
-				
+
 				foreach ($valuesNotInArray as $value) {
 					if (isset($designStockMap[$value])) {
 						$stockToSubtract = $designStockMap[$value];
@@ -967,8 +1276,8 @@ class Pices extends CI_Controller
 								'stock_qty' => (float) $row_gr->stock_qty - (float) $stockToSubtract,
 							);
 
-						// print_r($data3_gr);
-						// print_r($stockToSubtract);
+							// print_r($data3_gr);
+							// print_r($stockToSubtract);
 
 							$this->db->where('p_design_number', $value);
 							$this->db->update('stock', $data3_gr);
@@ -983,8 +1292,6 @@ class Pices extends CI_Controller
 
 			}
 			$db_data = $this->Pices_model->update_records($json_data, $sr_no);
-
-			// die();
 			foreach ($data['design_no'] as $index => $design_no) {
 				$return_qnty = $data['return_qnty'][$index];
 				$return_qnty_hidden = $data['return_qnty_hidden'][$index];
@@ -1010,7 +1317,7 @@ class Pices extends CI_Controller
 
 						// echo "The difference is negative: " . abs($diff);
 						$data3 = array(
-							'stock_qty' => (float) $existing_record->stock_qty + (float) $diff,
+							'stock_qty' => (float) $existing_record->stock_qty - (float) $diff,
 						);
 					} else {
 						$data3 = array(
