@@ -465,7 +465,7 @@ class Purchaser extends CI_Controller
                 } else {
                     $date = date("Y-m-d");
                 }
-                $update_data = [
+                $data = [
                     "purchaser_owner_id" => strtoupper($postData["owner_name"]),
                     "material_id" => $material_name,
                     "total_amount" => $amount,
@@ -476,7 +476,7 @@ class Purchaser extends CI_Controller
 
                 $purchaser_id = $postData["pur_id"];
 
-                $update = $this->Purchaser_model->update_purchaser($update_data, $pur_id);
+                $update = $this->Purchaser_model->update_purchaser($data, $pur_id);
 
                 // $purchaser_id = $this->db->insert_id();
                 $material_idNew = $this->input->post("material_name[]");
@@ -533,7 +533,14 @@ class Purchaser extends CI_Controller
                         $this->db->update('purchaser_stock', $data3);
                     }
 
-                    
+                    // if ($oldstock[$m] != ' ') {
+                    //     $dataStk["quantity"] = (float)$oldstock[$m] - (float)$stocks[$m];
+
+                    //     $this->Purchaser_model->update_pstock_qty($dataStk, $material_ids[$m]);
+
+                    //     // $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
+                    //     // $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
+                    // } 
                     else {
                         // $null_value= "0";
                         $dataMtk["materials_id"] = $material_idNew[$j];
@@ -544,31 +551,44 @@ class Purchaser extends CI_Controller
                         $this->Purchaser_model->add_purchaser_qty($dataMtk);
 
                     }
-                    
+                    //              print_r($material_idNew[$j]);
+                    // print_r($data3);
+
+                    // $this->db->where('materials_id', $material_idNew[$j]);
+                    // $querys = $this->db->get('maker_stock');
+                    // $rows = $querys->row();
+                    // if ($querys->num_rows()) {
+                    //     if ($stockNew[$j]) {
+                    //         $diff = $stock[$j] - $stockNew[$j];
+                    //     } else {
+                    //         $diff = $stock[$j] - '0';
+                    //     }
+
+                    //     if ($diff > 0) {
+                    //         // If the product exists, update the quantity value in the database
+                    //         $data3 = array(
+                    //             'quantity' => $rows->quantity + $diff,
+                    //         );
+                    //     } elseif ($diff < 0) {
+                    //         $data3 = array(
+                    //             'quantity' => $rows->quantity - abs($diff),
+                    //         );
+                    //     } else {
+                    //         // echo "The difference is negative: " . abs($diff);
+                    //         $data3 = array(
+                    //             'quantity' => $row->quantity + abs($diff),
+                    //         );
+                    //     }
+
+                    //     $this->db->where('materials_id', $material_idNew[$j]);
+                    //     $this->db->update('maker_stock', $data3);
+                    // } else {
+                    //     $this->Making_model->add_making_qty($MakStk);
+                    // }
                     $j++;
                 }
-                
-                /****************** Store in HISTORY table ******************************/
-                $material_ids = $this->input->post("material_name[]");
-                $stock_quantities = $this->input->post("stock_q[]");
-                $json_data = json_encode($update_data);
-                if (!empty($material_ids) && !empty($stock_quantities)) {
-                    // Loop through the data and store each pair in the stock table
-                    for ($i = 0; $i < count($material_ids); $i++) {
-                        $entry_from = 1;
-                        $material_id = $material_ids[$i];
-                        $user_id = $postData["owner_name"];
-                        $in_out_qnty = $stock_quantities[$i];
-                        $invoice_id = $postData["purchaser_no"];
-                        $json_data = $json_data;
-                        
-                        $updated_stock = $this->Stock_model->get_material_stock($material_id);
-                        $stock = $updated_stock ? $updated_stock : $in_out_qnty;
+                // die();
 
-                        $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
-                    }
-                }
-                /************************* Store in HISTORY table ***********************/
 
 
                 $customer_id = strtoupper($postData["owner_name"]);
