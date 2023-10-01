@@ -346,4 +346,15 @@ class History_model extends CI_Model {
             return array(); // Return an empty array if no data is found
         }
     }
+    public function get_sell_by_id($sell_id)
+    {
+        // Assuming you have a database table named 'making' with appropriate columns
+        $query = $this->db->get_where('insider_bill', array('sr_no' => $sell_id));
+
+        if ($query->num_rows() > 0) {
+            return $query->row_array(); // Return the result as an associative array
+        } else {
+            return null; // No data found
+        }
+    }
 }

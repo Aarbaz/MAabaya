@@ -41,513 +41,513 @@
                             <?php
                             if ($type == 'new') {
                                 ?>
-                                            <div role="tabpanel" class="tab-pane fade in" id="new">
-                                            <div class="challan-div">
-                                            <?php
-                                            $url = 'Pices/editPices/' . $cust->sr_no;
-                                            echo form_open($url, 'class="form-horizontal" id="add_product_form"');
-                                            ?>
-                        
-                                            <div class="form-group">
-                                                    <h3 class="text-center">Pices Recived</h3>
-                                                </div>
-                                                 <div class="col-sm-4 ">
-                                                    <div class="form-group ">
-                                                        <label class="control-label col-sm-3">Master Name</label>
-                                                        <div class="col-sm-9">
-                                                              <select name="customerName" id="customerName" class="form-control">
-                                                                <option value="" >--select master--</option>
-                                                                <?php
-                                                                foreach ($custList->result() as $row) {
-                                                                    echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . ' selected>' . $row->name . '</option>';
-                                                                } ?>
-                                                                </select>
-                                                           </div>
-                                                        <div class="col-sm-2 hide">
-                                                        <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new'); ?>">Add Customer</a>
-                                                        </div>
-                                                    </div>.
-                                                            </div>
-                                                                <div class="col-sm-4 text-center">
-                                    <label class="control-label">INVOICE NO.</label>
-                                                                        <?php echo '<b>' . $cust->invoice_no . '</b>'; ?>
-                                                                        <input type="hidden" name="invoice_no" value="<?php echo $cust->invoice_no; ?>">
-                                                                    </div>
-                                                                    <div class="col-sm-4">
-                                                                        <label class="control-label">INVOICE DATE</label>
-                                                                        <input type="date" id="bill_date" name="bill_date"  value="<?php echo $cust->created_at; ?>"/>
-                                                                        </div>
-                                                            <div class="form-group hide">
-                                                                <label class="control-label col-sm-3">Address</label>
-                                                                <div class="col-sm-9" id="addds_holder">
-                                                                    <input type="text" name="cust_adds_txt" id="cust_adds_txt" class="form-control" value="<?php echo set_value('cust_adds_txt'); ?>">
-                                                            <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds'); ?>" id="cust_adds">
-                                                            <input type="hidden" name="cust_name1" value="<?php echo set_value('cust_name'); ?>" id="cust_name1">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group hide">
-                                                        <label class="control-label col-sm-3">Buyer's GST</label>
-                                                        <div class="col-sm-9">
-                                                            <input type="text" name="cust_gst_txt" id="cust_gst_txt" class="form-control " value="<?php echo set_value('cust_gst_txt'); ?>" readonly="readonly">
-                                                            <input type="hidden" name="cust_gst" value="<?php echo set_value('cust_gst'); ?>" id="cust_gst">
-                                                           </div>
-                                                    </div>
-                                                    <div class="form-group hide">
-                                                        <label class="control-label col-sm-3">Select Region</label>
-                                                        <div class="col-sm-9">
-                                                            <select id="region" name="region" class="form-control">
-                                                                <option value="">--select--</option>
-                                                                <option value="in" <?php echo set_select('region', 'in'); ?>>In Maharashtra</option>
-                                                                <option value="out" <?php echo set_select('region', 'out'); ?>>Out of Maharashtra</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group hide">
-                                                        <label class="control-label col-sm-3">Invoice Type</label>
-                                                        <div class="col-sm-9">
-                                                            <select id="amount_with" name="amount_with" class="form-control">
-                                                                <option value="">--select--</option>
-                                                                <option value="with" <?php echo set_select('amount_with', 'with'); ?>>Amount With GST</option>
-                                                                <option value="without" <?php echo set_select('amount_with', 'without'); ?>>Amount Without GST</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                <!-- </div> -->
-                                                <div class="col-sm-1">&nbsp;</div>
-                                                <div class="col-sm-6 leftbox inv hide">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-4">INVOICE NO.</label>
-                                                        <div class="col-sm-8">&nbsp;&nbsp;
-                                                            <?php
-                                                            $invoice_no = '';
-                                                            if (!empty($last_invoice->invoice_no)) {
-                                                                $db_invoice = $last_invoice->invoice_no;
-                                                                $num_part = substr($db_invoice, 3);
-                                                                $add_one = intval($num_part) + 1;
-
-                                                                if (strlen($add_one) < 3) {
-                                                                    $ch_no = sprintf("%03u", $add_one);
-                                                                    $invoice_no = 'PIC' . $ch_no;
-                                                                } else {
-                                                                    $invoice_no = 'PIC' . $add_one;
-                                                                }
-                                                            } else {
-                                                                $invoice_no = 'PIC001';
-                                                            }
-
-                                                            ?>
-                                                            <?php echo '<b>' . $invoice_no . '</b>'; ?>
-                                                            <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label col-sm-4">INVOICE DATE</label>
-                                                        <div class="col-sm-8">&nbsp;&nbsp;&nbsp;<?php echo date('d/m/Y'); ?></div>
-                                                    </div>
-                                                    <div class="form-group hide">
-                                                        <label class="control-label col-sm-4">DATE OF SUPPLY</label>
-                                                        <div class="col-sm-8">&nbsp;<input type="date" name="sup_date" value="<?php echo set_value('sup_date'); ?>" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group hide">
-                                                        <label class="control-label col-sm-4">PLACE OF SUPPLY</label>
-                                                        <div class="col-sm-8">
-                                                            <input type="text" name="sup_place" value="<?php echo set_value('sup_place'); ?>" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group hide">
-                                                        <label class="control-label col-sm-4">OTHER</label>
-                                                        <div class="col-sm-8"><input type="text" name="sup_other" value="<?php echo set_value('sup_other'); ?>" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-12">&nbsp;</div>
-                                                <div class="form-group"><br />
-                                                  <div class="col-sm-8 col-sm-offset-2">
-                                                    <?php echo validation_errors('<p class="text text-danger">', '</p>'); ?>
-                                                  </div>
-                                                </div>
-
-                                                <div class="form-group"><br />
-                                                    <div class="col-sm-8 col-sm-offset-2">
-                                                        <?php
-                                                        if ($this->session->flashdata('pass')) {
-                                                            echo '<div class="alert alert-success alert-block successMsg"> ';
-                                                            echo $this->session->flashdata('pass');
-                                                            echo '</div>';
-                                                        } else if ($this->session->flashdata('fail')) {
-                                                            echo '<div class = "alert alert-warning successMsg">';
-                                                            echo $this->session->flashdata('fail');
-                                                            echo '</div>';
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                </div>
-
-                                                <!--table withouot tax-->
-                                                <div class="form-group" id="table_without_tax">
-                                                    <div class="container" id="table-container">
-                                                    <input type="hidden" name="steps" value="<?php echo count($dataArray); ?>" id="steps">
-                                                        <input type="hidden" name="sr_no" value="<?php echo $cust->sr_no; ?>">
+                                                    <div role="tabpanel" class="tab-pane fade in" id="new">
+                                                    <div class="challan-div">
                                                     <?php
-                                                    if ($type = 'new') {
-                                                        if (!empty($dataArray)) {
-                                                            $t = 0;
-                                                            foreach ($dataArray as $entry) {
-                                                                $designNumber = $entry['design_number'][0];
-                                                                $materialsIds = $entry['materials_ids'];
-                                                                $total_piece = $entry['total_piece'];
-                                                                $totalMaterial = $entry['total_material'];
-                                                                $customerId = $entry['customer_id'];
-                                                                $average = $entry['average'];
-                                                                $labour_charge = $entry['labour_charge'];
-                                                                $invoice_no = $entry['invoice_no'];
-                                                                $total_labour = $entry['total_karigari'];
+                                                    $url = 'Pices/editPices/' . $cust->sr_no;
+                                                    echo form_open($url, 'class="form-horizontal" id="add_product_form"');
+                                                    ?>
+                        
+                                                    <div class="form-group">
+                                                            <h3 class="text-center">Pices Recived</h3>
+                                                        </div>
+                                                         <div class="col-sm-4 ">
+                                                            <div class="form-group ">
+                                                                <label class="control-label col-sm-3">Master Name</label>
+                                                                <div class="col-sm-9">
+                                                                      <select name="customerName" id="customerName" class="form-control">
+                                                                        <option value="" >--select master--</option>
+                                                                        <?php
+                                                                        foreach ($custList->result() as $row) {
+                                                                            echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . ' selected>' . $row->name . '</option>';
+                                                                        } ?>
+                                                                        </select>
+                                                                   </div>
+                                                                <div class="col-sm-2 hide">
+                                                                <a class="btn btn-default" role="button"  href="<?php echo base_url('/index.php/Customer/add_new'); ?>">Add Customer</a>
+                                                                </div>
+                                                            </div>.
+                                                                    </div>
+                                                                        <div class="col-sm-4 text-center">
+                                            <label class="control-label">INVOICE NO.</label>
+                                                                                <?php echo '<b>' . $cust->invoice_no . '</b>'; ?>
+                                                                                <input type="hidden" name="invoice_no" value="<?php echo $cust->invoice_no; ?>">
+                                                                            </div>
+                                                                            <div class="col-sm-4">
+                                                                                <label class="control-label">INVOICE DATE</label>
+                                                                                <input type="date" id="bill_date" name="bill_date"  value="<?php echo $cust->created_at; ?>"/>
+                                                                                </div>
+                                                                    <div class="form-group hide">
+                                                                        <label class="control-label col-sm-3">Address</label>
+                                                                        <div class="col-sm-9" id="addds_holder">
+                                                                            <input type="text" name="cust_adds_txt" id="cust_adds_txt" class="form-control" value="<?php echo set_value('cust_adds_txt'); ?>">
+                                                                    <input type="hidden" name="cust_adds" value="<?php echo set_value('cust_adds'); ?>" id="cust_adds">
+                                                                    <input type="hidden" name="cust_name1" value="<?php echo set_value('cust_name'); ?>" id="cust_name1">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group hide">
+                                                                <label class="control-label col-sm-3">Buyer's GST</label>
+                                                                <div class="col-sm-9">
+                                                                    <input type="text" name="cust_gst_txt" id="cust_gst_txt" class="form-control " value="<?php echo set_value('cust_gst_txt'); ?>" readonly="readonly">
+                                                                    <input type="hidden" name="cust_gst" value="<?php echo set_value('cust_gst'); ?>" id="cust_gst">
+                                                                   </div>
+                                                            </div>
+                                                            <div class="form-group hide">
+                                                                <label class="control-label col-sm-3">Select Region</label>
+                                                                <div class="col-sm-9">
+                                                                    <select id="region" name="region" class="form-control">
+                                                                        <option value="">--select--</option>
+                                                                        <option value="in" <?php echo set_select('region', 'in'); ?>>In Maharashtra</option>
+                                                                        <option value="out" <?php echo set_select('region', 'out'); ?>>Out of Maharashtra</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group hide">
+                                                                <label class="control-label col-sm-3">Invoice Type</label>
+                                                                <div class="col-sm-9">
+                                                                    <select id="amount_with" name="amount_with" class="form-control">
+                                                                        <option value="">--select--</option>
+                                                                        <option value="with" <?php echo set_select('amount_with', 'with'); ?>>Amount With GST</option>
+                                                                        <option value="without" <?php echo set_select('amount_with', 'without'); ?>>Amount Without GST</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        <!-- </div> -->
+                                                        <div class="col-sm-1">&nbsp;</div>
+                                                        <div class="col-sm-6 leftbox inv hide">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-sm-4">INVOICE NO.</label>
+                                                                <div class="col-sm-8">&nbsp;&nbsp;
+                                                                    <?php
+                                                                    $invoice_no = '';
+                                                                    if (!empty($last_invoice->invoice_no)) {
+                                                                        $db_invoice = $last_invoice->invoice_no;
+                                                                        $num_part = substr($db_invoice, 3);
+                                                                        $add_one = intval($num_part) + 1;
 
-                                                                $total_piece = implode(", ", $total_piece);
-                                                                $labour_charge = implode(", ", $labour_charge);
-                                                                $total_labour = implode(", ", $total_labour);
+                                                                        if (strlen($add_one) < 3) {
+                                                                            $ch_no = sprintf("%03u", $add_one);
+                                                                            $invoice_no = 'PIC' . $ch_no;
+                                                                        } else {
+                                                                            $invoice_no = 'PIC' . $add_one;
+                                                                        }
+                                                                    } else {
+                                                                        $invoice_no = 'PIC001';
+                                                                    }
+
+                                                                    ?>
+                                                                    <?php echo '<b>' . $invoice_no . '</b>'; ?>
+                                                                    <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label col-sm-4">INVOICE DATE</label>
+                                                                <div class="col-sm-8">&nbsp;&nbsp;&nbsp;<?php echo date('d/m/Y'); ?></div>
+                                                            </div>
+                                                            <div class="form-group hide">
+                                                                <label class="control-label col-sm-4">DATE OF SUPPLY</label>
+                                                                <div class="col-sm-8">&nbsp;<input type="date" name="sup_date" value="<?php echo set_value('sup_date'); ?>" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group hide">
+                                                                <label class="control-label col-sm-4">PLACE OF SUPPLY</label>
+                                                                <div class="col-sm-8">
+                                                                    <input type="text" name="sup_place" value="<?php echo set_value('sup_place'); ?>" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group hide">
+                                                                <label class="control-label col-sm-4">OTHER</label>
+                                                                <div class="col-sm-8"><input type="text" name="sup_other" value="<?php echo set_value('sup_other'); ?>" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">&nbsp;</div>
+                                                        <div class="form-group"><br />
+                                                          <div class="col-sm-8 col-sm-offset-2">
+                                                            <?php echo validation_errors('<p class="text text-danger">', '</p>'); ?>
+                                                          </div>
+                                                        </div>
+
+                                                        <div class="form-group"><br />
+                                                            <div class="col-sm-8 col-sm-offset-2">
+                                                                <?php
+                                                                if ($this->session->flashdata('pass')) {
+                                                                    echo '<div class="alert alert-success alert-block successMsg"> ';
+                                                                    echo $this->session->flashdata('pass');
+                                                                    echo '</div>';
+                                                                } else if ($this->session->flashdata('fail')) {
+                                                                    echo '<div class = "alert alert-warning successMsg">';
+                                                                    echo $this->session->flashdata('fail');
+                                                                    echo '</div>';
+                                                                }
                                                                 ?>
-                                                                                                                                                                                        <div class="row select-row">
-                                                                                                                                                                                                            <div class="col-lg-3">
-                                                                                                                                                                                                                <label class="control-label col-sm-5 text-left" style="    text-align: left;">Select Design</label>
-                                                                                                                                                                                                                    <div class="col-sm-7">
-                                                                                                                                                                                                                        <select name="hsn_<?php echo $t ?>[]" id="hsn" class="form-control my-select design required">
-                                                                                                                                                                                                                                        <option value="">--select design no--</option>
-                                                                                                                                                                                                                                        <?php foreach ($designs->result() as $row) {
-                                                                                                                                                                                                                                            print_r($designNumber);
-                                                                                                                                                                                                                                            $selected = set_select("hsn[]", $row->design_num);
-                                                                                                                                                                                                                                            $data_id = $row->id;
-                                                                                                                                                                                                                                            if ($designNumber == $row->id) {
-                                                                                                                                                                                                                                                $selected = 'selected';
-                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                            echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . $selected . '>' . $row->design_num . '</option>';
+                                                            </div>
+                                                        </div>
 
-                                                                                                                                                                                                                                        } ?>
-                                                                                                                                                                                                                                    </select>
-                                                                                                                                                                                                                                    <input type="hidden" name='selected_ids_<?php echo $t ?>[]' id="selected_ids" value="">
-                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                            <div class="col-lg-3">
-                                                                                                                                                                                                                                <label class="control-label col-sm-4 text-left" style="text-align: left;">Total Pices</label>
-                                                                                                                                                                                                                                <div class="col-sm-7" id="">
-                                                                                                                                                                                                                                    <input type="hidden" name='total_piece_hidden_<?php echo $t ?>[]' id="" class="form-control ttl_pice required"
-                                                                                                                                                                                                                                                        value="<?php echo $total_piece; ?>">
+                                                        <!--table withouot tax-->
+                                                        <div class="form-group" id="table_without_tax">
+                                                            <div class="container" id="table-container">
+                                                            <input type="hidden" name="steps" value="<?php echo count($dataArray); ?>" id="steps">
+                                                                <input type="hidden" name="sr_no" value="<?php echo $cust->sr_no; ?>">
+                                                            <?php
+                                                            if ($type = 'new') {
+                                                                if (!empty($dataArray)) {
+                                                                    $t = 0;
+                                                                    foreach ($dataArray as $entry) {
+                                                                        $designNumber = $entry['design_number'][0];
+                                                                        $materialsIds = $entry['materials_ids'];
+                                                                        $total_piece = $entry['total_piece'];
+                                                                        $totalMaterial = $entry['total_material'];
+                                                                        $customerId = $entry['customer_id'];
+                                                                        $average = $entry['average'];
+                                                                        $labour_charge = $entry['labour_charge'];
+                                                                        $invoice_no = $entry['invoice_no'];
+                                                                        $total_labour = $entry['total_karigari'];
 
-                                                                                                                                                                                                                                                    <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece"
-                                                                                                                                                                                                                                        class="form-control ttl_pice required" value="<?php echo $total_piece; ?>">
+                                                                        $total_piece = implode(", ", $total_piece);
+                                                                        $labour_charge = implode(", ", $labour_charge);
+                                                                        $total_labour = implode(", ", $total_labour);
+                                                                        ?>
+                                                                                                                                                                                                                        <div class="row select-row">
+                                                                                                                                                                                                                                            <div class="col-lg-3">
+                                                                                                                                                                                                                                                <label class="control-label col-sm-5 text-left" style="    text-align: left;">Select Design</label>
+                                                                                                                                                                                                                                                    <div class="col-sm-7">
+                                                                                                                                                                                                                                                        <select name="hsn_<?php echo $t ?>[]" id="hsn" class="form-control my-select design required">
+                                                                                                                                                                                                                                                                        <option value="">--select design no--</option>
+                                                                                                                                                                                                                                                                        <?php foreach ($designs->result() as $row) {
+                                                                                                                                                                                                                                                                            print_r($designNumber);
+                                                                                                                                                                                                                                                                            $selected = set_select("hsn[]", $row->design_num);
+                                                                                                                                                                                                                                                                            $data_id = $row->id;
+                                                                                                                                                                                                                                                                            if ($designNumber == $row->id) {
+                                                                                                                                                                                                                                                                                $selected = 'selected';
+                                                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                                                            echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . $selected . '>' . $row->design_num . '</option>';
+
+                                                                                                                                                                                                                                                                        } ?>
+                                                                                                                                                                                                                                                                    </select>
+                                                                                                                                                                                                                                                                    <input type="hidden" name='selected_ids_<?php echo $t ?>[]' id="selected_ids" value="">
+                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                            <div class="col-lg-3">
+                                                                                                                                                                                                                                                                <label class="control-label col-sm-4 text-left" style="text-align: left;">Total Pices</label>
+                                                                                                                                                                                                                                                                <div class="col-sm-7" id="">
+                                                                                                                                                                                                                                                                    <input type="hidden" name='total_piece_hidden_<?php echo $t ?>[]' id="" class="form-control ttl_pice required"
+                                                                                                                                                                                                                                                                                        value="<?php echo $total_piece; ?>">
+
+                                                                                                                                                                                                                                                                                    <input type="text" name='total_piece_<?php echo $t ?>[]' id="total_piece"
+                                                                                                                                                                                                                                                                        class="form-control ttl_pice required" value="<?php echo $total_piece; ?>">
                                         
-                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                            <div class="col-lg-3">
-                                                                                                                                                                                                                                <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari (PP)</label>
-                                                                                                                                                                                                                                <div class="col-sm-7" id="">
+                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                            <div class="col-lg-3">
+                                                                                                                                                                                                                                                                <label class="control-label col-sm-4 text-left" style="    text-align: left;">Karigari (PP)</label>
+                                                                                                                                                                                                                                                                <div class="col-sm-7" id="">
                                                                                                                                                                                                                     
-                                                                                                                                                                                                                                                    <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="karigari form-control required"
-                                                                                                                                                                                                                                        value="<?php echo $labour_charge; ?>">
+                                                                                                                                                                                                                                                                                    <input type="text" name='karigari_<?php echo $t ?>[]' id="karigari" class="karigari form-control required"
+                                                                                                                                                                                                                                                                        value="<?php echo $labour_charge; ?>">
                                         
-                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                            <div class="col-lg-3">
-                                                                                                                                                                                                                                <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
-                                                                                                                                                                                                                                <div class="col-sm-6" id="">
+                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                            <div class="col-lg-3">
+                                                                                                                                                                                                                                                                <label class="control-label col-sm-5 text-left" style="    text-align: left;">Total Karigari</label>
+                                                                                                                                                                                                                                                                <div class="col-sm-6" id="">
                                                                                                                                                                                                                     
-                                                                                                                                                                                                                                                    <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required"
-                                                                                                                                                                                                                                        value="<?php echo $total_labour; ?>" readonly>
+                                                                                                                                                                                                                                                                                    <input type="text" name='total_karigari_<?php echo $t ?>[]' class="total_karigari form-control required"
+                                                                                                                                                                                                                                                                        value="<?php echo $total_labour; ?>" readonly>
                                         
-                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                            </div>
                                         
-                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                            </div>
                                                  
                         
-                                                                                                                                                                                                        <table class="table table-bordered pice_invoice_table">
-                                                                                                                                                                                                                <thead>
-                                                                                                                                                                                                                <tr>
-                                                                                                                                                                                                                    <!-- <th>Design No</th> -->
-                                                                                                                                                                                                                    <th>Material Name</th>
-                                                                                                                                                                                                                    <th>Pices</th>
-                                                                                                                                                                                                                    <th>Average</th>   
-                                                                                                                                                                                                                    <th>Total Material Used</th>
-                                                                                                                                                                                                                </tr>
-                                                                                                                                                                                                            </thead>
+                                                                                                                                                                                                                                        <table class="table table-bordered pice_invoice_table">
+                                                                                                                                                                                                                                                <thead>
+                                                                                                                                                                                                                                                <tr>
+                                                                                                                                                                                                                                                    <!-- <th>Design No</th> -->
+                                                                                                                                                                                                                                                    <th>Material Name</th>
+                                                                                                                                                                                                                                                    <th>Pices</th>
+                                                                                                                                                                                                                                                    <th>Average</th>   
+                                                                                                                                                                                                                                                    <th>Total Material Used</th>
+                                                                                                                                                                                                                                                </tr>
+                                                                                                                                                                                                                                            </thead>
                                             
-                                                                                                                                                                                                            <tbody>
+                                                                                                                                                                                                                                            <tbody>
                                     
-                                                                                                                                                                                                    <?php
-                                                                                                                                                                                                    $cnt = count($materialsIds);
-                                                                                                                                                                                                    for ($z = 0; $z < $cnt; $z++) {
-                                                                                                                                                                                                        ?>
-                                                                                                                                                        <tr class="row_one">
-                                                                                                                                                        <td class="material_ids">
-                                                                                                                                                            <select name="items_<?php echo $t ?>[]" id="" class="required items form-control">
-                                                                                                                                                                                <option value="">--select Product--</option>
-                                                                                                                                                                                <?php
-                                                                                                                                                                                $this->db->select('*');
-                                                                                                                                                                                $this->db->from('material');
-                                                                                                                                                                                $this->db->where('id', $materialsIds[$z]);
+                                                                                                                                                                                                                                    <?php
+                                                                                                                                                                                                                                    $cnt = count($materialsIds);
+                                                                                                                                                                                                                                    for ($z = 0; $z < $cnt; $z++) {
+                                                                                                                                                                                                                                        ?>
+                                                                                                                                                                                                <tr class="row_one">
+                                                                                                                                                                                                <td class="material_ids">
+                                                                                                                                                                                                    <select name="items_<?php echo $t ?>[]" id="" class="required items form-control">
+                                                                                                                                                                                                                        <option value="">--select Product--</option>
+                                                                                                                                                                                                                        <?php
+                                                                                                                                                                                                                        $this->db->select('*');
+                                                                                                                                                                                                                        $this->db->from('material');
+                                                                                                                                                                                                                        $this->db->where('id', $materialsIds[$z]);
 
-                                                                                                                                                                                $query = $this->db->get();
-                                                                                                                                                                                $results = $query->row();
-                                                                                                                                                                                $material_names = '';
-                                                                                                                                                                                $mat = '';
-                                                                                                                                                                                $material_names = $results->material_name;
-                                                                                                                                                                                foreach ($materialList->result() as $rows) {
-                                                                                                                                                                                    $matr = explode(',', $rows->material_name);
-                                                                                                                                                                                    foreach ($matr as $value) {
-                                                                                                                                                                                        if (strpos(',' . trim($material_names) . ',', ',' . trim($value) . ',') !== false) {
-                                                                                                                                                                                            $select = 'selected';
-                                                                                                                                                                                        } else {
-                                                                                                                                                                                            $select = '';
-                                                                                                                                                                                        }
-                                                                                                                                                                                    }
-                                                                                                                                                                                    echo '<option label="" data-material-id="' . $rows->id . '" ' . $select . ' value="' . $rows->id . '" >' . $matr[0] . '</option>';
-                                                                                                                                                                                }
-                                                                                                                                                                                ?>                                                           
-                                                                                                                                                                                <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
-                                                                                                                                                                                <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
-                                                                                                                                                                                <!-- <input type="hidden" name="sr_no" id="" value="<?php echo $cust->sr_no; ?>"> -->
-                                                                                                                                                                            </select>
-                                                                                                                                                                        </td>
-                                                                                                                                                                        <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7" value="<?php echo $total_piece; ?>"></td>
-                                                                                                                                                                        <td>
+                                                                                                                                                                                                                        $query = $this->db->get();
+                                                                                                                                                                                                                        $results = $query->row();
+                                                                                                                                                                                                                        $material_names = '';
+                                                                                                                                                                                                                        $mat = '';
+                                                                                                                                                                                                                        $material_names = $results->material_name;
+                                                                                                                                                                                                                        foreach ($materialList->result() as $rows) {
+                                                                                                                                                                                                                            $matr = explode(',', $rows->material_name);
+                                                                                                                                                                                                                            foreach ($matr as $value) {
+                                                                                                                                                                                                                                if (strpos(',' . trim($material_names) . ',', ',' . trim($value) . ',') !== false) {
+                                                                                                                                                                                                                                    $select = 'selected';
+                                                                                                                                                                                                                                } else {
+                                                                                                                                                                                                                                    $select = '';
+                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                            echo '<option label="" data-material-id="' . $rows->id . '" ' . $select . ' value="' . $rows->id . '" >' . $matr[0] . '</option>';
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                        ?>                                                           
+                                                                                                                                                                                                                        <input type="hidden" name="material_ids_<?php echo $t ?>[]" id="material_ids" value="">
+                                                                                                                                                                                                                        <input type="hidden" name="all_material_ids[]" id="all_material_ids" value="">
+                                                                                                                                                                                                                        <!-- <input type="hidden" name="sr_no" id="" value="<?php echo $cust->sr_no; ?>"> -->
+                                                                                                                                                                                                                    </select>
+                                                                                                                                                                                                                </td>
+                                                                                                                                                                                                                <td><input type="text" name="qnty[]" class="qnty form-control" size="3" maxlength="7" value="<?php echo $total_piece; ?>"></td>
+                                                                                                                                                                                                                <td>
                                                                                                                                                         
-                                                                                                                                                                                                <input type="text" name="rate_<?php echo $t ?>[]" class="rate  form-control" size="3" maxlength="7" value="<?php echo $average[$z]; ?>"></td>
+                                                                                                                                                                                                                                        <input type="text" name="rate_<?php echo $t ?>[]" class="rate  form-control" size="3" maxlength="7" value="<?php echo $average[$z]; ?>"></td>
     
-                                                                                                                                                                                    <td class="total_used_materials">
-                                                                                                                                                                                        <input type="hidden" name="total_material_hidden_<?php echo $t ?>[]" class=" form-control required"
-                                                                                                                                                                                                                style=" width: 40%; display: inline;" value="<?php echo $totalMaterial[$z]; ?> " size="3">
+                                                                                                                                                                                                                            <td class="total_used_materials">
+                                                                                                                                                                                                                                <input type="hidden" name="total_material_hidden_<?php echo $t ?>[]" class=" form-control required"
+                                                                                                                                                                                                                                                        style=" width: 40%; display: inline;" value="<?php echo $totalMaterial[$z]; ?> " size="3">
 
-                                                                                                                                                                                                            <input type="text" name="total_material_<?php echo $t ?>[]" class="amount  form-control required"
-                                                                                                                                                                                style=" width: 40%; display: inline;" value="<?php echo $totalMaterial[$z]; ?> " size="3">&nbsp;
-                                                                                                                                                                            <input type="hidden" name="total_material_used[]" id="total_material_used" value="">
-                                                                                                                                                                            <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
-                                                                                                                                                                            &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
-                                                                                                                                                                        </td>
-                                                                                                                                                                    </tr>
-                                                                                                                                                                                                                                                <?php
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                    ?>
-                                                                                                                                                </tbody>
-                                                                                                                                                    </table>
-                                                                                                                                                            <?php
-                                                                                                                                                            $t++;
+                                                                                                                                                                                                                                                    <input type="text" name="total_material_<?php echo $t ?>[]" class="amount  form-control required"
+                                                                                                                                                                                                                        style=" width: 40%; display: inline;" value="<?php echo $totalMaterial[$z]; ?> " size="3">&nbsp;
+                                                                                                                                                                                                                    <input type="hidden" name="total_material_used[]" id="total_material_used" value="">
+                                                                                                                                                                                                                    <button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
+                                                                                                                                                                                                                    &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button>
+                                                                                                                                                                                                                </td>
+                                                                                                                                                                                                            </tr>
+                                                                                                                                                                                                                                                                                        <?php
+                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                    ?>
+                                                                                                                                                                                </tbody>
+                                                                                                                                                                                    </table>
+                                                                                                                                                                                            <?php
+                                                                                                                                                                                            $t++;
+                                                                    }
+                                                                } else {
+                                                                    echo "No data found.";
+                                                                }
+
                                                             }
-                                                        } else {
-                                                            echo "No data found.";
-                                                        }
+                                                            ?>
+                                                                                                    </div>
+                                                                                                </div>
+                                                        <hr>
+                                                        <?php
+                                                        $invoice_no = $invoice_no;
+                                                        $get_ledger_invoice = $this->Balance_model->get_bal_user_bill($invoice_no);
+                                                        ?>
+                                                        <div class="form-group">
+                                                            <input type="hidden" name="balance_id" value="<?php echo $get_ledger_invoice->id; ?>">
+                                               <div class="col-sm-2 col-sm-offset-6">
+                                                   <b>TOTAL AMOUNT</b>
+                                               </div>
+                                               <div class="col-sm-3">
+                                                   <input type="text" name="total_amount" id="total_amount" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->bill_amount; ?>" size="3">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-2 col-sm-offset-6">
+                                                                <b>ROUND OFF TOTAL</b>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control"
+                                                                    style="display: inline; width: 50%" value="<?php echo round($get_ledger_invoice->bill_amount); ?>" size="3">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group ">
+                                                            <div class="col-sm-2 col-sm-offset-6">
+                                                                <b>PAID AMOUNT</b>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input type="text" name="paid_amount" class="form-control only_num paid_amount" id="paid_amount"
+                                                                    style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->paid_amount; ?>" size="3">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group ">
+                                                            <div class="col-sm-2 col-sm-offset-6">
+                                                                <b>BALANCE AMOUNT</b>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount"
+                                                                    style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->last_amount; ?>" size="3">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-10 col-sm-offset-1">
+                                                                <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word"
+                                                                    class="form-control" style="display: inline; width: 50%" value="" size="3">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">&nbsp;</div>
+                                                        </div>
 
-                                                    }
-                                                    ?>
-                                                                                            </div>
-                                                                                        </div>
-                                                <hr>
-                                                <?php
-                                                $invoice_no = $invoice_no;
-                                                $get_ledger_invoice = $this->Balance_model->get_bal_user_bill($invoice_no);
-                                                ?>
-                                                <div class="form-group">
-                                                    <input type="hidden" name="balance_id" value="<?php echo $get_ledger_invoice->id; ?>">
-                                       <div class="col-sm-2 col-sm-offset-6">
-                                           <b>TOTAL AMOUNT</b>
-                                       </div>
-                                       <div class="col-sm-3">
-                                           <input type="text" name="total_amount" id="total_amount" readonly="readonly" class="total form-control" style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->bill_amount; ?>" size="3">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-2 col-sm-offset-6">
-                                                        <b>ROUND OFF TOTAL</b>
-                                                    </div>
-                                                    <div class="col-sm-3">
-                                                        <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control"
-                                                            style="display: inline; width: 50%" value="<?php echo round($get_ledger_invoice->bill_amount); ?>" size="3">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="col-sm-2 col-sm-offset-6">
-                                                        <b>PAID AMOUNT</b>
-                                                    </div>
-                                                    <div class="col-sm-3">
-                                                        <input type="text" name="paid_amount" class="form-control only_num paid_amount" id="paid_amount"
-                                                            style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->paid_amount; ?>" size="3">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group ">
-                                                    <div class="col-sm-2 col-sm-offset-6">
-                                                        <b>BALANCE AMOUNT</b>
-                                                    </div>
-                                                    <div class="col-sm-3">
-                                                        <input type="text" name="balance_amount" class="form-control only_num balance_amount" id="balance_amount"
-                                                            style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->last_amount; ?>" size="3">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-10 col-sm-offset-1">
-                                                        <b>AMOUNT IN WORDS:</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="total_word" id="total_word"
-                                                            class="form-control" style="display: inline; width: 50%" value="" size="3">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <div class="col-sm-12">&nbsp;</div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                  <div class="col-sm-6 col-sm-offset-3">
-                                                    <button type="submit" name="add_challan" class="btn btn-primary submit-btn2">SAVE & PRINT</button>
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <button type="reset" name="reload" class="btn btn-primary">Reset</button>
-                                                    <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>
-                                                    <button type="button" name="" class="btn btn-primary" id="remove-div">Remove</button>
-                                                  </div>
-                                                </div>
+                                                        <div class="form-group">
+                                                          <div class="col-sm-6 col-sm-offset-3">
+                                                            <button type="submit" name="add_challan" class="btn btn-primary submit-btn2">SAVE & PRINT</button>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <button type="reset" name="reload" class="btn btn-primary">Reset</button>
+                                                            <button type="button" name="" class="btn btn-primary" id="duplicate-table-btn">Add New</button>
+                                                            <button type="button" name="" class="btn btn-primary" id="remove-div">Remove</button>
+                                                          </div>
+                                                        </div>
 
 
-                                            </form>
-                                        </div>
-                                            </div>
-                                            <?php
+                                                    </form>
+                                                </div>
+                                                    </div>
+                                                    <?php
                             } else {
 
                                 ?>
-                                            <div role="tabpanel" class="tab-pane fade " id="gr">
+                                                    <div role="tabpanel" class="tab-pane fade " id="gr">
 
-                                            <?php
-                                            $url = 'Pices/returnEditPices/' . $cust->sr_no;
-                                            echo form_open($url, 'class="form-horizontal" id="add_product_form"');
-                                            ?>
-                                            <div class="form-group">
-                                                    <h3 class="text-center">Return Pices</h3>
-                                                </div>
-                            
-                                                 <div class="col-sm-4 "><!--leftbox -->
-                                                    <div class="form-group ">
-                                                        <label class="control-label col-sm-3">Master Name</label>
-                                                        <?php
-                                                        $master_id = $cust->master_id;
-                                                        $get_cust = $this->Customer_model->get_customers();
-                                                        ?>
-                                                        <div class="col-sm-9">
-                                                              <select name="customerName" id="customerName" class="form-control">
-                                                                <option value="" selected="selected">--select master--</option>
-                                                                <?php
-                                                                foreach ($get_cust->result() as $row) {
-                                                                    if ($master_id == $row->id) {
-                                                                        $selected = 'selected';
-                                                                    } else {
-                                                                        $selected = '';
-                                                                    }
-                                                                    echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . ' ' . $selected . '>' . $row->name . '</option>';
-                                                                } ?>
-                                                                </select>
-                                                           </div>
-                                                    </div>
-                                                </div>
-                                                 <div class="col-sm-4 text-center">
-                                    <label class="control-label">INVOICE NO.</label>
-                                                        <?php echo '<b>' . $cust->invoice_no . '</b>'; ?>
-                                                        <input type="hidden" name="invoice_no" value="<?php echo $cust->invoice_no; ?>">
-                                                    </div>
-                                                   
-                                                    <div class="col-sm-4  col-sm-offset-3">
-                                                        <div class="form-group">
-                                                            <label class="control-label col-sm-5">INVOICE DATE</label>
-                                                            <div class="col-sm-7">
-                                                                <input type="date" id="bill_date" name="bill_date" value="<?php echo $cust->created_at; ?>"/>
+                                                    <?php
+                                                    $url = 'Pices/returnEditPices/' . $cust->sr_no;
+                                                    echo form_open($url, 'class="form-horizontal" id="add_product_form"');
+                                                    ?>
+                                                    <div class="form-group">
+                                                            <h3 class="text-center">Return Pices</h3>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-12">&nbsp;</div>
-                                                <div class="form-group"><br />
-                                                  <div class="col-sm-8 col-sm-offset-2">
-                                                    <?php echo validation_errors('<p class="text text-danger">', '</p>'); ?>
-                                                  </div>
-                                                </div>
+                            
+                                                         <div class="col-sm-4 "><!--leftbox -->
+                                                            <div class="form-group ">
+                                                                <label class="control-label col-sm-3">Master Name</label>
+                                                                <?php
+                                                                $master_id = $cust->master_id;
+                                                                $get_cust = $this->Customer_model->get_customers();
+                                                                ?>
+                                                                <div class="col-sm-9">
+                                                                      <select name="customerName" id="customerName" class="form-control">
+                                                                        <option value="" selected="selected">--select master--</option>
+                                                                        <?php
+                                                                        foreach ($get_cust->result() as $row) {
+                                                                            if ($master_id == $row->id) {
+                                                                                $selected = 'selected';
+                                                                            } else {
+                                                                                $selected = '';
+                                                                            }
+                                                                            echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . ' ' . $selected . '>' . $row->name . '</option>';
+                                                                        } ?>
+                                                                        </select>
+                                                                   </div>
+                                                            </div>
+                                                        </div>
+                                                         <div class="col-sm-4 text-center">
+                                            <label class="control-label">INVOICE NO.</label>
+                                                                <?php echo '<b>' . $cust->invoice_no . '</b>'; ?>
+                                                                <input type="hidden" name="invoice_no" value="<?php echo $cust->invoice_no; ?>">
+                                                            </div>
+                                                   
+                                                            <div class="col-sm-4  col-sm-offset-3">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-sm-5">INVOICE DATE</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input type="date" id="bill_date" name="bill_date" value="<?php echo $cust->created_at; ?>"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">&nbsp;</div>
+                                                        <div class="form-group"><br />
+                                                          <div class="col-sm-8 col-sm-offset-2">
+                                                            <?php echo validation_errors('<p class="text text-danger">', '</p>'); ?>
+                                                          </div>
+                                                        </div>
 
-                                                <div class="form-group"><br />
-                                                    <div class="col-sm-8 col-sm-offset-2">
-                                                        <?php
-                                                        if ($this->session->flashdata('pass')) {
-                                                            echo '<div class="alert alert-success alert-block successMsg"> ';
-                                                            echo $this->session->flashdata('pass');
-                                                            echo '</div>';
-                                                        } else if ($this->session->flashdata('fail')) {
-                                                            echo '<div class = "alert alert-warning successMsg">';
-                                                            echo $this->session->flashdata('fail');
-                                                            echo '</div>';
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                </div>
-
-                                                <!--table withouot tax-->
-                                                <div class="form-group" id="">
-                                                    <div class="container" id="table-container">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Design No</th>
-                                                                <th>Quantity</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                            <?php $t = 0;
-                                                            if ($type = 'gr') {
-
-                                                                if (!empty($dataArray)) {
-                                                                    foreach ($dataArray as $entry) {
-                                                                        $designNumber = $entry['design_number'];
-                                                                        $total_piece = $entry['total_piece'];
-                                                                        $designNumber = implode(", ", $designNumber);
-                                                                        $Total_piece = implode(", ", $total_piece);
-                                                                        ?>  
-                                                                                                                        <input type="hidden" name="invoice_no" value="<?php echo $cust->invoice_no; ?>">
-
-                                                                                                                                        <tr class="row_one">
-                                                                                                                                            <td class="material_ids">
-                                                                                                                                                <select name="design_no[]" id="return_pice"  class="form-control my-select design required">
-                                                                                                                                                        <option value="">--select design no--</option>
-                                                                                                                                        <?php foreach ($designs->result() as $row) {
-                                                                                                                                            $selected = set_select("design_no[]", $row->design_num);
-                                                                                                                                            $data_id = $row->id;
-                                                                                                                                            if ($designNumber == $row->id) {
-                                                                                                                                                $selected = 'selected';
-                                                                                                                                            }
-                                                                                                                                            echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . $selected . '>' . $row->design_num . '</option>';
-                                                                                                                                        } ?>
-                                                                                                                                </select>
-                                                                                                                            </td>
-                                                                                                                            <td>
-                                                                                                                                <input type="text" name="return_qnty[]" class="return_qnty form-control" size="3" maxlength="7" value="<?php echo $Total_piece; ?>">
-                                                                                                                                    <input type="hidden" name="return_qnty_hidden[]" class="return_qnty_hidden form-control" size="3" maxlength="7" value="<?php echo $Total_piece; ?>">
-                                                                                                                            </td>   
-                                                                                                                            <td><button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
-                                                                                                                                &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button></td>                                         
-                                                                                                                        </tr>
-                                                                                                                        <?php
-                                                                    }
+                                                        <div class="form-group"><br />
+                                                            <div class="col-sm-8 col-sm-offset-2">
+                                                                <?php
+                                                                if ($this->session->flashdata('pass')) {
+                                                                    echo '<div class="alert alert-success alert-block successMsg"> ';
+                                                                    echo $this->session->flashdata('pass');
+                                                                    echo '</div>';
+                                                                } else if ($this->session->flashdata('fail')) {
+                                                                    echo '<div class = "alert alert-warning successMsg">';
+                                                                    echo $this->session->flashdata('fail');
+                                                                    echo '</div>';
                                                                 }
-                                                            }
-                                                            ?>
-                                                        </tbody>
-                                                    </table>
-                                                    </div>
-                                                </div>
-                                                <hr>
+                                                                ?>
+                                                            </div>
+                                                        </div>
+
+                                                        <!--table withouot tax-->
+                                                        <div class="form-group" id="">
+                                                            <div class="container" id="table-container">
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Design No</th>
+                                                                        <th>Quantity</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                    <?php $t = 0;
+                                                                    if ($type = 'gr') {
+
+                                                                        if (!empty($dataArray)) {
+                                                                            foreach ($dataArray as $entry) {
+                                                                                $designNumber = $entry['design_number'];
+                                                                                $total_piece = $entry['total_piece'];
+                                                                                $designNumber = implode(", ", $designNumber);
+                                                                                $Total_piece = implode(", ", $total_piece);
+                                                                                ?>  
+                                                                                                                                                        <input type="hidden" name="invoice_no" value="<?php echo $cust->invoice_no; ?>">
+
+                                                                                                                                                                        <tr class="row_one">
+                                                                                                                                                                            <td class="material_ids">
+                                                                                                                                                                                <select name="design_no[]" id="return_pice"  class="form-control my-select design required">
+                                                                                                                                                                                        <option value="">--select design no--</option>
+                                                                                                                                                                        <?php foreach ($designs->result() as $row) {
+                                                                                                                                                                            $selected = set_select("design_no[]", $row->design_num);
+                                                                                                                                                                            $data_id = $row->id;
+                                                                                                                                                                            if ($designNumber == $row->id) {
+                                                                                                                                                                                $selected = 'selected';
+                                                                                                                                                                            }
+                                                                                                                                                                            echo '<option label="" data-id="' . $row->id . '" value="' . $row->id . '" ' . $selected . '>' . $row->design_num . '</option>';
+                                                                                                                                                                        } ?>
+                                                                                                                                                                </select>
+                                                                                                                                                            </td>
+                                                                                                                                                            <td>
+                                                                                                                                                                <input type="text" name="return_qnty[]" class="return_qnty form-control" size="3" maxlength="7" value="<?php echo $Total_piece; ?>">
+                                                                                                                                                                    <input type="hidden" name="return_qnty_hidden[]" class="return_qnty_hidden form-control" size="3" maxlength="7" value="<?php echo $Total_piece; ?>">
+                                                                                                                                                            </td>   
+                                                                                                                                                            <td><button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm"><b>+</b></button>
+                                                                                                                                                                &nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove"><b>X</b></button></td>                                         
+                                                                                                                                                        </tr>
+                                                                                                                                                        <?php
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                </tbody>
+                                                            </table>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
                           
-                                                <div class="form-group">
-                                                  <div class="col-sm-12 col-sm-offset-5 ">
-                                                    <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
-                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    <button type="reset" name="reload" class="btn btn-primary">Reset</button>
-                                                  </div>
-                                                </div>
+                                                        <div class="form-group">
+                                                          <div class="col-sm-12 col-sm-offset-5 ">
+                                                            <button type="submit" name="add_challan" class="btn btn-primary submit-btn">SAVE & PRINT</button>
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            <button type="reset" name="reload" class="btn btn-primary">Reset</button>
+                                                          </div>
+                                                        </div>
 
 
-                                            </form>
-                                            </div>
-                                              <?php
+                                                    </form>
+                                                    </div>
+                                                      <?php
                             }
 
                             ?>
