@@ -274,48 +274,7 @@
                                             }
                                         }
                                         ?>
-                                        <tr class="row_one">
-                                            <td class="">
-                                                <select name="hsn[]" id="hsn"
-                                                    class="form-control my-select check_design_stock">
-                                                    <option value="">--select design no--</option>
-                                                    <?php foreach ($designs->result() as $row) {
-                                                        $selected = set_select("hsn[]", $row->design_num);
-                                                        $data_id = $row->id;
-                                                        echo '<option data-id="' . $row->id . '" value="' . $row->design_num . '" ' . set_select("hsn[]", $row->design_num) . '>' . $row->design_num . '</option>';
-
-                                                    } ?>
-                                                </select>
-                                                <input type="hidden" name="selected_ids[]" id="selected_ids" value="">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control stock_quantity"
-                                                    id="stock_quantity" name="stock_quantity[]"
-                                                    placeholder="Stock/Quantity" value="" readonly>
-                                            </td>
-                                            <td class="hide">
-                                                <select name="items[]" id="items" class="form-control">
-                                                    <option value="">--select product--</option>
-                                                    <?php foreach ($productList->result() as $row) {
-                                                        echo '<option label="" value="' . $row->product_name . '" ' . set_select("items[]", $row->product_name) . '>' . $row->product_name . '</option>';
-                                                    } ?>
-                                                </select>
-                                            </td>
-
-                                            <td><input type="text" name="qnty[]" class="qnty form-control" size="3"
-                                                    maxlength="7"></td>
-                                            <td><input type="text" name="rate[]" class="rate form-control" size="3"
-                                                    maxlength="7"></td>
-                                            <td>
-                                                <input type="text" name="amount[]" class="amount form-control"
-                                                    style=" width: 40%; display: inline;" value="" size="3"
-                                                    readonly="readonly">&nbsp;
-                                                <button type="button" name="add_more" id="add_more"
-                                                    class="add_more btn btn-success btn-sm"><b>+</b></button>
-                                                &nbsp;<button type="button" name="remove" id="remove"
-                                                    class="btn btn-warning btn-sm remove"><b>X</b></button>
-                                            </td>
-                                        </tr>
+                                        
                                     </tbody>
                                 </table>
                             </div>
