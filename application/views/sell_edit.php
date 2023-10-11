@@ -256,9 +256,9 @@
                                                         </select>
                                                     </td>
 
-                                                    <td><input type="text" name="qnty[]" class=" form-control" size="3"
+                                                    <td><input type="text" name="qnty[]" class="qnty form-control" size="3"
                                                             maxlength="7" value="<?php echo $qnty; ?>"></td>
-                                                    <td><input type="text" name="rate[]" class=" form-control" size="3"
+                                                    <td><input type="text" name="rate[]" class="rate form-control" size="3"
                                                             maxlength="7" value="<?php echo $rate; ?>"></td>
                                                     <td>
                                                         <input type="text" name="amount[]" class="amount form-control"

@@ -85,9 +85,10 @@ class Challan_model extends CI_Model {
         return $this->db->affected_rows();
     }
 
-    public function get_sell_stock()
+    public function get_sell_stock($sell_id)
     {
         $this->db->select('*');
+        $this->db->where('sr_no', $sell_id);
         $this->db->from('insider_bill');
         return $this->db->get();
     }

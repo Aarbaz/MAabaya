@@ -182,7 +182,7 @@ class Invoice extends CI_Controller
 			$data_balance = array(
 				'customer_id' => $bakers_id,
 				'bill_no' => $invoice_no,
-				'total_bill' => $amount,
+				'total_bill' => $total_amount,
 				'paid_bill' => $paid_amount,
 				'balance_bill' => $balance_amount,
 				'updated_on' => date('Y-m-d H:i:s')
@@ -194,7 +194,7 @@ class Invoice extends CI_Controller
 				'invoice' => $invoice_no,
 				'quantity' => $qnty,
 				'rate' => $rate,
-				'bill_amount' => $amount,
+				'bill_amount' => $total_amount,
 				'paid_amount' => $paid_amount,
 				'last_amount' => $balance_amount,
 				'dated' => date('Y-m-d H:i:s')
@@ -345,7 +345,7 @@ class Invoice extends CI_Controller
 				$filename = $this->input->post('invoice_no') . '.pdf';
 				// print_r($data_pdf['customer']);
 				// die();
-				$dir = APPPATH . '/invoice/' . $customers_name->name . '/';
+				$dir = APPPATH . '/invoice/' . $customers_name->id . '/';
 
 				if (!is_dir($dir)) {
 					mkdir($dir, 0777, true);
@@ -628,7 +628,7 @@ class Invoice extends CI_Controller
 				$filename = $this->input->post('invoice_no') . '.pdf';
 				// print_r($data_pdf['customer']);
 				// die();
-				$dir = APPPATH . '/invoice/' . $customers_name->name . '/';
+				$dir = APPPATH . '/invoice/' . $customers_name->id . '/';
 
 				if (!is_dir($dir)) {
 					mkdir($dir, 0777, true);
