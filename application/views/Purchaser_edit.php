@@ -245,20 +245,18 @@
        if( $(this).val() !== '' )
        {
            amt = $(this).val();
-   console.log(amt);
 
            total += parseFloat(amt);
        }
    });
    var total_with_tax = parseFloat(total) + 0 + 0 + 0 ;
    total_with_tax      = total_with_tax.toFixed(2);
-      $('#total_amount').val(total_with_tax);
+      // $('#total_amount').val(total_with_tax);
 
    //total round amount
-   $('#total_round').val(Math.round(total));
+   // $('#total_round').val(Math.round(total));
    //total in words
    var round_amount = total;
-   console.log(round_amount);
       if( round_amount!= null)
       {
          var total_words = NumToWord(round_amount);

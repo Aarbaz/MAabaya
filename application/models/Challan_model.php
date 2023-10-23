@@ -60,7 +60,7 @@ class Challan_model extends CI_Model {
     // get  Invoice list
     public function get_invoice_list()
     {
-        return $this->db->select('sr_no, invoice_no, round_off_total, invoice_date, update_at, name,address,customer_id, customer_address, ')->order_by('sr_no','desc')
+        return $this->db->select('sr_no, invoice_no, round_off_total, invoice_date, update_at, name,address,customer_id, customer_address,id, ')->order_by('sr_no','desc')
         ->from('insider_bill')->join('customers', 'customers.id = insider_bill.customer_id')->get();
        /*  return $this->db->select('sr_no, invoice_no, round_off_total, invoice_date, customer_id,customer_address, product_name, invoice_date')->order_by('sr_no','desc')
         ->from('insider_bill')->get(); */

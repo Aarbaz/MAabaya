@@ -121,6 +121,7 @@ class Balance_model extends CI_Model {
       return $query->result();
     }
 
+
     // function get_billinvoice($id)
     // {
     //   $this->db->select('*');
@@ -286,6 +287,15 @@ class Balance_model extends CI_Model {
         return $query->row();
 
     }
+
+    // function get_custledger($id)
+    // {
+    //     $this->db->select('*');
+    //     $this->db->from(" customer_ledger_balance");
+    //     $this->db->where("customer", $id);
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
     /*ends here */
 
 }

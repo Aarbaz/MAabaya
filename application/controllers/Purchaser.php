@@ -406,6 +406,15 @@ class Purchaser extends CI_Controller
                 $material_names_new = $this->input->post("material_name[]");
                 $stock_q_new = $this->input->post("stock_q[]");
                 // $prod_id = $postData["prod_id"];
+                $purchaser_no = $postData["purchaser_no"];
+
+
+                $get_ledger_invoice = $this->Balance_model->get_bal_user_bill($purchaser_no);
+                // print_r($get_ledger_invoice);
+
+                        $ledger_bill = $get_ledger_invoice->bill_amount;
+                        $paidBill = $get_ledger_invoice->paid_amount;
+                        $ledger_last = $get_ledger_invoice->last_amount;
 
                 // Retrieve the existing record from the database
                 $existingData = $this->Purchaser_model->get_pur_by_id($pur_id); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
@@ -438,7 +447,7 @@ class Purchaser extends CI_Controller
                             'quantity' => (float)$row->quantity - (float)$old_material["stock_q"],
                         );
                         $this->db->where('materials_id', $old_material["material_id"]);
-                        $this->db->update('purchaser_stock', $data3);
+                        // $this->db->update('purchaser_stock', $data3);
                     }
 
 
@@ -476,7 +485,7 @@ class Purchaser extends CI_Controller
 
                 $purchaser_id = $postData["pur_id"];
 
-                $update = $this->Purchaser_model->update_purchaser($update_data, $pur_id);
+                // $update = $this->Purchaser_model->update_purchaser($update_data, $pur_id);
 
                 // $purchaser_id = $this->db->insert_id();
                 $material_idNew = $this->input->post("material_name[]");
@@ -530,7 +539,7 @@ class Purchaser extends CI_Controller
 
                         // die();
                         $this->db->where('materials_id', $material_idNew[$j]);
-                        $this->db->update('purchaser_stock', $data3);
+                        // $this->db->update('purchaser_stock', $data3);
                     }
 
                     
@@ -541,7 +550,7 @@ class Purchaser extends CI_Controller
                         $dataMtk["price"] = '';
                         $dataMtk["purchaser_id"] = '';
                         $dataMtk["purchaser_owner_id"] = '';
-                        $this->Purchaser_model->add_purchaser_qty($dataMtk);
+                        // $this->Purchaser_model->add_purchaser_qty($dataMtk);
 
                     }
                     
@@ -565,7 +574,7 @@ class Purchaser extends CI_Controller
                         $updated_stock = $this->Stock_model->get_material_stock($material_id);
                         $stock = $updated_stock ? $updated_stock : $in_out_qnty;
 
-                        $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
+                        // $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
                     }
                 }
                 /************************* Store in HISTORY table ***********************/
@@ -575,7 +584,6 @@ class Purchaser extends CI_Controller
                 $balance_amount = strtoupper($postData["balance_amount"]);
                 $paid_amount = strtoupper($postData["paid_amount"]);
                 $total_amount = strtoupper($postData["total_amount"]);
-                $purchaser_no = $postData["purchaser_no"];
                 if ($balance_amount) {
                     // print_r('sadasd');
                     // die();
@@ -590,11 +598,86 @@ class Purchaser extends CI_Controller
                         //     'paid_bill' => $row->paid_bill + $paid_amount,
                         //     'total_bill' => $row->total_bill + $total_amount,
                         // );
+
+                        if ($paidBill) {
+                            $diff_paid = (float) $paidBill - (float) $paid_amount;
+
+                        } else {
+                            $diff_paid = (float) $paid_amount - (float) $value_null;
+                        }
+                        // print_r($diff_paid);
+
+                        if ($diff_paid > 0) {
+                            // echo "The diff_paid is positive: " . $diff_paid;   
+                            $paid_bill_new = (float) $row->paid_bill + (float) $diff_paid;
+                        } elseif ($diff_paid < 0) {
+                            $paid_bill_new = (float) $row->paid_bill + (float) abs($diff_paid);
+                        } else {
+                            $paid_bill_new = (float) $row->paid_bill + (float) $diff_paid;
+                        }
+                        // i want ledger bill amount minus with total amount and difference amount will plus with total bill amount
+
+
+                        if ($ledger_bill) {
+                            $diff_total = (float) $ledger_bill - (float) $total_amount;
+
+                        } else {
+
+                            $diff_total = (float) $total_amount - (float) $value_null;
+                        }
+
+                        // print_r($diff_total);
+
+                        if ($diff_total > 0) {
+                            // echo "The diff_totalerence is positive: " . $diff_total; 
+                            $total_bill_new = (float) $row->total_bill + (float) $diff_total;
+                        } elseif ($diff_total < 0) {
+                            $total_bill_new = (float) $row->total_bill + (float) abs($diff_total);
+                        } else {
+                            $total_bill_new = (float) $row->total_bill + (float) $diff_total;
+                        }
+
+
+                        
+                        
+                        if ($ledger_last) {
+                            $diff_bal = (float) $ledger_last - (float) $balance_amount;
+
+                        } else {
+                            $diff_bal = (float) $balance_amount - (float) $value_null;
+                        }
+
+                        // print_r($diff_bal);
+
+                        if ($diff_bal > 0) {
+                            // echo "The diff_balerence is positive: " . $diff_bal; 
+                            $bal_bill_new = (float) $row->balance_bill + (float) $diff_bal;
+
+                        } elseif ($diff_bal < 0) {
+                            // echo "The diff_balerence is negative: " . abs($diff_bal);
+                            $bal_bill_new = (float) $row->balance_bill + (float) abs($diff_bal);
+                        }
+                        else{
+                            $bal_bill_new = (float) $row->balance_bill + (float) $diff_bal;
+
+                        }
+
+
                         $data3 = array(
-                            'balance_bill' => $balance_amount,
-                            'paid_bill' => $paid_amount,
-                            'total_bill' => $total_amount,
+                            'customer_id' => $customer_id,
+                            'bill_no' => $purchaser_no,
+                            'total_bill' => $total_bill_new,
+                            'paid_bill' => $paid_bill_new,
+                            'balance_bill' => $bal_bill_new,
+                            'updated_on' => date('Y-m-d H:i:s')
                         );
+                        // print_r($data3);
+
+                        // $data3 = array(
+                        //     'balance_bill' => $balance_amount,
+                        //     'paid_bill' => $paid_amount,
+                        //     'total_bill' => $total_amount,
+                        // );
                         // $this->db->where('customer_id',$customer_id);
                         // $this->db->update('balance', $data3);
                         $bal_update = $this->Balance_model->update_balanceBybill($data3, $customer_id, $purchaser_no);
@@ -611,6 +694,7 @@ class Purchaser extends CI_Controller
                         $bal_insert = $this->Balance_model->insert_balance($bal_data);
                     }
                 }
+                // die();
 
                 $ledge_data = [
                     "customer" => $customer_id,
@@ -713,6 +797,7 @@ class Purchaser extends CI_Controller
                 ob_end_clean();
                 // $pdf->Output($save_path, "I");
                 $pdf->Output($save_path, "F");
+                // die();
                 $this->session->set_flashdata(
                     "success",
                     " Purchaser invoice updated successfully...."
