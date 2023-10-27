@@ -239,7 +239,7 @@ class Purchaser extends CI_Controller
 
                 if ($insert > 0) {
                     $json_data = json_encode($data);
-                /****************** Store in HISTORY table ******************************/
+                    /****************** Store in HISTORY table ******************************/
                     $material_ids = $this->input->post("material_name[]");
                     $stock_quantities = $this->input->post("stock_q[]");
 
@@ -252,7 +252,7 @@ class Purchaser extends CI_Controller
                             $in_out_qnty = $stock_quantities[$i];
                             $invoice_id = $postData["purchaser_no"];
                             $json_data = $json_data;
-                            
+
                             $updated_stock = $this->Stock_model->get_material_stock($material_id);
                             $stock = $updated_stock ? $updated_stock : $in_out_qnty;
 
@@ -402,23 +402,17 @@ class Purchaser extends CI_Controller
                 $this->load->view("layout/footer");
             } else {
 
-
                 $material_names_new = $this->input->post("material_name[]");
                 $stock_q_new = $this->input->post("stock_q[]");
-                // $prod_id = $postData["prod_id"];
                 $purchaser_no = $postData["purchaser_no"];
-
-
                 $get_ledger_invoice = $this->Balance_model->get_bal_user_bill($purchaser_no);
-                // print_r($get_ledger_invoice);
 
-                        $ledger_bill = $get_ledger_invoice->bill_amount;
-                        $paidBill = $get_ledger_invoice->paid_amount;
-                        $ledger_last = $get_ledger_invoice->last_amount;
+                $ledger_bill = $get_ledger_invoice->bill_amount;
+                $paidBill = $get_ledger_invoice->paid_amount;
+                $ledger_last = $get_ledger_invoice->last_amount;
 
                 // Retrieve the existing record from the database
                 $existingData = $this->Purchaser_model->get_pur_by_id($pur_id); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
-
 
                 $existing_material_names = explode(",", $existingData["material_id"]);
                 $existing_stock_q = explode(",", $existingData["stock"]);
@@ -438,26 +432,20 @@ class Purchaser extends CI_Controller
                 }
                 // Now you can use the $old_materials array to identify old materials not included in the new data
                 foreach ($old_materials as $old_material) {
-
                     $this->db->where('materials_id', $old_material["material_id"]);
                     $query = $this->db->get('purchaser_stock');
                     $row = $query->row();
                     if ($query->num_rows()) {
                         $data3 = array(
-                            'quantity' => (float)$row->quantity - (float)$old_material["stock_q"],
+                            'quantity' => (float) $row->quantity - (float) $old_material["stock_q"],
                         );
                         $this->db->where('materials_id', $old_material["material_id"]);
-                        // $this->db->update('purchaser_stock', $data3);
+                        $this->db->update('purchaser_stock', $data3);
                     }
-
-
 
                 }
 
-                $material_name = implode(
-                    ",",
-                    $this->input->post("material_name[]")
-                );
+                $material_name = implode(",", $this->input->post("material_name[]"));
                 $material_name = trim($material_name, ",");
 
                 $qnty = implode(",", $this->input->post("stock_q[]"));
@@ -469,121 +457,12 @@ class Purchaser extends CI_Controller
                 $amount = implode(",", $this->input->post("price_total[]"));
                 $amount = trim($amount, ",");
 
-                if ($postData["bill_date"]) {
-                    $date = $postData["bill_date"];
-                } else {
-                    $date = date("Y-m-d");
-                }
-                $update_data = [
-                    "purchaser_owner_id" => strtoupper($postData["owner_name"]),
-                    "material_id" => $material_name,
-                    "total_amount" => $amount,
-                    "stock" => $qnty,
-                    "price" => $rate,
-                    "create_date" => $date,
-                ];
-
-                $purchaser_id = $postData["pur_id"];
-
-                // $update = $this->Purchaser_model->update_purchaser($update_data, $pur_id);
-
-                // $purchaser_id = $this->db->insert_id();
-                $material_idNew = $this->input->post("material_name[]");
-                $stockNew = $this->input->post("stock_qhidden[]");
-
-                $stock = $this->input->post("stock_q[]");
-                // $price = $this->input->post("p_price[]");
-
-
-                $j = 0;
-                foreach ($stockNew as $row) {
-                    $MakStk["maker_id"] = '0';
-                    $MakStk["making_owner_id"] = '0';
-                    $MakStk["materials_id"] = $material_idNew[$j];
-                    $MakStk["quantity"] = $stock[$j];
-
-                    $this->db->where('materials_id', $material_idNew[$j]);
-                    $query = $this->db->get('purchaser_stock');
-                    $row = $query->row();
-                    // print_r($stockNew[$j]);
-                    // print_r($stock[$j]);
-
-                    $value_null = '0';
-                    if ($stockNew[$j]) {
-                        $diff = (float) $stock[$j] - (float) $stockNew[$j];
-
-                    } else {
-
-                        $diff = (float) $stock[$j] - (float) $value_null;
-                    }
-                    if ($query->num_rows()) {
-
-                        if ($diff > 0) {
-                            // echo "The difference is positive: " . $diff;	
-                            // If the product exists, update the quantity value in the database
-                            $data3 = array(
-                                'quantity' => (float) $row->quantity + (float) $diff,
-                            );
-                        } elseif ($diff < 0) {
-                            // print_r(abs($diff));
-
-                            // echo "The difference is negative: " . abs($diff);
-                            $data3 = array(
-                                'quantity' => (float) $row->quantity + (float) $diff,
-                            );
-                        } else {
-                            $data3 = array(
-                                'quantity' => (float) $row->quantity + (float) abs($diff),
-                            );
-                        }
-
-                        // die();
-                        $this->db->where('materials_id', $material_idNew[$j]);
-                        // $this->db->update('purchaser_stock', $data3);
-                    }
-
-                    
-                    else {
-                        // $null_value= "0";
-                        $dataMtk["materials_id"] = $material_idNew[$j];
-                        $dataMtk["quantity"] = (float) $value_null - (float) $stock[$j];
-                        $dataMtk["price"] = '';
-                        $dataMtk["purchaser_id"] = '';
-                        $dataMtk["purchaser_owner_id"] = '';
-                        // $this->Purchaser_model->add_purchaser_qty($dataMtk);
-
-                    }
-                    
-                    $j++;
-                }
-                
-                /****************** Store in HISTORY table ******************************/
-                $material_ids = $this->input->post("material_name[]");
-                $stock_quantities = $this->input->post("stock_q[]");
-                $json_data = json_encode($update_data);
-                if (!empty($material_ids) && !empty($stock_quantities)) {
-                    // Loop through the data and store each pair in the stock table
-                    for ($i = 0; $i < count($material_ids); $i++) {
-                        $entry_from = 1;
-                        $material_id = $material_ids[$i];
-                        $user_id = $postData["owner_name"];
-                        $in_out_qnty = $stock_quantities[$i];
-                        $invoice_id = $postData["purchaser_no"];
-                        $json_data = $json_data;
-                        
-                        $updated_stock = $this->Stock_model->get_material_stock($material_id);
-                        $stock = $updated_stock ? $updated_stock : $in_out_qnty;
-
-                        // $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
-                    }
-                }
-                /************************* Store in HISTORY table ***********************/
-
-
                 $customer_id = strtoupper($postData["owner_name"]);
                 $balance_amount = strtoupper($postData["balance_amount"]);
                 $paid_amount = strtoupper($postData["paid_amount"]);
                 $total_amount = strtoupper($postData["total_amount"]);
+                $value_null = '0';
+
                 if ($balance_amount) {
                     // print_r('sadasd');
                     // die();
@@ -593,61 +472,50 @@ class Purchaser extends CI_Controller
                     $row = $query->row();
                     if ($query->num_rows()) {
 
-                        // $data3 = array(
-                        //     'balance_bill' => $row->balance_bill + $balance_amount,
-                        //     'paid_bill' => $row->paid_bill + $paid_amount,
-                        //     'total_bill' => $row->total_bill + $total_amount,
-                        // );
 
                         if ($paidBill) {
-                            $diff_paid = (float) $paidBill - (float) $paid_amount;
+                            $diff_paid = (float) $paid_amount - (float) $paidBill;
 
                         } else {
                             $diff_paid = (float) $paid_amount - (float) $value_null;
                         }
-                        // print_r($diff_paid);
 
                         if ($diff_paid > 0) {
                             // echo "The diff_paid is positive: " . $diff_paid;   
                             $paid_bill_new = (float) $row->paid_bill + (float) $diff_paid;
                         } elseif ($diff_paid < 0) {
-                            $paid_bill_new = (float) $row->paid_bill + (float) abs($diff_paid);
+                            $paid_bill_new = (float) $row->paid_bill - (float) abs($diff_paid);
                         } else {
                             $paid_bill_new = (float) $row->paid_bill + (float) $diff_paid;
                         }
-                        // i want ledger bill amount minus with total amount and difference amount will plus with total bill amount
-
 
                         if ($ledger_bill) {
-                            $diff_total = (float) $ledger_bill - (float) $total_amount;
+                            $diff_total = (float) $total_amount - (float) $ledger_bill;
+
 
                         } else {
 
                             $diff_total = (float) $total_amount - (float) $value_null;
                         }
 
-                        // print_r($diff_total);
 
                         if ($diff_total > 0) {
-                            // echo "The diff_totalerence is positive: " . $diff_total; 
                             $total_bill_new = (float) $row->total_bill + (float) $diff_total;
                         } elseif ($diff_total < 0) {
-                            $total_bill_new = (float) $row->total_bill + (float) abs($diff_total);
+                            $total_bill_new = (float) $row->total_bill - (float) abs($diff_total);
                         } else {
                             $total_bill_new = (float) $row->total_bill + (float) $diff_total;
                         }
 
 
-                        
-                        
+
+
                         if ($ledger_last) {
-                            $diff_bal = (float) $ledger_last - (float) $balance_amount;
+                            $diff_bal = (float) $balance_amount - (float) $ledger_last;
 
                         } else {
                             $diff_bal = (float) $balance_amount - (float) $value_null;
                         }
-
-                        // print_r($diff_bal);
 
                         if ($diff_bal > 0) {
                             // echo "The diff_balerence is positive: " . $diff_bal; 
@@ -655,13 +523,10 @@ class Purchaser extends CI_Controller
 
                         } elseif ($diff_bal < 0) {
                             // echo "The diff_balerence is negative: " . abs($diff_bal);
-                            $bal_bill_new = (float) $row->balance_bill + (float) abs($diff_bal);
-                        }
-                        else{
+                            $bal_bill_new = (float) $row->balance_bill - (float) abs($diff_bal);
+                        } else {
                             $bal_bill_new = (float) $row->balance_bill + (float) $diff_bal;
-
                         }
-
 
                         $data3 = array(
                             'customer_id' => $customer_id,
@@ -671,15 +536,6 @@ class Purchaser extends CI_Controller
                             'balance_bill' => $bal_bill_new,
                             'updated_on' => date('Y-m-d H:i:s')
                         );
-                        // print_r($data3);
-
-                        // $data3 = array(
-                        //     'balance_bill' => $balance_amount,
-                        //     'paid_bill' => $paid_amount,
-                        //     'total_bill' => $total_amount,
-                        // );
-                        // $this->db->where('customer_id',$customer_id);
-                        // $this->db->update('balance', $data3);
                         $bal_update = $this->Balance_model->update_balanceBybill($data3, $customer_id, $purchaser_no);
 
                     } else {
@@ -694,11 +550,9 @@ class Purchaser extends CI_Controller
                         $bal_insert = $this->Balance_model->insert_balance($bal_data);
                     }
                 }
-                // die();
 
                 $ledge_data = [
                     "customer" => $customer_id,
-                    // "bill_type" => 'debited',
                     "invoice" => strtoupper($postData["purchaser_no"]),
                     "bill_amount" => $total_amount,
                     "paid_amount" => $paid_amount,
@@ -707,41 +561,97 @@ class Purchaser extends CI_Controller
                 ];
                 $ledge_insert = $this->Balance_model->update_ledgerbalance($ledge_data, $customer_id, $purchaser_no);
 
-                // $j = 0;
-                // foreach ($stock as $row) {
-                //     $dataStk["material_id"] = $material_id[$j];
-                //     $dataStk["quantity"] = $stock[$j];
-                //     $dataStk["price"] = $price[$j];
-                //     $dataStk["purchaser_id"] = $purchaser_id;
+                if ($postData["bill_date"]) {
+                    $date = $postData["bill_date"];
+                } else {
+                    $date = date("Y-m-d");
+                }
+                $update_data = [
+                    "purchaser_owner_id" => strtoupper($postData["owner_name"]),
+                    "material_id" => $material_name,
+                    "total_amount" => $amount,
+                    "stock" => $qnty,
+                    "price" => $rate,
+                    "create_date" => $date,
+                ];
+                $purchaser_id = $postData["pur_id"];
+                $update = $this->Purchaser_model->update_purchaser($update_data, $pur_id);
+
+                $material_idNew = $this->input->post("material_name[]");
+                $stockNew = $this->input->post("stock_qhidden[]");
+
+                $stock = $this->input->post("stock_q[]");
 
 
-                //     // $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
-                //     // $this->db->where('material_id',$material_id[$j]);
-                //     // $query = $this->db->get('purchaser_stock');
-                //     // $row = $query->row();
-                //     // if ($query->num_rows()) {
-                //     // 	// If the product exists, update the quantity value in the database
-                //     // 	$data3 = array(
-                //     // 		'quantity' => $row->quantity + $stock[$j],
-                //     // 		'price' => $price[$j]
-                //     // 	);
-                //     // 	// print_r($data2);
-                //     //   $this->db->where('purchaser_owner_id', strtoupper($postData["owner_name"]));
-                //     //   $this->db->where('material_id',$material_id[$j]);
-                //     // 	$this->db->update('purchaser_stock', $data3);
-                //     // } else {
-                //     // 	// If the product does not exist, insert a new row into the database
-                //     // 	// $this->db->insert('purchaser_stock', array('p_design_number' => $product_id, 'stock_qty' => $quantity));
-                //     //   $this->Purchaser_model->add_purchaser_qty($dataStk);
-                //     //
-                //     //
-                //     // }
+                $j = 0;
+                foreach ($stockNew as $row) {
+                    $MakStk["maker_id"] = '0';
+                    $MakStk["making_owner_id"] = '0';
+                    $MakStk["materials_id"] = $material_idNew[$j];
+                    $MakStk["quantity"] = $stock[$j];
 
+                    $this->db->where('materials_id', $material_idNew[$j]);
+                    $query = $this->db->get('purchaser_stock');
+                    $row = $query->row();
 
-                //     $this->Purchaser_model->update_pstock_qty($dataStk, $material_id[$j]);
-                //     $j++;
-                // }
+                    if ($stockNew[$j]) {
+                        $diff = (float) $stock[$j] - (float) $stockNew[$j];
 
+                    } else {
+
+                        $diff = (float) $stock[$j] - (float) $value_null;
+                    }
+                    if ($query->num_rows()) {
+
+                        if ($diff > 0) {
+                            $data3 = array(
+                                'quantity' => (float) $row->quantity + (float) $diff,
+                            );
+                        } elseif ($diff < 0) {
+                            $data3 = array(
+                                'quantity' => (float) $row->quantity + (float) $diff,
+                            );
+                        } else {
+                            $data3 = array(
+                                'quantity' => (float) $row->quantity + (float) abs($diff),
+                            );
+                        }
+                        $this->db->where('materials_id', $material_idNew[$j]);
+                        $this->db->update('purchaser_stock', $data3);
+                    } else {
+                        $dataMtk["materials_id"] = $material_idNew[$j];
+                        $dataMtk["quantity"] = (float) $value_null - (float) $stock[$j];
+                        $dataMtk["price"] = '';
+                        $dataMtk["purchaser_id"] = '';
+                        $dataMtk["purchaser_owner_id"] = '';
+                        $this->Purchaser_model->add_purchaser_qty($dataMtk);
+
+                    }
+
+                    $j++;
+                }
+
+                /****************** Store in HISTORY table ******************************/
+                $material_ids = $this->input->post("material_name[]");
+                $stock_quantities = $this->input->post("stock_q[]");
+                $json_data = json_encode($update_data);
+                if (!empty($material_ids) && !empty($stock_quantities)) {
+                    // Loop through the data and store each pair in the stock table
+                    for ($i = 0; $i < count($material_ids); $i++) {
+                        $entry_from = 1;
+                        $material_id = $material_ids[$i];
+                        $user_id = $postData["owner_name"];
+                        $in_out_qnty = $stock_quantities[$i];
+                        $invoice_id = $postData["purchaser_no"];
+                        $json_data = $json_data;
+
+                        $updated_stock = $this->Stock_model->get_material_stock($material_id);
+                        $stock = $updated_stock ? $updated_stock : $in_out_qnty;
+
+                        // $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
+                    }
+                }
+                /************************* Store in HISTORY table ***********************/
                 $customer_id = strtoupper($postData["owner_name"]);
                 $this->db->select('*');
                 $this->db->from('customers');

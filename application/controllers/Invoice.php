@@ -399,6 +399,13 @@ class Invoice extends CI_Controller
 			$balance_amount = $this->input->post('balance_amount');
 
 
+			$get_ledger_invoice = $this->Balance_model->get_bal_user_bill($invoice_no);
+
+			$ledger_bill2 = $get_ledger_invoice->bill_amount;
+			$paidBill2 = $get_ledger_invoice->paid_amount;
+			$ledger_last2 = $get_ledger_invoice->last_amount;
+
+
 			$get_ledger_invoice = $this->Balance_model->get_billcust($bakers_id);
 			$ledger_bill = $get_ledger_invoice[0]->total_bill;
 			$paidBill = $get_ledger_invoice[0]->paid_bill;
@@ -433,14 +440,13 @@ class Invoice extends CI_Controller
 				$removed = array_diff_assoc($assocExisting, $assocNew);
 
 				$value_null = '0';
-				if ($existingData["total"]) {
-					$diff_total = (float) $total_amount - (float) $existingData["total"];
+				if ($ledger_bill2) {
+					$diff_total = (float) $total_amount - (float) $ledger_bill2;
 
 				} else {
-
 					$diff_total = (float) $total_amount - (float) $value_null;
 				}
-
+				// print_r($diff_total);
 
 				if ($diff_total > 0) {
 					// echo "The diff_totalerence is positive: " . $diff_total;	
@@ -452,12 +458,13 @@ class Invoice extends CI_Controller
 				}
 
 
-				if ($existingData["paid"]) {
-					$diff_paid = (float) $paid_amount - (float) $existingData["paid"];
+				if ($paidBill2) {
+					$diff_paid = (float) $paid_amount - (float) $paidBill2;
 
 				} else {
 					$diff_paid = (float) $paid_amount - (float) $value_null;
 				}
+				// print_r($diff_paid);
 
 				if ($diff_paid > 0) {
 					// echo "The diff_paiderence is positive: " . $diff_paid;	
@@ -468,13 +475,14 @@ class Invoice extends CI_Controller
 					$paid_bill_new = (float) $paidBill + (float) $diff_paid;
 				}
 
-				if ($existingData["balance"]) {
-					$diff_bal = (float) $balance_amount - (float) $existingData["balance"];
+				if ($ledger_last2) {
+					$diff_bal = (float) $balance_amount - (float) $ledger_last2;
 
 				} else {
 					$diff_bal = (float) $balance_amount - (float) $value_null;
 				}
 
+				// print_r($diff_bal);
 
 				if ($diff_bal > 0) {
 					// echo "The diff_balerence is positive: " . $diff_bal;	
@@ -486,10 +494,18 @@ class Invoice extends CI_Controller
 				} else {
 					$bal_bill_new = (float) $ledger_last + (float) $diff_bal;
 				}
-				// print_r("Added Data: ");
-				// print_r($added);
-				// print_r("Remove Data: ");
-				// print_r($removed);
+				$data_balances = array(
+					'customer_id' => $bakers_id,
+					'bill_no' => $invoice_no,
+					'total_bill' => $total_bill_new,
+					'paid_bill' => $paid_bill_new,
+					'balance_bill' => $bal_bill_new,
+					'updated_on' => date('Y-m-d H:i:s')
+				);
+				print_r($data_balances);
+				die();
+				$bal_update = $this->Balance_model->update_balanceBybill($data_balances, $bakers_id, $invoice_no);
+
 				if ($added) {
 					foreach ($added as $key => $value) {
 
@@ -552,16 +568,7 @@ class Invoice extends CI_Controller
 				'invoice_date' => $date
 			);
 
-			$data_balance = array(
-				'customer_id' => $bakers_id,
-				'bill_no' => $invoice_no,
-				'total_bill' => $total_bill_new,
-				'paid_bill' => $paid_bill_new,
-				'balance_bill' => $bal_bill_new,
-				'updated_on' => date('Y-m-d H:i:s')
-			);
-
-
+			
 			$data_ledger = array(
 				'customer' => $bakers_id,
 				'invoice' => $invoice_no,
@@ -572,12 +579,9 @@ class Invoice extends CI_Controller
 				'last_amount' => $balance_amount,
 				'dated' => $date
 			);
-			// print_r($data_ledger);
-			// die();
 			$this->db->where('invoice_no', $invoice_no);
 			$insert = $this->db->update('insider_bill', $data);
 
-			$bal_update = $this->Balance_model->update_balanceBybill($data_balance, $bakers_id, $invoice_no);
 			$ledge_insert = $this->Balance_model->update_ledgerbalance($data_ledger, $bakers_id, $invoice_no);
 
 

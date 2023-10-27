@@ -486,17 +486,89 @@ class Pices extends CI_Controller
 				$paid_amount = $this->input->post('paid_amount');
 				$balance_amount = $this->input->post('balance_amount');
 
-				$get_ledger_invoice = $this->Balance_model->get_billcust($customer_id);
+				/********************Customer Balance Update**********************/
+				$get_ledger_invoice = $this->Balance_model->get_bal_user_bill($invoice_no);
 
-				$ledger_bill = $get_ledger_invoice[0]->total_bill;
-				$paidBill = $get_ledger_invoice[0]->paid_bill;
-				$ledger_last = $get_ledger_invoice[0]->balance_bill;
+                $ledger_bill = $get_ledger_invoice->bill_amount;
+                $paidBill = $get_ledger_invoice->paid_amount;
+                $ledger_last = $get_ledger_invoice->last_amount;
+				$value_null = '0';
+				if ($balance_amount) {
+                    $this->db->where('customer_id', $customer_id);
+                    $this->db->where('bill_no', $invoice_no);
+                    $query = $this->db->get('balance');
+                    $row = $query->row();
+                    if ($query->num_rows()) {
 
-				$ledger_bill = $total_amount - $ledger_bill;
-				$paidBill = $paid_amount - $paidBill;
-				$ledger_last = $balance_amount - $ledger_last;
+
+                        if ($paidBill) {
+                            $diff_paid = (float) $paid_amount - (float) $paidBill;
+
+                        } else {
+                            $diff_paid = (float) $paid_amount - (float) $value_null;
+                        }
+
+                        if ($diff_paid > 0) {
+                            // echo "The diff_paid is positive: " . $diff_paid;   
+                            $paid_bill_new = (float) $row->paid_bill + (float) $diff_paid;
+                        } elseif ($diff_paid < 0) {
+                            $paid_bill_new = (float) $row->paid_bill - (float) abs($diff_paid);
+                        } else {
+                            $paid_bill_new = (float) $row->paid_bill + (float) $diff_paid;
+                        }
+
+                        if ($ledger_bill) {
+                            $diff_total = (float) $total_amount - (float) $ledger_bill;
 
 
+                        } else {
+
+                            $diff_total = (float) $total_amount - (float) $value_null;
+                        }
+
+
+                        if ($diff_total > 0) {
+                            $total_bill_new = (float) $row->total_bill + (float) $diff_total;
+                        } elseif ($diff_total < 0) {
+                            $total_bill_new = (float) $row->total_bill - (float) abs($diff_total);
+                        } else {
+                            $total_bill_new = (float) $row->total_bill + (float) $diff_total;
+                        }
+
+
+
+
+                        if ($ledger_last) {
+                            $diff_bal = (float) $balance_amount - (float) $ledger_last;
+
+                        } else {
+                            $diff_bal = (float) $balance_amount - (float) $value_null;
+                        }
+
+                        if ($diff_bal > 0) {
+                            // echo "The diff_balerence is positive: " . $diff_bal; 
+                            $bal_bill_new = (float) $row->balance_bill + (float) $diff_bal;
+
+                        } elseif ($diff_bal < 0) {
+                            // echo "The diff_balerence is negative: " . abs($diff_bal);
+                            $bal_bill_new = (float) $row->balance_bill - (float) abs($diff_bal);
+                        } else {
+                            $bal_bill_new = (float) $row->balance_bill + (float) $diff_bal;
+                        }
+
+                        $data3 = array(
+                            'customer_id' => $customer_id,
+                            'bill_no' => $invoice_no,
+                            'total_bill' => $total_bill_new,
+                            'paid_bill' => $paid_bill_new,
+                            'balance_bill' => $bal_bill_new,
+                            'updated_on' => date('Y-m-d H:i:s')
+                        );
+                        $bal_update = $this->Balance_model->update_balanceBybill($data3, $customer_id, $invoice_no);
+					}
+				}
+				
+				/********************Customer Balance Update end**********************/
 				$total_round = $this->input->post('total_round');
 				$total_word = $this->input->post('total_word');
 				$steps = $this->input->post('steps');
@@ -771,23 +843,6 @@ class Pices extends CI_Controller
 					}
 
 					/***************** Pices Stock Update end ******************/
-
-
-					/********************Customer Balance Update**********************/
-					$this->db->where('customer_id', $this->input->post('customerName'));
-					$this->db->where('bill_no', $invoice_no);
-					$query = $this->db->get('balance');
-					$row = $query->row();
-					if ($query->num_rows()) {
-						$data_balance = array(
-							'balance_bill' => (float) $row->balance_bill + (float) $ledger_last,
-							'paid_bill' => (float) $row->paid_bill + (float) $paidBill,
-							'total_bill' => (float) $row->total_bill + (float) $ledger_bill,
-							"bill_type" => 'debited',
-						);
-						$bal_update = $this->Balance_model->update_balanceBybill($data_balance, $customer_id, $invoice_no);
-					}
-					/********************Customer Balance Update end**********************/
 
 					/********************Customer Ledger Balance (History) ***************/
 					$data_ledger = array(
