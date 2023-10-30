@@ -21,8 +21,8 @@
   <table  style="width: 100%">
     <tr><td colspan="4">&nbsp;</td></tr>
     <tr style="border-bottom:1px solid #eee;">
-      <td width="20%"> Design Number </td>
-      <!-- <td width="35%"> <?php echo $encoded_design_num; ?></td> -->
+      <td width="20%"> Customer Name </td>
+      <td width="35%"> <?php echo $user_name; ?></td>
     </tr>
     <tr style="border-bottom: 2px solid #000;">
       <td> INVOICE DATE </td>

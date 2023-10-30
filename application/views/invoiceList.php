@@ -53,7 +53,7 @@
     							<td><?php echo date('d M, Y', strtotime($row->invoice_date) ); ?></td>
     							<td><?php echo date('d M, Y', strtotime($row->update_at) ); ?></td>
     						  <td>
-                    <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->id).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
+                    <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->sr_no).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
                                           <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Invoice/edit_sell/') . $row->sr_no; ?>"><i
                                                   class="glyphicon glyphicon-pencil"></i></a>&nbsp;
 

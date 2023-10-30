@@ -354,12 +354,12 @@
 
                                         if (strlen($add_one) < 3) {
                                             $ch_no = sprintf("%03u", $add_one);
-                                            $invoice_no = 'PIC' . $ch_no;
+                                            $invoice_no = 'RPIC' . $ch_no;
                                         } else {
-                                            $invoice_no = 'PIC' . $add_one;
+                                            $invoice_no = 'RPIC' . $add_one;
                                         }
                                     } else {
-                                        $invoice_no = 'PIC001';
+                                        $invoice_no = 'RPIC001';
                                     }
 
                                     ?>

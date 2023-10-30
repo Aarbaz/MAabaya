@@ -502,8 +502,7 @@ class Invoice extends CI_Controller
 					'balance_bill' => $bal_bill_new,
 					'updated_on' => date('Y-m-d H:i:s')
 				);
-				print_r($data_balances);
-				die();
+
 				$bal_update = $this->Balance_model->update_balanceBybill($data_balances, $bakers_id, $invoice_no);
 
 				if ($added) {
@@ -552,13 +551,40 @@ class Invoice extends CI_Controller
 				}
 				// die();
 			}
+
+			//HISTORY
+			$dhistoryData = $this->History_model->deletHistoryByMakerInvoiceId($invoice_no);
+			$entry_from = 4;
+			$user_id = $bakers_id;
+			$design = explode(',',$selected_ids);
+			$qnty = $this->input->post('qnty');
+			$data_json = array(
+				'customer' => $this->input->post('customerName'),
+				'customer_address' => $this->input->post('hsn'),
+				'qty' => $this->input->post('cust_gst'),
+			);
+			$json_data = json_encode($data_json);
+
+			for ($i = 0; $i < count($design); $i++) {
+				
+				$product_id = $design[$i];
+				$quantity = $qnty[$i];
+				$in_out_qty = -1 * $quantity;
+				$this->db->where('p_design_number', $design[$i]);
+				$query = $this->db->get('stock');
+				$previous_qty = $query->row();
+				$current_qty = $previous_qty->stock_qty;
+	
+				$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_no, $product_id, $in_out_qty, $current_qty, $json_data);
+			}
+
 			$data = array(
 				'customer_id' => $bakers_id,
 				'invoice_no' => $invoice_no,
 				'customer_address' => $this->input->post('cust_adds_txt'),
 				'product_name' => $material,
 				'hsn' => $hsns,
-				'qnty' => $qnty,
+				'qnty' => implode(",", $this->input->post('qnty')),
 				'rate' => $rate,
 				'amount' => $amount,
 				'total' => $total_amount,
@@ -572,13 +598,14 @@ class Invoice extends CI_Controller
 			$data_ledger = array(
 				'customer' => $bakers_id,
 				'invoice' => $invoice_no,
-				'quantity' => $qnty,
+				'quantity' => implode(",", $this->input->post('qnty')),
 				'rate' => $rate,
 				'bill_amount' => $total_amount,
 				'paid_amount' => $paid_amount,
 				'last_amount' => $balance_amount,
 				'dated' => $date
 			);
+
 			$this->db->where('invoice_no', $invoice_no);
 			$insert = $this->db->update('insider_bill', $data);
 

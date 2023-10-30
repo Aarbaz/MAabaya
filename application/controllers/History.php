@@ -366,7 +366,7 @@ class History extends CI_Controller
 
 				$pdf->SetFont('times', '', 10);
 
-				$pdf_data = $this->load->view('design_history_pdf', array('data_pdf' => $data_pdf, 'date_range' => $date_range), true);
+				$pdf_data = $this->load->view('design_history_pdf', array('data_pdf' => $data_pdf, 'date_range' => $date_range, 'user_name' => $user_name), true);
 				$pdf->addPage();
 
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');

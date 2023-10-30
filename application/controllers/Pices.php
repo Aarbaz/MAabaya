@@ -684,10 +684,10 @@ class Pices extends CI_Controller
 							// Perform the subtraction and accumulate the results in $resultArray
 							for ($index = 0; $index < count($valueSubArrayHidden); $index++) {
 								if($valueSubArrayHidden[$index]){
-									$resultArray[] = $valueSubArray[$index] - $valueSubArrayHidden[$index];
+									$resultArray[] = (float)$valueSubArray[$index] - (float)$valueSubArrayHidden[$index];
 								}
 								else{
-									$resultArray[] = $valueSubArray[$index] - $balance_value;
+									$resultArray[] = (float)$valueSubArray[$index] - (float)$balance_value;
 								}
 
 							}
@@ -813,8 +813,13 @@ class Pices extends CI_Controller
 				$insert = $this->db->update('product_pices', $json_data);
 				if ($insert == true) {
 					/***************** Pices Stock Update  *********************/
+					$this->History_model->deletHistoryByMakerInvoiceId($invoice_no);
+
 					$r = 0;
 					foreach ($data2 as $row) {
+						$entry_from = '3';
+						$user_id = $this->input->post('customerName');
+						
 						$product_id = $row['p_design_number'];
 						// $quantity = $row['stock_qty'];
 
@@ -837,8 +842,8 @@ class Pices extends CI_Controller
 						$query = $this->db->get('stock');
 						$row = $query->row();
 						$current_stock_value = $row->stock_qty;
-						$stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
-						// $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $product_id, $in_out_qnty, $stock, $data_json);
+						$updated_stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
+						$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_no, $product_id, $in_out_qnty, $updated_stock, $json);
 						$r++;
 					}
 
@@ -1411,6 +1416,29 @@ class Pices extends CI_Controller
 						$product_names[] = $product->design_num;
 					}
 				}
+				// HISTORY
+
+				$totalDesigns = $this->input->post('design_no[]');
+				$totalDesignQty = $this->input->post('return_qnty[]');
+                $this->History_model->deletHistoryByMakerInvoiceId($invoice_no);
+				for ($i = 0; $i < count($totalDesigns); $i++) {
+
+					$entry_from = 5;
+					$user_id = $this->input->post('customerName');
+					$invoice_id = $this->input->post('invoice_no');
+					$design_id = $totalDesigns[$i];
+					$in_out_qnty = $totalDesignQty[$i];
+
+					$current_stock = $this->db->where('p_design_number', $design_id);
+					$query = $this->db->get('stock');
+					$row = $query->row();
+					$current_stock_value = $row->stock_qty;
+
+
+					$historyData = $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $design_id, $in_out_qnty, $current_stock_value, $design_json);
+				}
+
+
 
 				$products = implode(',', $product_names);
 

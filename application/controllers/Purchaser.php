@@ -635,6 +635,7 @@ class Purchaser extends CI_Controller
                 $material_ids = $this->input->post("material_name[]");
                 $stock_quantities = $this->input->post("stock_q[]");
                 $json_data = json_encode($update_data);
+                $this->History_model->deletHistoryByMakerInvoiceId($postData["purchaser_no"]);
                 if (!empty($material_ids) && !empty($stock_quantities)) {
                     // Loop through the data and store each pair in the stock table
                     for ($i = 0; $i < count($material_ids); $i++) {
@@ -648,7 +649,7 @@ class Purchaser extends CI_Controller
                         $updated_stock = $this->Stock_model->get_material_stock($material_id);
                         $stock = $updated_stock ? $updated_stock : $in_out_qnty;
 
-                        // $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
+                        $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
                     }
                 }
                 /************************* Store in HISTORY table ***********************/

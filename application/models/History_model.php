@@ -265,6 +265,26 @@ class History_model extends CI_Model {
         // Assuming 'stock' is the name of your stock table
         $this->db->insert('history', $data);
     }
+	public function updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data) {
+        $data = array(
+            'entry_from' => $entry_from,
+            'user_id' => $user_id,
+            'invoice_no' => $invoice_id,
+            'material_id' => $material_id,
+            'in_out_qnty' => $in_out_qnty,
+            'stock_quantity' => $stock,
+            'json_data' => $json_data
+        );
+
+        /* $this->db->where('invoice_no', $invoice_id);
+        $this->db->update('history', $data);
+        
+        return $this->db->affected_rows(); */
+
+        $result = $this->db->insert('history', $data);
+
+        return $result;
+    }
 
     public function getHistoryByMaterialId($material_id, $from_date, $to_date) {
         $from_datetime = $from_date. ' '.'00:00:00';
@@ -356,5 +376,17 @@ class History_model extends CI_Model {
         } else {
             return null; // No data found
         }
+    }
+
+    public function deletHistoryByMakerInvoiceId($maker_no){
+        $this->db->where('invoice_no', $maker_no);
+        $result = $this->db->delete('history');
+        
+        return $result;
+        if (!empty($results)) {
+            return $results;
+        } else {
+            return false; // Return an empty array if no data is found
+        } 
     }
 }
