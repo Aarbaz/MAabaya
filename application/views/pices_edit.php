@@ -733,9 +733,12 @@ $(document).ready(function(){
 
         $('#total_round').val(Math.round(total_with_tax));
         //total in words
-        var round_amount = $('#total_round').val();
-        var paid_amount = $('#paid_amount').val(' ');
-        var balance_amount = $('#balance_amount').val(' ');
+        // var round_amount = $('#total_round').val();
+        // var paid_amount = $('#paid_amount').val(' ');
+         var paid_amt = $('#paid_amount').val();
+    var the_amounts = (total_with_tax-paid_amt).toFixed(2);
+   $('#balance_amount').val(the_amounts);
+        // var balance_amount = $('#balance_amount').val(' ');
         if( round_amount!= null)
         {
             var total_words = NumToWord(round_amount);

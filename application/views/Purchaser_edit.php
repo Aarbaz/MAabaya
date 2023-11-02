@@ -116,7 +116,7 @@
                        <b>ROUND OFF TOTAL</b>
                    </div>
                    <div class="col-sm-3">
-                       <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="<?php echo $get_ledger_invoice->bill_amount; ?>" size="3">
+                       <input type="text" name="total_round" id="total_round" readonly="readonly" class="form-control" style="display: inline; width: 50%" value="<?php echo round($get_ledger_invoice->bill_amount, 2);  ?>" size="3">
                    </div>
                </div>
                <div class="form-group ">
@@ -200,7 +200,7 @@
 
 
    $('#total_amount').on('focus', function(){
-   // debugger;
+   debugger;
 //   amountWord();
     total = 0;
             amt= 0;
@@ -222,8 +222,10 @@
    // $(this).val(total_with_tax);
    // console.log(total_with_tax);
 
-    $('#paid_amount').val('');
-   $('#balance_amount').val('');
+   var paid_amt = $('#paid_amount').val();
+    var the_amounts = (total_with_tax-paid_amt).toFixed(2);
+   $('#balance_amount').val(the_amounts);
+   // $('#balance_amount').val('');
    //total round amount
    $('#total_amount').val(total_with_tax);
    $('#total_round').val(Math.round(total));

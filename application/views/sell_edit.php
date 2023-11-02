@@ -520,8 +520,11 @@
             $('.total_round').val(Math.round(crnt_val));
             //total in words
             var round_amount = $('.total_round').val();
-            $('#paid_amount ').val('');
-            $('#balance_amount ').val('');
+            // $('#paid_amount ').val('');
+            // $('#balance_amount ').val('');
+             var paid_amt = $('#paid_amount').val();
+    var the_amounts = (round_amount-paid_amt).toFixed(2);
+   $('#balance_amount').val(the_amounts);
             if (round_amount != null) {
                 var total_words = NumToWord(round_amount);
                 $("#total_word").val(total_words);
