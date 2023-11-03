@@ -635,7 +635,7 @@ class Purchaser extends CI_Controller
                 $material_ids = $this->input->post("material_name[]");
                 $stock_quantities = $this->input->post("stock_q[]");
                 $json_data = json_encode($update_data);
-                $this->History_model->deletHistoryByMakerInvoiceId($postData["purchaser_no"]);
+                // $this->History_model->deletHistoryByMakerInvoiceId($postData["purchaser_no"]);
                 if (!empty($material_ids) && !empty($stock_quantities)) {
                     // Loop through the data and store each pair in the stock table
                     for ($i = 0; $i < count($material_ids); $i++) {
@@ -646,10 +646,15 @@ class Purchaser extends CI_Controller
                         $invoice_id = $postData["purchaser_no"];
                         $json_data = $json_data;
 
-                        $updated_stock = $this->Stock_model->get_material_stock($material_id);
-                        $stock = $updated_stock ? $updated_stock : $in_out_qnty;
+                        $this->db->where('materials_id', $material_id);
+                        $query = $this->db->get('purchaser_stock');
+                        $prev_stock = $query->row();
+                        $updated_stock = $prev_stock->quantity;
+                        // $updated_stock = $this->Stock_model->get_material_stock($material_id);
+                        $new_stock = $updated_stock ? $updated_stock : $in_out_qnty;
 
-                        $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock, $json_data);
+                        $this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $new_stock, $json_data);
+                        // $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $new_stock, $json_data);
                     }
                 }
                 /************************* Store in HISTORY table ***********************/

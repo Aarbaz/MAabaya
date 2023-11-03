@@ -368,6 +368,7 @@ class Making extends CI_Controller
                 $material_names_new = $this->input->post("material_name[]");
                 $stock_q_new = $this->input->post("stock_q[]");
                 $prod_id = $postData["prod_id"];
+                $master_name = $postData["master_name"];
 
                 // Retrieve the existing record from the database
                 $existingData = $this->Making_model->get_data_by_id($prod_id); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
@@ -387,8 +388,71 @@ class Making extends CI_Controller
                     }
                 }
 
+                $material_id = implode(",", $this->input->post("material_name[]"));
+                $material_id = trim($material_id, ",");
+                $stock_q = implode(",", $this->input->post("stock_q[]"));
+                $stock_q = trim($stock_q, ",");
+                if ($postData["bill_date"]) {
+                    $date = $postData["bill_date"];
+                } else {
+                    $date = date("Y-m-d");
+                }
+
+                $data = [
+                    "making_owner_id" => strtoupper($postData["master_name"]),
+                    "material_id" => $material_id,
+                    "stock" => $stock_q,
+                    'create_date' => $date,
+                ];
                 // Now you can use the $old_materials array to identify old materials not included in the new data
+                $json_data = json_encode($data);
+                // $dhistoryData = $this->History_model->deletHistoryByMakerInvoiceId($postData["maker_no"]);
+
+                $updatedMaterials = $this->input->post('material_name');
+
+                $updatedQty = $this->input->post('stock_q');
+                for ($i = 0; $i < count($updatedMaterials); $i++) {
+                    $h_material_id = $updatedMaterials[$i];
+                    $h_quantity = $updatedQty[$i];
+                    
+                    $entry_from = 2;
+                        $user_id = $master_name;
+                        $invoice_id = $postData["maker_no"];
+                        $curr_material_id = $h_material_id;
+                        $in_out_qnty = -1 * $h_quantity;
+                        
+                        $updated_stock = $this->Stock_model->get_material_stock($h_material_id);
+                        $stock = $updated_stock ? $updated_stock : (-1 * $in_out_qnty);
+    
+                        $historyData = $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $curr_material_id, $in_out_qnty, $updated_stock, $json_data);
+                }
+                // get history record to delete old
+                $maker_no = $this->input->post('maker_no');
+                
+
+                
+                $prod_id = $postData["prod_id"];
+
+                $update = $this->Making_model->update_making($data, $prod_id);
+
                 foreach ($old_materials as $old_material) {
+                    $entry_from = 2;
+                    $user_id = $master_name;
+                    $invoice_id = $postData["maker_no"];
+                    $material_id = $old_material;
+                    $in_out_qnty = -1 * $old_material["stock_q"];
+                    
+                   /*  $updated_stock = $this->Stock_model->get_material_stock($material_id);
+                    $stock = $updated_stock ? $updated_stock : (-1 * $in_out_qnty); */
+                    $postjson = [];
+                    $postjson["entry_from"] = $entry_from;
+                    $postjson["user_id"] = $user_id;
+                    $postjson["invoice_id"] = $invoice_id;
+                    $postjson["material_id"] = $material_id;
+                    $postjson["in_out_qnty"] = $in_out_qnty;
+                    $postjson["stock_q"] = $stock_q;
+
+                    $historyData = $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock_q, $json_data);
 
                     $this->db->where('materials_id', $old_material["material_id"]);
                     $query = $this->db->get('purchaser_stock');
@@ -414,27 +478,9 @@ class Making extends CI_Controller
                         $this->db->update('maker_stock', $data33);
                     }
 
+                    // history record
+                       
                 }
-
-                $material_id = implode(",", $this->input->post("material_name[]"));
-                $material_id = trim($material_id, ",");
-                $stock_q = implode(",", $this->input->post("stock_q[]"));
-                $stock_q = trim($stock_q, ",");
-                if ($postData["bill_date"]) {
-                    $date = $postData["bill_date"];
-                } else {
-                    $date = date("Y-m-d");
-                }
-
-                $data = [
-                    "making_owner_id" => strtoupper($postData["master_name"]),
-                    "material_id" => $material_id,
-                    "stock" => $stock_q,
-                    'create_date' => $date,
-                ];
-                $prod_id = $postData["prod_id"];
-
-                $update = $this->Making_model->update_making($data, $prod_id);
                 // $product_id = $this->db->insert_id();
                 $stockNew = $this->input->post("stock_qhidden[]");
                 $stockqNew = $this->input->post("stock_q[]");
@@ -553,6 +599,7 @@ class Making extends CI_Controller
                     $material_names .= $result->material_name . ', ';
                 }
                 $material_names = rtrim($material_names, ', ');
+
 
                 $data_pdf = [
                     'master_id' => $master_name->id,

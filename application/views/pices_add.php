@@ -345,7 +345,7 @@
                                     <label class="control-label">INVOICE NO.</label>
                                 <?php
 
-                                    $invoice_no = '';
+                                    $return_invoice_no = '';
 
                                     if (!empty($last_invoice->invoice_no)) {
                                         $db_invoice = $last_invoice->invoice_no;
@@ -354,17 +354,17 @@
 
                                         if (strlen($add_one) < 3) {
                                             $ch_no = sprintf("%03u", $add_one);
-                                            $invoice_no = 'RPIC' . $ch_no;
+                                            $return_invoice_no = 'RPIC' . $ch_no;
                                         } else {
-                                            $invoice_no = 'RPIC' . $add_one;
+                                            $return_invoice_no = 'RPIC' . $add_one;
                                         }
                                     } else {
-                                        $invoice_no = 'RPIC001';
+                                        $return_invoice_no = 'RPIC001';
                                     }
 
                                     ?>
-                                    <?php echo '<b>' . $invoice_no . '</b>'; ?>
-                                    <input type="hidden" name="invoice_no" value="<?php echo $invoice_no; ?>">
+                                    <?php echo '<b>' . $return_invoice_no . '</b>'; ?>
+                                    <input type="hidden" name="return_invoice_no" value="<?php echo $return_invoice_no; ?>">
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="control-label">INVOICE DATE</label>

@@ -1095,7 +1095,7 @@ class Pices extends CI_Controller
 			$this->add_new();
 		} else {
 			$customerName = $this->input->post('customerName');
-			$invoice_no = $this->input->post('invoice_no');
+			$return_invoice_no = $this->input->post('return_invoice_no');
 			$design_nos = implode(',', $this->input->post('design_no[]'));
 			$design_nos = trim($design_nos, ',');
 
@@ -1106,7 +1106,7 @@ class Pices extends CI_Controller
 			$input_array = array(
 				'design_number' => $this->input->post('design_no[]'),
 				'customer_id' => $customerName,
-				'invoice_no' => $invoice_no,
+				'return_invoice_no' => $return_invoice_no,
 				'total_piece' => $this->input->post('return_qnty[]'),
 			);
 
@@ -1116,7 +1116,7 @@ class Pices extends CI_Controller
 				$item = array(
 					"design_number" => [$input_array['design_number'][$i]],
 					"customer_id" => $input_array['customer_id'],
-					"invoice_no" => $input_array['invoice_no'],
+					"return_invoice_no" => $input_array['return_invoice_no'],
 					"total_piece" => [$input_array['total_piece'][$i]]
 				);
 
@@ -1131,14 +1131,14 @@ class Pices extends CI_Controller
 			$json_data = array(
 				'data_json' => $design_json,
 				'master_id' => $customerName,
-				'invoice_no' => $invoice_no,
+				'return_invoice_no' => $return_invoice_no,
 				'type' => 'gr',
 				'created_at' => $date,
 			);
 
 			$entry_from = 5;
 			$user_id = $this->input->post('customerName');
-			$invoice_id = $this->input->post('invoice_no');
+			$invoice_id = $this->input->post('return_invoice_no');
 			$data_json = $design_json;
 
 			$insert = $this->db->insert('product_pices', $json_data);
@@ -1195,7 +1195,7 @@ class Pices extends CI_Controller
 					'customer' => $username,
 					'design_no' => $products,
 					'qnty' => $return_qntys,
-					'invoice_no' => $invoice_no,
+					'return_invoice_no' => $return_invoice_no,
 					'date' => $date,
 				];
 				$this->load->library('tcpdf/tcpdf.php');
@@ -1210,7 +1210,7 @@ class Pices extends CI_Controller
 				$pdf->addPage();
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
 
-				$filename = $invoice_no . '.pdf';
+				$filename = $return_invoice_no . '.pdf';
 				$dir = APPPATH . '/pices_invoice/' . $data_pdf['customer_id'] . '/';
 				if (!is_dir($dir)) {
 					mkdir($dir, 0777, true);
