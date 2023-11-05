@@ -485,7 +485,7 @@ class Pices extends CI_Controller
 				$total_amount = $this->input->post('total_amount');
 				$paid_amount = $this->input->post('paid_amount');
 				$balance_amount = $this->input->post('balance_amount');
-
+				
 				/********************Customer Balance Update**********************/
 				$get_ledger_invoice = $this->Balance_model->get_bal_user_bill($invoice_no);
 
@@ -813,13 +813,13 @@ class Pices extends CI_Controller
 				$insert = $this->db->update('product_pices', $json_data);
 				if ($insert == true) {
 					/***************** Pices Stock Update  *********************/
-					$this->History_model->deletHistoryByMakerInvoiceId($invoice_no);
+					//$this->History_model->deletHistoryByMakerInvoiceId($invoice_no);
 
 					$r = 0;
 					foreach ($data2 as $row) {
 						$entry_from = '3';
 						$user_id = $this->input->post('customerName');
-						
+						$invoice_id = $this->input->post('invoice_no');
 						$product_id = $row['p_design_number'];
 						// $quantity = $row['stock_qty'];
 
@@ -838,17 +838,24 @@ class Pices extends CI_Controller
 							$this->db->insert('stock', array('p_design_number' => $product_id, 'stock_qty' => $resultArray_j[$r]));
 						}
 						$in_out_qnty = $resultArray_j[$r];
+
+						//$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_no, $product_id, $in_out_qnty, $updated_stock, $json);
+						$r++;
+					}
+
+					/***************** Pices Stock Update end ******************/
+					for($m=0; $m < $step; $m++){
+						$entry_from = '3';
+						$user_id = $this->input->post('customerName');
+						$invoice_id = $this->input->post('invoice_no');
+						$product_id = $this->input->post('hsn_' . $m . '[]');
 						$current_stock = $this->db->where('p_design_number', $product_id);
 						$query = $this->db->get('stock');
 						$row = $query->row();
 						$current_stock_value = $row->stock_qty;
 						$updated_stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
-						$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_no, $product_id, $in_out_qnty, $updated_stock, $json);
-						$r++;
+						$this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $product_id, $in_out_qnty, $current_stock_value, $json);
 					}
-
-					/***************** Pices Stock Update end ******************/
-
 					/********************Customer Ledger Balance (History) ***************/
 					$data_ledger = array(
 						'customer' => $this->input->post('customerName'),
@@ -863,13 +870,20 @@ class Pices extends CI_Controller
 					/********************Customer Ledger Balance (History) end**************/
 
 					/********************Add In History Table     ****************/
-					/* $json_data_array = array(
-															   'entry_from' => 3,
-															   //Pices
-															   'json_data' => $json,
-														   );
-
-														   $insert_json_data = $this->Pices_model->create_history($json_data_array); */
+					$steps = $this->input->post('steps');
+					for($mk=0; $mk < $steps; $mk++){
+						$entry_from = '3';
+						$user_id = $this->input->post('customerName');
+						$invoice_id = $this->input->post('invoice_no');
+						$product_id = $this->input->post('hsn_'.$mk.'[]');
+						$in_out_qnty = $this->input->post('total_piece_'.$mk.'[]');
+						$current_stock = $this->db->where('p_design_number', $product_id[0]);
+						$query = $this->db->get('stock');
+						$row = $query->row();
+						$current_stock_value = $row->stock_qty;
+						$updated_stock = $current_stock_value ? $current_stock_value : $in_out_qnty[0];
+						$this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $product_id[0], $in_out_qnty[0], $current_stock_value, "");
+					}
 					/********************AAdd In History Table end**************/
 
 					$this->db->select('*');

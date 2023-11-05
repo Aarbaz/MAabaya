@@ -276,10 +276,12 @@ class History_model extends CI_Model {
             'json_data' => $json_data
         );
 
-        /* $this->db->where('invoice_no', $invoice_id);
+        $this->db->where('user_id', $user_id);
+        $this->db->where('invoice_no', $invoice_id);
+        $this->db->where('material_id', $material_id);
         $this->db->update('history', $data);
         
-        return $this->db->affected_rows(); */
+        return $this->db->affected_rows();
 
         $result = $this->db->insert('history', $data);
 
