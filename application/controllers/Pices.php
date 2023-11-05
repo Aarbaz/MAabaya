@@ -1145,7 +1145,7 @@ class Pices extends CI_Controller
 			$json_data = array(
 				'data_json' => $design_json,
 				'master_id' => $customerName,
-				'return_invoice_no' => $return_invoice_no,
+				'invoice_no' => $return_invoice_no,
 				'type' => 'gr',
 				'created_at' => $date,
 			);
