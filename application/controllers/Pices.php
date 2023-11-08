@@ -238,10 +238,11 @@ class Pices extends CI_Controller
 				// print_r($q_result);die();
 				if (empty($q_result) || count($q_result) == 0) {
 					// Insert a new row with the material ID and quantity 0
+					$material_value = -1 * $mat_values[$i];
 					$m_data = array(
 						'materials_id' => $mat_id[$i],
 						//'making_owner_id' => $customer_id,
-						'quantity' => $mat_values[$i]
+						'quantity' => $material_value
 					);
 					$this->db->insert('maker_stock', $m_data);
 				} else {
@@ -1062,7 +1063,7 @@ class Pices extends CI_Controller
 				//$pdf->SetFont('helvetica', '', 10);
 				$pdf->SetFont('times', '', 10);
 
-				$pdf_data = $this->load->view('balance_pdf', array('data_pdf' => $data_pdf, 'date_range' => $date_range, 'cust_name' => $cust_name), true);
+				$pdf_data = $this->load->view('balance_pdf', array('data_pdf' => $data_pdf, 'date_range' => $date_range, 'cust_name' => rawurldecode($cust_name)), true);
 				$pdf->addPage();
 
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');

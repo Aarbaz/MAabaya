@@ -428,6 +428,13 @@ class Purchaser extends CI_Controller
                             "stock_q" => $existing_stock
                         ];
                     } else {
+                        $key = array_search($existing_material_id, $material_names_new);
+                        if ($key !== false) {
+                            $old_materials[] = [
+                                "material_id" => $existing_material_id,
+                                "stock_q" => $stock_q_new
+                            ];
+                        }
                     }
                 }
                 // Now you can use the $old_materials array to identify old materials not included in the new data
@@ -630,7 +637,53 @@ class Purchaser extends CI_Controller
 
                     $j++;
                 }
+                /****************** Update Stock table *********************************/
+                $s = 0;
+                foreach ($stockNew as $srow) {
+                    $StkMak["maker_id"] = '0';
+                    $StkMak["making_owner_id"] = '0';
+                    $StkMak["materials_id"] = $material_idNew[$s];
+                    $StkMak["quantity"] = $stock[$s];
 
+                    $this->db->where('product_id', $material_idNew[$s]);
+                    $stock_query = $this->db->get('stock');
+                    $stock_row = $stock_query->row();
+
+                    if ($stockNew[$s]) {
+                        $stock_diff = (float) $stock[$s] - (float) $stockNew[$s];
+
+                    } else {
+
+                        $stock_diff = (float) $stock[$s] - (float) $value_null;
+                    }
+
+                    if ($stock_query->num_rows()) {
+
+                        if ($stock_diff > 0) {
+                            $data3 = array(
+                                'stock_qty' => (float) $stock_row->stock_qty + (float) $stock_diff,
+                            );
+                        } elseif ($stock_diff < 0) {
+                            $data3 = array(
+                                'stock_qty' => (float) $stock_row->stock_qty + (float) $stock_diff,
+                            );
+                        } else {
+                            $data3 = array(
+                                'stock_qty' => (float) $stock_row->stock_qty + (float) abs($stock_diff),
+                            );
+                        }
+                        $this->db->where('product_id', $material_idNew[$s]);
+                        $this->db->update('stock', $data3);
+                    } else {
+                        $dataStk["product_id"] = $material_idNew[$s];
+                        $dataStk["stock_qty"] = (float) $stock[$s];
+                        $dataStk["purchase_rate"] = '0';
+                        $dataStk["p_design_number"] = '0';
+                        $this->Stock_model->add_records($dataStk);
+                    }
+                    $s++;
+                }
+                /****************** Update Stock table *********************************/
                 /****************** Store in HISTORY table ******************************/
                 $material_ids = $this->input->post("material_name[]");
                 $stock_quantities = $this->input->post("stock_q[]");

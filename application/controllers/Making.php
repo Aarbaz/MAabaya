@@ -408,24 +408,7 @@ class Making extends CI_Controller
                 $json_data = json_encode($data);
                 // $dhistoryData = $this->History_model->deletHistoryByMakerInvoiceId($postData["maker_no"]);
 
-                $updatedMaterials = $this->input->post('material_name');
-
-                $updatedQty = $this->input->post('stock_q');
-                for ($i = 0; $i < count($updatedMaterials); $i++) {
-                    $h_material_id = $updatedMaterials[$i];
-                    $h_quantity = $updatedQty[$i];
-                    
-                    $entry_from = 2;
-                        $user_id = $master_name;
-                        $invoice_id = $postData["maker_no"];
-                        $curr_material_id = $h_material_id;
-                        $in_out_qnty = -1 * $h_quantity;
-                        
-                        $updated_stock = $this->Stock_model->get_material_stock($h_material_id);
-                        $stock = $updated_stock ? $updated_stock : (-1 * $in_out_qnty);
-    
-                        $historyData = $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $curr_material_id, $in_out_qnty, $updated_stock, $json_data);
-                }
+                
                 // get history record to delete old
                 $maker_no = $this->input->post('maker_no');
                 
@@ -452,7 +435,7 @@ class Making extends CI_Controller
                     $postjson["in_out_qnty"] = $in_out_qnty;
                     $postjson["stock_q"] = $stock_q;
 
-                    $historyData = $this->History_model->insertStockEntry($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock_q, $json_data);
+                    // $historyData = $this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock_q, $json_data);
 
                     $this->db->where('materials_id', $old_material["material_id"]);
                     $query = $this->db->get('purchaser_stock');
@@ -611,7 +594,25 @@ class Making extends CI_Controller
                 ];
 
 
+                $updatedMaterials = $this->input->post('material_name');
 
+                $updatedQty = $this->input->post('stock_q');
+                for ($i = 0; $i < count($updatedMaterials); $i++) {
+                    $h_material_id = $updatedMaterials[$i];
+                    $h_quantity = $updatedQty[$i];
+                    
+                    $entry_from = 2;
+                        $user_id = $master_name;
+                        $invoice_id = $postData["maker_no"];
+                        $curr_material_id = $h_material_id;
+                        $in_out_qnty = -1 * $h_quantity;
+                        
+                        $updated_stock = $this->Stock_model->get_material_stock($h_material_id);
+                        $stock = $updated_stock ? $updated_stock : (-1 * $in_out_qnty);
+    
+                        $historyData = $this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $curr_material_id, $in_out_qnty, $updated_stock, $json_data);
+                }
+                
                 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
                 $pdf->setPrintHeader(false);
                 $pdf->setPrintFooter(false);

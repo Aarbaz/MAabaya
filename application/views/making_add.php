@@ -288,7 +288,7 @@
       }
 
       // Update the last appended row
-      // $lastAppendedRow = $clonedRow;
+      $lastAppendedRow = $clonedRow;
 
    });
       //Remove table row
