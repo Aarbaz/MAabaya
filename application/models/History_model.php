@@ -315,11 +315,12 @@ class History_model extends CI_Model {
         $this->db->select('h.*');
         $this->db->from('history h');
         $this->db->where('h.material_id', $design_id);
-        $this->db->where_in('h.entry_from', array(3, 4));
+        $this->db->where_in('h.entry_from', array(3, 4,5));
         $this->db->where('h.created_at >=', $from_datetime);
         $this->db->where('h.created_at <=', $to_datetime);
         $query = $this->db->get();
         $results = $query->result();
+        // print_r($results.'-');die();
         if (!empty($results)) {
             return $results;
         } else {

@@ -21,7 +21,7 @@
       <td width="20%"> CUSTOMER NAME </td>
       <td width="35%"> <?php echo $customer; ?></td>
       <td width="20%"> INVOICE NO.</td>
-      <td width="25%"> <?php echo $invoice_no; ?> </td>
+      <td width="25%"> <?php echo $return_invoice_no; ?> </td>
       
     </tr>
   </table>

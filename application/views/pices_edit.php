@@ -57,10 +57,11 @@
                                                                 <div class="col-sm-9">
                                                                       <select name="customerName" id="customerName" class="form-control">
                                                                         <option value="" >--select master--</option>
-                                                                        <?php
-                                                                        foreach ($custList->result() as $row) {
-                                                                            echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . ' selected>' . $row->name . '</option>';
-                                                                        } ?>
+                                                                        <?php                                                                        foreach ($custList->result() as $row) {
+                                                                            // echo '<option value="' . $row->id . '" ' . set_select('ownerName', $row->name) . ' selected>' . $row->name . '</option>';
+                                                                                echo '<option value="' . $row->id . '" ' . ($row->id == $cust->master_id? 'selected' : '') . ' >' . $row->name . '</option>';
+
+                                                                            } ?>
                                                                         </select>
                                                                    </div>
                                                                 <div class="col-sm-2 hide">

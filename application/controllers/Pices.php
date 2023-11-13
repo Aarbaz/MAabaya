@@ -501,7 +501,6 @@ class Pices extends CI_Controller
                     $row = $query->row();
                     if ($query->num_rows()) {
 
-
                         if ($paidBill) {
                             $diff_paid = (float) $paid_amount - (float) $paidBill;
 
@@ -520,13 +519,9 @@ class Pices extends CI_Controller
 
                         if ($ledger_bill) {
                             $diff_total = (float) $total_amount - (float) $ledger_bill;
-
-
                         } else {
-
                             $diff_total = (float) $total_amount - (float) $value_null;
                         }
-
 
                         if ($diff_total > 0) {
                             $total_bill_new = (float) $row->total_bill + (float) $diff_total;
@@ -536,9 +531,6 @@ class Pices extends CI_Controller
                             $total_bill_new = (float) $row->total_bill + (float) $diff_total;
                         }
 
-
-
-
                         if ($ledger_last) {
                             $diff_bal = (float) $balance_amount - (float) $ledger_last;
 
@@ -547,11 +539,9 @@ class Pices extends CI_Controller
                         }
 
                         if ($diff_bal > 0) {
-                            // echo "The diff_balerence is positive: " . $diff_bal; 
                             $bal_bill_new = (float) $row->balance_bill + (float) $diff_bal;
 
                         } elseif ($diff_bal < 0) {
-                            // echo "The diff_balerence is negative: " . abs($diff_bal);
                             $bal_bill_new = (float) $row->balance_bill - (float) abs($diff_bal);
                         } else {
                             $bal_bill_new = (float) $row->balance_bill + (float) $diff_bal;
@@ -808,7 +798,8 @@ class Pices extends CI_Controller
 
 				}
 				/********************Material Stock Update end**********************/
-
+				// print_r($customer_id);
+				// die();
 				$this->db->where('sr_no', $sr_no);
 				$this->db->where('master_id', $customer_id);
 				$insert = $this->db->update('product_pices', $json_data);
@@ -845,18 +836,18 @@ class Pices extends CI_Controller
 					}
 
 					/***************** Pices Stock Update end ******************/
-					for($m=0; $m < $step; $m++){
-						$entry_from = '3';
-						$user_id = $this->input->post('customerName');
-						$invoice_id = $this->input->post('invoice_no');
-						$product_id = $this->input->post('hsn_' . $m . '[]');
-						$current_stock = $this->db->where('p_design_number', $product_id);
-						$query = $this->db->get('stock');
-						$row = $query->row();
-						$current_stock_value = $row->stock_qty;
-						$updated_stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
-						$this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $product_id, $in_out_qnty, $current_stock_value, $json);
-					}
+					// for($m=0; $m < $step; $m++){
+					// 	$entry_from = '3';
+					// 	$user_id = $this->input->post('customerName');
+					// 	$invoice_id = $this->input->post('invoice_no');
+					// 	$product_id = $this->input->post('hsn_' . $m . '[]');
+					// 	$current_stock = $this->db->where('p_design_number', $product_id);
+					// 	$query = $this->db->get('stock');
+					// 	$row = $query->row();
+					// 	$current_stock_value = $row->stock_qty;
+					// 	$updated_stock = $current_stock_value ? $current_stock_value : $in_out_qnty;
+					// 	$this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $product_id, $in_out_qnty, $current_stock_value, $json);
+					// }
 					/********************Customer Ledger Balance (History) ***************/
 					$data_ledger = array(
 						'customer' => $this->input->post('customerName'),
@@ -883,7 +874,7 @@ class Pices extends CI_Controller
 						$row = $query->row();
 						$current_stock_value = $row->stock_qty;
 						$updated_stock = $current_stock_value ? $current_stock_value : $in_out_qnty[0];
-						$this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $product_id[0], $in_out_qnty[0], $current_stock_value, "");
+						$this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $product_id[0], $in_out_qnty[0], $current_stock_value, $json);
 					}
 					/********************AAdd In History Table end**************/
 
@@ -1340,7 +1331,6 @@ class Pices extends CI_Controller
 					if (isset($designStockMap[$value])) {
 						$stockToSubtract = $designStockMap[$value];
 						// echo "Design number $value does not exist in the valuesToCheck list. Stock subtracted from the table: $stockToSubtract.\n";
-
 						$this->db->where('p_design_number', $value);
 						$queryrow_gr = $this->db->get('stock');
 						$row_gr = $queryrow_gr->row();
@@ -1351,16 +1341,9 @@ class Pices extends CI_Controller
 								'stock_qty' => (float) $row_gr->stock_qty - (float) $stockToSubtract,
 							);
 
-							// print_r($data3_gr);
-							// print_r($stockToSubtract);
-
 							$this->db->where('p_design_number', $value);
 							$this->db->update('stock', $data3_gr);
-							// print_r($this->db->last_query());
-							// die();
 						} else {
-							// print_r('fhdfg');
-							// echo "Design number $value does not have a corresponding stock quantity. No stock subtraction performed.\n";
 						}
 					}
 				}
