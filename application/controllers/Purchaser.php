@@ -405,6 +405,10 @@ class Purchaser extends CI_Controller
                 $material_names_new = $this->input->post("material_name[]");
                 $stock_q_new = $this->input->post("stock_q[]");
                 $purchaser_no = $postData["purchaser_no"];
+                $p_price = $this->input->post("p_price[]");
+                // $p_price = trim($p_price, ",");
+
+                
                 $get_ledger_invoice = $this->Balance_model->get_bal_user_bill($purchaser_no);
 
                 $ledger_bill = $get_ledger_invoice->bill_amount;
@@ -416,18 +420,26 @@ class Purchaser extends CI_Controller
 
                 $existing_material_names = explode(",", $existingData["material_id"]);
                 $existing_stock_q = explode(",", $existingData["stock"]);
-
+                // $existing_price = explode(",", $existingData["price"]);
+               
                 for ($i = 0; $i < count($existing_material_names); $i++) {
                     $existing_material_id = $existing_material_names[$i];
                     $existing_stock = $existing_stock_q[$i];
-
+                    $existing_price = $p_price[$i];
+                    // print_r($existing_price);
+                    // die();
                     // Check if the existing material ID is not present in the new data
                     if (!in_array($existing_material_id, $material_names_new)) {
                         $old_materials[] = [
                             "material_id" => $existing_material_id,
-                            "stock_q" => $existing_stock
+                            "stock_q" => $existing_stock,
+                            "price" => $existing_price,
                         ];
-                    } else {
+                    } else {$old_materials[] = [
+                        "material_id" => $material_names_new[$i],
+                        "stock_q" => $stock_q_new[$i],
+                        "price" => $existing_price[$i],
+                    ];
                     }
                 }
                 // Now you can use the $old_materials array to identify old materials not included in the new data
@@ -438,9 +450,22 @@ class Purchaser extends CI_Controller
                     if ($query->num_rows()) {
                         $data3 = array(
                             'quantity' => (float) $row->quantity - (float) $old_material["stock_q"],
+                            'price' => (float) $old_material["price"],
                         );
                         $this->db->where('materials_id', $old_material["material_id"]);
                         $this->db->update('purchaser_stock', $data3);
+                    }
+
+                    $this->db->where('product_id', $old_material["material_id"]);
+                    $query = $this->db->get('stock');
+                    $row = $query->row();
+                    if ($query->num_rows()) {
+                        $data3 = array(
+                            'stock_qty' => (float) $row->stock_qty - (float) $old_material["stock_q"],
+                            'purchase_rate' => (float) $old_material["price"],
+                        );
+                        $this->db->where('product_id', $old_material["material_id"]);
+                        $this->db->update('stock', $data3);
                     }
 
                 }
@@ -581,6 +606,7 @@ class Purchaser extends CI_Controller
                 $stockNew = $this->input->post("stock_qhidden[]");
 
                 $stock = $this->input->post("stock_q[]");
+                $rate2 = $this->input->post("p_price[]");
 
 
                 $j = 0;
@@ -589,6 +615,7 @@ class Purchaser extends CI_Controller
                     $MakStk["making_owner_id"] = '0';
                     $MakStk["materials_id"] = $material_idNew[$j];
                     $MakStk["quantity"] = $stock[$j];
+                    $rate2_new = $rate2[$j];
 
                     $this->db->where('materials_id', $material_idNew[$j]);
                     $query = $this->db->get('purchaser_stock');
@@ -606,26 +633,66 @@ class Purchaser extends CI_Controller
                         if ($diff > 0) {
                             $data3 = array(
                                 'quantity' => (float) $row->quantity + (float) $diff,
+                                'price' => (float) $rate2_new,
                             );
                         } elseif ($diff < 0) {
                             $data3 = array(
                                 'quantity' => (float) $row->quantity + (float) $diff,
+                                'price' => (float) $rate2_new,
+
                             );
                         } else {
                             $data3 = array(
                                 'quantity' => (float) $row->quantity + (float) abs($diff),
+                                'price' => (float) $rate2_new,
+
                             );
                         }
                         $this->db->where('materials_id', $material_idNew[$j]);
                         $this->db->update('purchaser_stock', $data3);
                     } else {
                         $dataMtk["materials_id"] = $material_idNew[$j];
-                        $dataMtk["quantity"] = (float) $value_null - (float) $stock[$j];
+                        $dataMtk["quantity"] = (float) $stock[$j];
                         $dataMtk["price"] = '';
                         $dataMtk["purchaser_id"] = '';
                         $dataMtk["purchaser_owner_id"] = '';
                         $this->Purchaser_model->add_purchaser_qty($dataMtk);
 
+                    } 
+                    
+                    $this->db->where('product_id', $material_idNew[$j]);
+                    $query = $this->db->get('stock');
+                    $row = $query->row();
+
+
+                    if ($query->num_rows()) {
+
+                        if ($diff > 0) {
+                            $data3 = array(
+                                'stock_qty' => (float) $row->stock_qty + (float) $diff,
+                                'purchase_rate' => (float) $rate2_new,
+                            );
+                        } elseif ($diff < 0) {
+                            $data3 = array(
+                                'stock_qty' => (float) $row->stock_qty + (float) $diff,
+                                'purchase_rate' => (float) $rate2_new,
+
+                            );
+                        } else {
+                            $data3 = array(
+                                'stock_qty' => (float) $row->stock_qty + (float) abs($diff),
+                                'purchase_rate' => (float) $rate2_new,
+
+                            );
+                        }
+                        $this->db->where('product_id', $material_idNew[$j]);
+                        $this->db->update('stock', $data3);
+                    } else {
+                        $dataMtk["product_id"] = $material_idNew[$j];
+                        $dataMtk["stock_qty"] =  (float) $stock[$j];
+                        $dataMtk["purchase_rate"] = (float) $rate2_new;
+                        $dataMtk["p_design_number"] = '';
+                        $this->Purchaser_model->add_purchaser_stk($dataMtk);
                     }
 
                     $j++;

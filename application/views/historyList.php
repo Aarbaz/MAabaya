@@ -146,11 +146,13 @@
                   foreach ($ledger_list->result() as $row){ 
                     $entryFrom = $row->entry_from;
                     if ($entryFrom == 1) {
-                      $filePath = 'purchaser';
+                      $filePath = 'Purchaser';
                     }else if ($entryFrom == 2) {
-                      $filePath = 'maker';
+                      $filePath = 'Maker';
                     }else if ($entryFrom == 3) {
-                      $filePath = 'pices_invoice';
+                      $filePath = 'Pices';
+                    }else if ($entryFrom == 0) {
+                      $filePath = 'Sell';
                     }else{
                       $filePath = '';
                     }
@@ -267,12 +269,13 @@
                     $materialName = $results->material_name;
 
                     $entryFrom = $row->entry_from;
+                  
                     if ($entryFrom == 1) {
-                      $filePath = 'purchaser';
+                      $filePath = 'Purchaser';
                     }else if ($entryFrom == 2) {
-                      $filePath = 'maker';
+                      $filePath = 'Maker';
                     }else if ($entryFrom == 3) {
-                      $filePath = 'pices_invoice';
+                      $filePath = 'Pices';
                     }else{
                       $filePath = '';
                     }
@@ -391,13 +394,17 @@
 
                     $entryFrom = $row->entry_from;
                     if ($entryFrom == 1) {
-                      $filePath = 'purchaser';
+                      $filePath = 'Purchaser';
                     }else if ($entryFrom == 2) {
-                      $filePath = 'maker';
+                      $filePath = 'Maker';
                     }else if ($entryFrom == 3) {
-                      $filePath = 'pices_invoice';
+                      $filePath = 'Pices';
+                    }else if($entryFrom == 4){
+                      $filePath = 'Sell';
+                    }else if($entryFrom == 5){
+                      $filePathat = 'Return Pices';
                     }else{
-                      $filePath = '';
+                      $filePh = '';
                     }
                     ?>
                     <tr>
@@ -504,14 +511,20 @@
 
                     $entryFrom = $row->entry_from;
                     if ($entryFrom == 1) {
-                      $filePath = 'purchaser';
+                      $filePath = 'Purchaser';
                     }else if ($entryFrom == 2) {
-                      $filePath = 'maker';
+                      $filePath = 'Maker';
                     }else if ($entryFrom == 3) {
-                      $filePath = 'pices_invoice';
+                      $filePath = 'Pices';
+                    }else if ($entryFrom == 4) {
+                      $filePath = 'Sell';
+                    }else if ($entryFrom == 5) {
+                      $filePath = 'Return Pices';
                     }else{
                       $filePath = '';
                     }
+
+                    
                     ?>
                     <tr>
                       

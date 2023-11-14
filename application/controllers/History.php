@@ -202,6 +202,8 @@ class History extends CI_Controller
 				$filename = $encoded_material_name. '_' . $from_date . $to_date . '.pdf';
 				$pdf_file = APPPATH . 'material_history/' . $encoded_material_name . '/' . $filename;
 				$file = $filename;
+				// print_r($data_pdf);
+				// die();
 				$this->load->library('tcpdf/tcpdf.php');
 
 				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -211,7 +213,7 @@ class History extends CI_Controller
 
 				$pdf->SetFont('times', '', 10);
 
-				$pdf_data = $this->load->view('material_history_pdf', array('data_pdf' => $data_pdf, 'date_range' => $date_range, 'material_name' => $encoded_material_name), true);
+				$pdf_data = $this->load->view('material_history_pdf', array('data_pdf' => $data_pdf, 'date_range' => $date_range, 'material_name' => $material_name), true);
 				$pdf->addPage();
 
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');

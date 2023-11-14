@@ -181,7 +181,7 @@
                            
                             <!--table withouot tax-->
                             <div class="form-group" id="table_without_tax">
-                                <table class="table table-bordere<th>PRODUCT</th>d">
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>DESIGN NO</th>
@@ -199,6 +199,7 @@
                                         // Loop through the data
                                         foreach ($sell_stock->result() as $item) {
 
+                                            $designArray = explode(',', $item->product_name);
                                             $hsnArray = explode(',', $item->hsn);
                                             $qntyArray = explode(',', $item->qnty);
                                             $rateArray = explode(',', $item->rate);
@@ -208,6 +209,7 @@
 
                                             // Iterate through each HSN and its corresponding quantity and rate
                                             for ($i = 0; $i < $cnt; $i++) {
+                                                $design = trim($designArray[$i]);
                                                 $hsn = trim($hsnArray[$i]);
                                                 $qnty = trim($qntyArray[$i]);
                                                 $rate = trim($rateArray[$i]);
@@ -221,8 +223,8 @@
                                                             <?php foreach ($designs->result() as $row) {
                                                                 $selected = set_select("hsn[]", $row->design_num);
                                                                 $data_id = $row->id;
-                                                                if ($hsn) {
-                                                                    $selecteds = ($hsn == $row->design_num) ? 'selected' : '';
+                                                                if ($design) {
+                                                                    $selecteds = ($design == $row->design_num) ? 'selected' : '';
                                                                 }
                                                                 echo '<option ' . $selecteds . ' data-id="' . $row->id . '" value="' . $row->design_num . '" ' . set_select("hsn[]", $row->design_num) . '>' . $row->design_num . '</option>';
 
@@ -234,7 +236,7 @@
                                                         <?php
                                                         $this->db->select('*');
                                                         $this->db->from('designs');
-                                                        $this->db->where('design_num', $hsn);
+                                                        $this->db->where('id', $hsn);
                                                         $query = $this->db->get();
                                                         $design_number_result = $query->result();
                                                         $design_id = $design_number_result[0]->id;

@@ -51,7 +51,7 @@
     							<td><?php echo $row->invoice_no; ?></td>  						
                   <td><?php echo $row->round_off_total; ?></td>
     							<td><?php echo date('d M, Y', strtotime($row->invoice_date) ); ?></td>
-    							<td><?php echo date('d M, Y', strtotime($row->update_at) ); ?></td>
+    							<td><?php echo date('d M, Y', strtotime($row->updated_at) ); ?></td>
     						  <td>
                     <a class="btn btn-primary btn-xs" title="Click to download" href="<?php echo base_url('/index.php/Invoice/download_pdf/').rawurlencode($row->sr_no).'/'.$row->invoice_no;?>"><i class="glyphicon glyphicon-download"></i></a>&nbsp;
                                           <a class="btn btn-primary btn-xs" title="Click to edit" href="<?php echo base_url('/index.php/Invoice/edit_sell/') . $row->sr_no; ?>"><i

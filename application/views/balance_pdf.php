@@ -25,7 +25,7 @@
       <td width="20%"> <?php echo $cust_name?> </td>
     </tr>
     <tr style="border-bottom: 2px solid #000;">
-      <td> INVOICE DATE </td>
+      <td> Invoice Date </td>
       <!-- <td> <?php echo date('d F, Y'); ?> </td> -->
       <td> <?php echo $date_range; ?> </td>
     </tr>

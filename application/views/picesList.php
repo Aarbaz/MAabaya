@@ -81,7 +81,7 @@
                       echo $type; ?>
                     </td>
                     <td>
-                      <?php echo $row->created_at; ?>
+                      <?php echo date('d M Y', strtotime($row->created_at)); ?>
                     </td>
                     <td>
                       <a class="btn btn-primary btn-xs" title="Click to download"

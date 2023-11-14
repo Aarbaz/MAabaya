@@ -25,7 +25,7 @@
       <td width="35%"> <?php echo $material_name; ?></td>
     </tr>
     <tr style="border-bottom: 2px solid #000;">
-      <td> INVOICE DATE </td>
+      <td> Invoice Date </td>
       <td> <?php echo $date_range; ?> </td>
     </tr>
     <tr><td colspan="4">&nbsp;</td></tr>
@@ -76,43 +76,110 @@
             $result = $query->row();
             $material_name = $result->material_name;
 
-            if ($row->entry_from == 1) {
-              $type = "Purchaser";
-              if (isset($dataArray) && isset($dataArray['purchaser_no'])) {
-                # code...
-                $invoiceNo = $dataArray['purchaser_no'] ? $dataArray['purchaser_no'] : '-';
-                $person_id = $dataArray['purchaser_owner_id'] ? $dataArray['purchaser_owner_id'] : '-';
-                $this->db->select('*');
-                $this->db->from('customers');
-                $this->db->where('id',$person_id);
-                $query = $this->db->get();
-                $result = $query->row();
-                $person_name = $result->name;
-                $to = "Shop";
-              }
-            }elseif($row->entry_from == 2) {
-              $type = "Maker";
-              $sign = '-';
-              if (isset($dataArray['maker_no'])) {
-                # code...
-                $invoiceNo = $dataArray['maker_no'] ? $dataArray['maker_no'] : '-';
-                $person_id = $dataArray['making_owner_id'] ? $dataArray['making_owner_id'] : '-';
-                $this->db->select('*');
-                $this->db->from('customers');
-                $this->db->where('id',$person_id);
-                $query = $this->db->get();
-                $result = $query->row();
-                $to = $result->name;
-                $person_name = "Shop";
-              }
-            }elseif ($row->entry_from == 3 ) {
-              $type = "Pices";
+            $invoice_no = $row->invoice_no;
+
+            if (stripos($invoice_no, "PIC") !== false) {
+                // echo "The string contains 'PIC'.";
+                $type = 'Pices';
+            } else if (stripos($invoice_no, "MAK") !== false) {
+                $type = 'Maker';
+            } else if (stripos($invoice_no, "PUR") !== false) {
+                $type = 'Purchaser';
+            } 
+            else {
+                $type = 'Sell';
             }
+            if (stripos($invoice_no, "RPIC") !== false) {
+                // echo "The string contains 'RPIC'.";
+                $type = 'Return Pices';
+            } 
+
+            if ($type == 'Sell'  || $type == 'Pices') {
+              $to = $person_name;
+              $person_name = 'Shop';
+
+              $design_id = $row->material_id;
+              $this->db->select('*');
+              $this->db->from('designs');
+              $this->db->where('id', $design_id);
+              $query = $this->db->get();
+              $result = $query->row();
+              $design_num = $result->design_num;
+
+          } else if ($type == 'Maker') {
+              $to = $person_name;
+              $person_name = 'Shop';
+
+              $design_id = $row->material_id;
+              $design_id = $design_id;
+              $this->db->select('*');
+              $this->db->from('material');
+              $this->db->where('id', $design_id);
+              $query = $this->db->get();
+              $result = $query->row();
+              $design_num = $result->material_name;
+          } else if($type == 'Return Pices'){
+                  $to = 'Shop';
+                  $person_name = $person_name;
+              $design_id = $row->material_id;
+              $this->db->select('*');
+              $this->db->from('designs');
+              $this->db->where('id', $design_id);
+              $query = $this->db->get();
+              $result = $query->row();
+              $design_num = $result->design_num;
+          }else {
+              $person_name = $person_name;
+              $to = 'Shop';
+
+              $design_id = $row->material_id;
+              $design_id = $design_id;
+              $this->db->select('*');
+              $this->db->from('material');
+              $this->db->where('id', $design_id);
+              $query = $this->db->get();
+              $result = $query->row();
+              $design_num = $result->material_name;
+          }
+            // if ($row->entry_from == 1) {
+            //   $type = "Purchaser";
+            //   if ($row->entry_from == 1) {
+            //   }
+            //   if (isset($dataArray) && isset($dataArray['purchaser_no'])) {
+            //     # code...
+            //     $invoiceNo = $dataArray['purchaser_no'] ? $dataArray['purchaser_no'] : '-';
+            //     $person_id = $dataArray['purchaser_owner_id'] ? $dataArray['purchaser_owner_id'] : '-';
+            //     $this->db->select('*');
+            //     $this->db->from('customers');
+            //     $this->db->where('id',$person_id);
+            //     $query = $this->db->get();
+            //     $result = $query->row();
+            //     $person_name = $result->name;
+            //     $to = "Shop";
+            //   }
+            // }elseif($row->entry_from == 2) {
+            //   $type = "Maker";
+            //   $sign = '-';
+            //   if (isset($dataArray['maker_no'])) {
+            //     # code...
+            //     $invoiceNo = $dataArray['maker_no'] ? $dataArray['maker_no'] : '-';
+            //     $person_id = $dataArray['making_owner_id'] ? $dataArray['making_owner_id'] : '-';
+            //     $this->db->select('*');
+            //     $this->db->from('customers');
+            //     $this->db->where('id',$person_id);
+            //     $query = $this->db->get();
+            //     $result = $query->row();
+            //     $to = $result->name;
+            //     $person_name = "Shop";
+            //   }
+            // }elseif ($row->entry_from == 3 ) {
+            //   $type = "Pices";
+            // }
           ?>
         <tr>
             <td><?php echo $i; ?></td>
             <td><?php echo $type; ?></td>
-            <td><?php echo $invoiceNo; ?></td>
+            <td><?php echo $row->invoice_no; ?></td>
             <td><?php echo $row->created_at; ?></td>
             <td><?php echo $person_name; ?></td>
             <td><?php echo $to; ?></td>
