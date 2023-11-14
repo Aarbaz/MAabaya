@@ -370,82 +370,6 @@ class Making extends CI_Controller
                 $prod_id = $postData["prod_id"];
                 $master_name = $postData["master_name"];
 
-                // Retrieve the existing record from the database
-                $existingData = $this->Making_model->get_data_by_id($prod_id); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
-                $existing_material_names = explode(",", $existingData["material_id"]);
-                $existing_stock_q = explode(",", $existingData["stock"]);
-
-                for ($i = 0; $i < count($existing_material_names); $i++) {
-                    $existing_material_id = $existing_material_names[$i];
-                    $existing_stock = $existing_stock_q[$i];
-                    // print_r($existing_material_id);
-                    // die();
-                $old_materials = [];
-
-                    // Check if the existing material ID is not present in the new data
-                    if (!in_array($existing_material_id, $material_names_new)) {
-                        $old_materials[] = [
-                            "material_id" => $existing_material_id,
-                            "stock_q" => $existing_stock
-                        ];
-
-                    }
-                    // else {
-                    //     $old_materials[] = [
-                    //         "material_id" => 0,
-                    //         "stock_q" => 0
-                    //     ];
-                    // }
-                }
-
-                foreach ($old_materials as $old_material) {
-                    $entry_from = 2;
-                    $user_id = $master_name;
-                    $invoice_id = $postData["maker_no"];
-                    $material_id = $old_material;
-                    $in_out_qnty = -1 * $old_material["stock_q"];
-
-                    /*  $updated_stock = $this->Stock_model->get_material_stock($material_id);
-                     $stock = $updated_stock ? $updated_stock : (-1 * $in_out_qnty); */
-                    $postjson = [];
-                    $postjson["entry_from"] = $entry_from;
-                    $postjson["user_id"] = $user_id;
-                    $postjson["invoice_id"] = $invoice_id;
-                    $postjson["material_id"] = $material_id;
-                    $postjson["in_out_qnty"] = $in_out_qnty;
-                    $postjson["stock_q"] = $stock_q;
-
-                    // $historyData = $this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock_q, $json_data);
-
-                    $this->db->where('materials_id', $old_material["material_id"]);
-                    $query = $this->db->get('purchaser_stock');
-                    $row = $query->row();
-                    if ($query->num_rows()) {
-                        $data3 = array(
-                            'quantity' => (float) $row->quantity + (float) $old_material["stock_q"],
-                        );
-                        $this->db->where('materials_id', $old_material["material_id"]);
-                        $this->db->update('purchaser_stock', $data3);
-                    }
-
-                    $this->db->where('materials_id', $old_material["material_id"]);
-                    $querys = $this->db->get('maker_stock');
-                    $rows = $querys->row();
-                    if ($querys->num_rows()) {
-                        $data33 = array(
-                            'quantity' => (float) $rows->quantity - (float) $old_material["stock_q"],
-                        );
-
-
-                        $this->db->where('materials_id', $old_material["material_id"]);
-                        $this->db->update('maker_stock', $data33);
-                    }
-
-                    // history record
-
-                }
-                $material_id = implode(",", $this->input->post("material_name[]"));
-                $material_id = trim($material_id, ",");
                 $stock_q = implode(",", $this->input->post("stock_q[]"));
                 $stock_q = trim($stock_q, ",");
                 if ($postData["bill_date"]) {
@@ -453,173 +377,267 @@ class Making extends CI_Controller
                 } else {
                     $date = date("Y-m-d");
                 }
+                   
+                // Retrieve the existing record from the database
+                $existingData = $this->Making_model->get_data_by_id($prod_id); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
+                $existing_material_names = explode(",", $existingData["material_id"]);
+                $existing_stock_q = explode(",", $existingData["stock"]);
 
-                $data = [
+                $assocExisting = array_combine($existing_material_names, $existing_stock_q);
+                $assocNew = array_combine($material_names_new, $stock_q_new);
+                // Find the difference based on both design numbers and quantities
+                $is_value_changed = array_diff_assoc($assocNew, $assocExisting);
+
+                if ($is_value_changed) {
+                    for ($i = 0; $i < count($is_value_changed); $i++) {
+                        $existing_material_id = $is_value_changed[$i];
+                        $existing_stock = $existing_stock_q[$i];
+                        // print_r($material_names_new[$i]);
+                        // die();  
+                        // $old_materials = [];                   
+                        // Check if the existing material ID is not present in the new data
+                        if (!in_array($existing_material_id, $material_names_new)) {
+                            $old_materials[] = [
+                                "material_id" => $existing_material_id,
+                                "stock_q" => $existing_stock
+                            ];
+
+                        } else {
+                            // echo 'asdasd';
+                            $old_materials[] = [
+                                "material_id" => $material_names_new[$i],
+                                "stock_q" => $stock_q_new[$i]
+                            ];
+                        }
+                    }
+
+                    foreach ($old_materials as $old_material) {
+
+                        $entry_from = 2;
+                        $user_id = $master_name;
+                        $invoice_id = $postData["maker_no"];
+                        $material_id = $old_material;
+                        $in_out_qnty = -1 * $old_material["stock_q"];
+
+                        /*  $updated_stock = $this->Stock_model->get_material_stock($material_id);
+                         $stock = $updated_stock ? $updated_stock : (-1 * $in_out_qnty); */
+                        $postjson = [];
+                        $postjson["entry_from"] = $entry_from;
+                        $postjson["user_id"] = $user_id;
+                        $postjson["invoice_id"] = $invoice_id;
+                        $postjson["material_id"] = $material_id;
+                        $postjson["in_out_qnty"] = $in_out_qnty;
+                        $postjson["stock_q"] = $stock_q;
+
+                        // $historyData = $this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $material_id, $in_out_qnty, $stock_q, $json_data);
+
+                        $this->db->where('materials_id', $old_material["material_id"]);
+                        $query = $this->db->get('purchaser_stock');
+                        $row = $query->row();
+                        if ($query->num_rows()) {
+                            $data3 = array(
+                                'quantity' => (float) $row->quantity + (float) $old_material["stock_q"],
+                            );
+                            $this->db->where('materials_id', $old_material["material_id"]);
+                            $this->db->update('purchaser_stock', $data3);
+                        }
+
+                        $this->db->where('materials_id', $old_material["material_id"]);
+                        $querys = $this->db->get('maker_stock');
+                        $rows = $querys->row();
+                        if ($querys->num_rows()) {
+                            $data33 = array(
+                                'quantity' => (float) $rows->quantity - (float) $old_material["stock_q"],
+                            );
+
+
+                            $this->db->where('materials_id', $old_material["material_id"]);
+                            $this->db->update('maker_stock', $data33);
+                        }
+
+                        // history record
+
+                    }
+                    $material_id = implode(",", $this->input->post("material_name[]"));
+                    $material_id = trim($material_id, ",");
+
+                    $data = [
+                        "making_owner_id" => strtoupper($postData["master_name"]),
+                        "material_id" => $material_id,
+                        "stock" => $stock_q,
+                        'create_date' => $date,
+                    ];
+                    // Now you can use the $old_materials array to identify old materials not included in the new data
+                    $json_data = json_encode($data);
+                    // $dhistoryData = $this->History_model->deletHistoryByMakerInvoiceId($postData["maker_no"]);
+
+
+                    // get history record to delete old
+                    $maker_no = $this->input->post('maker_no');
+
+
+
+                    $prod_id = $postData["prod_id"];
+
+                    $update = $this->Making_model->update_making($data, $prod_id);
+
+
+                    // $product_id = $this->db->insert_id();
+                    $stockNew = $this->input->post("stock_qhidden[]");
+                    $stockqNew = $this->input->post("stock_q[]");
+                    $material_idNew = $this->input->post("material_name[]");
+                    $i = 0;
+                    foreach ($stockNew as $row) {
+                        $MakStk["maker_id"] = '0';
+                        $MakStk["making_owner_id"] = '0';
+                        $MakStk["materials_id"] = $material_idNew[$i];
+                        $MakStk["quantity"] = $stockqNew[$i];
+
+                        $this->db->where('materials_id', $material_idNew[$i]);
+                        $query = $this->db->get('purchaser_stock');
+                        $row = $query->row();
+
+                        $value_null = '0';
+                        if ($stockNew[$i]) {
+                            $diff = (float) $stockqNew[$i] - (float) $stockNew[$i];
+                        } else {
+                            $diff = (float) $stockqNew[$i] - (float) $value_null;
+                        }
+
+                        if ($query->num_rows()) {
+
+                            if ($diff > 0) {
+                                // echo "The difference is positive: " . $diff;	
+                                // If the product exists, update the quantity value in the database
+                                $data3 = array(
+                                    'quantity' => (float) $row->quantity - (float) $diff,
+                                );
+                            } elseif ($diff < 0) {
+                                // echo "The difference is negative: " . abs($diff);
+                                $data3 = array(
+                                    'quantity' => (float) $row->quantity + (float) abs($diff),
+                                );
+                            } else {
+                                // echo "The difference is negative: " . abs($diff);
+                                $data3 = array(
+                                    'quantity' => (float) $row->quantity - (float) abs($diff),
+                                );
+                            }
+
+                            $this->db->where('materials_id', $material_idNew[$i]);
+                            $this->db->update('purchaser_stock', $data3);
+                        }
+
+                        // if ($oldstock[$m] != ' ') {
+                        //     $dataStk["quantity"] = (float)$oldstock[$m] - (float)$stocks[$m];
+
+                        //     $this->Purchaser_model->update_pstock_qty($dataStk, $material_ids[$m]);
+
+                        //     // $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
+                        //     // $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
+                        // } 
+                        else {
+                            // $null_value= "0";
+                            $dataMtk["materials_id"] = $material_idNew[$i];
+                            $dataMtk["quantity"] = (float) $value_null - (float) $stockqNew[$i];
+                            $dataMtk["price"] = '';
+                            $dataMtk["purchaser_id"] = '';
+                            $dataMtk["purchaser_owner_id"] = '';
+                            $this->Purchaser_model->add_purchaser_qty($dataMtk);
+
+                        }
+
+
+                        $this->db->where('materials_id', $material_idNew[$i]);
+                        $querys = $this->db->get('maker_stock');
+                        $rows = $querys->row();
+                        if ($querys->num_rows()) {
+                            if ($stockNew[$i]) {
+                                $diff = (float) $stockqNew[$i] - (float) $stockNew[$i];
+                            } else {
+                                $diff = (float) $stockqNew[$i] - '0';
+                            }
+
+                            if ($diff > 0) {
+                                // If the product exists, update the quantity value in the database
+                                $data3 = array(
+                                    'quantity' => (float) $rows->quantity + (float) $diff,
+                                );
+                            } elseif ($diff < 0) {
+                                $data3 = array(
+                                    'quantity' => (float) $rows->quantity - (float) abs($diff),
+                                );
+                            } else {
+                                // echo "The difference is negative: " . abs($diff);
+                                $data3 = array(
+                                    'quantity' => (float) $row->quantity + (float) abs($diff),
+                                );
+                            }
+
+                            $this->db->where('materials_id', $material_idNew[$i]);
+                            $this->db->update('maker_stock', $data3);
+                        } else {
+                            $this->Making_model->add_making_qty($MakStk);
+                        }
+                        $i++;
+                    }
+                    $customer_id = $postData["master_name"];
+                    $this->db->select('*');
+                    $this->db->from('customers');
+                    $this->db->where('id', $customer_id);
+                    $query = $this->db->get();
+                    $master_name = $query->row();
+
+
+                    $this->db->select('*');
+                    $this->db->from('material');
+                    $this->db->where_in('id', $material_idNew);
+                    $query = $this->db->get();
+                    $results = $query->result();
+                    $material_names = '';
+                    foreach ($results as $result) {
+                        $material_names .= $result->material_name . ', ';
+                    }
+                    $material_names = rtrim($material_names, ', ');
+
+
+                    $data_pdf = [
+                        'master_id' => $master_name->id,
+                        'master_name' => $master_name->name,
+                        'maker_no' => strtoupper($this->input->post("maker_no")),
+                        'material_names' => $material_names,
+                        'qnty' => $stock_q,
+                        'create_date' => $date,
+                    ];
+                }
+
+
+
+                $material_id = implode(",", $this->input->post("material_name[]"));
+                $material_id = trim($material_id, ",");
+
+                $old_data = [
                     "making_owner_id" => strtoupper($postData["master_name"]),
                     "material_id" => $material_id,
-                    "stock" => $stock_q,
+                    "stock" => $this->input->post('stock_q'),
                     'create_date' => $date,
                 ];
                 // Now you can use the $old_materials array to identify old materials not included in the new data
-                $json_data = json_encode($data);
-                // $dhistoryData = $this->History_model->deletHistoryByMakerInvoiceId($postData["maker_no"]);
-
-                
-                // get history record to delete old
-                $maker_no = $this->input->post('maker_no');
-                
-
-                
-                $prod_id = $postData["prod_id"];
-
-                $update = $this->Making_model->update_making($data, $prod_id);
-
-                
-                // $product_id = $this->db->insert_id();
-                $stockNew = $this->input->post("stock_qhidden[]");
-                $stockqNew = $this->input->post("stock_q[]");
-                $material_idNew = $this->input->post("material_name[]");
-                $i = 0;
-                foreach ($stockNew as $row) {
-                    $MakStk["maker_id"] = '0';
-                    $MakStk["making_owner_id"] = '0';
-                    $MakStk["materials_id"] = $material_idNew[$i];
-                    $MakStk["quantity"] = $stockqNew[$i];
-
-                    $this->db->where('materials_id', $material_idNew[$i]);
-                    $query = $this->db->get('purchaser_stock');
-                    $row = $query->row();
-
-                    $value_null = '0';
-                    if ($stockNew[$i]) {
-                        $diff = (float) $stockqNew[$i] - (float) $stockNew[$i];
-                    } else {
-                        $diff = (float) $stockqNew[$i] - (float) $value_null;
-                    }
-
-                    if ($query->num_rows()) {
-
-                        if ($diff > 0) {
-                            // echo "The difference is positive: " . $diff;	
-                            // If the product exists, update the quantity value in the database
-                            $data3 = array(
-                                'quantity' => (float) $row->quantity - (float) $diff,
-                            );
-                        } elseif ($diff < 0) {
-                            // echo "The difference is negative: " . abs($diff);
-                            $data3 = array(
-                                'quantity' => (float) $row->quantity + (float) abs($diff),
-                            );
-                        } else {
-                            // echo "The difference is negative: " . abs($diff);
-                            $data3 = array(
-                                'quantity' => (float)$row->quantity - (float)abs($diff),
-                            );
-                        }
-
-                        $this->db->where('materials_id', $material_idNew[$i]);
-                        $this->db->update('purchaser_stock', $data3);
-                    }
-
-                    // if ($oldstock[$m] != ' ') {
-                    //     $dataStk["quantity"] = (float)$oldstock[$m] - (float)$stocks[$m];
-
-                    //     $this->Purchaser_model->update_pstock_qty($dataStk, $material_ids[$m]);
-
-                    //     // $dataDStk["stock_qty"] = $oldstock[$m] - $stocks[$m];
-                    //     // $this->Purchaser_model->update_Dstock($dataDStk,$material_ids[$m]);
-                    // } 
-                    else {
-                        // $null_value= "0";
-                        $dataMtk["materials_id"] = $material_idNew[$i];
-                        $dataMtk["quantity"] = (float) $value_null - (float) $stockqNew[$i];
-                        $dataMtk["price"] = '';
-                        $dataMtk["purchaser_id"] = '';
-                        $dataMtk["purchaser_owner_id"] = '';
-                        $this->Purchaser_model->add_purchaser_qty($dataMtk);
-
-                    }
-
-
-                    $this->db->where('materials_id', $material_idNew[$i]);
-                    $querys = $this->db->get('maker_stock');
-                    $rows = $querys->row();
-                    if ($querys->num_rows()) {
-                        if ($stockNew[$i]) {
-                            $diff = (float)$stockqNew[$i] - (float)$stockNew[$i];
-                        } else {
-                            $diff = (float)$stockqNew[$i] - '0';
-                        }
-
-                        if ($diff > 0) {
-                            // If the product exists, update the quantity value in the database
-                            $data3 = array(
-                                'quantity' => (float)$rows->quantity + (float)$diff,
-                            );
-                        } elseif ($diff < 0) {
-                            $data3 = array(
-                                'quantity' => (float)$rows->quantity - (float)abs($diff),
-                            );
-                        } else {
-                            // echo "The difference is negative: " . abs($diff);
-                            $data3 = array(
-                                'quantity' => (float)$row->quantity + (float)abs($diff),
-                            );
-                        }
-
-                        $this->db->where('materials_id', $material_idNew[$i]);
-                        $this->db->update('maker_stock', $data3);
-                    } else {
-                        $this->Making_model->add_making_qty($MakStk);
-                    }
-                    $i++;
-                }
-
-                $customer_id = $postData["master_name"];
-                $this->db->select('*');
-                $this->db->from('customers');
-                $this->db->where('id', $customer_id);
-                $query = $this->db->get();
-                $master_name = $query->row();
-
-
-                $this->db->select('*');
-                $this->db->from('material');
-                $this->db->where_in('id', $material_idNew);
-                $query = $this->db->get();
-                $results = $query->result();
-                $material_names = '';
-                foreach ($results as $result) {
-                    $material_names .= $result->material_name . ', ';
-                }
-                $material_names = rtrim($material_names, ', ');
-
-
-                $data_pdf = [
-                    'master_id' => $master_name->id,
-                    'master_name' => $master_name->name,
-                    'maker_no' => strtoupper($this->input->post("maker_no")),
-                    'material_names' => $material_names,
-                    'qnty' => $stock_q,
-                    'create_date' => $date,
-                ];
-
-
+                $json_data = json_encode($old_data);
                 $updatedMaterials = $this->input->post('material_name');
-
                 $updatedQty = $this->input->post('stock_q');
                 for ($i = 0; $i < count($updatedMaterials); $i++) {
                     $h_material_id = $updatedMaterials[$i];
                     $h_quantity = $updatedQty[$i];
                     
-                    $entry_from = 2;
-                        $user_id = $master_name;
+                    $entry_from = "2";
+                        $user_id = $postData["master_name"];
                         $invoice_id = $postData["maker_no"];
                         $curr_material_id = $h_material_id;
                         $in_out_qnty = -1 * $h_quantity;
                         
                         $updated_stock = $this->Stock_model->get_material_stock($h_material_id);
-                        $stock = $updated_stock ? $updated_stock : (-1 * $in_out_qnty);
+                        $stock = $updated_stock ? $updated_stock : -1 * $in_out_qnty;
     
                         $historyData = $this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $curr_material_id, $in_out_qnty, $updated_stock, $json_data);
                 }
@@ -746,5 +764,144 @@ class Making extends CI_Controller
         }
     }
 
+    public function edit_making($prod_id) {
+        $cust_data = $this->Making_model->get_material_byID($prod_id);
+        if (!$this->session->userdata("logged_in")) {
+            redirect("Welcome");
+        } elseif ($prod_id && $this->input->post("edit_making") == null) {
+            $data["title"] = ucwords("Edit Making Details");
+            $data["username"] = $this->session->userdata("logged_in");
+            $data["prod"] = $cust_data;
+            $data["purList"] = $this->Making_model->get_all_making();
+            $data["matList"] = $this->Purchaser_model->get_all_material();
+            $data["custList"] = $this->Customer_model->get_mowner();
+            $data["PurchaserList"] = $this->Customer_model->get_powner();
 
+
+            $this->load->view("layout/header", $data);
+            $this->load->view("layout/menubar");
+            $this->load->view("making_edit");
+            $this->load->view("layout/footer");
+        } elseif ($this->input->post("edit_making") != null) {
+            // POST data
+            $postData = $this->input->post();
+            $postData = $this->input->post();
+
+            $this->form_validation->set_rules(
+                "master_name",
+                "Master Name",
+                "trim|required"
+            );
+            if ($this->form_validation->run() == false) {
+                $data["title"] = ucwords("Edit Making Details");
+                $data["username"] = $this->session->userdata("logged_in");
+                $data["purList"] = $this->Making_model->get_all_making();
+                $data["matList"] = $this->Purchaser_model->get_all_material();
+                $data["custList"] = $this->Customer_model->get_mowner();
+                $data["PurchaserList"] = $this->Customer_model->get_powner();
+
+
+                $data["prod"] = $cust_data;
+
+                $this->load->view("layout/header", $data);
+                $this->load->view("layout/menubar");
+                $this->load->view("making_edit");
+                $this->load->view("layout/footer");
+            } else {
+                $material_names_new = $this->input->post("material_name[]");
+                $stock_q_new = $this->input->post("stock_q[]");
+                $prod_id = $postData["prod_id"];
+                $master_name = $postData["master_name"];
+
+                $stock_q = implode(",", $this->input->post("stock_q[]"));
+                $stock_q = trim($stock_q, ",");
+                if ($postData["bill_date"]) {
+                    $date = $postData["bill_date"];
+                } else {
+                    $date = date("Y-m-d");
+                }
+
+                // Retrieve the existing record from the database
+                $existingData = $this->Making_model->get_data_by_id($prod_id); // Replace 'get_data_by_id' with the actual method in your model to retrieve the existing data
+                $existing_material_names = explode(",", $existingData["material_id"]);
+                $existing_stock_q = explode(",", $existingData["stock"]);
+
+                $assocExisting = array_combine($existing_material_names, $existing_stock_q);
+                $assocNew = array_combine($material_names_new, $stock_q_new);
+                // Find the difference based on both design numbers and quantities
+                $is_value_changed = array_diff_assoc($assocNew, $assocExisting);
+
+                $added = array_diff_key($assocNew, $assocExisting);
+                $removed= array_diff_key($assocExisting, $assocNew);
+                
+                // print_r($is_value_changed);die();
+                if ($is_value_changed) {
+
+                }
+
+                if ($added) {
+                   $result = $this->Making_model->get_data_by_id($prod_id);
+                   $material_ids = explode(",", $result['material_id']);
+                    $material_stock = explode(",", $result['stock']);
+
+                    // Merge the keys of $a2 into $a1
+                    $new_material_array = array_merge($material_ids, array_keys($added));
+                    
+                    $new_material_stock_array = array_merge($material_stock, array_values($added));
+
+                    $material_id = implode(",", $this->input->post("material_name[]"));
+                    $material_id = trim($material_id, ",");
+
+                    $data = [
+                        "making_owner_id" => strtoupper($postData["master_name"]),
+                        "material_id" => $material_id,
+                        "stock" => $stock_q,
+                        'create_date' => $date,
+                    ];
+                    // Now you can use the $old_materials array to identify old materials not included in the new data
+                    $json_data = json_encode($data);
+                    
+                    $update = $this->Making_model->update_making($data, $prod_id);
+
+                    
+                    /* Update MAKER STOCK Table */
+                    print_r($added);die();
+                    foreach ($added as $key => $value) {
+                        $makingStockData["maker_id"] = $prod_id;
+                        $makingStockData["making_owner_id"] = $master_name;
+                        $makingStockData["materials_id"] = $key;
+                        $makingStockData["quantity"] = $value;
+                        $this->Making_model->add_making_qty($makingStockData);
+                    }
+                }
+                die();
+                if ($removed) {
+                    $result = $this->Making_model->get_data_by_id($prod_id);
+                    $material_ids = explode(",", $result['material_id']);
+                    $material_stock = explode(",", $result['stock']);
+
+                    // Merge the keys of $a2 into $a1
+                    $new_material_array = array_merge($material_ids, array_keys($removed));
+
+                    $new_material_stock_array = array_merge($material_stock, array_values($removed));
+
+                    $material_id = implode(",", $this->input->post("material_name[]"));
+                    $material_id = trim($material_id, ",");
+
+                    $data = [
+                        "making_owner_id" => strtoupper($postData["master_name"]),
+                        "material_id" => $material_id,
+                        "stock" => $stock_q,
+                        'create_date' => $date,
+                    ];
+                    // Now you can use the $old_materials array to identify old materials not included in the new data
+                    $json_data = json_encode($data);
+
+                    $update = $this->Making_model->update_making($data, $prod_id);
+                }
+            }
+        } else {
+
+            }
+    }
 }

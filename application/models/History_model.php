@@ -275,7 +275,6 @@ class History_model extends CI_Model {
             'stock_quantity' => $stock,
             'json_data' => $json_data
         );
-
         $this->db->where('user_id', $user_id);
         $this->db->where('invoice_no', $invoice_id);
         $this->db->where('material_id', $material_id);
