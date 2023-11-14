@@ -19,7 +19,7 @@
               list</a>
           </p>
           <?php
-          $url = 'Making/edit/' . $prod->id;
+          $url = 'Making/edit_making/' . $prod->id;
           echo form_open($url, 'class="form-horizontal" id="add_product_form"');
           ?>
           <!-- <div class="form-group">
