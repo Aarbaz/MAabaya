@@ -141,7 +141,6 @@ class Invoice extends CI_Controller
 
 			$qnty_array = $this->input->post('qnty[]');
 			$qnty_sum = 0;
-
 			foreach ($qnty_array as $value) {
 				$qnty_sum += $value;
 			}
@@ -156,9 +155,9 @@ class Invoice extends CI_Controller
 				'customer_id' => $bakers_id,
 				'invoice_no' => $invoice_no,
 				'customer_address' => $this->input->post('cust_adds_txt'),
-				'product_name' => $material,
+				'product_name' => $hsn,
 				//'stk'		=> $stk,
-				'hsn' => $hsn,
+				'hsn' => $selected_ids,
 				'qnty' => $qnty,
 				'rate' => $rate,
 				'amount' => $amount,
@@ -373,7 +372,7 @@ class Invoice extends CI_Controller
 			// $this->create();
 		} else {
 
-			$material = implode(',', $this->input->post('items[]'));
+			$material = implode(',', $this->input->post('hsn[]'));
 			$material = trim($material, ',');
 			$selected_ids = implode(',', $this->input->post('selected_ids'));
 			$selected_ids = trim($selected_ids, ',');
@@ -412,7 +411,14 @@ class Invoice extends CI_Controller
 			$ledger_last = $get_ledger_invoice[0]->balance_bill;
 			$qnty_array = $this->input->post('qnty[]');
 			$qnty_sum = 0;
+			// Assume $material and $qnty are obtained from your form
 
+			$materialArray = explode(',', $selected_ids);
+			$qntyArray = explode(',', $qnty);
+			$dataToUpdate = array_combine($materialArray, $qntyArray);
+
+			//$this->Stock_model->updateStock($dataToUpdate);
+			//die();
 			foreach ($qnty_array as $value) {
 				$qnty_sum += $value;
 			}
@@ -431,14 +437,14 @@ class Invoice extends CI_Controller
 				$existing_rate = explode(",", $existingData["rate"]);
 				$existing_amount = explode(",", $existingData["amount"]);
 				$hsn = $this->input->post('hsn[]'); // Your incoming new data as an array
-
+				$design_ids = explode(',', $selected_ids);
 				// Create associative arrays with design numbers as keys and quantities as values
 				$assocExisting = array_combine($existing_design, $existing_qnty);
-				$assocNew = array_combine($hsn, $qnty_array);
+				$assocNew = array_combine($design_ids, $qnty_array);
 				// Find the difference based on both design numbers and quantities
-				$added = array_diff_assoc($assocNew, $assocExisting);
-				$removed = array_diff_assoc($assocExisting, $assocNew);
-
+				$added = array_diff_key($assocNew, $assocExisting);
+				$removed = array_diff_key($assocExisting, $assocNew);
+				$value_changed = array_diff_assoc($assocNew, $assocExisting);
 				$value_null = '0';
 				if ($ledger_bill2) {
 					$diff_total = (float) $total_amount - (float) $ledger_bill2;
@@ -505,7 +511,7 @@ class Invoice extends CI_Controller
 
 				$bal_update = $this->Balance_model->update_balanceBybill($data_balances, $bakers_id, $invoice_no);
 
-				if ($added) {
+				/* if ($added) {
 					foreach ($added as $key => $value) {
 
 						// You can add your logic here based on the key or value if needed
@@ -519,12 +525,18 @@ class Invoice extends CI_Controller
 						$query = $this->db->get('stock');
 						$row = $query->row();
 						if ($query->num_rows()) {
-							$data3 = array(
-								'stock_qty' => (float) $row->stock_qty + (float) $value,
-							);
+							if ($row->stock_qty < 0) {
+								$data3 = array(
+									'stock_qty' => (float) $row->stock_qty - (float) $value,
+								);
+							}else {
+								$data3 = array(
+									'stock_qty' => (float) $row->stock_qty + (float) $value,
+								);
+							}
+							
 							$this->db->where('p_design_number', $product->id);
 							$this->db->update('stock', $data3);
-							// print_r($data3);
 						}
 					}
 				}
@@ -548,12 +560,68 @@ class Invoice extends CI_Controller
 							$this->db->update('stock', $data3_remove);
 						}
 					}
-				}
+				} */
+				if ($value_changed) {
+						foreach ($value_changed as $changed_value => $value_change) {
+
+							// You can add your logic here based on the changed_value or value_change if needed
+							$this->db->select('hsn,qnty');
+							$this->db->from('insider_bill');
+							$this->db->where('sr_no', $sell_id);
+							$query = $this->db->get();
+							$designs = $query->row(); // Get a single row as an object
+							// Previous values
+							// print_r($existing_qnty);die();
+							// $previous_product_ids_str = $existing_design;
+							// $previous_quantities_str = $existing_qnty;
+
+							// New values
+							$new_product_ids_str = $design_ids;
+							$new_quantities_str = $qnty_array;
+
+							// Convert the strings into arrays
+							$previous_product_ids = $design_ids;
+							$previous_quantities = $existing_qnty;
+							$new_product_ids = $design_ids;
+							$new_quantities = $qnty_array;
+
+							// Combine product IDs and quantities into an associative array
+							$previous_data = array_combine($previous_product_ids, $previous_quantities);
+							$new_data = array_combine($new_product_ids, $new_quantities);
+
+							// Calculate quantity differences
+							$quantity_differences = [];
+							foreach ($new_data as $product_id => $new_quantity) {
+								$previous_quantity = $previous_data[$product_id] ? $previous_data[$product_id] : 0;
+								$quantity_differences[$product_id] = $new_quantity - $previous_quantity;
+							}
+							foreach ($quantity_differences as $product_id => $difference) {
+								// Fetch current quantity from the stock table
+								// $current_quantity = $this->Stock_model->get_allstock($product_id)->stock_qty;
+							
+								// // Calculate new quantity
+								// $new_quantity = $current_quantity + $difference;
+							
+								// Update the stock table with the new quantity
+								$this->Stock_model->update_stock($product_id, $difference);
+							}
+							// Display or use the quantity differences
+							/* foreach ($quantity_differences as $product_id => $difference) {
+								echo "Product ID: $product_id, Quantity Difference: $difference\n";
+							} */
+							/* if ($query->num_rows()) {
+								$data3_remove = array(
+									'stock_qty' => (float) $row->stock_qty - (float) $value_change,
+								);
+								$this->db->where('p_design_number', $designs->id);
+								$this->db->update('stock', $data3_remove);
+							} */
+						}
+					}
 				// die();
 			}
 
 			//HISTORY
-			$dhistoryData = $this->History_model->deletHistoryByMakerInvoiceId($invoice_no);
 			$entry_from = 4;
 			$user_id = $bakers_id;
 			$design = explode(',',$selected_ids);
@@ -575,7 +643,7 @@ class Invoice extends CI_Controller
 				$previous_qty = $query->row();
 				$current_qty = $previous_qty->stock_qty;
 	
-				$this->History_model->insertStockEntry($entry_from, $user_id, $invoice_no, $product_id, $in_out_qty, $current_qty, $json_data);
+				$this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_no, $product_id, $in_out_qty, $current_qty, $json_data);
 			}
 
 			$data = array(
@@ -583,7 +651,7 @@ class Invoice extends CI_Controller
 				'invoice_no' => $invoice_no,
 				'customer_address' => $this->input->post('cust_adds_txt'),
 				'product_name' => $material,
-				'hsn' => $hsns,
+				'hsn' => $selected_ids,
 				'qnty' => implode(",", $this->input->post('qnty')),
 				'rate' => $rate,
 				'amount' => $amount,

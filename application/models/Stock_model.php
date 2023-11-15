@@ -87,4 +87,36 @@ public function delete_by_id($id)
 		}
 	}
 
+    public function update_stock($product_id, $quantity_change) {
+        // Update the stock table with the new quantity
+        $current_quantity = $this->get_allstock($product_id)->stock_qty;
+
+        // Calculate the new quantity
+        $new_quantity = $current_quantity - $quantity_change;
+        $new_quantity_add = $current_quantity + $quantity_change;
+
+        // Check if the new quantity is negative, and only update if it is
+        if ($current_quantity < 0) {
+            // Update the stock table with the new quantity
+            $this->db->where('p_design_number', $product_id);
+            $this->db->update('stock', ['stock_qty' => $new_quantity]);
+        }else {
+            $this->db->where('p_design_number', $product_id);
+            $this->db->update('stock', ['stock_qty' => $new_quantity_add]);
+        }
+    }
+
+    private function addStock($productName, $quantity) {
+        $this->db
+            ->where('p_design_number', $productName)
+            ->set('stock_qty', 'stock_qty + ' . $quantity, false)
+            ->update('stock');
+    }
+
+    private function removeStock($productName, $quantity) {
+        $this->db
+            ->where('p_design_number', $productName)
+            ->set('stock_qty', 'GREATEST(stock_qty - ' . $quantity . ', 0)', false)
+            ->update('stock');
+    }
 }
