@@ -200,7 +200,7 @@
 
 
    $('#total_amount').on('focus', function(){
-   debugger;
+   // debugger;
 //   amountWord();
     total = 0;
             amt= 0;

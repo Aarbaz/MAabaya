@@ -47,7 +47,9 @@ class Purchaser_model extends CI_Model
 
     public function get_all_purchasers()
     {
+        $this->db->order_by('id', 'desc');
         return $this->db->get("purchaser");
+
     }
 
     public function get_purchaser_byID($id)

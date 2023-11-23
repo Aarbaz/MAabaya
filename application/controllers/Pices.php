@@ -1011,7 +1011,7 @@ class Pices extends CI_Controller
 			$cust_id = $cust_name;
 			$cust_name = rawurlencode($username);
 
-			$pdf_file = APPPATH . 'balance_sheet/' . rawurldecode($cust_name) . '/' . $invoice_id . '.pdf';
+			$pdf_file = APPPATH . 'balance_sheet/' . $cust_id . '/' . $invoice_id . '.pdf';
 			$file = $invoice_id . '.pdf';
 
 			if (file_exists($pdf_file)) {
@@ -1028,7 +1028,7 @@ class Pices extends CI_Controller
 
 				$data_pdf = $db_data; // Replace $dynamic_array with your actual dynamic array
 				$filename = $frm_mth . '_' . $to_mth . '.pdf';
-				$pdf_file = APPPATH . 'balance_sheet/' . rawurldecode($username) . '/' . $filename;
+				$pdf_file = APPPATH . 'balance_sheet/' . $cust_id . '/' . $filename;
 				$file = $filename;
 
 				$start_date = $frm_mth . '/' . $frm_yr;
@@ -1060,7 +1060,7 @@ class Pices extends CI_Controller
 				$pdf->writeHTML($pdf_data, true, false, true, false, '');
 
 				$inv_id = $frm_mth . '_' . $to_mth;
-				$dir = APPPATH . '/balance_sheet/' . $username . '/';
+				$dir = APPPATH . '/balance_sheet/' . $cust_id . '/';
 
 				if (!is_dir($dir)) {
 					mkdir($dir, 0777, true);

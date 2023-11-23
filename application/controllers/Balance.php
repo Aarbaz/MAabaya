@@ -177,7 +177,8 @@ class Balance extends CI_Controller {
 				$pdf->addPage();
 				$pdf->writeHTML($pdf_data, true, false, true, false, "");
 				$filename = strtoupper($invoice).".pdf";
-				$dir = APPPATH . "/Balance Amount/" . $cust_name . "/";
+				$dir = APPPATH . "/Balance Amount/" . $customer_id . "/";
+				
 				if (!is_dir($dir)) {
 						mkdir($dir, 0777, true);
 				}
