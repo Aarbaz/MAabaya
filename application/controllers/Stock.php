@@ -110,4 +110,9 @@ class Stock extends CI_Controller {
 		}
 	}
 
+	public function get_stock(){
+		$id = $this->input->post('material_id');
+        $data = $this->Stock_model->get_material_stock($id);
+        echo json_encode($data);
+	}
 }
