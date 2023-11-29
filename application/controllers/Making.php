@@ -919,11 +919,11 @@ class Making extends CI_Controller
 
                                     if ($stock_table_rows->stock_qty >= 0) {
                                         $stock_data = array(
-                                            'stock_qty' => (float) $stock_table_rows->stock_qty + (float) ($diff),
+                                            'stock_qty' => (float) $stock_table_rows->stock_qty - (float) ($diff),
                                         );
                                     } else {
                                         $stock_data = array(
-                                            'stock_qty' => (float) $stock_table_rows->stock_qty - (float) ($diff),
+                                            'stock_qty' => (float) $stock_table_rows->stock_qty + (float) ($diff),
                                         );
                                     }
                                 } else {
@@ -1004,7 +1004,7 @@ class Making extends CI_Controller
                     // Now you can use the $old_materials array to identify old materials not included in the new data
                     $json_data = json_encode($data);
 
-                    //$update = $this->Making_model->update_making($data, $prod_id);
+                    $update = $this->Making_model->update_making($data, $prod_id);
                     foreach ($added as $ad_key => $ad_value) {
                         $makingStockData["maker_id"] = $prod_id;
                         $makingStockData["making_owner_id"] = $master_name;

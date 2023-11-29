@@ -626,6 +626,7 @@ class Invoice extends CI_Controller
 			$user_id = $bakers_id;
 			$design = explode(',',$selected_ids);
 			$qnty = $this->input->post('qnty');
+			$qnty_new = implode(",", $this->input->post('qnty'));
 			$data_json = array(
 				'customer' => $this->input->post('customerName'),
 				'customer_address' => $this->input->post('hsn'),
@@ -692,7 +693,7 @@ class Invoice extends CI_Controller
 				'invoice_no' => $invoice_no,
 				'product_name' => $material,
 				'hsn' => $hsns,
-				'qnty' => $qnty,
+				'qnty' => $qnty_new,
 				'rate' => $rate,
 				'amount' => $amount,
 				'total' => $total_amount,
