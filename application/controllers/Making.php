@@ -903,7 +903,7 @@ class Making extends CI_Controller
 
                                     } else {
                                         $stock_data = array(
-                                            'stock_qty' => (float) $stock_table_rows->stock_qty - (float) $diff,
+                                            'stock_qty' => (float) $stock_table_rows->stock_qty + (float) $diff,
                                         );
                                     }
                                 } elseif ($diff < 0) {
