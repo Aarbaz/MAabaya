@@ -232,13 +232,13 @@
          var baseURL = "<?php echo base_url(); ?>";
          $.ajax({
             type: 'post',
-            url: '<?= base_url() ?>index.php/Making/quantityById',
+            url: '<?= base_url() ?>index.php/Stock/get_stock',
             data: { material_id: material_id },
          }).then(function (res) {
             console.log(res);
             var res = $.parseJSON(res);
             if (res || res != null) {
-               row.find(".stock_in").val(res.quantity);
+               row.find(".stock_in").val(res);
             } else {
                row.find(".stock_in").val(" ");
             }

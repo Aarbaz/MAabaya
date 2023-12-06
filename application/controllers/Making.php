@@ -192,6 +192,19 @@ class Making extends CI_Controller
                         );
                         $this->db->where('product_id', $material_ids[$m]);
                         $this->db->update('stock', $data_return);
+                    }else{
+                        $material_id = $material_ids[$m];
+                        $in_out_qnty = -1 * $stocks[$m];
+
+                        $data = array(
+                            'product_id' => $material_id,
+                            'stock_qty' => $in_out_qnty,
+                            'weight' => $postData['weight'],
+                            'unit_price' => $postData['price'],
+                            'stock_qty' => $postData['stock_q'],
+                            'price' => $postData['price_total'],
+                        );
+                        $insert = $this->Product_model->add_product($data);
                     }
 
 
@@ -1078,6 +1091,7 @@ class Making extends CI_Controller
 
                 }
                 if ($removed) {
+
                     $old_result = $this->Making_model->get_data_by_id($prod_id);
                     $old_material_ids = explode(",", $old_result['material_id']);
                     $old_material_stock = explode(",", $old_result['stock']);
@@ -1225,7 +1239,7 @@ class Making extends CI_Controller
 
                         if ($querys->num_rows()) {
                             
-                            if ($rows->quantity > 0) {
+                            if ($rows->quantity >= 0) {
                                 // If the product exists, update the quantity value in the database
                                 $data3 = array(
                                     'quantity' => (float) $rows->quantity - (float) $rvalue,
@@ -1257,11 +1271,11 @@ class Making extends CI_Controller
                                 if ($r_rows->stock_qty >= 0) {
                                     # code...
                                     $stock_data = array(
-                                        'stock_qty' => (float) $r_rows->stock_qty - (float) $rvalue,
+                                        'stock_qty' => (float) $r_rows->stock_qty + (float) $rvalue,
                                     );
                                 }elseif ($r_rows->stock_qty < 0) {
                                     $stock_data = array(
-                                        'stock_qty' => (float) $r_rows->stock_qty + (float) $rvalue,
+                                        'stock_qty' => (float) $r_rows->stock_qty - (float) $rvalue,
                                     );
                                 }else {
                                     // echo "The difference is negative: " . abs($r_diff);
@@ -1276,6 +1290,31 @@ class Making extends CI_Controller
                         }
 
                         /************************* Update Stock Table ******************************/
+
+                        /************************* Update History Table ******************************/
+                        $added_history_data = [
+                            "making_owner_id" => strtoupper($postData["master_name"]),
+                            "material_id" => $ad_key,
+                            "stock" => $stock_q,
+                            'create_date' => $date,
+                        ];
+                        // Now you can use the $old_materials array to identify old materials not included in the new data
+                        $history_json_data = json_encode($added_history_data);
+
+                        $h_material_id = $rkey;
+                        $h_quantity = $rvalue;
+                        
+                        $entry_from = "2";
+                        $user_id = $postData["master_name"];
+                        $invoice_id = $postData["maker_no"];
+                        $curr_material_id = $h_material_id;
+                        $in_out_qnty = -1 * $h_quantity;
+                        
+                        $updated_stock = $this->Stock_model->get_material_stock($h_material_id);
+                        $stock = $updated_stock ? $updated_stock : -1 * $in_out_qnty;
+
+                        $historyData = $this->History_model->updateHistoryRecordByInvoiceId($entry_from, $user_id, $invoice_id, $curr_material_id, $in_out_qnty, $stock, $history_json_data);
+                        /************************* Update History Table ******************************/
                         $rem++;
                     }
                     $data = [
@@ -1288,6 +1327,75 @@ class Making extends CI_Controller
                     $json_data = json_encode($data);
 
                     $update = $this->Making_model->update_making($data, $prod_id);
+                }
+
+                $customer_id = $postData["master_name"];
+                $this->db->select('*');
+                $this->db->from('customers');
+                $this->db->where('id', $customer_id);
+                $query = $this->db->get();
+                $master_name = $query->row();
+                
+                $this->db->select('*');
+                $this->db->from('material');
+                $this->db->where_in('id', $material_names_new);
+                $query = $this->db->get();
+                $results = $query->result();
+                $material_names = '';
+                foreach ($results as $result) {
+                    $material_names .= $result->material_name . ', ';
+                    }
+                $material_names = rtrim($material_names, ', ');
+                $data_pdf = [
+                    'master_id' => $master_name->id,
+                    'master_name' => $master_name->name,
+                    'maker_no' => strtoupper($this->input->post("maker_no")),
+                    'material_names' => $material_names,
+                    'qnty' => $stock_q,
+                    'create_date' => $date,
+                ];
+                
+                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                $pdf->setPrintHeader(false);
+                $pdf->setPrintFooter(false);
+                $pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+                //$pdf->SetFont('helvetica', '', 10);
+                $pdf->SetFont("", "", 10);
+                $pdf_data = $this->load->view("making_pdf", $data_pdf, true);
+                $pdf->addPage();
+                $pdf->writeHTML($pdf_data, true, false, true, false, "");
+                $filename = strtoupper($postData["maker_no"]) . ".pdf";
+                $dir = APPPATH . "/maker/" . $data_pdf["master_id"] . "/";
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0777, true);
+                }
+                $save_path = $dir . $filename;
+                
+                if (file_exists($save_path)) {
+                    // If the file exists, delete it
+                    unlink($save_path);
+                
+                    $filename = strtoupper($postData["maker_no"]) . ".pdf";
+                    $dir = APPPATH . "/maker/" . $data_pdf["master_id"] . "/";
+                    if (!is_dir($dir)) {
+                        mkdir($dir, 0777, true);
+                    }
+                    $save_path = $dir . $filename;
+                    ob_end_clean();
+                    // $pdf->Output($save_path, "I");
+                    $pdf->Output($save_path, "F");
+                
+                } else {
+                    $filename = strtoupper($postData["maker_no"]) . ".pdf";
+                    $dir = APPPATH . "/maker/" . $data_pdf["master_id"] . "/";
+                    if (!is_dir($dir)) {
+                        mkdir($dir, 0777, true);
+                    }
+                    $save_path = $dir . $filename;
+                    ob_end_clean();
+                    // $pdf->Output($save_path, "I");
+                    $pdf->Output($save_path, "F");
+                    echo 'The file does not exist.';
                 }
                 $this->session->set_flashdata("success", "Material details updated successfully.");
                 redirect("Making");

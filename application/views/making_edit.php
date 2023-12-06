@@ -108,15 +108,15 @@
                     </td>
                     <td>
                       <?php
-                      $get_pstock = $this->Purchaser_model->get_pstock($mat[$i]);
-                      if (!$get_pstock || !isset($get_pstock->quantity)) {
+                      $get_pstock = $this->Stock_model->get_material_stock($mat[$i]);
+                      if (!$get_pstock || !isset($get_pstock->stock_qty)) {
                         $pstock_quantity = " ";
                       } else {
-                        $pstock_quantity = $get_pstock->quantity;
+                        $pstock_quantity = $get_pstock->stock_qty;
                       }
                       ?>
                       <input type="text" class="form-control stock_in" id="stock_in" name="stock_in[]"
-                        placeholder="Stock/Quantity" value="<?php echo $pstock_quantity ?>" readonly>
+                        placeholder="Stock/Quantity" value="<?php echo $get_pstock ?>" readonly>
                     </td>
                     <td>
                       <input type="hidden" class="form-control" id="stock_qhidden" name="stock_qhidden[]"
