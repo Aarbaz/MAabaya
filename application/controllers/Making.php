@@ -16,6 +16,7 @@ class Making extends CI_Controller
         $this->load->model("Making_model");
         $this->load->model("Purchaser_model");
         $this->load->model("History_model");
+        $this->load->model("Product_model");
         $this->load->model("Stock_model");
         $this->load->library("tcpdf");
         $this->load->library("upload");
@@ -199,12 +200,8 @@ class Making extends CI_Controller
                         $data = array(
                             'product_id' => $material_id,
                             'stock_qty' => $in_out_qnty,
-                            'weight' => $postData['weight'],
-                            'unit_price' => $postData['price'],
-                            'stock_qty' => $postData['stock_q'],
-                            'price' => $postData['price_total'],
                         );
-                        $insert = $this->Product_model->add_product($data);
+                        $insert = $this->Stock_model->add_records($data);
                     }
 
 
