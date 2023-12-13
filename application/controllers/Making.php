@@ -904,7 +904,6 @@ class Making extends CI_Controller
                                             'quantity' => (float) $maker_stock_rows->quantity - (float) $diff,
                                         );
                                     }
-
                                     if ($stock_table_rows->stock_qty >= 0) {
                                         # code...
                                         $stock_data = array(
@@ -913,7 +912,7 @@ class Making extends CI_Controller
 
                                     } else {
                                         $stock_data = array(
-                                            'stock_qty' => (float) $stock_table_rows->stock_qty + (float) $diff,
+                                            'stock_qty' => (float) $stock_table_rows->stock_qty - (float) $diff,
                                         );
                                     }
                                 } elseif ($diff < 0) {
@@ -933,7 +932,7 @@ class Making extends CI_Controller
                                         );
                                     } else {
                                         $stock_data = array(
-                                            'stock_qty' => (float) $stock_table_rows->stock_qty + (float) ($diff),
+                                            'stock_qty' => (float) $stock_table_rows->stock_qty - (float) ($diff),
                                         );
                                     }
                                 } else {
@@ -961,7 +960,6 @@ class Making extends CI_Controller
                                 );
                                 $this->Stock_model->add_records($insert_stock_data);
                             }
-
                             $history_data = [
                                 "making_owner_id" => strtoupper($postData["master_name"]),
                                 "material_id" => $material_names_new[$key],

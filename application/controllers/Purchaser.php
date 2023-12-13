@@ -426,6 +426,7 @@ class Purchaser extends CI_Controller
                     $existing_material_id = $existing_material_names[$i];
                     $existing_stock = $existing_stock_q[$i];
                     $existing_price = $p_price[$i];
+
                     // print_r($existing_price);
                     // die();
                     // Check if the existing material ID is not present in the new data
@@ -433,42 +434,18 @@ class Purchaser extends CI_Controller
                         $old_materials[] = [
                             "material_id" => $existing_material_id,
                             "stock_q" => $existing_stock,
-                            "price" => $existing_price,
+                            "price" => (float)$existing_price,
                         ];
                     } else {$old_materials[] = [
-                        "material_id" => $material_names_new[$i],
-                        "stock_q" => $stock_q_new[$i],
-                        "price" => $existing_price[$i],
+                        "material_id" => $material_names_new,
+                        "stock_q" => $stock_q_new,
+                        "price" => (float)$existing_price,
                     ];
-                    }
+                    
                 }
+            }
                 // Now you can use the $old_materials array to identify old materials not included in the new data
-                foreach ($old_materials as $old_material) {
-                    $this->db->where('materials_id', $old_material["material_id"]);
-                    $query = $this->db->get('purchaser_stock');
-                    $row = $query->row();
-                    if ($query->num_rows()) {
-                        $data3 = array(
-                            'quantity' => (float) $row->quantity - (float) $old_material["stock_q"],
-                            'price' => (float) $old_material["price"],
-                        );
-                        $this->db->where('materials_id', $old_material["material_id"]);
-                        $this->db->update('purchaser_stock', $data3);
-                    }
-
-                    $this->db->where('product_id', $old_material["material_id"]);
-                    $query = $this->db->get('stock');
-                    $row = $query->row();
-                    if ($query->num_rows()) {
-                        $data3 = array(
-                            'stock_qty' => (float) $row->stock_qty - (float) $old_material["stock_q"],
-                            'purchase_rate' => (float) $old_material["price"],
-                        );
-                        $this->db->where('product_id', $old_material["material_id"]);
-                        $this->db->update('stock', $data3);
-                    }
-
-                }
+                
 
                 $material_name = implode(",", $this->input->post("material_name[]"));
                 $material_name = trim($material_name, ",");
