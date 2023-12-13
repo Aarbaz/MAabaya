@@ -595,17 +595,10 @@ class Invoice extends CI_Controller
 								$previous_quantity = $previous_data[$product_id] ? $previous_data[$product_id] : 0;
 								$quantity_differences[$product_id] = $new_quantity - $previous_quantity;
 							}
-							foreach ($quantity_differences as $product_id => $difference) {
-								// Fetch current quantity from the stock table
-								// $current_quantity = $this->Stock_model->get_allstock($product_id)->stock_qty;
 							
-								// // Calculate new quantity
-								// $new_quantity = $current_quantity + $difference;
-							
-								// Update the stock table with the new quantity
-								$this->Stock_model->update_stock($product_id, $difference);
-							}
-							// Display or use the quantity differences
+						// die();
+
+						// Display or use the quantity differences
 							/* foreach ($quantity_differences as $product_id => $difference) {
 								echo "Product ID: $product_id, Quantity Difference: $difference\n";
 							} */
@@ -617,6 +610,16 @@ class Invoice extends CI_Controller
 								$this->db->update('stock', $data3_remove);
 							} */
 						}
+
+					foreach ($quantity_differences as $product_id => $difference) {
+						// Fetch current quantity from the stock table
+						// $current_quantity = $this->Stock_model->get_allstock($product_id)->stock_qty;
+						// // Calculate new quantity
+						// $new_quantity = $current_quantity + $difference;							
+						// Update the stock table with the new quantity
+						// print_r($difference);
+						$this->Stock_model->update_stock($product_id, $difference);
+					}
 					}
 				// die();
 			}
