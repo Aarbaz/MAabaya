@@ -84,3 +84,17 @@ body {
 .card .tab-content{
 	border: 1px solid #ddd;
 }
+.mx-2{
+	margin-left: 2px!important;
+	margin-right: 2px!important;
+}
+.mt-2{
+	margin-top: 2px;
+}
+.my-2{
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+}
+.border{
+	border: 2px solid #3c3d41;
+}
