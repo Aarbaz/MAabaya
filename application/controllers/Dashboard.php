@@ -24,10 +24,11 @@ class Dashboard extends CI_Controller {
 					$data['sel_customer'] = $this->Dashboard_model->get_sel_customer();
 					$data['all_material'] = $this->Dashboard_model->get_all_newmaterial();
 
-	        $this->load->view('layout/header', $data);
+					$this->load->view('layout/header', $data);
+					// print_r($data);die();
 	        $this->load->view('layout/menubar');
 			$this->load->view('dashboard', $data);
-			// $this->load->view('layout/footer');
+			$this->load->view('layout/footer');
 		}
 		else
 		{

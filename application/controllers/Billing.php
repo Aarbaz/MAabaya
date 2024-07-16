@@ -75,7 +75,8 @@ class Billing extends CI_Controller {
 				$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);				
 				$pdf->setPrintHeader(false);
 				$pdf->setPrintFooter(false);
-				$pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT, true);
+				$pdf->SetMargins(PDF_MARGIN_LEFT, 5, PDF_MARGIN_RIGHT, true);
+				$pdf->SetAutoPageBreak(false, 10);  // Enable auto page break with a margin
 				$pdf->SetFont('helvetica', '', 10);
 				$pdf_data = $this->load->view('bill_pdf', $data_pdf, true);			
 				$pdf->addPage();

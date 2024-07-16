@@ -1,8 +1,4 @@
-<div class="">
-    <div class="row">
         <h1 class="text-center" style="text-align:center; margin:0px;">Invoice</h1>
-    </div>
-</div>
 
 <div class="">
     <div class="row" style="display:flex; border: 1px solid; display:none;">
@@ -20,7 +16,7 @@
         </div>
         <div class="col-lg-4 text-center" style="border: 1px solid; border-left: 0; display: flex; align-items: center; justify-content: space-around; width: 20%;">
             <span>Invoice.No:- </span>
-            <span>15 </span>
+            <span>16 </span>
         </div>
     </div>
 </div>
@@ -38,12 +34,12 @@
                     GSTN : 27DGKPA3869J1Z0
                 </p>
             </td>
-            <td colspan="2">Invoice.No:- 15</td>
-            <td > Dated :- 09.07.2024</td>
+            <td colspan="2">Invoice.No:- 16</td>
+            <td > Dated :- 17.07.2024</td>
         </tr>
         <tr>
             <td colspan="2"> Delivery Note.</td>
-            <td colspan="2">Terms of Payment: <b>Cash</b></td>
+            <td colspan="2">Terms of Payment: <b></b></td>
         </tr>
         <tr>
             <td colspan="2"> Supplier's Ref.</td>
@@ -61,7 +57,7 @@
                     GSTN : 19FFHPR2596H1ZQ
                 </p>
             </td>
-            <td colspan="2">Buyer's Order No. :5454</td>
+            <td colspan="2">Buyer's Order No. :</td>
             <td colspan="2"> Dated :- 15/07/2024</td>
         </tr>
         <tr>
@@ -85,65 +81,50 @@
         <th width="10%">AMOUNT</th>
     </tr>
     <tr>
-        <td >1</td>
-        <td>All ABAYA</td>
-        <td>4</td>
-        <td>11058.00</td>
+        <td  rowspan="7">1</td>
+        <td  rowspan="7">Sveng masheen Box</td>
+        <td  rowspan="7">3</td>
+        <td>10,000</td>
         <td></td>
-        <td>44232</td>
+        <td>30,000</td>
     </tr>
     <tr style="height:50px;">
-        <td ></td>
-        <td ></td>
-        <td ></td>
-        <td ></td>
-        <td ></td>
-        <td >0</td>
+        <td colspan="3" rowspan="2"></td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        
         <td >Total</td>
         <td></td>
-        <td>4432</td>
+        <td>30,000</td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        
         <td >CGST</td>
         <td>2.5%</td>
-        <td>0</td>
+        <td></td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        
         <td >SGST</td>
         <td>2.5%</td>
-        <td>0</td>
+        <td></td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        
         <td >IGST</td>
-        <td>5%</td>
-        <td>0</td>
+        <td>12%</td>
+        <td>3,600</td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
-        <td></td>
+        
         <td colspan="2">Transportation</td>
-        <td>0</td>
+        <td></td>
     </tr>
     <tr>
         <td></td>
         <td>Total</td>
         <td colspan="3"></td>
-        <td>46444</td>
+        <td>33,600</td>
     </tr>
 </table>
 
@@ -163,7 +144,7 @@
                 <p style="margin:0px;"><span>To:-</span></p>
                 <p style="margin:0px;"><span>Transport:-</span></p>
             </div>
-            <div style="width: 50%; text-align: center;">
+            <div style="width: 50%; text-align: right;">
                 <h4><b>For M.A ABAYA MANUFACTURE</b></h4>
                 <p></p>
                 <p></p>
