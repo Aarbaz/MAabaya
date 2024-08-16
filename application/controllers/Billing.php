@@ -57,14 +57,32 @@ class Billing extends CI_Controller {
 			$invoiceNumber = $this->input->post('invoiceNumber');
 			$date = $this->input->post('date');
 
-			$data = array(
-				'invoiceNumber' => $invoiceNumber,
-				'date'	=> 	$date,			
-			);			
+			// $data = array(
+			// 	'invoiceNumber' => $invoiceNumber,
+			// 	'date'	=> 	$date,			
+			// 	'buyersOrderNo'	=> 	$buyersOrderNo,			
+			// );			
 
 			$data_pdf = array(
 				'invoiceNumber' => $invoiceNumber,
-				'date'	=> 	$date,			
+				'date'	=> 	$date,
+				'buyersOrderNo'	=> 	$buyersOrderNo,			
+				'dispatchedThrough'	=> 	$dispatchedThrough,			
+				'destination'	=> 	$destination,			
+				'description'	=> 	$description,			
+				'quantity'	=> 	$quantity,			
+				'discount'	=> 	$discount,			
+				'amount'	=> 	$amount,			
+				'total'	=> 	$total,			
+				'cgst'	=> 	$cgst,			
+				'sgst'	=> 	$sgst,			
+				'igst'	=> 	$igst,			
+				'transportation'	=> 	$transportation,			
+				'final_total'	=> 	$final_total,			
+				'transport_id'	=> 	$transport_id,			
+				'LR_number'	=> 	$LR_number,			
+				'to_person'	=> 	$to_person,			
+				'Transport'	=> 	$Transport,			
 			);				
 					
 			// $insert = $this->Challan_model->create_challan($data);
