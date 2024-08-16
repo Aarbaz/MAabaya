@@ -7,7 +7,7 @@ class Billing extends CI_Controller {
     {
         parent::__construct();     
         $this->load->library('form_validation');
-        $this->load->model('Challan_model');    
+        $this->load->model('Billing_model');    
 		$this->load->library('tcpdf');
 		$this->load->library('upload');
 		//$this->load->helper('pdf_helper');
@@ -45,7 +45,7 @@ class Billing extends CI_Controller {
 		    ),
 		);
 		$this->form_validation->set_rules($validation);	
-		$this->form_validation->set_rules('date', 'date', 'required');	
+		// $this->form_validation->set_rules('date', 'date', 'required');	
 
 		if ($this->form_validation->run() == false)
 		{		
@@ -56,6 +56,25 @@ class Billing extends CI_Controller {
 		{	
 			$invoiceNumber = $this->input->post('invoiceNumber');
 			$date = $this->input->post('date');
+			$buyersOrderNo = $this->input->post('buyersOrderNo');
+			$dispatchedThrough = $this->input->post('dispatchedThrough');
+			$destination = $this->input->post('destination');
+			$Consignee = $this->input->post('Consignee');
+			$description = $this->input->post('description');
+			$quantity = $this->input->post('quantity');
+			$rate = $this->input->post('rate');
+			$discount = $this->input->post('discount');
+			$amount = $this->input->post('amount');
+			$total = $this->input->post('total');
+			$cgst = $this->input->post('cgst');
+			$igst = $this->input->post('igst');
+			$sgst = $this->input->post('sgst');
+			$transportation = $this->input->post('transportation');
+			$grandTotal = $this->input->post('grandTotal');
+			$transport_id = $this->input->post('transport_id');
+			$LR_number = $this->input->post('LR_number');
+			$to_person = $this->input->post('to_person');
+			$Transport = $this->input->post('Transport');
 
 			// $data = array(
 			// 	'invoiceNumber' => $invoiceNumber,
@@ -69,8 +88,10 @@ class Billing extends CI_Controller {
 				'buyersOrderNo'	=> 	$buyersOrderNo,			
 				'dispatchedThrough'	=> 	$dispatchedThrough,			
 				'destination'	=> 	$destination,			
+				'Consignee'	=> 	$Consignee,			
 				'description'	=> 	$description,			
 				'quantity'	=> 	$quantity,			
+				'rate'	=> 	$rate,			
 				'discount'	=> 	$discount,			
 				'amount'	=> 	$amount,			
 				'total'	=> 	$total,			
@@ -78,14 +99,14 @@ class Billing extends CI_Controller {
 				'sgst'	=> 	$sgst,			
 				'igst'	=> 	$igst,			
 				'transportation'	=> 	$transportation,			
-				'final_total'	=> 	$final_total,			
+				'grandTotal'	=> 	$grandTotal,			
 				'transport_id'	=> 	$transport_id,			
 				'LR_number'	=> 	$LR_number,			
 				'to_person'	=> 	$to_person,			
 				'Transport'	=> 	$Transport,			
 			);				
 					
-			// $insert = $this->Challan_model->create_challan($data);
+			$insert = $this->Billing_model->create_bill($data_pdf);
 			$insert = 1;
 			if($insert)
 			{				

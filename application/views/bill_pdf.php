@@ -14,10 +14,6 @@
             <span>Invoice.No:- </span>
             <span><?php echo $invoiceNumber; ?> </span>
         </div>
-        <div class="col-lg-4 text-center" style="border: 1px solid; border-left: 0; display: flex; align-items: center; justify-content: space-around; width: 20%;">
-            <span>Invoice.No:- </span>
-            <span>16 </span>
-        </div>
     </div>
 </div>
 
@@ -35,7 +31,7 @@
                 </p>
             </td>
             <td colspan="2">Invoice.No:- 16</td>
-            <td > Dated :- 17.07.2024</td>
+            <td > Dated :- <?php echo $date ?></td>
         </tr>
         <tr>
             <td colspan="2"> Delivery Note.</td>
@@ -48,10 +44,9 @@
         <tr>
             <td rowspan="3" colspan="2">
                 <p>Consignee</p>
-                <h1 class="text-center">M/S KGN ABAYA STORE</h1>
+                <!-- <h1 class="text-center">M/S KGN ABAYA STORE</h1> -->
                 <p>
-                    Vill. Boxivita, P.O. Khunia, Chopra, Uttar Dinajpur, 
-                    West Bengal, 733207
+                   <?php echo $Consignee?>
                 </p>
                 <p class="font-bold">
                     GSTN : 19FFHPR2596H1ZQ
@@ -82,11 +77,11 @@
     </tr>
     <tr>
         <td  rowspan="7">1</td>
-        <td  rowspan="7">Sveng masheen Box</td>
-        <td  rowspan="7">3</td>
-        <td>10,000</td>
-        <td></td>
-        <td>30,000</td>
+        <td  rowspan="7"><?php echo $description ?></td>
+        <td  rowspan="7"><?php echo $quantity ?></td>
+        <td><?php echo $rate ?></td>
+        <td><?php echo $discount ?></td>
+        <td><?php echo $amount ?></td>
     </tr>
     <tr style="height:50px;">
         <td colspan="3" rowspan="2"></td>
@@ -95,36 +90,36 @@
         
         <td >Total</td>
         <td></td>
-        <td>30,000</td>
+        <td><?php echo $total ?></td>
     </tr>
     <tr>
         
         <td >CGST</td>
         <td>2.5%</td>
-        <td></td>
+        <td><?php echo $cgst ?></td>
     </tr>
     <tr>
         
         <td >SGST</td>
-        <td>2.5%</td>
-        <td></td>
+        <td>12%</td>
+        <td><?php echo $sgst ?></td>
     </tr>
     <tr>
         
         <td >IGST</td>
-        <td>12%</td>
+        <td><?php echo $igst ?></td>
         <td>3,600</td>
     </tr>
     <tr>
         
         <td colspan="2">Transportation</td>
-        <td></td>
+        <td><?php echo $transportation?></td>
     </tr>
     <tr>
         <td></td>
         <td>Total</td>
         <td colspan="3"></td>
-        <td>33,600</td>
+        <td><?php echo $grandTotal?></td>
     </tr>
 </table>
 
@@ -139,10 +134,10 @@
     <tr>
         <td style="display:flex;">
             <div style="width: 50%;">
-                <p style="margin:0px;"><span>Transport ID No :-</span></p>
-                <p style="margin:0px;"><span>L R No</span></p>
-                <p style="margin:0px;"><span>To:-</span></p>
-                <p style="margin:0px;"><span>Transport:-</span></p>
+                <p style="margin:0px;"><span>Transport ID No :-</span> <?php echo $transport_id ?></p>
+                <p style="margin:0px;"><span>L R No</span><?php echo $LR_number ?></p>
+                <p style="margin:0px;"><span>To:-</span><?php echo $to_person ?></p>
+                <p style="margin:0px;"><span>Transport:-</span><?php echo $Transport ?></p>
             </div>
             <div style="width: 50%; text-align: right;">
                 <h4><b>For M.A ABAYA MANUFACTURE</b></h4>
