@@ -69,32 +69,7 @@
 			   			<div class="col-sm-12">
     						<div class="panel panel-default">
 								<div class="panel-heading"><b>Purchaser wise Total Order Value</b></div>
-								<div class="panel-body">
-									<table id="order_sum" class="table table-bordered">
-										<tr class="header">
-											<th>Sr No</th><th>Purchaser Name</th><th>Total Order (In Rs.)</th>
-											<th>Paid (In Rs.)</th><th>Balance (In Rs.)</th><th>Last Aamount (In Rs.)</th>
-										</tr>
-										<!-- <?php
-										if(count($order_sum) > 0)
-										{
-											$i = 1;
-											foreach ($order_sum as $order)
-											{
-												echo '<tr>
-														<td>'.$i.'</td>
-														<td>'.$order->name.'</td>
-														<td class="total">'.$order->total.'</td>
-														<td class="paid">'.$order->paid.'</td>
-														<td class="balance">'.$order->balance.'</td>
-														<td class="last_amount">'.$order->last_amount.'</td>
-													</tr>';
-													$i++;
-											}
-										} ?> -->
-
-									</table>
-								</div>
+								
 							</div>
 						</div>
     				</div>
