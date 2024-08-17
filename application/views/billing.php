@@ -6,22 +6,36 @@
 	<!-- <form id="invoiceForm"> -->
 	<div class="row">
 		<div class="col-lg-6">
-			<h2 class="text-left">M.A ABAYA MANUFACTURE</h2>
+			<!-- <h2 class="text-left">M.A ABAYA MANUFACTURE</h2>
 			<p class="text-left">BEHIND NOOR MASJID HOUSE NO 1640<br>
 				NEAR SAGAR PLAZA HOTEL BHIWANDI<br>
 				GSTN : 27DGKPA3869J1Z0
-			</p>
-			<div>
-				<p>Consignee,<br>
-					<textarea name="Consignee" id="" cols="50" rows="5" class="form-control"></textarea>
+			</p> -->
+            <div class="col-lg-6">
+				<b>My Shop Name: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="myShop_name" name="myShop_name">
 			</div>
-
+            <div class="col-lg-6">
+				<b>My Shop Add: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="myShop_add" name="myShop_add">
+			</div>
+            <div class="col-lg-6">
+				<b>My shop GST: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="myShop_gst" name="myShop_gst">
+			</div>
+            <div class="col-lg-6">
+				<b>Consignee Name: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="consignee_name" name="consignee_name">
+			</div><br>
+            <div class="col-lg-6">
+				<b>Consignee Address: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="consignee_add" name="consignee_add">
+			</div><br>
+            <div class="col-lg-6">
+				<b>Consignee GST: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="consignee_gst" name="consignee_gst">
+			</div>
+<br>
 		</div>
 		<div class="col-lg-6">
 			<div class="row">
 				<div class="form-group col-lg-5 mx-2">
 					<div class="">
-						<b>Invoice No: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber" value="15" readonly>
+						<b>Invoice No: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber" value="">
 					</div>
 				</div>
 				<div class="form-group col-lg-5">
@@ -40,10 +54,13 @@
 			<div class="col-lg-6">
 				<b>Destination: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" id="destination" name="destination">
 			</div>
+			<div class="col-lg-6">
+				<b>Consignee Date: </b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="date" class="form-control" id="consignee_date" name="consignee_date">
+			</div>
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row"  style="margin-top: 10px;">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
@@ -58,9 +75,9 @@
 			<tbody>
 				<tr>
 					<td>1</td>
-					<td><input type="text" id="description" name="description" value="All ABAYA" readonly></td>
-					<td><input type="number" id="quantity" name="quantity" value="4" oninput="calculateTotal()"></td>
-					<td><input type="number" id="rate" name="rate" value="11058" oninput="calculateTotal()"></td>
+					<td><input type="text" id="description" name="description" value=""></td>
+					<td><input type="number" id="quantity" name="quantity" value="" oninput="calculateTotal()"></td>
+					<td><input type="number" id="rate" name="rate" value="" oninput="calculateTotal()"></td>
 					<td><input type="number" id="discount" name="discount" value="0" oninput="calculateTotal()"></td>
 					<td><input type="text" id="amount" name="amount" readonly></td>
 				</tr>
@@ -86,8 +103,7 @@
 
 			<div class="col-lg-2">
 				<!-- <b>CGST 2.5 % : </b>&nbsp;&nbsp;&nbsp;&nbsp; -->
-				<b>CGST <input type="number" style="width:25%" value="2.5" id="cgstchnage" onchange="calculateTotal()"> % : </b>
-			</div>
+				<b>CGST <input type="number" style="width:25%" value="2.5" name="cgstchnage" id="cgstchnage" onchange="calculateTotal()"> % : </b>			</div>
 			<div class=" col-lg-10">
 				<input type="text" id="cgst" name="cgst" readonly>
 			</div>
@@ -96,7 +112,7 @@
 
 			<div class="col-lg-2">
 				<!-- <b>SGST 2.5 % : </b>&nbsp;&nbsp;&nbsp;&nbsp; -->
-				<b>SGST <input type="number" style="width:25%" value="2.5" id="sgstchnage" onchange="calculateTotal()"> % : </b>
+				<b>SGST <input type="number" style="width:25%" value="2.5" name="sgstchnage" id="sgstchnage" onchange="calculateTotal()"> % : </b>
 			</div>
 			<div class="col-lg-10">
 				<input type="text" id="sgst" name="sgst" readonly>
@@ -106,7 +122,7 @@
 
 			<div class="col-lg-2">
 				<!-- <b>IGST 5 % : </b>&nbsp;&nbsp;&nbsp;&nbsp; -->
-				<b>IGST <input type="number" style="width:25%" value="5" id="igstchnage" onchange="calculateTotal()"> % : </b>
+				<b>IGST <input type="number" style="width:25%" value="5" name="igstchnage" id="igstchnage" onchange="calculateTotal()"> % : </b>
 			</div>
 			<div class=" col-lg-10">
 				<input type="text" id="igst" name="igst" readonly>

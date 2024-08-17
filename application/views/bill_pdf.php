@@ -21,16 +21,15 @@
     <table border="1" cellspacing="0" cellpadding="3" width="100%">
         <tr>
             <td rowspan="3" colspan="2">
-                <h1 class="text-center">M.A ABAYA MANUFACTURE</h1>
+                <h1 class="text-center"><?php echo $myShop_name?></h1>
                 <p>
-                    BEHIND NOOR MASJID HOUSE NO 1640<br>
-                    NEAR SAGAR PLAZA HOTEL BHIWANDI
+                    <?php echo $myShop_add?>
                 </p>
                 <p class="font-bold">
-                    GSTN : 27DGKPA3869J1Z0
+                    GSTN : <?php echo $myShop_gst?>
                 </p>
             </td>
-            <td colspan="2">Invoice.No:- 16</td>
+            <td colspan="2">Invoice.No:- <?php echo $invoiceNumber?></td>
             <td > Dated :- <?php echo $date ?></td>
         </tr>
         <tr>
@@ -45,15 +44,19 @@
             <td rowspan="3" colspan="2">
                 <p>Consignee</p>
                 <!-- <h1 class="text-center">M/S KGN ABAYA STORE</h1> -->
+                <h2>
+                   <?php echo $consignee_name?>
+                </h2>
                 <p>
-                   <?php echo $Consignee?>
+                   <?php echo $consignee_add?>
                 </p>
+
                 <p class="font-bold">
-                    GSTN : 19FFHPR2596H1ZQ
+                    GSTN : <?php echo $consignee_gst?>
                 </p>
             </td>
             <td colspan="2">Buyer's Order No. :</td>
-            <td colspan="2"> Dated :- 15/07/2024</td>
+            <td colspan="2"> Dated :- <?php echo  $consignee_date?></td>
         </tr>
         <tr>
             <td colspan="2"> Dispatch Document No.</td>
@@ -95,20 +98,21 @@
     <tr>
         
         <td >CGST</td>
-        <td>2.5%</td>
+        
+        <td><?php echo $cgstchnage ?> %</td>
         <td><?php echo $cgst ?></td>
     </tr>
     <tr>
         
         <td >SGST</td>
-        <td>12%</td>
+        <td><?php echo $sgstchnage ?> %</td>
         <td><?php echo $sgst ?></td>
     </tr>
     <tr>
         
         <td >IGST</td>
+        <td><?php echo $igstchnage ?> %</td>
         <td><?php echo $igst ?></td>
-        <td>3,600</td>
     </tr>
     <tr>
         
