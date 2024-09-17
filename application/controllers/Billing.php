@@ -36,24 +36,24 @@ class Billing extends CI_Controller {
     public function generate_bill(){
 
         $this->form_validation->set_rules('invoiceNumber', 'invoiceNumber', 'required');	
-		$validation = array(
-		    array(
-		        'field' => 'invoiceNumber',
-		        'label' => 'Product', 
-		        'rules' => 'required', 
-		        "errors" => array('required' => " Please select %s. ")
-		    ),
-		);
-		$this->form_validation->set_rules($validation);	
+		// $validation = array(
+		//     array(
+		//         'field' => 'quantity[]',
+		//         'label' => 'quantity[]', 
+		//         'rules' => 'required', 
+		//         "errors" => array('required' => " Please select %s. ")
+		//     ),
+		// );
+		// $this->form_validation->set_rules($validation);	
 		// $this->form_validation->set_rules('date', 'date', 'required');	
 
-		if ($this->form_validation->run() == false)
-		{		
-			$response['result'] = $this->form_validation->error_array();        	
-        	$response['status']   = 'failed';
-		}
-		else
-		{	
+		// if ($this->form_validation->run() == false)
+		// {		
+		// 	$response['result'] = $this->form_validation->error_array();        	
+        // 	$response['status']   = 'failed';
+		// }
+		// else
+		// {	
 			$invoiceNumber = $this->input->post('invoiceNumber');
 			$date = $this->input->post('date');
 			$myShop_name = $this->input->post('myShop_name');
@@ -66,11 +66,11 @@ class Billing extends CI_Controller {
 			$consignee_name = $this->input->post('consignee_name');
 			$consignee_add = $this->input->post('consignee_add');
 			$consignee_gst = $this->input->post('consignee_gst');
-			$description = $this->input->post('description');
-			$quantity = $this->input->post('quantity');
-			$rate = $this->input->post('rate');
-			$discount = $this->input->post('discount');
-			$amount = $this->input->post('amount');
+			$description = implode(",",$this->input->post("desc[]"));
+			$quantity = implode(",",$this->input->post("quantity[]"));
+			$rate = implode(",",$this->input->post("rate[]"));
+			$discount = implode(",",$this->input->post("discount[]"));
+			$amount = implode(",",$this->input->post("amount[]"));
 			$total = $this->input->post('total');
 			$cgstchnage = $this->input->post('cgstchnage');
 			$sgstchnage = $this->input->post('sgstchnage');
@@ -123,7 +123,9 @@ class Billing extends CI_Controller {
 				'to_person'	=> 	$to_person,			
 				'Transport'	=> 	$Transport,			
 			);				
-					
+
+		
+					// print_r($data_pdf);die();
 			$insert = $this->Billing_model->create_bill($data_pdf);
 			$insert = 1;
 			if($insert)
@@ -158,7 +160,7 @@ class Billing extends CI_Controller {
 				$response['result'] = 'Sorry! there was some problems.';                    		
           		$response['status'] = 'failed';
 			}					
-		}
+		// }
 		echo json_encode($response);
     }
 }

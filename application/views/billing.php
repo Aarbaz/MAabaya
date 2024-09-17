@@ -85,6 +85,59 @@
 		</table>
 	</div>
 
+	<div class="form-group" id="">
+		<table class="table table-bordered">
+			<thead>
+			<tr>
+				<th>Sr. No.</th>
+				<th>Description Of Goods</th>
+				<th>Quantity</th>
+				<th>Rate</th>
+				<th>Discount</th>
+				<th>Amount</th>
+				<th>Action</th>
+			</tr>
+			</thead>
+			<tbody id="rows-list">
+			<tr>
+				<td>1</td>
+				<td>
+					<input type="text" class="form-control desc" id="desc" name="desc[]" placeholder="Description Of Goods"  value="">
+				</td>
+				<td>
+					<input type="text" class="form-control quantity" id="quantity" name="quantity[]" placeholder="Quantity" value="<?php echo set_value('quantity'); ?>">
+				</td>
+				<td>
+					<input type="text" class="form-control rate" id="rate" name="rate[]" placeholder="Rate" value="<?php echo set_value('rate'); ?>">
+				</td>
+				<td>
+					<input type="text" class="form-control disc" id="discount" name="discount[]" placeholder="Discount" value="">
+				</td>
+				<td>
+					<input type="text" class="form-control amt" id="amount" name="amount[]" placeholder="Amount" value="<?php echo set_value('amount'); ?>">
+				</td>
+				<td style="display:flex;">
+					<button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>
+					&nbsp;<button type="button" name="remove" id="remove" class="btn btn-warning btn-sm remove" fdprocessedid="vik1a"><b>X</b></button>
+				</td>
+			</tr>
+			<tr class="row_two">
+					<td>
+					<div class="col-sm-12"> <?php echo form_error('material_name[]', '<p class="text-danger">', '</p>'); ?></div>
+
+					</td>
+					<td>
+
+					</td>
+					<td>
+					<div class="col-sm-12"> <?php echo form_error('stock_q[]', '<p class="text-danger">', '</p>'); ?></div>
+
+					</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
 	<div class="totals">
 		<div class="form-group">
 			<label for="includeGst">Include GST</label>
@@ -183,10 +236,89 @@
 
 
 <script>
+
+		$('.quantity, .disc').on('change', function(){
+			   var ro  = $(this).closest('tr');
+			   var qnty = ro.find('.quantity').val();
+			   var disc = ro.find('.disc').val();
+			   var rate = ro.find('.rate').val();
+				if (!disc) {
+					disc = 0;
+				}
+			   if(qnty && rate)
+			   {
+				   var the_amount = parseFloat(qnty*rate).toFixed(2);
+				   var disc_amount = the_amount - disc;
+				   ro.find('.amt').val(disc_amount);
+			   }
+		   });
+		   calculateTotal();
+	// function calculateTotal() {
+	// 	const quantity = parseFloat(document.getElementById("quantity").value);
+	// 	const rate = parseFloat(document.getElementById("rate").value);
+	// 	const discount = parseFloat(document.getElementById("discount").value);
+	// 	const transportation = parseFloat(
+	// 		document.getElementById("transportation").value
+	// 	);
+	// 	const includeGst = document.getElementById("includeGst").checked;
+
+
+
+	// 	let amount = quantity * rate - discount;
+
+
+	// 	var cgst = 0;
+	// 	var sgst = 0;
+	// 	var igst = 0;
+
+
+	// 	const cgstchnage = parseFloat(document.getElementById("cgstchnage").value);
+
+	// 	if (cgstchnage != '0') {
+	// 		cgst = cgstchnage;
+	// 	}
+	// 	const sgstchnage = parseFloat(document.getElementById("sgstchnage").value);
+
+	// 	if (sgstchnage != '0') {
+	// 		sgst = sgstchnage;
+	// 	}
+	// 	const igstchnage = parseFloat(document.getElementById("igstchnage").value);
+
+	// 	if (igstchnage != '0') {
+	// 		igst = igstchnage;
+	// 	}
+
+    //     var total = 0;
+	// 	if (includeGst) {
+	// 		// cgst = amount * 0.025;
+	// 		// sgst = amount * 0.025;
+	// 		// igst = amount * 0.05;
+	// 		cgst = (amount * cgst) / 100;
+	// 		sgst = (amount * sgst) / 100;
+	// 		igst = (amount * igst) / 100;
+			
+	// 		document.getElementById("cgst").value = cgst.toFixed(2);
+	// 		document.getElementById("sgst").value = sgst.toFixed(2);
+	// 		document.getElementById("igst").value = igst.toFixed(2);
+    //         total = amount + cgst + sgst + igst + transportation;
+	// 	} else {
+
+	// 		document.getElementById("cgst").value = 0;
+	// 		document.getElementById("sgst").value = 0;
+	// 		document.getElementById("igst").value = 0;
+
+    //         total = amount + transportation;
+	// 	}
+
+
+	// 	document.getElementById("amount").value = amount.toFixed(2);
+
+	// 	document.getElementById("total").value = amount.toFixed(2);
+	// 	document.getElementById("grandTotal").value = total.toFixed(2);
+	// }
+
 	function calculateTotal() {
-		const quantity = parseFloat(document.getElementById("quantity").value);
-		const rate = parseFloat(document.getElementById("rate").value);
-		const discount = parseFloat(document.getElementById("discount").value);
+	
 		const transportation = parseFloat(
 			document.getElementById("transportation").value
 		);
@@ -194,8 +326,11 @@
 
 
 
-		let amount = quantity * rate - discount;
-
+		let amount = 0;
+		const amountElements = document.querySelectorAll('.amt');
+		amountElements.forEach(element => {
+			amount += parseFloat(element.value) || 0;
+		});
 
 		var cgst = 0;
 		var sgst = 0;
@@ -218,16 +353,9 @@
 			igst = igstchnage;
 		}
 
-
-
-		console.log(cgst);
-		console.log(sgst);
-		console.log(igst);
         var total = 0;
 		if (includeGst) {
-			// cgst = amount * 0.025;
-			// sgst = amount * 0.025;
-			// igst = amount * 0.05;
+			
 			cgst = (amount * cgst) / 100;
 			sgst = (amount * sgst) / 100;
 			igst = (amount * igst) / 100;
@@ -251,6 +379,17 @@
 		document.getElementById("total").value = amount.toFixed(2);
 		document.getElementById("grandTotal").value = total.toFixed(2);
 	}
+
+	$(document).on('click', '.add_more', function(){
+		$(this).closest('tr').clone(true).find(':input:not(".hsn")').val('').end().insertAfter($(this).closest('tr'));
+	});
+	//Remove table row
+	$(document).on('click', '.remove', function(){
+		var $tr = $(this).closest('tr');
+		if ($tr.index() != '0') {
+		$tr.remove();
+		}
+	});
 	// $(document).ready(function() {
 	// });
 </script>
