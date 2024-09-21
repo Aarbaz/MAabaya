@@ -209,7 +209,7 @@ foreach ($groupedRows as $discount => $items) {
         <td style="display:flex;">
             <div style="width: 50%;">
                 <p style="margin:0px;"><span>Transport ID No :-</span> <?php echo $transport_id ?></p>
-                <p style="margin:0px;"><span>L R No</span><?php echo $LR_number ?></p>
+                <p style="margin:0px;"><span>L R No:- </span><?php echo $LR_number ?></p>
                 <p style="margin:0px;"><span>To:-</span><?php echo $to_person ?></p>
                 <p style="margin:0px;"><span>Transport:-</span><?php echo $Transport ?></p>
             </div>

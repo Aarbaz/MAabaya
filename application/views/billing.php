@@ -60,7 +60,7 @@
 		</div>
 	</div>
 
-	<div class="row"  style="margin-top: 10px;">
+	<!-- <div class="row"  style="margin-top: 10px;">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
@@ -83,9 +83,9 @@
 				</tr>
 			</tbody>
 		</table>
-	</div>
-
-	<div class="form-group" id="">
+	</div> -->
+<?php print_r($this->session->flashdata()); ?>
+	<div class="form-group" id="" style="margin-top:25px;">
 		<table class="table table-bordered">
 			<thead>
 			<tr>
@@ -103,18 +103,23 @@
 				<td>1</td>
 				<td>
 					<input type="text" class="form-control desc" id="desc" name="desc[]" placeholder="Description Of Goods"  value="">
+					<?php echo form_error('invoiceNumber');?>
 				</td>
 				<td>
 					<input type="text" class="form-control quantity" id="quantity" name="quantity[]" placeholder="Quantity" value="<?php echo set_value('quantity'); ?>">
+					<?php echo form_error('quantity[]');?>
 				</td>
 				<td>
 					<input type="text" class="form-control rate" id="rate" name="rate[]" placeholder="Rate" value="<?php echo set_value('rate'); ?>">
+					<?php echo form_error('rate[]');?>
 				</td>
 				<td>
 					<input type="text" class="form-control disc" id="discount" name="discount[]" placeholder="Discount" value="">
+					<?php echo form_error('discount[]');?>
 				</td>
 				<td>
 					<input type="text" class="form-control amt" id="amount" name="amount[]" placeholder="Amount" value="<?php echo set_value('amount'); ?>">
+					<?php echo form_error('amount[]');?>
 				</td>
 				<td style="display:flex;">
 					<button type="button" name="add_more" id="add_more" class="add_more btn btn-success btn-sm" fdprocessedid="1s22ut"><b>+</b></button>

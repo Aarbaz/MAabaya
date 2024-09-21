@@ -80,10 +80,10 @@ class Billing extends CI_Controller {
 			$sgst = $this->input->post('sgst');
 			$transportation = $this->input->post('transportation');
 			$grandTotal = $this->input->post('grandTotal');
-			$transport_id = $this->input->post('transport_id');
-			$LR_number = $this->input->post('LR_number');
-			$to_person = $this->input->post('to_person');
-			$Transport = $this->input->post('Transport');
+			$transport_id = $this->input->post('transportId');
+			$LR_number = $this->input->post('lrNo');
+			$to_person = $this->input->post('to');
+			$Transport = $this->input->post('transport');
 
 			// $data = array(
 			// 	'invoiceNumber' => $invoiceNumber,
