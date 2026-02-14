@@ -18,7 +18,7 @@
 			<div class="col-sm-12 center-vertical">
     			<div class="panel panel-default">
 				    <div class="panel-heading">
-				    	<h4>Welcome to M.A Abayass</h4>
+				    	<h4>Welcome to M.A Abaya</h4>
 				    </div>
 				    <div class="panel-body">
 				    <div class="col-sm-offset-2 col-sm-8">

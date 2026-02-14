@@ -1,0 +1,209 @@
+/* Label Generator Styles */
+
+/* Labels Grid Container */
+.labels-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+/* Base Label Item */
+.label-item {
+    border: 1px dashed #999;
+    background: white;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin: 0;
+    page-break-inside: avoid;
+}
+
+.label-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 10px;
+    line-height: 1.3;
+}
+
+.label-field {
+    margin: 2px 0;
+    word-wrap: break-word;
+}
+
+.label-field strong {
+    font-weight: bold;
+}
+
+/* Predefined Label Sizes */
+
+/* 30 per sheet (2.625" x 1") */
+.label-item.size-30 {
+    width: 2.625in;
+    height: 1in;
+    font-size: 9px;
+}
+
+/* 40 per sheet (1.799" x 1.003") */
+.label-item.size-40 {
+    width: 1.799in;
+    height: 1.003in;
+    font-size: 8px;
+}
+
+/* 24 per sheet (2.48" x 1.334") */
+.label-item.size-24 {
+    width: 2.48in;
+    height: 1.334in;
+    font-size: 9px;
+}
+
+/* 20 per sheet (4" x 1") */
+.label-item.size-20 {
+    width: 4in;
+    height: 1in;
+    font-size: 10px;
+}
+
+/* 18 per sheet (2.5" x 1.835") */
+.label-item.size-18 {
+    width: 2.5in;
+    height: 1.835in;
+    font-size: 10px;
+}
+
+/* 14 per sheet (4" x 1.33") */
+.label-item.size-14 {
+    width: 4in;
+    height: 1.33in;
+    font-size: 11px;
+}
+
+/* 12 per sheet (2.5" x 2.834") */
+.label-item.size-12 {
+    width: 2.5in;
+    height: 2.834in;
+    font-size: 11px;
+}
+
+/* 10 per sheet (4" x 2") */
+.label-item.size-10 {
+    width: 4in;
+    height: 2in;
+    font-size: 12px;
+}
+
+/* Custom size - dimensions set dynamically via JavaScript */
+.label-item.custom {
+    font-size: 10px;
+}
+
+/* Print Styles */
+@media print {
+    /* Hide everything except labels */
+    body * {
+        visibility: hidden;
+    }
+    
+    #labelsContainer,
+    #labelsContainer * {
+        visibility: visible;
+    }
+    
+    #labelsContainer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+        padding: 0 !important;
+        border: none !important;
+    }
+    
+    .labels-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+        background: white !important;
+        padding: 0 !important;
+        border: none !important;
+        margin: 0 !important;
+    }
+    
+    .label-item {
+        border: 1px solid #000 !important;
+        background: white !important;
+        page-break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Ensure proper sizing in print */
+    .label-item.size-30 {
+        width: 2.625in !important;
+        height: 1in !important;
+    }
+    
+    .label-item.size-40 {
+        width: 1.799in !important;
+        height: 1.003in !important;
+    }
+    
+    .label-item.size-24 {
+        width: 2.48in !important;
+        height: 1.334in !important;
+    }
+    
+    .label-item.size-20 {
+        width: 4in !important;
+        height: 1in !important;
+    }
+    
+    .label-item.size-18 {
+        width: 2.5in !important;
+        height: 1.835in !important;
+    }
+    
+    .label-item.size-14 {
+        width: 4in !important;
+        height: 1.33in !important;
+    }
+    
+    .label-item.size-12 {
+        width: 2.5in !important;
+        height: 2.834in !important;
+    }
+    
+    .label-item.size-10 {
+        width: 4in !important;
+        height: 2in !important;
+    }
+    
+    /* Page setup */
+    @page {
+        margin: 0.5in;
+        size: letter;
+    }
+}
+
+/* Responsive adjustments for screen view */
+@media screen and (max-width: 768px) {
+    .labels-grid {
+        justify-content: center;
+    }
+    
+    .label-item {
+        /* Scale down for mobile viewing */
+        transform: scale(0.8);
+        transform-origin: top left;
+    }
+}
