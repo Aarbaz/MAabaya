@@ -118,7 +118,7 @@
 					<?php echo form_error('discount[]');?>
 				</td>
 				<td>
-					<input type="text" class="form-control amt" id="" name="amount[]" placeholder="Amount" value="<?php echo set_value('amount'); ?>">
+					<input type="text" class="form-control amt" id="amount" name="amount[]" placeholder="Amount" value="<?php echo set_value('amount'); ?>">
 					<?php echo form_error('amount[]');?>
 				</td>
 				<td style="display:flex;">
