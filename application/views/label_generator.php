@@ -13,32 +13,85 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <!-- Label Generation Form -->
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4>Label Information</h4>
                 </div>
                 <div class="panel-body">
                     <form id="labelForm">
-                        <div class="form-group">
-                            <label for="design_no">Design No <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="design_no" name="design_no" required>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="design_no">Design No <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="design_no" name="design_no" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="fabric">Fabric <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="fabric" name="fabric" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="product_size">Size <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="product_size" name="product_size" placeholder="e.g., S, M, L, XL, 32, 34, etc." required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="price">Price <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+
+                                <div class="form-group">
+                                    <label for="size">Paper Size <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="size" name="size" required>
+                                        <option value="">Select Size</option>
+                                        <option value="size-30">30 per sheet (2.625" x 1")</option>
+                                        <option value="size-40">40 per sheet (a4) (1.799" x 1.003")</option>
+                                        <option value="size-24">24 per sheet (a4) (2.48" x 1.334")</option>
+                                        <option value="size-20">20 per sheet (4" x 1")</option>
+                                        <option value="size-18">18 per sheet (a4) (2.5" x 1.835")</option>
+                                        <option value="size-14">14 per sheet (4" x 1.33")</option>
+                                        <option value="size-12">12 per sheet (a4) (2.5" x 2.834")</option>
+                                        <option value="size-10">10 per sheet (4" x 2")</option>
+                                        <option value="custom">Custom Size (in inches)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Custom Size Input (Hidden by default) -->
+                                <div id="customSizeDiv" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="custom_width">Width (inches)</label>
+                                                <input type="number" class="form-control" id="custom_width" name="custom_width" step="0.01" min="0.5">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="custom_height">Height (inches)</label>
+                                                <input type="number" class="form-control" id="custom_height" name="custom_height" step="0.01" min="0.5">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="quantity">Quantity of Labels <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="fabric">Fabric <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="fabric" name="fabric" required>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="product_size">Size <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="product_size" name="product_size" placeholder="e.g., S, M, L, XL, 32, 34, etc." required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="price">Price <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="price" name="price" step="0.01" required>
-                        </div>
 
                         <hr>
                         <h5>Font Customization</h5>
@@ -70,46 +123,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
 
                         <hr>
-                        <h5>Label Size</h5>
+                        
 
-                        <div class="form-group">
-                            <label for="size">Paper Size <span class="text-danger">*</span></label>
-                            <select class="form-control" id="size" name="size" required>
-                                <option value="">Select Size</option>
-                                <option value="size-30">30 per sheet (2.625" x 1")</option>
-                                <option value="size-40">40 per sheet (a4) (1.799" x 1.003")</option>
-                                <option value="size-24">24 per sheet (a4) (2.48" x 1.334")</option>
-                                <option value="size-20">20 per sheet (4" x 1")</option>
-                                <option value="size-18">18 per sheet (a4) (2.5" x 1.835")</option>
-                                <option value="size-14">14 per sheet (4" x 1.33")</option>
-                                <option value="size-12">12 per sheet (a4) (2.5" x 2.834")</option>
-                                <option value="size-10">10 per sheet (4" x 2")</option>
-                                <option value="custom">Custom Size (in inches)</option>
-                            </select>
-                        </div>
-
-                        <!-- Custom Size Input (Hidden by default) -->
-                        <div id="customSizeDiv" style="display: none;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="custom_width">Width (inches)</label>
-                                        <input type="number" class="form-control" id="custom_width" name="custom_width" step="0.01" min="0.5">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="custom_height">Height (inches)</label>
-                                        <input type="number" class="form-control" id="custom_height" name="custom_height" step="0.01" min="0.5">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="quantity">Quantity of Labels <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
-                        </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary btn-lg btn-block">
