@@ -84,7 +84,7 @@
 			</tbody>
 		</table>
 	</div> -->
-<?php print_r($this->session->flashdata()); ?>
+<!-- <?php print_r($this->session->flashdata()); ?> -->
 	<div class="form-group" id="" style="margin-top:25px;">
 		<table class="table table-bordered">
 			<thead>
