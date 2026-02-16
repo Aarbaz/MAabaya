@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                 <div class="form-group">
                                     <label for="size">Paper Size <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="size" name="size" required>
+                                    <select class="form-control" id="size" name="size" disabled>
                                         <option value="">Select Size</option>
                                         <option value="size-30">30 per sheet (2.625" x 1")</option>
                                         <option value="size-40">40 per sheet (a4) (1.799" x 1.003")</option>
@@ -96,17 +96,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <hr>
                         <!-- <h5>Font Customization</h5> -->
 
-                        <div class="row" style="display: none;">
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="font_size">Font Size</label>
-                                    <select class="form-control" id="font_size" name="font_size">
+                                    <select class="form-control" id="font_size" name="font_size" disabled>
                                         <option value="12">Small (12px)</option>
-                                        <option value="14">Normal (14px)</option>
-                                        <option value="16" selected>Medium (16px)</option>
+                                        <option value="14" selected>Normal (14px)</option>
+                                        <option value="16" >Medium (16px)</option>
                                         <option value="18">Large (18px)</option>
                                         <option value="20">Extra Large (20px)</option>
-                                        <option value="22" selected>XXL (22px)</option>
+                                        <option value="22" >XXL (22px)</option>
                                         <option value="24">XXXL (24px)</option>
                                     </select>
                                 </div>
@@ -114,9 +114,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="font_bold">Font Weight</label>
-                                    <select class="form-control" id="font_bold" name="font_bold">
-                                        <option value="normal">Normal</option>
-                                        <option value="bold" selected>Bold</option>
+                                    <select class="form-control" id="font_bold" name="font_bold" disabled>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="bold" >Bold</option>
                                     </select>
                                 </div>
                             </div>
