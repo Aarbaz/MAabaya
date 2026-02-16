@@ -88,14 +88,14 @@ class Label extends CI_Controller
     font-size:' . $font_size . 'px; 
     font-weight:' . $font_weight . ';">
 
-    <table width="100%">
+    <table width="100%" height="150px">
         <tr>
-            <td><strong>Design:</strong> ' . htmlspecialchars($design_no) . '</td>
-            <td><strong>Fabric:</strong> ' . htmlspecialchars($fabric) . '</td>
+            <td><div><span><strong>Design:</strong><br>' . htmlspecialchars($design_no) . '</span></div></td>
+            <td><div><span><strong>Fabric:</strong><br>' . htmlspecialchars($fabric) . '</span></div></td>
         </tr>
         <tr>
-            <td><strong>Size:</strong> ' . htmlspecialchars($product_size) . '</td>
-            <td><strong>Price:</strong> ₹' . htmlspecialchars($price) . '</td>
+            <td><div><span><strong>Size:</strong><br>' . htmlspecialchars($product_size) . '</span></div></td>
+            <td><div><span><strong>Price:</strong><br> ₹' . htmlspecialchars($price) . '</span></div></td>
         </tr>
     </table>
 
