@@ -74,11 +74,11 @@
     font-size: 16px;
 }
 
-/* 18 per sheet (2.5" x 1.835") */
+/* 18 per sheet (46.8mm x 35.1mm - Custom 2x4 layout) */
 .label-item.size-18 {
-    width: 2.5in;
-    height: 1.835in;
-    font-size: 16px;
+    width: 46.8mm;
+    height: 35.1mm;
+    font-size: 14px;
 }
 
 /* 14 per sheet (4" x 1.33") */
@@ -134,19 +134,23 @@
     .labels-grid {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5in;
+        gap: 2mm;
         background: white !important;
         padding: 0 !important;
         border: none !important;
         margin: 0 !important;
+        justify-content: space-between;
     }
 
     .label-item {
         border: 1px solid #000 !important;
         background: white !important;
         page-break-inside: avoid;
+        break-inside: avoid;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
+        orphans: 1;
+        widows: 1;
     }
 
     /* Ensure proper sizing in print */
@@ -171,8 +175,8 @@
     }
 
     .label-item.size-18 {
-        width: 3.5in !important;
-        height: 1.835in !important;
+        width: 46.8mm !important;
+        height: 35.1mm !important;
     }
 
     .label-item.size-14 {
@@ -190,10 +194,10 @@
         height: 2in !important;
     }
 
-    /* Page setup */
+    /* Page setup - Custom 101.6mm x 152.4mm (4" x 6") */
     @page {
-        margin: 0.5in;
-        size: letter;
+        margin: 3mm;
+        size: 101.6mm 152.4mm;
     }
 
     /* Force content to start on first page */

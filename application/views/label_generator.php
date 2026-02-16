@@ -51,7 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                                 <div class="form-group">
                                     <label for="size">Paper Size <span class="text-danger">*</span></label>
-                                    <select class="form-control" id="size" name="size" required disabled>
+                                    <select class="form-control" id="size" name="size" required>
                                         <option value="">Select Size</option>
                                         <option value="size-30">30 per sheet (2.625" x 1")</option>
                                         <option value="size-40">40 per sheet (a4) (1.799" x 1.003")</option>
@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label for="quantity">Quantity of Labels <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="8" disabled>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="8" >
                                 </div>
                             </div>
                         </div>
