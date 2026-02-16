@@ -101,13 +101,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <div class="form-group">
                                     <label for="font_size">Font Size</label>
                                     <select class="form-control" id="font_size" name="font_size">
-                                        <option value="8">Extra Small (8px)</option>
-                                        <option value="9">Small (9px)</option>
-                                        <option value="10" selected>Normal (10px)</option>
-                                        <option value="11">Medium (11px)</option>
-                                        <option value="12">Large (12px)</option>
-                                        <option value="14">Extra Large (14px)</option>
-                                        <option value="16">XXL (16px)</option>
+                                        <option value="12">Small (12px)</option>
+                                        <option value="14">Normal (14px)</option>
+                                        <option value="16" selected>Medium (16px)</option>
+                                        <option value="18">Large (18px)</option>
+                                        <option value="20">Extra Large (20px)</option>
+                                        <option value="22">XXL (22px)</option>
+                                        <option value="24">XXXL (24px)</option>
                                     </select>
                                 </div>
                             </div>
